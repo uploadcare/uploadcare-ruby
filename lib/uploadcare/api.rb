@@ -10,6 +10,8 @@ require 'uploadcare/api/file_api'
 
 module Uploadcare
   class Api
+    attr_reader :options
+    
     include Uploadcare::RawApi
     include Uploadcare::UploadingApi
     include Uploadcare::FileApi

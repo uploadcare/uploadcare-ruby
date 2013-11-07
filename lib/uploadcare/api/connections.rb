@@ -16,7 +16,7 @@ module Uploadcare
       connection
     end
 
-    def self.upload_connection
+    def self.upload_connection options
       ca_path = '/etc/ssl/certs' if File.exists?('/etc/ssl/certs')
 
       connection = Faraday.new ssl: { ca_path: ca_path }, url: options[:upload_url_base] do |frd|

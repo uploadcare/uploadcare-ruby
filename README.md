@@ -68,7 +68,7 @@ Upload file
 ```ruby
 @file_to_upload = File.open("your-file.png")
 
-@uc_file = @api.upload_file(@file_to_upload)
+@uc_file = @api.upload(@file_to_upload)
 # => #<Uploadcare::Api::File ...
 ```
 
@@ -95,6 +95,31 @@ Keep or delete file
 @uc_file.delete
 # => #<Uploadcare::Api::File ...
 ```
+## Uploading
+You can upload either File object (array of files will also cut it) or custom URL.
+
+1. Uploading from URL
+
+Just throw your URL into api - and you good to go.
+
+```ruby
+# smart upload
+@file  = @api.upload "http://your.awesome/avatar.jpg" 
+# =>  #<Uploadcare::Api::File ...
+
+# explicitly upload from URl
+@file = @api.upload_from_url "http://your.awesome/avatar.jpg" 
+# =>  #<Uploadcare::Api::File ...
+```
+Keep in mind that invalid url will rise an ArgumentError.
+
+2. Uploading a single file
+
+pending
+
+3. Uploading an array of files
+
+pending
 
 ## Project
 ## Files list and pagination
