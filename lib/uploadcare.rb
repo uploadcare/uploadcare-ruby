@@ -2,7 +2,6 @@ require 'faraday'
 require 'json'
 require 'ostruct'
 
-require 'uploadcare/raw_api'
 require 'uploadcare/api'
 require 'uploadcare/version'
 

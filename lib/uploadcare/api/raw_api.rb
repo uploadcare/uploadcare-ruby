@@ -3,7 +3,7 @@ require 'json'
 require 'uploadcare/api/connections'
 
 module Uploadcare
-  class RawApi
+  module RawApi
 
     def initialize options={}
       @options = Uploadcare::default_settings.merge(options)  
