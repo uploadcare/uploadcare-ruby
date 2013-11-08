@@ -21,4 +21,10 @@ module Uploadcare
   def self.user_agent
     "uploadcare-api-ruby/#{Uploadcare::VERSION}"
   end
+
+  UUID_REGEX = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
+  CDN_URL_REGEX = /
+     (?<uuid>[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})
+     (?:\/-\/(?<operations>.*?))?\/?$
+     /ix
 end

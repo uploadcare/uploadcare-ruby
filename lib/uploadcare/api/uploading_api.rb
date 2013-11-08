@@ -1,4 +1,5 @@
 require "uri"
+require 'mime/types'
 
 module Uploadcare
   module UploadingApi
@@ -25,8 +26,14 @@ module Uploadcare
     # upload file to servise
     def upload_file file
       if file.kind_of?(File)
-        # response = upload_request :post, '/base/', {}
-        Uploadcare::Api::File.new self, 'asdsadsa'
+        mime_type = extract_mime_type(file)
+        
+        response = upload_request :post, '/base/', {
+          UPLOADCARE_PUB_KEY: @options[:public_key],
+          file: Faraday::UploadIO.new(file.path, mime_type)
+        }
+        uuid = upload_parse(response)["file"]
+        Uploadcare::Api::File.new self, uuid
       else
         raise ArgumentError.new 'expecting File object'
       end
@@ -45,15 +52,16 @@ module Uploadcare
         end
         
         raise ArgumentError.new(response['error']) if response['status'] == 'error'
-        
         uuid = response['file_id']
         Uploadcare::Api::File.new self, uuid
-
       else
         raise ArgumentError.new 'invalid url was given'
       end
     end
     alias_method :upload_from_url, :upload_url
+
+
+
 
     protected
       def upload_request method, path, params = {}
@@ -62,7 +70,7 @@ module Uploadcare
       end
 
 
-      def parse response
+      def upload_parse response
         raise ArgumentError.new(response.body) if response.status > 200
         begin
           JSON.parse(response.body)
@@ -74,13 +82,18 @@ module Uploadcare
 
     private
       def get_status_response token
-        parse(upload_request(:post, '/from_url/status/', {token: token}))
+        upload_parse(upload_request(:post, '/from_url/status/', {token: token}))
       end
 
 
       def get_token url
         response = upload_request :post, '/from_url/', { source_url: url, pub_key: @options[:public_key] }
-        token = parse(response)["token"]
+        token = upload_parse(response)["token"]
+      end
+
+      def extract_mime_type file
+        types = MIME::Types.of(file.path)
+        types[0].content_type
       end
   end
 end

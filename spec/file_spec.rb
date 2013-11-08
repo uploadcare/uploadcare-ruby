@@ -13,6 +13,10 @@ describe Uploadcare::Api::File do
     @file.should be_an_instance_of Uploadcare::Api::File
   end
 
+  it 'should not be initialized without correct UUID given' do
+    expect {Uploadcare::Api::File.new(@api, "not-uuid")}.to raise_error
+  end
+
   it 'should have valid url' do
     @file.uuid.should match UUID_REGEX
   end
@@ -27,4 +31,23 @@ describe Uploadcare::Api::File do
     uri = URI.parse(url)
     uri.should be_kind_of(URI::HTTP)
   end
+
+  it 'should be able to load image data' do
+    expect {@file.load_data}.to_not raise_error
+  end
+
+  it 'should store itself' do
+    expect { @file.store }.to_not raise_error
+  end
+
+  it 'should be able to tell thenever file was stored' do
+  end
+
+  it 'should delete itself' do
+    expect { @file.delete }.to_not raise_error
+  end
+
+  it 'should be able to tell thenever file was deleted' do
+  end
+
 end
