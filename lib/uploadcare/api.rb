@@ -5,7 +5,9 @@ require 'uploadcare/api/raw_api'
 require 'uploadcare/api/connections'
 require 'uploadcare/api/uploading_api'
 require 'uploadcare/resources/file'
+require 'uploadcare/resources/project'
 require 'uploadcare/api/file_api'
+require 'uploadcare/api/project_api'
 
 
 module Uploadcare
@@ -15,9 +17,6 @@ module Uploadcare
     include Uploadcare::RawApi
     include Uploadcare::UploadingApi
     include Uploadcare::FileApi
-
-    # def initiaize options={}
-    #   super
-    # end
+    include Uploadcare::ProjectApi
   end
 end
