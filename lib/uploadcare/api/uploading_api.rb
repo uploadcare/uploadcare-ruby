@@ -13,7 +13,7 @@ module Uploadcare
       elsif object.kind_of?(String)
         upload_url(object)
 
-      # TODO: uploading array of files
+      # array of files
       elsif object.kind_of?(Array)
         upload_files(object)
 

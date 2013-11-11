@@ -3,7 +3,7 @@ require 'ostruct'
 module Uploadcare
   class Api
     class File < OpenStruct
-      def initialize api, uuid
+      def initialize api, uuid, data=nil
         @api = api
 
         unless uuid =~ Uploadcare::UUID_REGEX
@@ -11,6 +11,8 @@ module Uploadcare
         end
 
         super(uuid: uuid)
+
+        set_data(data) if data
       end
 
       def cdn_url
