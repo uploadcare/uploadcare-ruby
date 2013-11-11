@@ -27,26 +27,18 @@ module Uploadcare
       if files.select {|f| !f.kind_of?(File)}.any?
         raise ArgumentError.new "one or more of given files is not actually files"
       else
-        # response = upload_request :post, '/base/', {
-        #   UPLOADCARE_PUB_KEY: @options[:public_key],
-        #   files: files.map {|f| Faraday::UploadIO.new(f.path, extract_mime_type(f))}
-        # }
-
-        post = {
+        data = {
           UPLOADCARE_PUB_KEY: @options[:public_key],
         }
 
         files.each_with_index do |f, i|
-          post["file[#{i}]"] = Faraday::UploadIO.new(f.path, extract_mime_type(f))
+          data["file[#{i}]"] = Faraday::UploadIO.new(f.path, extract_mime_type(f))
         end
 
-
-        response = upload_request :post, '/base/', post
-
+        response = upload_request :post, '/base/', data
         uuids = upload_parse(response)
 
         files = uuids.values.map! {|f| Uploadcare::Api::File.new self, f }
-
       end
     end
 

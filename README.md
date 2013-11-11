@@ -129,7 +129,27 @@ file = File.open("path/to/your/file.png")
 And thats it.
 
 ### Uploading an array of files
-pending
+Uploading of an array is just as easy as uploading single files.
+Note, that every object in array must be an instance of File.
+
+```ruby
+file1 = File.open("path/to/your/file.png")
+file2 = File.open("path/to/your/another-file.png")
+files = [file1, file2]
+
+@uc_files = @api.upload files
+# => [#<Uploadcare::Api::File uuid="24626d2f-3f23-4464-b190-37115ce7742a">,
+#     #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6">]
+```
+It is returning you an array of Uploadcare files. 
+
+```ruby
+@uc_files[0]
+# => #<Uploadcare::Api::File uuid="24626d2f-3f23-4464-b190-37115ce7742a">
+
+@uc_files[0].load_data
+# => #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6", original_file_url="http://www.ucarecdn.com/7bb9efa4-05c0-4f36-b0ef-11a4221867f6/view.png", image_info={"width"=>800, "geo_location"=>nil, "datetime_original"=>nil, "height"=>600}, mime_type="image/png", is_ready=true, url="https://api.uploadcare.com/files/7bb9efa4-05c0-4f36-b0ef-11a4221867f6/", original_filename="view.png", datetime_uploaded="2013-11-11T10:39:05.273Z", size=2785, is_image=true, datetime_stored=nil, datetime_removed=nil, source=nil>
+```
 
 ## File
 File - is the primary object for Uploadcare API. Basicly it an avatar for file, stored for you ).
@@ -179,6 +199,23 @@ You could read more https://uploadcare.com/documentation/rest/#file .
 
 
 ## Project
+Project provides basic information about the connecting project.
+Project object is basicly openstruct so every method described in API docs (https://uploadcare.com/documentation/rest/#project) accessible to you:
+
+```ruby
+project = @api.project
+# => #<Uploadcare::Api::Project collaborators=[], name="demo", pub_key="demopublickey", autostore_enabled=true>
+
+project.name
+# => "demo"
+
+p.collaborators
+# => []
+# more often it should look like
+# [{"email": some@some.com, "name": "My Collaborator"}, {"email": some@some.com, "name": "My Collaborator"}]
+```
+
+
 ## Files list and pagination
 ## File
 ## Groups of files
