@@ -11,14 +11,42 @@ module Uploadcare
 
       # if a string - try to upload as url
       elsif object.kind_of?(String)
-       # binding.pry
         upload_url(object)
 
       # TODO: uploading array of files
-      # elsif object.kind_of?(Array)
-        # some iteration and checking here, when mass upload
+      elsif object.kind_of?(Array)
+        upload_files(object)
+
       else
         raise ArgumentError.new "you should give File object, array of files or valid url string"
+      end
+    end
+
+
+    def upload_files files
+      if files.select {|f| !f.kind_of?(File)}.any?
+        raise ArgumentError.new "one or more of given files is not actually files"
+      else
+        # response = upload_request :post, '/base/', {
+        #   UPLOADCARE_PUB_KEY: @options[:public_key],
+        #   files: files.map {|f| Faraday::UploadIO.new(f.path, extract_mime_type(f))}
+        # }
+
+        post = {
+          UPLOADCARE_PUB_KEY: @options[:public_key],
+        }
+
+        files.each_with_index do |f, i|
+          post["file[#{i}]"] = Faraday::UploadIO.new(f.path, extract_mime_type(f))
+        end
+
+
+        response = upload_request :post, '/base/', post
+
+        uuids = upload_parse(response)
+
+        files = uuids.values.map! {|f| Uploadcare::Api::File.new self, f }
+
       end
     end
 
