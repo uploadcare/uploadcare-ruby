@@ -148,7 +148,7 @@ It is returning you an array of Uploadcare files.
 # => #<Uploadcare::Api::File uuid="24626d2f-3f23-4464-b190-37115ce7742a">
 
 @uc_files[0].load_data
-# => #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6", original_file_url="http://www.ucarecdn.com/7bb9efa4-05c0-4f36-b0ef-11a4221867f6/view.png", image_info={"width"=>800, "geo_location"=>nil, "datetime_original"=>nil, "height"=>600}, mime_type="image/png", is_ready=true, url="https://api.uploadcare.com/files/7bb9efa4-05c0-4f36-b0ef-11a4221867f6/", original_filename="view.png", datetime_uploaded="2013-11-11T10:39:05.273Z", size=2785, is_image=true, datetime_stored=nil, datetime_removed=nil, source=nil>
+# => #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6", original_file_url="http://www.ucarecdn.com/7bb9efa4-05c0-4f36-b0ef-11a4221867f6/view.png", image_info={"width"=>800, "geo_location"=>nil, "datetime_original"=>nil, "height"=>600}, ....>
 ```
 
 ## File
@@ -197,6 +197,70 @@ Then your file object will respond to any method, described in API documentation
 
 You could read more https://uploadcare.com/documentation/rest/#file .
 
+## Files list and pagination
+File lists - it is a paginated collection of files for you project. You could read more at https://uploadcare.com/documentation/rest/#pagination.
+In our gem file list is a single page containing 20 (by default, value may change) files and some methods for navgiting throug pages.
+
+```ruby
+@list = @api.file_list 1 #page number, 1 by default
+# => #<Uploadcare::Api::FileList ....
+
+
+# method :resulst will return you an array of files
+@list.results
+# => [#<Uploadcare::Api::File uuid="24626d2f-3f23-4464-b190-37115ce7742a" ...>,
+#       ... 20 of them ...
+#     #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6" ...>]
+
+
+# note that every file is already loaded
+@list.results[1].is_loaded?
+# => true
+
+
+# there is also shortcuts for you
+@list.to_a
+# => [#<Uploadcare::Api::File uuid="24626d2f-3f23-4464-b190-37115ce7742a" ...>,
+#       ... 20 of them ...
+#     #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6" ...>]
+
+@list[3]
+# => #<Uploadcare::Api::File ....
+```
+
+And don't forget navigation throught pages:
+
+```ruby
+@list = @api.files_list 3
+
+@list.next_page
+# => #<Uploadcare::Api::FileList page=4 ....
+
+@list.previous_page
+# => #<Uploadcare::Api::FileList page=2 ....
+
+@list.go_to 5
+# => #<Uploadcare::Api::FileList page=5 ....
+
+
+
+# there is also methods described in API docs avaliable for you:
+# total pages
+@list.pages
+# => 16
+
+# current page
+@list.page
+# => 3
+
+# files per page
+@list.per_page
+# => 20
+
+# total files in project
+@list.total
+# => 308
+```
 
 ## Project
 Project provides basic information about the connecting project.
@@ -216,8 +280,6 @@ p.collaborators
 ```
 
 
-## Files list and pagination
-## File
 ## Groups of files
 ## Testing
 
