@@ -27,4 +27,6 @@ module Uploadcare
      (?<uuid>[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})
      (?:\/-\/(?<operations>.*?))?\/?$
      /ix
+
+  GROUP_UUID_REGEX = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}~(?<count>\d+)/
 end

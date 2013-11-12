@@ -4,11 +4,12 @@ module Uploadcare
   class Api
     class File < OpenStruct
       def initialize api, uuid, data=nil
-        @api = api
-
         unless uuid =~ Uploadcare::UUID_REGEX
           raise ArgumentError.new "ivalid UUID was given"
         end
+        
+        @api = api
+        @is_loaded = false
 
         super(uuid: uuid)
 
