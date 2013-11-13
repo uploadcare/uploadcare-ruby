@@ -276,11 +276,51 @@ project.name
 p.collaborators
 # => []
 # more often it should look like
-# [{"email": some@some.com, "name": "My Collaborator"}, {"email": some@some.com, "name": "My Collaborator"}]
+# [{"email": collaborator@gmail.com, "name": "Collaborator"}, {"email": collaborator@gmail.com, "name": "Collaborator"}]
 ```
 
 
 ## Groups of files
+Groups of files - https://uploadcare.com/documentation/rest/#group.
+Stores files as group by the single UUID.
+Note that UUID has a bit ~#{files_count} at the end and it is required by API to work properly.
+
+```ruby
+# group can be created eather by array of Uploadcare Files:
+@files_ary = [@file, @file2]
+@files = @api.upload @files_ary
+@group = @api.create_group @files
+# => #<Uploadcare::Api::Group uuid="0d192d66-c7a6-4465-b2cd-46716c5e3df3~2", files_count=2 ...
+
+# or by array of strings containing UUIDs
+@uuids_ary = ["c969be02-9925-4a7e-aa6d-b0730368791c", "c969be02-9925-4a7e-aa6d-b0730368791c"]
+@group = @api.create_group @uuids_ary
+# => #<Uploadcare::Api::Group uuid="0d192d66-c7a6-4465-b2cd-46716c5e3df3~2", files_count=2 ...
+
+# you can also create group object just by passing group UUID
+@group_uloaded = @api.group "#{uuid}"
+```
+
+As with files, group created by passing just the UUID is not loaded by default - you need to load data manualy, as it requires separate HTTP GET request.
+New groups created by :create_group method is loaded by default.
+
+```ruby
+@group = @api.group "#{uuid}"
+
+@group.is_loaded?
+# => false
+
+@group.load_data
+# => #<Uploadcare::Api::Group uuid="0d192d66-c7a6-4465-b2cd-46716c5e3df3~2", files_count=2 ...
+
+# loaded group has methods described by API docs and more importantly an array of files
+# this files are loaded by default.
+@group.files
+# => [#<Uploadcare::Api::File uuid="24626d2f-3f23-4464-b190-37115ce7742a" ...>,
+#       ... #{files_count} of them ...
+#     #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6" ...>]
+```
+
 ## Testing
 
 Run `bundle exec rspec`.
