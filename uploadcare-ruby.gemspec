@@ -7,8 +7,16 @@ Gem::Specification.new do |gem|
                        "@dimituri (Dimitry Solovyov)",
                        "@romanonthego (Roman Dubinin)"]
   gem.email         = ["hello@uploadcare.com"]
-  gem.description   = "Ruby wrapper for Uploadcare service API."
-  gem.summary       = "ruby gem for Uploadcare"
+  gem.summary       = "Ruby gem for Uploadcare"
+  gem.description   = <<-EOF
+                        Ruby wrapper for Uploadcare service API. 
+                        Full documentations on api can be found 
+                        at https://uploadcare.com/documentation/rest/
+                      EOF
+  gem.metadata       =  { 
+                          "github" => "https://github.com/uploadcare/uploadcare-ruby", 
+                          "issue_tracker" => "https://github.com/uploadcare/uploadcare-ruby/issues" 
+                        }
   gem.homepage      = "https://uploadcare.com"
   gem.license       = "MIT"
 
