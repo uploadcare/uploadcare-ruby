@@ -195,7 +195,57 @@ Then your file object will respond to any method, described in API documentation
 # => {"width"=>397, "geo_location"=>nil, "datetime_original"=>nil, "height"=>81}
 ```
 
-You could read more https://uploadcare.com/documentation/rest/#file .
+You could read more https://uploadcare.com/documentation/rest/#file
+
+### Generating files from stored info
+At this point you probably store your files UUIDs or CDN urls in some kind of storage.
+Then you can created file object by passing them into API:
+
+```ruby
+# file by UUID
+@file = @api.file "c969be02-9925-4a7e-aa6d-b0730368791c"
+# => #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6"
+
+# file by CDN url
+@file = @api.file "http://www.ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/"
+# => #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6"
+
+# not that generated files aren't loaded by initializing, you need to load it.
+@file.is_loaded?
+# => false
+```
+
+### Operations
+Uploadcare presents for you some awesome CDN operations for croping, resizing, rotation, format convertation etc. You could read more at https://uploadcare.com/documentation/cdn/
+Version 1.0.0 of this gem has not specific methods for this kind of operations, we expecting it comes lately in 1.1 releases.
+For now all you files objects can store operations passed by cdn url:
+
+```ruby
+@file = @api.file "http://www.ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/-/crop/150x150/center/-/format/png/"
+# => #<Uploadcare::Api::File uuid="a8775cf7-0c2c-44fa-b071-4dd48637ecac"
+
+@file.operations
+# => ["crop/150x150/center", "format/png"]
+
+# note that by default :cdn_url method will return url without any operations:
+@file.cdn_url
+# => "http://www.ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/""
+
+# you can pass true to :cdn_url methods to get url with included operations:
+@file.cdn_url(true)
+# => "http://www.ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/-/crop/150x150/center/-/format/png/"
+
+# or cal specific methods for url with or without them:
+@file.cdn_url_with_operations
+@file.cdn_url_without_operations
+```
+
+Until operations wrapper is released best way for you to manage operation is simply add them to url as a string:
+
+```ruby
+<img src="#{file.cdn_url}-/crop/#{width}x#{height}/center/"/>
+# or something like that
+```
 
 ## Files list and pagination
 File lists - it is a paginated collection of files for you project. You could read more at https://uploadcare.com/documentation/rest/#pagination.
