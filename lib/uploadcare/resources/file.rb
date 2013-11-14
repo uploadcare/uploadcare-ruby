@@ -8,24 +8,42 @@ module Uploadcare
           raise ArgumentError.new "ivalid UUID was given"
         end
         
-        @api = api
-        @is_loaded = false
+        file ={uuid: uuid, operations: []}
 
-        super(uuid: uuid)
+        @api = api
+
+        super file
 
         set_data(data) if data
       end
 
-      def cdn_url
-        @api.options[:static_url_base] + "/#{@table[:uuid]}/"
+      def cdn_url add_operations=false
+        if add_operations
+          cdn_url_with_operations
+        else
+          cdn_url_without_operations
+        end
       end
       alias_method :public_url, :cdn_url
 
 
+      def cdn_url_without_operations
+        @api.options[:static_url_base] + "/#{@table[:uuid]}/"
+      end
+      alias_method :public_url_without_operations, :cdn_url_without_operations
+
+
+      def cdn_url_with_operations
+        url = cdn_url_without_operations
+        ops = operations.join("/-/")
+        url = url + "-/#{ops}/"
+      end
+      alias_method :public_url_with_operations, :cdn_url_with_operations
+
+
       def load_data
         unless is_loaded?
-          data = @api.get "/files/#{uuid}/"
-          set_data data
+          load_data!
         end
 
         self
@@ -41,7 +59,7 @@ module Uploadcare
 
 
       def is_loaded?
-        @is_loaded
+        !send(:image_info).nil?
       end
       alias_method :loaded?, :is_loaded?
 
@@ -73,7 +91,8 @@ module Uploadcare
             data.each do |key, value|
               self.send "#{key}=", value
             end
-            @is_loaded = true
+          else
+            self.data = data
           end
         end
     end

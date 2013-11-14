@@ -58,6 +58,9 @@ module Uploadcare
         raise ArgumentError.new 'expecting File object'
       end
     end
+    
+    # create file is the same as uplaod file
+    alias_method :create_file, :upload_file
 
 
     #upload from url

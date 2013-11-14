@@ -50,4 +50,15 @@ describe Uploadcare::Api::File do
   it 'should be able to tell thenever file was deleted' do
   end
 
+  it 'should construct file from uuid' do
+    file = @api.file @file.uuid
+    file.should be_kind_of(Uploadcare::Api::File)
+  end
+
+  it 'should construct file from cdn url' do
+    url = @file.cdn_url + "-/crop/150x150/center/-/format/png/"
+    binding.pry
+    file = @api.file url
+    file.should be_kind_of(Uploadcare::Api::File)
+  end
 end
