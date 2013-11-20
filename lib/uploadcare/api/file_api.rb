@@ -3,33 +3,19 @@ require "uri"
 module Uploadcare
   module FileApi
     # create file from uuid or cdn url
+
     def file uuid_or_cdn_url
-      if uuid_or_cdn_url =~ Uploadcare::UUID_REGEX
-        file = file_from_uuid(uuid_or_cdn_url)
-      elsif uuid_or_cdn_url =~ Uploadcare::CDN_URL_REGEX
-        file = file_from_cdn_url(uuid_or_cdn_url)
-      else
-        raise ArgumentError.new "Expecting file UUID or CDN url for file."
-      end
-    end
+      result = Uploadcare::Parser.parse(uuid_or_cdn_url)
 
-
-    def file_from_uuid uuid
-      file = Uploadcare::Api::File.new self, uuid
-    end
-
-
-    def file_from_cdn_url url
-      matched = Uploadcare::CDN_URL_REGEX.match(url)
-      
-      uuid = matched[:uuid]
-      unless matched[:operations].nil?
-        operations = matched[:operations].split("/-/")
-      else
-        operations = []
+      unless result.is_a?(Uploadcare::Parser::File)
+        msg = "invalid CDN URL or UUID was given for file: #{uuid_or_cdn_url}."
+        if result.is_a?(Uploadcare::Parser::Group)
+          msg = msg + "\n Group UUID was given. Try call @api.group if it is what you intended."
+        end
+        raise msg
       end
 
-      file = Uploadcare::Api::File.new self, uuid, {operations: operations}
+      file = Uploadcare::Api::File.new self, result["uuid"], {operations: result["operations"]}
     end
   end
 end

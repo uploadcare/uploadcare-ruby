@@ -59,7 +59,7 @@ module Uploadcare
 
 
       def is_loaded?
-        !send(:image_info).nil?
+        !send(:datetime_uploaded).nil?
       end
       alias_method :loaded?, :is_loaded?
 

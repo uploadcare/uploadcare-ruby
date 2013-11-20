@@ -6,8 +6,7 @@ require 'uploadcare/api'
 require 'uploadcare/version'
 
 module Uploadcare
-  def self.default_settings
-    {
+  DEFAULT_SETTINGS = {
       public_key: 'demopublickey',
       private_key: 'demoprivatekey',
       upload_url_base: 'https://upload.uploadcare.com',
@@ -16,17 +15,29 @@ module Uploadcare
       api_version: '0.3',
       cache_files: true,
     }
+
+  USER_AGENT = "uploadcare-ruby/#{Uploadcare::VERSION}"
+  
+
+  def self.default_settings
+    DEFAULT_SETTINGS
   end
 
   def self.user_agent
-    "uploadcare-api-ruby/#{Uploadcare::VERSION}"
+    USER_AGENT
   end
 
   UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
-  CDN_URL_REGEX = /
+  
+  GROUP_UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}~(?<count>\d+)$/
+  
+  CDN_URL_FILE_REGEX = /
      (?<uuid>[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})
      (?:\/-\/(?<operations>.*?))?\/?$
      /ix
-
-  GROUP_UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}~(?<count>\d+)$/
+  
+  CDN_URL_GROUP_REGEX = /
+     (?<uuid>[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}~(?<count>\d+))
+     (?:\/-\/(?<operations>.*?))?\/?$
+     /ix
 end

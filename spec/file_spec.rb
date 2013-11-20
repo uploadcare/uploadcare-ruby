@@ -57,7 +57,6 @@ describe Uploadcare::Api::File do
 
   it 'should construct file from cdn url' do
     url = @file.cdn_url + "-/crop/150x150/center/-/format/png/"
-    binding.pry
     file = @api.file url
     file.should be_kind_of(Uploadcare::Api::File)
   end
