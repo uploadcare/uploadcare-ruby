@@ -10,6 +10,5 @@ describe Uploadcare::Api::File do
 
   it "basic list" do
     list = @api.get "/groups/"
-    binding.pry
   end
 end

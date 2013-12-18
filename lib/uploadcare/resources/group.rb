@@ -3,25 +3,28 @@ require 'ostruct'
 module Uploadcare
   class Api
     class Group < OpenStruct
-      def initialize api, uuid, data=nil
-        @api = api
-        @is_loaded = false
-        super uuid: uuid
+      def initialize api, uuid_or_cdn_url, data=nil
+        result = Uploadcare::Parser.parse(uuid_or_cdn_url)
 
-        # if data is suplide - just pass it to builder.
-        if data
-          set_data(data)
-        # if no data is suplide - build files_count from uuid string
-        else
-          matched = Uploadcare::GROUP_UUID_REGEX.match(uuid)
-          self.files_count = matched[:count]
+        unless result.is_a?(Uploadcare::Parser::Group)
+          msg = "invalid CDN URL or UUID was given for file: #{uuid_or_cdn_url}."
+          if result.is_a?(Uploadcare::Parser::File)
+            msg = msg + "\n File UUID was given. Try call @api.file if it is what you intended."
+          end
+          raise msg
         end
 
-        self
+        @api = api
+        # self.files_count = result["count"]
+        group = {uuid: result["uuid"], files_count: result["count"]}
+        super group
+
+        # if data is suplide - just pass it to builder.
+        set_data(data) if data
       end
 
       def is_loaded?
-        @is_loaded
+        !send(:files).nil?
       end
       alias_method :loaded?, :is_loaded? 
 

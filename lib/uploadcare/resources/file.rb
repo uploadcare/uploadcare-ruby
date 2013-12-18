@@ -3,12 +3,18 @@ require 'ostruct'
 module Uploadcare
   class Api
     class File < OpenStruct
-      def initialize api, uuid, data=nil
-        unless uuid =~ Uploadcare::UUID_REGEX
-          raise ArgumentError.new "ivalid UUID was given"
+      def initialize api, uuid_or_cdn_url, data=nil
+        result = Uploadcare::Parser.parse(uuid_or_cdn_url)
+
+        unless result.is_a?(Uploadcare::Parser::File)
+          msg = "invalid CDN URL or UUID was given for file: #{uuid_or_cdn_url}."
+          if result.is_a?(Uploadcare::Parser::Group)
+            msg = msg + "\n Group UUID was given. Try call @api.group if it is what you intended."
+          end
+          raise msg
         end
         
-        file ={uuid: uuid, operations: []}
+        file = {uuid: result["uuid"], operations: result["operations"]}
 
         @api = api
 
@@ -35,8 +41,11 @@ module Uploadcare
 
       def cdn_url_with_operations
         url = cdn_url_without_operations
-        ops = operations.join("/-/")
-        url = url + "-/#{ops}/"
+        unless operations.empty?
+          ops = operations.join("/-/")
+          url = url + "-/#{ops}/"
+        end
+        url
       end
       alias_method :public_url_with_operations, :cdn_url_with_operations
 

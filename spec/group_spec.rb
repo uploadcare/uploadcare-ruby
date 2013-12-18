@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'uri'
 require 'socket'
 
-describe Uploadcare::Api::File do
+describe Uploadcare::Api::Group do
   before :each do
     @api = Uploadcare::Api.new(CONFIG)
     @file = File.open(File.join(File.dirname(__FILE__), 'view.png'))
