@@ -47,15 +47,7 @@ module Uploadcare
 
       private
         def set_data data
-          unless data["files"].nil?
-            data["files"].map! do |file|
-              unless file.nil?
-                Uploadcare::Api::File.new(@api, file["uuid"], file)
-              else
-                file
-              end
-            end
-          end
+          data = map_files(data) unless data["files"].nil?
 
           if data.respond_to? (:each)
             data.each do |k, v|
@@ -64,6 +56,20 @@ module Uploadcare
           end
 
           @is_loaded = true
+        end
+
+        # map files (hashes basicly) to
+        # actual File objects
+        def map_files data
+          data["files"].map! do |file|
+            unless file.nil?
+              Uploadcare::Api::File.new(@api, file["uuid"], file)
+            else
+              file
+            end
+          end
+
+          data
         end
     end
   end
