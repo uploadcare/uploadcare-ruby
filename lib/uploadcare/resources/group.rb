@@ -7,7 +7,7 @@ module Uploadcare
         result = Uploadcare::Parser.parse(uuid_or_cdn_url)
 
         unless result.is_a?(Uploadcare::Parser::Group)
-          msg = "invalid CDN URL or UUID was given for file: #{uuid_or_cdn_url}."
+          msg = "invalid CDN URL or UUID was given for group: #{uuid_or_cdn_url}."
           if result.is_a?(Uploadcare::Parser::File)
             msg = msg + "\n File UUID was given. Try call @api.file if it is what you intended."
           end

@@ -6,9 +6,26 @@ describe Uploadcare::Api::File do
   before :each do
     @api = Uploadcare::Api.new(CONFIG)
     @url = "http://macaw.co/images/macaw-logo.png"
+    @list = @api.group_list
   end
 
-  it "basic list" do
-    list = @api.get "/groups/"
+  it "basic group list" do
+    @list.should be_kind_of Uploadcare::Api::GroupList
+  end
+
+  it "should contain groups and results" do
+    @list.should respond_to(:results)
+    @list.should respond_to(:groups)
+    @list.groups.should be_kind_of(Array)
+  end
+
+  it "results should contain groups" do
+    group = @list.groups.sample
+    group.should be_kind_of(Uploadcare::Api::Group)
+  end
+
+  it "group should no be loaded" do
+    group = @list.groups.sample
+    group.is_loaded?.should == false
   end
 end
