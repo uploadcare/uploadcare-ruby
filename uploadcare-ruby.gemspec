@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
                           "github" => "https://github.com/uploadcare/uploadcare-ruby", 
                           "issue_tracker" => "https://github.com/uploadcare/uploadcare-ruby/issues" 
                         }
-  gem.homepage      = "https://uploadcare.com"
+  gem.homepage      = "https://uploadcare.com/documentation/libs/"
   gem.license       = "MIT"
 
   gem.files         = `git ls-files`.split($\)

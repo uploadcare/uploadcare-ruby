@@ -177,7 +177,7 @@ So if don't *specificaly* need image data (like file name, geolocation data etc)
 <img src="#{@file.cdn_url}"/>
 ```
 
-And thats it. Saves you precious page loading time.
+And thats it. Saves precious loading time.
 
 If you do however need image data - you could do it manualy:
 
