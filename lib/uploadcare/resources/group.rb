@@ -55,7 +55,7 @@ module Uploadcare
       end
 
       def store!
-        data = @api.put "/groups/#{uuid}/storage"
+        data = @api.put "/groups/#{uuid}/storage/"
         set_data(data)
         self
       end
@@ -65,6 +65,24 @@ module Uploadcare
         !send(:datetime_stored).nil?
       end
       alias_method :stored?, :is_stored?
+
+
+      ["created", "stored"].each do |dt|
+        define_method "datetime_#{dt}" do
+          date = @table["datetime_#{dt}".to_sym]
+          if date.is_a?(String)
+            begin
+              parsed = DateTime.parse(date)
+              self.send("datetime_#{dt}=", parsed)
+              parsed
+            rescue Exception => e
+              date
+            end
+          else
+            date
+          end
+        end
+      end
 
 
       private

@@ -51,4 +51,40 @@ describe Uploadcare::Api::Group do
     expect {group_uloaded.load_data}.to_not raise_error
     group_uloaded.is_loaded?.should be_true
   end
+
+  it "group should store itself" do
+    group = @api.create_group @files
+    expect {group.store}.to_not raise_error
+  end
+
+  it "should be able to tell when group is stored" do
+    group = @api.create_group @files
+    group_unloaded = @api.group group.uuid
+
+    group_unloaded.is_loaded?.should == false
+    group_unloaded.is_stored?.should == nil
+
+    group_unloaded.load
+    group_unloaded.is_stored?.should == false
+
+    group_unloaded.store
+    group_unloaded.is_stored?.should == true
+  end
+
+  it "group should have datetime attributes" do
+    group = @api.create_group @files
+    group.should respond_to(:datetime_created)
+    group.should respond_to(:datetime_stored)
+  end
+
+  it "group should have datetime_created as DateTime object" do
+    group = @api.create_group @files
+    group.datetime_created.should be_kind_of(DateTime)
+  end
+
+  it "group should have datetime_created as DateTime object" do
+    group = @api.create_group @files
+    group.store
+    group.datetime_stored.should be_kind_of(DateTime)
+  end
 end
