@@ -23,6 +23,8 @@ module Uploadcare
         set_data(data) if data
       end
 
+
+      # Loading logic
       def is_loaded?
         !send(:files).nil?
       end
@@ -30,13 +32,11 @@ module Uploadcare
 
       def load_data
         unless is_loaded?
-          data = @api.get "/groups/#{uuid}/"
-          set_data data
+          load_data!
         end
-
         self
       end
-
+      alias_method :load, :load_data
 
       def load_data!
         data = @api.get "/groups/#{uuid}/"
@@ -44,6 +44,28 @@ module Uploadcare
 
         self
       end
+      alias_method :load!, :load_data!
+
+      # Store group (and all files in group)
+      def store
+        unless is_stored?
+          store!
+        end
+        self
+      end
+
+      def store!
+        data = @api.put "/groups/#{uuid}/storage"
+        set_data(data)
+        self
+      end
+
+      def is_stored?
+        return nil unless is_loaded?
+        !send(:datetime_stored).nil?
+      end
+      alias_method :stored?, :is_stored?
+
 
       private
         def set_data data

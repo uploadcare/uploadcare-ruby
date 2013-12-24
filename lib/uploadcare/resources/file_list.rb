@@ -15,6 +15,7 @@ module Uploadcare
         super data
       end
 
+      # Array-like behavior
       def [] index
         results[index] if defined?(:results)
       end
@@ -23,6 +24,7 @@ module Uploadcare
         results if defined?(:results)
       end
 
+      # List navigation
       def next_page
         @api.file_list(page+1) unless send(:next).nil?
       end

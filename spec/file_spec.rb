@@ -40,7 +40,17 @@ describe Uploadcare::Api::File do
     expect { @file.store }.to_not raise_error
   end
 
+  it 'file should respond with nil for :stored? and :deleted? methods unless loaded' do
+    @file.is_loaded?.should == false
+    @file.is_stored?.should == nil
+    @file.is_deleted?.should == nil
+  end
+
   it 'should be able to tell thenever file was stored' do
+    @file.load
+    @file.is_stored?.should == false
+    @file.store
+    @file.is_stored?.should == true
   end
 
   it 'should delete itself' do
@@ -48,6 +58,10 @@ describe Uploadcare::Api::File do
   end
 
   it 'should be able to tell thenever file was deleted' do
+    @file.load
+    @file.is_deleted?.should == false
+    @file.delete
+    @file.is_deleted?.should == true
   end
 
   it 'should construct file from uuid' do
@@ -60,4 +74,32 @@ describe Uploadcare::Api::File do
     file = @api.file url
     file.should be_kind_of(Uploadcare::Api::File)
   end
+
+  it 'shoul respond to datetime_ methods' do
+    @file.load
+    @file.should respond_to(:datetime_original)
+    @file.should respond_to(:datetime_uploaded)
+    @file.should respond_to(:datetime_stored)
+    @file.should respond_to(:datetime_removed)
+  end
+
+  it 'should respond to datetime_uploaded' do
+    @file.load
+    @file.datetime_uploaded.should be_kind_of(DateTime)
+  end
+
+  it 'should respond to datetime_stored' do
+    @file.load
+    @file.store
+    @file.datetime_stored.should be_kind_of(DateTime)
+  end
+
+  it 'should respond to datetime_removed' do
+    @file.load
+    @file.delete
+    @file.datetime_removed.should be_kind_of(DateTime)
+    @file.datetime_deleted.should be_kind_of(DateTime)
+    @file.datetime_removed.should == @file.datetime_deleted
+  end
+
 end
