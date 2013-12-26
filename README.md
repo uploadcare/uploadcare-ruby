@@ -17,7 +17,7 @@ And then execute:
 $ bundle install
 ```
 
-Or install it yourself as:
+Or install it yourself:
 
 ```shell
 $ gem install uploadcare-ruby
@@ -113,7 +113,7 @@ Just throw your URL into API - and you're good to go.
 @file = @api.upload_from_url "http://your.awesome/avatar.jpg" 
 # =>  #<Uploadcare::Api::File ...
 ```
-Keep in mind that invalid URL will raise an ArgumentError.
+Keep in mind that invalid URL will raise an `ArgumentError`.
 
 ### Uploading a single file
 Like with URL - just start throwing your file into API
@@ -214,7 +214,7 @@ Then you can create file object by passing them into API:
 ```
 
 ### Operations
-Uploadcare gives you some awesome CDN operations for croping, resizing, rotation, format convertation etc. You could read more at https://uploadcare.com/documentation/cdn/
+Uploadcare gives you some awesome CDN operations for croping, resizing, rotation, format convertation etc. You could read more at https://uploadcare.com/documentation/cdn/ .
 Version 1.0.0 of the gem has no specific methods for this kind of operations, we expect to add support for it later in 1.1 releases.
 For the moment all your file objects can store operations passed by cdn url:
 
@@ -233,7 +233,7 @@ For the moment all your file objects can store operations passed by cdn url:
 @file.cdn_url(true)
 # => "http://www.ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/-/crop/150x150/center/-/format/png/"
 
-# or cal specific methods for url with or without them:
+# or call specific methods for url with or without them:
 @file.cdn_url_with_operations
 @file.cdn_url_without_operations
 ```
@@ -246,7 +246,7 @@ Until operations wrapper is released the best way for you to manage operation is
 ```
 
 ## File list and pagination
-File lists is a paginated collection of files for you project. You could read more at https://uploadcare.com/documentation/rest/#pagination.
+File list is a paginated collection of files for you project. You could read more at https://uploadcare.com/documentation/rest/#pagination.
 In our gem file list is a single page containing 20 (by default, value may change) files and some methods for navigating through pages.
 
 ```ruby
@@ -384,4 +384,4 @@ private_key: 'PRIVATE KEY'
 
 ## Contributing
 
-This is open source, fork, hack, request a pull.
+This is open source, fork, hack, request a pull, receive a discount)
