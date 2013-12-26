@@ -90,7 +90,7 @@ Use file
 Keep or delete file
 
 ```ruby
-# store file (if you dont use autostore feature)
+# store file (if you dont use autostore option)
 @uc_file.store
 # => #<Uploadcare::Api::File ...
 
@@ -155,9 +155,6 @@ It is returning you an array of Uploadcare files.
 File - is the primary object for Uploadcare API. Basicly it an avatar for file, stored for you ).
 So all the opertations you do - you do it with the file object.
 
-*to do:* way to build file from UUID, CDN URL, and uploading
-
-
 ```ruby
 @file_to_upload = File.open("your-file.png")
 
@@ -170,6 +167,7 @@ So all the opertations you do - you do it with the file object.
 @uc_file.cdn_url
 # => "http://www.ucarecdn.com/c969be02-9925-4a7e-aa6d-b0730368791c/"
 ```
+
 There is one issue with files - all data associated with it accesible with separate HTTP request only.
 So if don't *specificaly* need image data (like file name, geolocation data etc) - you could just use :uuid and :cdn_url methods for file output:
 
