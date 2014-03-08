@@ -1,6 +1,6 @@
 [![Build Status](https://secure.travis-ci.org/uploadcare/ruby-uploadcare-api.png?branch=master)](http://travis-ci.org/uploadcare/ruby-uploadcare-api)
 
-A ruby wrapper for uploadcare.com service.
+A ruby wrapper for [Uploadcare.com](https://uploadcare.com) service.
 
 
 ## Installation
@@ -17,7 +17,7 @@ And then execute:
 $ bundle install
 ```
 
-Or install it yourself as:
+Or install it yourself:
 
 ```shell
 $ gem install uploadcare-ruby
@@ -26,7 +26,7 @@ $ gem install uploadcare-ruby
 --
 
 ## Initalizations
-Just create api object - and you good to go.
+Just create an API object - and you're good to go.
 
 ```ruby
 @api = Uploadcare::Api.new(CONFIG)
@@ -35,14 +35,14 @@ Just create api object - and you good to go.
 --
 
 ## Raw API
-Raw API - it is a simple interface wich allows you to make custom requests to Uploadcare REST API.
+Raw API is a simple interface that allows you to make custom requests to Uploadcare REST API.
 Just in case you want some low-level control over your app.
 
 ```ruby
 # any request
 @api.request :get, "/files/", {page: 2}
 
-# you allso have the shortcuts for methods
+# you also have the shortcuts for methods
 @api.get '/files', {page: 2}
 
 @api.post ...
@@ -52,7 +52,7 @@ Just in case you want some low-level control over your app.
 @api.delete ...
 
 ```
-All raw API methods returns parsed JSON response or raise an error (from which you should rescue on your own).
+All raw API methods return parsed JSON response or raise an error (which you should handle yourself).
 
 --
 
@@ -87,7 +87,7 @@ Use file
 # => "http://www.ucarecdn.com/c969be02-9925-4a7e-aa6d-b0730368791c/"
 ```
 
-Keep or delete file
+Store or delete file
 
 ```ruby
 # store file (if you dont use autostore option)
@@ -102,21 +102,21 @@ Keep or delete file
 You can upload either File object (array of files will also cut it) or custom URL.
 
 ### Uploading from URL
-Just throw your URL into api - and you good to go.
+Just throw your URL into API - and you're good to go.
 
 ```ruby
 # smart upload
 @file  = @api.upload "http://your.awesome/avatar.jpg" 
 # =>  #<Uploadcare::Api::File ...
 
-# explicitly upload from URl
+# explicitly upload from URL
 @file = @api.upload_from_url "http://your.awesome/avatar.jpg" 
 # =>  #<Uploadcare::Api::File ...
 ```
-Keep in mind that invalid url will rise an ArgumentError.
+Keep in mind that invalid URL will raise an `ArgumentError`.
 
 ### Uploading a single file
-Like with URL - just start throwing your file into api
+Like with URL - just start throwing your file into API
 
 ```ruby
 
@@ -126,11 +126,11 @@ file = File.open("path/to/your/file.png")
 # =>  #<Uploadcare::Api::File ...
 
 ```
-And thats it.
+And that's it.
 
 ### Uploading an array of files
-Uploading of an array is just as easy as uploading single files.
-Note, that every object in array must be an instance of File.
+Uploading of an array is just as easy as uploading a single file.
+Note, that every object in array must be an instance of `File`.
 
 ```ruby
 file1 = File.open("path/to/your/file.png")
@@ -152,8 +152,8 @@ It is returning you an array of Uploadcare files.
 ```
 
 ## File
-File - is the primary object for Uploadcare API. Basicly it an avatar for file, stored for you ).
-So all the opertations you do - you do it with the file object.
+`File` - is the primary object for Uploadcare API. Basically it's an avatar for file stored for you ).
+So all the operations you do - you do it with the file object.
 
 ```ruby
 @file_to_upload = File.open("your-file.png")
@@ -169,13 +169,13 @@ So all the opertations you do - you do it with the file object.
 ```
 
 There is one issue with files - all data associated with it accesible with separate HTTP request only.
-So if don't *specificaly* need image data (like file name, geolocation data etc) - you could just use :uuid and :cdn_url methods for file output:
+So if don't *specificaly* need image data (like file name, geolocation data etc.) - you could just use :uuid and :cdn_url methods for file output:
 
 ```erb
 <img src="#{@file.cdn_url}"/>
 ```
 
-And thats it. Saves precious loading time.
+And that's it. Saves precious loading time.
 
 If you do however need image data - you could do it manualy:
 
@@ -183,7 +183,7 @@ If you do however need image data - you could do it manualy:
 @uc_file.load_data
 ```
 
-Then your file object will respond to any method, described in API documentations (it basicaly an OpenStruct, so you know what to do):
+Then your file object will respond to any method, described in API documentation (it basicaly an OpenStruct, so you know what to do):
 
 ```ruby
 @uc_file.original_filename
@@ -193,11 +193,11 @@ Then your file object will respond to any method, described in API documentation
 # => {"width"=>397, "geo_location"=>nil, "datetime_original"=>nil, "height"=>81}
 ```
 
-You could read more https://uploadcare.com/documentation/rest/#file
+You could read more: https://uploadcare.com/documentation/rest/#file
 
 ### Generating files from stored info
 At this point you probably store your files UUIDs or CDN urls in some kind of storage.
-Then you can created file object by passing them into API:
+Then you can create file object by passing them into API:
 
 ```ruby
 # file by UUID
@@ -214,9 +214,9 @@ Then you can created file object by passing them into API:
 ```
 
 ### Operations
-Uploadcare presents for you some awesome CDN operations for croping, resizing, rotation, format convertation etc. You could read more at https://uploadcare.com/documentation/cdn/
-Version 1.0.0 of this gem has not specific methods for this kind of operations, we expecting it comes lately in 1.1 releases.
-For now all you files objects can store operations passed by cdn url:
+Uploadcare gives you some awesome CDN operations for croping, resizing, rotation, format convertation etc. You could read more at https://uploadcare.com/documentation/cdn/ .
+Version 1.0.0 of the gem has no specific methods for this kind of operations, we expect to add support for it later in 1.1 releases.
+For the moment all your file objects can store operations passed by cdn url:
 
 ```ruby
 @file = @api.file "http://www.ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/-/crop/150x150/center/-/format/png/"
@@ -233,21 +233,21 @@ For now all you files objects can store operations passed by cdn url:
 @file.cdn_url(true)
 # => "http://www.ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/-/crop/150x150/center/-/format/png/"
 
-# or cal specific methods for url with or without them:
+# or call specific methods for url with or without them:
 @file.cdn_url_with_operations
 @file.cdn_url_without_operations
 ```
 
-Until operations wrapper is released best way for you to manage operation is simply add them to url as a string:
+Until operations wrapper is released the best way for you to manage operation is simply add them to URL as a string:
 
 ```ruby
 <img src="#{file.cdn_url}-/crop/#{width}x#{height}/center/"/>
 # or something like that
 ```
 
-## Files list and pagination
-File lists - it is a paginated collection of files for you project. You could read more at https://uploadcare.com/documentation/rest/#pagination.
-In our gem file list is a single page containing 20 (by default, value may change) files and some methods for navgiting throug pages.
+## File list and pagination
+File list is a paginated collection of files for you project. You could read more at https://uploadcare.com/documentation/rest/#pagination.
+In our gem file list is a single page containing 20 (by default, value may change) files and some methods for navigating through pages.
 
 ```ruby
 @list = @api.file_list 1 #page number, 1 by default
@@ -276,7 +276,7 @@ In our gem file list is a single page containing 20 (by default, value may chang
 # => #<Uploadcare::Api::File ....
 ```
 
-And don't forget navigation throught pages:
+And don't forget that you can navigate throught pages:
 
 ```ruby
 @list = @api.files_list 3
@@ -312,7 +312,9 @@ And don't forget navigation throught pages:
 
 ## Project
 Project provides basic information about the connecting project.
-Project object is basicly openstruct so every method described in API docs (https://uploadcare.com/documentation/rest/#project) accessible to you:
+Project object is basicly openstruct so every method described in
+[API docs](https://uploadcare.com/documentation/rest/#project)
+accessible to you:
 
 ```ruby
 project = @api.project
@@ -331,7 +333,7 @@ p.collaborators
 ## Groups of files
 Groups of files - https://uploadcare.com/documentation/rest/#group.
 Stores files as group by the single UUID.
-Note that UUID has a bit ~#{files_count} at the end and it is required by API to work properly.
+Note that UUID has a `~#{files_count}` part at the end and it is required by API to work properly.
 
 ```ruby
 # group can be created eather by array of Uploadcare Files:
@@ -349,7 +351,7 @@ Note that UUID has a bit ~#{files_count} at the end and it is required by API to
 @group_uloaded = @api.group "#{uuid}"
 ```
 
-As with files, group created by passing just the UUID is not loaded by default - you need to load data manualy, as it requires separate HTTP GET request.
+As with files, group created by passing just the UUID is not loaded by default - you need to load data manually, as it requires separate HTTP GET request.
 New groups created by :create_group method is loaded by default.
 
 ```ruby
@@ -381,3 +383,5 @@ private_key: 'PRIVATE KEY'
 ```
 
 ## Contributing
+
+This is open source, fork, hack, request a pull, receive a discount)
