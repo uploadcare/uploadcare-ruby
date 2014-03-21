@@ -4,6 +4,7 @@ require 'faraday_middleware'
 module Uploadcare
   class Connections
     def self.api_connection options
+      # binding.pry
       connection = Faraday.new url: options[:api_url_base] do |frd|
         frd.request :url_encoded
         frd.use FaradayMiddleware::FollowRedirects, limit: 3
