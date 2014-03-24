@@ -26,18 +26,4 @@ module Uploadcare
   def self.user_agent
     USER_AGENT
   end
-
-  UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
-  
-  GROUP_UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}~(?<count>\d+)$/
-  
-  CDN_URL_FILE_REGEX = /
-     (?<uuid>[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})
-     (?:\/-\/(?<operations>.*?))?\/?$
-     /ix
-  
-  CDN_URL_GROUP_REGEX = /
-     (?<uuid>[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}~(?<count>\d+))
-     (?:\/-\/(?<operations>.*?))?\/?$
-     /ix
 end
