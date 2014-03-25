@@ -1,7 +1,5 @@
 require 'json'
 
-require 'uploadcare/api/connections'
-
 module Uploadcare
   module RawApi
 
@@ -12,8 +10,11 @@ module Uploadcare
 
     # basic request method 
     def request method = :get, path = "/files/", params = {}
-      response = send_request(method, path, params)
-      parse(response)
+      connection = Uploadcare::Connections::ApiConnection.new(@options)
+      response = connection.send method, path, params
+
+      # return parsed body
+      response.body
     end
     alias_method :api_request, :request
 
@@ -39,35 +40,5 @@ module Uploadcare
     def delete path= "/files/", params={}
       request :delete, path, params
     end
-
-
-    protected
-      def send_request method, path, params={}
-        connection = Uploadcare::Connections::ApiConnection.new @options
-        response = connection.send method, path, params
-      end
-
-
-      def parse response
-        begin
-          object = JSON.parse(response.body)
-        rescue JSON::ParserError
-          object = false
-        end
-
-        # and returning the object (file actually) or raise new error
-        if response.status < 300
-          object
-        else
-          message = "HTTP code #{response.status}"
-          if object # add active_support god damn it
-            message += ": #{object["detail"]}"
-          else
-            message += ": unknown error occured."
-          end
-
-          raise ArgumentError.new(message)
-        end
-      end
   end
 end
