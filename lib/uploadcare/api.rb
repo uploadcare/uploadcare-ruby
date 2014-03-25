@@ -1,6 +1,6 @@
 require 'json'
 require 'ostruct'
-
+Dir[File.dirname(__FILE__) + '/rest/*rb'].each {|file| require file }
 Dir[File.dirname(__FILE__) + '/api/*.rb'].each {|file| require file }
 Dir[File.dirname(__FILE__) + '/resources/*.rb'].each {|file| require file }
 

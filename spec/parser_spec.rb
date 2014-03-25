@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe Uploadcare::Api::File do
-  before :each do
+describe Uploadcare::Parser do
+  before :all do
     # http://www.ucarecdn.com/be4e24fb-2cad-476f-9417-ba95e3fefbf2~3/-/crop/123/-/fromat/png/
     @uuid = "be4e24fb-2cad-476f-9417-ba95e3fefbf2"
     @count = "12"

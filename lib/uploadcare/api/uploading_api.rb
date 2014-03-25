@@ -88,7 +88,7 @@ module Uploadcare
 
     protected
       def upload_request method, path, params = {}
-        connection = Uploadcare::Connections.upload_connection(@options)
+        connection = Uploadcare::Connections::UploadConnection.new @options
         response = connection.send method, path, params
       end
 
