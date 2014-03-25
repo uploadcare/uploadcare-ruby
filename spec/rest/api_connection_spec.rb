@@ -11,7 +11,7 @@ describe Uploadcare::Connections::ApiConnection do
     expect {Uploadcare::Connections::ApiConnection.new(@settings)}.to_not raise_error
   end
 
-  it 'should return use ParseJson and RaiseError middlewares' do
+  it 'should use ParseJson and RaiseError middlewares' do
     connection = Uploadcare::Connections::ApiConnection.new(@settings)
     connection.builder.handlers.include?(Uploadcare::Connections::Response::ParseJson).should == true
     connection.builder.handlers.include?(Uploadcare::Connections::Response::RaiseError).should == true
