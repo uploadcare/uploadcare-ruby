@@ -9,7 +9,7 @@ module Uploadcare
         super ssl: { ca_path: ca_path }, url: options[:upload_url_base] do |frd|
           frd.request :multipart
           frd.request :url_encoded
-          frd.adapter :net_httpx
+          frd.adapter Faraday.default_adapter
           frd.headers['User-Agent'] = Uploadcare::user_agent
 
           frd.response :raise_error

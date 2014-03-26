@@ -12,9 +12,7 @@ describe Uploadcare::Connections::UploadConnection do
   end
 
   it 'should use ParseJson and RaiseError middleware' do
-    # binding.pry
     connection = Uploadcare::Connections::UploadConnection.new(@settings)
-    # binding.pry
     connection.builder.handlers.include?(Uploadcare::Connections::Response::ParseJson).should == true
     connection.builder.handlers.include?(Uploadcare::Connections::Response::RaiseError).should == true
   end

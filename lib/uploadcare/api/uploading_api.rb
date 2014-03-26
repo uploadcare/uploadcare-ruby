@@ -27,16 +27,14 @@ module Uploadcare
       if files.select {|f| !f.kind_of?(File)}.any?
         raise ArgumentError.new "one or more of given files is not actually files"
       else
-        data = {
-          UPLOADCARE_PUB_KEY: @options[:public_key],
-        }
+        data = {UPLOADCARE_PUB_KEY: @options[:public_key]}
 
         files.each_with_index do |f, i|
           data["file[#{i}]"] = Faraday::UploadIO.new(f.path, extract_mime_type(f))
         end
 
-        response = upload_request :post, '/base/', data
-        uuids = upload_parse(response)
+        response = @upload_connection.send :post, '/base/', data
+        uuids = response.body
 
         files = uuids.values.map! {|f| Uploadcare::Api::File.new self, f }
       end
@@ -48,11 +46,11 @@ module Uploadcare
       if file.kind_of?(File)
         mime_type = extract_mime_type(file)
         
-        response = upload_request :post, '/base/', {
+        response = @upload_connection.send :post, '/base/', {
           UPLOADCARE_PUB_KEY: @options[:public_key],
           file: Faraday::UploadIO.new(file.path, mime_type)
         }
-        uuid = upload_parse(response)["file"]
+        uuid = response.body["file"]
         Uploadcare::Api::File.new self, uuid
       else
         raise ArgumentError.new 'expecting File object'
@@ -87,31 +85,23 @@ module Uploadcare
 
 
     protected
+      # DEPRECATRED but still works
       def upload_request method, path, params = {}
-        connection = Uploadcare::Connections::UploadConnection.new @options
-        response = connection.send method, path, params
-      end
-
-
-      def upload_parse response
-        raise ArgumentError.new(response.body) if response.status > 200
-        begin
-          JSON.parse(response.body)
-        rescue JSON::ParserError
-          response.body
-        end
+        response = @upload_connection.send method, path, params
       end
 
 
     private
       def get_status_response token
-        upload_parse(upload_request(:post, '/from_url/status/', {token: token}))
+        response = @upload_connection.send :post, '/from_url/status/', {token: token}
+        response.body
       end
 
 
       def get_token url
-        response = upload_request :post, '/from_url/', { source_url: url, pub_key: @options[:public_key] }
-        token = upload_parse(response)["token"]
+        binding.pry
+        response = @upload_connection.send :post, '/from_url/', { source_url: url, pub_key: @options[:public_key] }
+        token = response.body["token"]
       end
 
       def extract_mime_type file

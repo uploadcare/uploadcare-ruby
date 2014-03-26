@@ -4,16 +4,15 @@ module Uploadcare
   module RawApi
 
     def initialize options={}
-      @options = Uploadcare::default_settings.merge(options)  
+      @options = Uploadcare::default_settings.merge(options)
+      @api_connection = Uploadcare::Connections::ApiConnection.new(@options)
+      @upload_connection = Uploadcare::Connections::UploadConnection.new(@options)
     end
 
 
     # basic request method 
     def request method = :get, path = "/files/", params = {}
-      connection = Uploadcare::Connections::ApiConnection.new(@options)
-      response = connection.send method, path, params
-
-      # return parsed body
+      response = @api_connection.send method, path, params 
       response.body
     end
     alias_method :api_request, :request
