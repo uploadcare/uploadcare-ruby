@@ -99,7 +99,6 @@ module Uploadcare
 
 
       def get_token url
-        binding.pry
         response = @upload_connection.send :post, '/from_url/', { source_url: url, pub_key: @options[:public_key] }
         token = response.body["token"]
       end
