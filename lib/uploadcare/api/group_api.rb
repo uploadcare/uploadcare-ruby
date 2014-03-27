@@ -32,7 +32,7 @@ module Uploadcare
 
       data.merge! files
       post = @upload_connection.send :post, "/group/", data
-      group = Uploadcare::Api::Group.new self, post.body["id"], post
+      group = Uploadcare::Api::Group.new self, post.body["id"], post.body
     end
   end
 end
