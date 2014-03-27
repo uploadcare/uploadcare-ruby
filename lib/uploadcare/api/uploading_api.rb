@@ -24,37 +24,33 @@ module Uploadcare
 
 
     def upload_files files
-      if files.select {|f| !f.kind_of?(File)}.any?
-        raise ArgumentError.new "one or more of given files is not actually files"
-      else
-        data = {UPLOADCARE_PUB_KEY: @options[:public_key]}
+      raise ArgumentError.new "one or more of given files is not actually files" if files.select {|f| !f.kind_of?(File)}.any?
 
-        files.each_with_index do |f, i|
-          data["file[#{i}]"] = Faraday::UploadIO.new(f.path, extract_mime_type(f))
-        end
+      data = {UPLOADCARE_PUB_KEY: @options[:public_key]}
 
-        response = @upload_connection.send :post, '/base/', data
-        uuids = response.body
-
-        files = uuids.values.map! {|f| Uploadcare::Api::File.new self, f }
+      files.each_with_index do |file, i|
+        data["file[#{i}]"] = build_upload_io(file)
       end
+
+      response = @upload_connection.send :post, '/base/', data
+      uuids = response.body
+
+      files = uuids.values.map! {|f| Uploadcare::Api::File.new self, f }
     end
 
 
     # upload file to servise
     def upload_file file
-      if file.kind_of?(File)
-        mime_type = extract_mime_type(file)
-        
-        response = @upload_connection.send :post, '/base/', {
-          UPLOADCARE_PUB_KEY: @options[:public_key],
-          file: Faraday::UploadIO.new(file.path, mime_type)
-        }
-        uuid = response.body["file"]
-        Uploadcare::Api::File.new self, uuid
-      else
-        raise ArgumentError.new 'expecting File object'
-      end
+      raise ArgumentError.new 'expecting File object' unless file.kind_of?(File)
+
+      response = @upload_connection.send :post, '/base/', {
+        UPLOADCARE_PUB_KEY: @options[:public_key],
+        file: build_upload_io(file)
+      }
+      
+      uuid = response.body["file"]
+
+      Uploadcare::Api::File.new self, uuid
     end
     
     # create file is the same as uplaod file
@@ -64,20 +60,19 @@ module Uploadcare
     #upload from url
     def upload_url url
       uri = URI.parse(url)
-      
-      if uri.kind_of?(URI::HTTP) # works both for HTTP and HTTPS as HTTPS inherits from HTTP
-        token = get_token(url)
 
-        while (response = get_status_response(token))['status'] == 'unknown'
-          sleep 0.5
-        end
-        
-        raise ArgumentError.new(response['error']) if response['status'] == 'error'
-        uuid = response['file_id']
-        Uploadcare::Api::File.new self, uuid
-      else
-        raise ArgumentError.new 'invalid url was given'
+      raise ArgumentError.new 'invalid url was given' unless uri.kind_of?(URI::HTTP)
+      
+      token = get_token(url)
+
+      while (response = get_status_response(token))['status'] == 'unknown'
+        sleep 0.5
       end
+      
+      raise ArgumentError.new(response['error']) if response['status'] == 'error'
+      
+      uuid = response['file_id']
+      Uploadcare::Api::File.new self, uuid
     end
     alias_method :upload_from_url, :upload_url
 
@@ -88,6 +83,10 @@ module Uploadcare
       # DEPRECATRED but still works
       def upload_request method, path, params = {}
         response = @upload_connection.send method, path, params
+      end
+
+      def build_upload_io file
+        Faraday::UploadIO.new file.path, extract_mime_type(file)
       end
 
 

@@ -9,6 +9,35 @@ module Uploadcare
         (?:\/-\/(?<operations>.*?))?\/?$ # optional operations
       /ix
 
+    def self.parse_file_string string
+      result = Uploadcare::Parser.parse(string)
+
+      unless result.is_a?(Uploadcare::Parser::File)
+        msg = "invalid CDN URL or UUID was given for file: #{uuid_or_cdn_url}."
+        if result.is_a?(Uploadcare::Parser::Group)
+          msg = msg + "\n Group UUID was given. Try call @api.group if it is what you intended."
+        end
+        raise msg
+      end
+
+      result
+    end
+
+
+    def self.parse_group_string string
+      result = Uploadcare::Parser.parse(string)
+
+      unless result.is_a?(Uploadcare::Parser::Group)
+        msg = "invalid CDN URL or UUID was given for group: #{uuid_or_cdn_url}."
+        if result.is_a?(Uploadcare::Parser::File)
+          msg = msg + "\n File UUID was given. Try call @api.file if it is what you intended."
+        end
+        raise msg
+      end
+
+      result
+    end
+
     def self.parse string
       matched = META_URL.match(string)
 

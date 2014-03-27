@@ -31,8 +31,8 @@ module Uploadcare
       }
 
       data.merge! files
-      post = parse(upload_request :post, "/group/", data)
-      group = Uploadcare::Api::Group.new self, post["id"], post
+      post = @upload_connection.send :post, "/group/", data
+      group = Uploadcare::Api::Group.new self, post.body["id"], post
     end
   end
 end

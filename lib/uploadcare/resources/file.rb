@@ -4,15 +4,7 @@ module Uploadcare
   class Api
     class File < OpenStruct
       def initialize api, uuid_or_cdn_url, data=nil
-        result = Uploadcare::Parser.parse(uuid_or_cdn_url)
-
-        unless result.is_a?(Uploadcare::Parser::File)
-          msg = "invalid CDN URL or UUID was given for file: #{uuid_or_cdn_url}."
-          if result.is_a?(Uploadcare::Parser::Group)
-            msg = msg + "\n Group UUID was given. Try call @api.group if it is what you intended."
-          end
-          raise msg
-        end
+        result = Uploadcare::Parser.parse_file_string uuid_or_cdn_url
         
         file = {uuid: result["uuid"], operations: result["operations"]}
 

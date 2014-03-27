@@ -5,11 +5,12 @@ module Uploadcare
     module Response
       class RaiseError < Faraday::Response::Middleware
         def on_complete(response)
-          @error_codes = [404, 403, 500, 503]
+          @error_codes = Uploadcare::Error.errors.keys
+          @status = response[:status]
           
-          if @error_codes.include?(response[:status])
-            message = "HTTP code #{response[:status]}"
-            fail(message)
+          if @error_codes.include?(@status)
+            error = Uploadcare::Error.errors[@status].new
+            fail(error)
           end
         end
       end

@@ -11,7 +11,6 @@ describe Uploadcare::Api::File do
 
   it "should return file list" do
     @list.should be_kind_of(Uploadcare::Api::FileList)
-    binding.pry
   end
 
   it "should respont to results method" do
