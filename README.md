@@ -371,6 +371,58 @@ New groups created by :create_group method is loaded by default.
 #     #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6" ...>]
 ```
 
+## Errors handling
+From version 1.0.2 we have a custom exceptions which will raise when Uploadcare service return something with 4xx or 5xx HTTP status.
+
+List of custom errors:
+
+```ruby
+400 => Uploadcare::Error::RequestError::BadRequest,
+401 => Uploadcare::Error::RequestError::Unauthorized,
+403 => Uploadcare::Error::RequestError::Forbidden,
+404 => Uploadcare::Error::RequestError::NotFound,
+406 => Uploadcare::Error::RequestError::NotAcceptable,
+408 => Uploadcare::Error::RequestError::RequestTimeout,
+422 => Uploadcare::Error::RequestError::UnprocessableEntity,
+429 => Uploadcare::Error::RequestError::TooManyRequests,
+500 => Uploadcare::Error::ServerError::InternalServerError,
+502 => Uploadcare::Error::ServerError::BadGateway,
+503 => Uploadcare::Error::ServerError::ServiceUnavailable,
+504 => Uploadcare::Error::ServerError::GatewayTimeout
+```
+
+so now you could escape particular error (in that case 404: Not Found error):
+
+```ruby
+begin
+  @connection.send :get, '/random_url/', {}
+rescue Uploadcare::Error::RequestError::NotFound => e
+  nil
+end
+```
+
+... any request error (covers all 4xx status codes): 
+
+```ruby
+begin
+  @connection.send :get, '/random_url/', {}
+rescue Uploadcare::Error::RequestError => e
+  nil
+end
+```
+
+...and actually any Uploadcare service errors:
+
+```ruby
+begin
+  @connection.send :get, '/random_url/', {}
+rescue Uploadcare::Error => e
+  nil
+end
+```
+
+Please note what almost all actions depends on Uploadcare servers and it will be wise of you to expect that servers will return error code (at least some times).
+
 ## Testing
 
 Run `bundle exec rspec`.
