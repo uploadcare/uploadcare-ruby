@@ -1,5 +1,3 @@
-require "uri"
-
 module Uploadcare
   module FileApi
     def file uuid_or_cdn_url

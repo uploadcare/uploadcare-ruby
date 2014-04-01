@@ -102,6 +102,7 @@ module Uploadcare
         token = response.body["token"]
       end
 
+
       def extract_mime_type file
         types = MIME::Types.of(file.path)
         types[0].content_type

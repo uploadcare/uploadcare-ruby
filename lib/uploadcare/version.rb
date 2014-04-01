@@ -1,3 +1,3 @@
 module Uploadcare
-  VERSION = "1.0.1.rc2"
+  VERSION = "1.0.2"
 end
