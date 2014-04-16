@@ -14,6 +14,10 @@ module Uploadcare
         set_data(data) if data
       end
 
+      def cdn_url
+        @api.options[:static_url_base] + "/#{uuid}/"
+      end
+
 
       # Loading logic
       def is_loaded?

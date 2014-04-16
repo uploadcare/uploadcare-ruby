@@ -1,3 +1,5 @@
 Gemfile.lock
 .ruby-gemset
 .ruby-version
+
+*.gem
