@@ -18,6 +18,10 @@ module Uploadcare
         @api.options[:static_url_base] + "/#{uuid}/"
       end
 
+      def file_cdn_url index=0
+        raise ArgumentError.new "The index was given is greater than files count in group." if index + 1 > files_count
+        cdn_url + "nth/#{index}/"
+      end
 
       # Loading logic
       def is_loaded?

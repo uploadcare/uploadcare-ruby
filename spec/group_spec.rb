@@ -87,4 +87,18 @@ describe Uploadcare::Api::Group do
     group.store
     group.datetime_stored.should be_kind_of(DateTime)
   end
+
+  it "should return cdn string for file in group by it index" do
+    group = @api.create_group @files
+
+    file_cdn_url = group.file_cdn_url(0)
+
+    file_cdn_url.should be_kind_of(String)
+    file_cdn_url.should == group.cdn_url + "nth/0/"
+  end 
+
+  it 'should raise an error if index is greater than files count in group' do
+    group = @api.create_group @files
+    expect {group.file_cdn_url(5)}.to raise_error
+  end
 end
