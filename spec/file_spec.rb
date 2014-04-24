@@ -102,4 +102,9 @@ describe Uploadcare::Api::File do
     @file.datetime_removed.should == @file.datetime_deleted
   end
 
+
+  it 'should copy itself' do
+    binding.pry
+    @file.copy
+  end
 end

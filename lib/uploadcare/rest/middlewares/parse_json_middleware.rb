@@ -7,6 +7,8 @@ module Uploadcare
       class ParseJson < Faraday::Response::Middleware
         WHITESPACE_REGEX = /\A^\s*$\z/
 
+        ERROR_CODES = [400, 401, 403, 404, 406, 408, 422, 429, 500, 502, 503, 504]
+
         def parse(body)
           case body
           when WHITESPACE_REGEX, nil
@@ -17,7 +19,7 @@ module Uploadcare
         end
 
         def on_complete(response)
-          response[:body] = parse(response[:body]) if respond_to?(:parse) && !(response[:status] > 200) #!unparsable_status_codes.include?(response.status)
+          response[:body] = parse(response[:body]) if respond_to?(:parse) && !ERROR_CODES.include?(response[:status])
         end
 
         def unparsable_status_codes

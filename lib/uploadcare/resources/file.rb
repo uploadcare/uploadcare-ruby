@@ -92,6 +92,18 @@ module Uploadcare
       alias_method :is_removed?, :is_deleted?
 
 
+      # copy file to target location
+      # note what file copied with operations
+      def copy with_operations=true, target=nil
+        data = Hash.new
+        data[:target] = target if target
+        data[:source] = self.cdn_url_with_operations if with_operations
+        data[:source] = self.cdn_url_without_operations unless with_operations
+
+        @api.post "/files/", data
+      end
+
+
       # Datetime methods
       # practicly try and parse the string to date objects
       ["original", "uploaded", "stored", "removed"].each do |dt|
