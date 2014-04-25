@@ -8,14 +8,6 @@ module Uploadcare
         data = @api.get "/project/"
         super data
       end
-
-      # def load data
-      #   if data.respond_to? :each
-      #     data.each do |key, value|
-      #       self.send "#{key}=", value
-      #     end
-      #   end
-      # end
     end
   end
 end
