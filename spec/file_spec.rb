@@ -104,7 +104,8 @@ describe Uploadcare::Api::File do
 
 
   it 'should copy itself' do
-    binding.pry
-    @file.copy
+    result = @file.copy
+    result.should be_kind_of(Hash)
+    result["type"].should == "file"
   end
 end
