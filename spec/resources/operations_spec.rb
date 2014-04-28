@@ -3,10 +3,9 @@ require 'uri'
 require 'socket'
 
 describe Uploadcare::Api::File do
-  before :each do
-    @api = Uploadcare::Api.new(CONFIG)
-    @url = "http://macaw.co/images/macaw-logo.png"
-    @file = @api.upload @url
+  before :all do
+    @api = API
+    @file = @api.upload IMAGE_URL
   end
 
   it "freshly uploaded file should have empty operations list" do

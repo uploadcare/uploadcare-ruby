@@ -3,12 +3,9 @@ require 'uri'
 require 'socket'
 
 describe Uploadcare::Api::Group do
-  before :each do
-    @api = Uploadcare::Api.new(CONFIG)
-    @file = File.open(File.join(File.dirname(__FILE__), 'view.png'))
-    @file2 = File.open(File.join(File.dirname(__FILE__), 'view2.jpg'))
-    @files_ary = [@file, @file2]
-    @files = @api.upload @files_ary
+  before :all do
+    @api = API
+    @files = @api.upload FILES_ARY
   end
 
   it "should return group object" do

@@ -3,10 +3,10 @@ require 'uri'
 require 'socket'
 
 describe Uploadcare::Api do
-  before :each do
-    @api = Uploadcare::Api.new(CONFIG)
-    @file = File.open(File.join(File.dirname(__FILE__), 'view.png'))
-    @url = "http://macaw.co/images/macaw-logo.png"
+  before :all do
+    @api = API
+    @file = FILE1
+    @url = IMAGE_URL
   end
 
   it 'should upload file or url' do

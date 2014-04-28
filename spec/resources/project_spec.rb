@@ -3,8 +3,8 @@ require 'uri'
 require 'socket'
 
 describe Uploadcare::Api::Project do
-  before :each do
-    @api = Uploadcare::Api.new(CONFIG)
+  before :all do
+    @api = API
     @project = @api.project
   end
 

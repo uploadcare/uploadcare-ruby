@@ -3,9 +3,8 @@ require 'uri'
 require 'socket'
 
 describe Uploadcare::Api::File do
-  before :each do
-    @api = Uploadcare::Api.new(CONFIG)
-    @url = "http://macaw.co/images/macaw-logo.png"
+  before :all do
+    @api = API
     @list = @api.file_list 1
   end
 
