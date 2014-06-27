@@ -37,8 +37,8 @@ describe Uploadcare::Api::Group do
   it "should create loaded and unloaded groups" do
     group = @api.create_group @files
     group_uloaded = @api.group group.uuid
-    group.is_loaded?.should be_true
-    group_uloaded.is_loaded?.should be_false
+    group.is_loaded?.should be true
+    group_uloaded.is_loaded?.should be false
   end
 
   it "group should load data" do
@@ -46,7 +46,7 @@ describe Uploadcare::Api::Group do
     group_uloaded = @api.group group.uuid
     group_uloaded.should respond_to(:load_data)
     expect {group_uloaded.load_data}.to_not raise_error
-    group_uloaded.is_loaded?.should be_true
+    group_uloaded.is_loaded?.should be true
   end
 
   it "group should store itself" do

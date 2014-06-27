@@ -28,7 +28,7 @@ describe Uploadcare::Api::File do
 
   it "results should be not only files, but loaded files" do
     @list.results.each do |file|
-      file.is_loaded?.should be_true
+      file.is_loaded?.should be true
     end
   end
 

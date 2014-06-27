@@ -16,19 +16,19 @@ describe Uploadcare::Api::File do
 
   it "file created from uuid should be not loaded and without operations" do
     file = @api.file @file.uuid
-    file.is_loaded?.should be_false
+    file.is_loaded?.should be false
     file.operations.should be_empty
   end
 
   it "file created from url without operations should be not be loaded and have no operations" do
     file = @api.file @file.cdn_url
-    file.is_loaded?.should be_false
+    file.is_loaded?.should be false
     file.operations.should be_empty
   end
 
   it "file created from url with operations should be not be loaded and have operations" do
     file = @api.file @file.cdn_url + "-/crop/150x150/center/-/format/png/"
-    file.is_loaded?.should be_false
+    file.is_loaded?.should be false
     file.operations.should_not be_empty
   end
 

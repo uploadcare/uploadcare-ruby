@@ -30,6 +30,6 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'multipart-post'
   gem.add_runtime_dependency 'mime-types'
 
-  gem.add_development_dependency 'rspec'
+  gem.add_development_dependency 'rspec', "~> 3"
   gem.add_development_dependency 'pry'
 end
