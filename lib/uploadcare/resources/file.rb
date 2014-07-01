@@ -6,7 +6,7 @@ module Uploadcare
       def initialize api, uuid_or_cdn_url, data=nil
         result = Uploadcare::Parser.parse_file_string uuid_or_cdn_url
         
-        file = {uuid: result["uuid"], operations: result["operations"]}
+        file = {uuid: result.uuid, operations: result.operations}
 
         @api = api
 

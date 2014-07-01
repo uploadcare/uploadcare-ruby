@@ -7,7 +7,7 @@ module Uploadcare
         result = Uploadcare::Parser.parse_group_string(uuid_or_cdn_url) 
 
         @api = api
-        group = {uuid: result["uuid"], files_count: result["count"]}
+        group = {uuid: result.uuid, files_count: result.count}
         super group
 
         # if data is suplide - just pass it to builder.
