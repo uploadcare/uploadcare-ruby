@@ -66,11 +66,14 @@ module Uploadcare
       token = get_token(url)
 
       while (response = get_status_response(token))['status'] == 'unknown'
-        sleep 0.5
+        sleep 2
       end
       
       raise ArgumentError.new(response['error']) if response['status'] == 'error'
       
+      puts
+      puts (response = get_status_response(token))['status']
+      puts
       uuid = response['file_id']
       Uploadcare::Api::File.new self, uuid
     end
