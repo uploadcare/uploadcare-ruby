@@ -70,10 +70,6 @@ module Uploadcare
       end
       
       raise ArgumentError.new(response['error']) if response['status'] == 'error'
-      
-      puts
-      puts (response = get_status_response(token))['status']
-      puts
       uuid = response['file_id']
       Uploadcare::Api::File.new self, uuid
     end
