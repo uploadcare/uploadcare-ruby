@@ -65,8 +65,8 @@ module Uploadcare
       
       token = get_token(url)
 
-      while (response = get_status_response(token))['status'] == 'unknown'
-        sleep 2
+      while !['success', 'error'].include?((response = get_status_response(token))['status'])
+        sleep 0.5
       end
       
       raise ArgumentError.new(response['error']) if response['status'] == 'error'
