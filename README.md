@@ -1,4 +1,4 @@
-[![Build Status](https://secure.travis-ci.org/uploadcare/ruby-uploadcare-api.png?branch=master)](http://travis-ci.org/uploadcare/ruby-uploadcare-api)
+[![Build Status](https://secure.travis-ci.org/uploadcare/uploadcare-ruby.png?branch=master)](http://travis-ci.org/uploadcare/uploadcare-ruby)
 
 A ruby wrapper for [Uploadcare.com](https://uploadcare.com) service.
 
