@@ -39,8 +39,8 @@ require 'uploadcare'
 ### Default settings 
 ``` ruby
   {
-    public_key: 'demopublickey',
-    private_key: 'demoprivatekey',
+    public_key: 'demopublickey',   # you need to override this
+    private_key: 'demoprivatekey', # you need to override this
     upload_url_base: 'https://upload.uploadcare.com',
     api_url_base: 'https://api.uploadcare.com',
     static_url_base: 'http://www.ucarecdn.com',
@@ -50,8 +50,11 @@ require 'uploadcare'
 ```
 
 [Upload API](https://uploadcare.com/documentation/upload/) requires public key and [REST API](https://uploadcare.com/documentation/rest/) requires both public and private keys for authentication.  
-You can find and manage your project's API keys on project's overview page. Open [dashboard](https://uploadcare.com/dashboard/), click on the project's name and find "Keys" section.  
-If you haven't found what you were looking for in these docs, try looking in our [Knowledge Base.](http://kb.uploadcare.com/)
+
+You can find and manage your project's API keys on project's overview page.
+Open [dashboard](https://uploadcare.com/dashboard/), click on the project's name and find "Keys" section.  
+
+If you haven't found what you were looking for in these docs, try looking in our [Knowledge Base](http://kb.uploadcare.com/).
 
 --
 
