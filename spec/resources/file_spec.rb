@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'uri'
 require 'socket'
 
-describe Uploadcare::Api::File do
+describe Uploadcare::Api::File, :vcr do
   before :each do
     @api = API
     @file = @api.upload IMAGE_URL
@@ -13,7 +13,8 @@ describe Uploadcare::Api::File do
   end
 
   it 'should not be initialized without correct UUID given' do
-    expect {Uploadcare::Api::File.new(@api, "not-uuid")}.to raise_error
+    expect { Uploadcare::Api::File.new(@api, "not-uuid") }.
+      to raise_error(NoMethodError)
   end
 
   it 'should have valid url' do

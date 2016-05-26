@@ -3,11 +3,11 @@ require 'ostruct'
 module Uploadcare
   class Api
     class Group < OpenStruct
-      def initialize api, uuid_or_cdn_url, data=nil
-        result = Uploadcare::Parser.parse_group_string(uuid_or_cdn_url) 
+      def initialize(api, uuid_or_cdn_url, data=nil)
+        result = Uploadcare::Parser.parse_group_string(uuid_or_cdn_url)
 
         @api = api
-        group = {uuid: result.uuid, files_count: result.count}
+        group = { uuid: result.uuid, files_count: result.count }
         super group
 
         # if data is suplide - just pass it to builder.
@@ -27,19 +27,19 @@ module Uploadcare
       def is_loaded?
         !send(:files).nil?
       end
-      alias_method :loaded?, :is_loaded? 
+
+      alias_method :loaded?, :is_loaded?
 
       def load_data
-        unless is_loaded?
-          load_data!
-        end
+        load_data! unless is_loaded?
         self
       end
+
       alias_method :load, :load_data
 
       def load_data!
-        data = @api.get "/groups/#{uuid}/"
-        set_data data
+        data = @api.get("/groups/#{uuid}/")
+        set_data(data)
 
         self
       end
@@ -47,14 +47,12 @@ module Uploadcare
 
       # Store group (and all files in group)
       def store
-        unless is_stored?
-          store!
-        end
+        store! unless is_stored?
         self
       end
 
       def store!
-        data = @api.put "/groups/#{uuid}/storage/"
+        data = @api.put("/groups/#{uuid}/storage/")
         set_data(data)
         self
       end
@@ -63,6 +61,7 @@ module Uploadcare
         return nil unless is_loaded?
         !send(:datetime_stored).nil?
       end
+
       alias_method :stored?, :is_stored?
 
 

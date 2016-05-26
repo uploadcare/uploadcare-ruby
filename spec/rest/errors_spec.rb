@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'uri'
 require 'socket'
 
-describe Uploadcare::Error do
+describe Uploadcare::Error, :vcr do
   before(:all) do
     @settings = Uploadcare.default_settings
     @codes = [400,401,403,404,406,408,422,429,500,502,503,504]

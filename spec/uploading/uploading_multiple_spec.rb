@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'uri'
 require 'socket'
 
-describe Uploadcare::Api do
+describe Uploadcare::Api, :vcr do
   before :all do
     @api = API
     @files_ary = FILES_ARY
@@ -24,7 +24,7 @@ describe Uploadcare::Api do
     end
   end
 
-  it "each in array should have valid UUID" do 
+  it "each in array should have valid UUID" do
     files = @api.upload @files_ary
     files.each do |f|
       f.should respond_to(:uuid)
@@ -32,7 +32,7 @@ describe Uploadcare::Api do
     end
   end
 
-  it "each in array should load data for uploaded file" do 
+  it "each in array should load data for uploaded file" do
     files = @api.upload @files_ary
     files.each do |f|
       f.should respond_to(:load_data)
