@@ -27,6 +27,10 @@ end
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/cassettes'
   c.hook_into :webmock
+  c.debug_logger = File.open('vcs.log', 'w')
+  c.default_cassette_options = {
+    :match_requests_on => [:method, :host, :path]
+  }
   c.default_cassette_options = { :record => :new_episodes }
   c.configure_rspec_metadata!
 end

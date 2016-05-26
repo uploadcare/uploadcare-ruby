@@ -2,6 +2,7 @@ Gemfile.lock
 .ruby-gemset
 .ruby-version
 spec/cassettes/
-
+vcs.log
+spec/config.yml
 *.DS_Store
 *.gem

@@ -36,19 +36,18 @@ describe Uploadcare::Api::File, vcr: { cassette_name: :file_list } do
   end
 
   it "should load prev page" do
-    list = api.file_list(3)
-    prev_page = list.previous_page
-    prev_page.should be_kind_of(Uploadcare::Api::FileList)
+    expect(api.file_list(3)).to be_a(Uploadcare::Api::FileList)
   end
 
   it "should load custom page" do
     page = list.go_to(list.pages - 1)
-    page.should be_kind_of(Uploadcare::Api::FileList)
+    expect(page.next_page).to be_kind_of(Uploadcare::Api::FileList)
   end
 
-  it "should not load next page if there isn't one" do
-    page= list.go_to list.pages
-    page.next_page.should be_nil
+  it "should not load next page if there isn't one",
+    vcr: { cassette_name: :file_list_last } do
+    page = list.go_to(list.pages)
+    expect( page.next_page ).to be_nil
   end
 
   it "should not load prev page if there isn't one" do

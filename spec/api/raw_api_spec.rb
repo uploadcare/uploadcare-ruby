@@ -3,23 +3,17 @@ require 'uri'
 require 'socket'
 
 describe Uploadcare::Api, :vcr do
-  before :each do
-    @api = Uploadcare::Api.new(CONFIG)
-  end
+  let(:subject) { Uploadcare::Api.new(CONFIG) }
 
-  it "should initialize api" do
-    @api.should be_an_instance_of(Uploadcare::Api)
-  end
 
-  it 'should respond to request methods' do
-    @api.should respond_to :request
-    @api.should respond_to :get
-    @api.should respond_to :post
-    @api.should respond_to :put
-    @api.should respond_to :delete
-  end
+  it { is_expected.to be_an_instance_of(Uploadcare::Api) }
+  it { is_expected.to respond_to(:request) }
+  it { is_expected.to respond_to(:get) }
+  it { is_expected.to respond_to(:post) }
+  it { is_expected.to respond_to(:put) }
+  it { is_expected.to respond_to(:delete) }
 
   it 'should perform custom requests' do
-    expect { @api.request }.to_not raise_error
+    expect { subject.request }.to_not raise_error
   end
 end
