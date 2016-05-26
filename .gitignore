@@ -1,6 +1,7 @@
 Gemfile.lock
 .ruby-gemset
 .ruby-version
+spec/cassettes/
 
 *.DS_Store
 *.gem

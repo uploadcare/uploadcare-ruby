@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'uri'
 require 'socket'
 
-describe Uploadcare::Api::File do
+describe Uploadcare::Api::File, :vcr do
   before :all do
     @api = API
     @file = @api.upload IMAGE_URL

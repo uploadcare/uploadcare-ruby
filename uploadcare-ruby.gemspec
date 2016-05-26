@@ -9,13 +9,13 @@ Gem::Specification.new do |gem|
   gem.email         = ["hello@uploadcare.com"]
   gem.summary       = "Ruby gem for Uploadcare"
   gem.description   = <<-EOF
-                        Ruby wrapper for Uploadcare service API. 
-                        Full documentations on api can be found 
+                        Ruby wrapper for Uploadcare service API.
+                        Full documentations on api can be found
                         at https://uploadcare.com/documentation/rest/
                       EOF
-  gem.metadata       =  { 
-                          "github" => "https://github.com/uploadcare/uploadcare-ruby", 
-                          "issue_tracker" => "https://github.com/uploadcare/uploadcare-ruby/issues" 
+  gem.metadata       =  {
+                          "github" => "https://github.com/uploadcare/uploadcare-ruby",
+                          "issue_tracker" => "https://github.com/uploadcare/uploadcare-ruby/issues"
                         }
   gem.homepage      = "https://uploadcare.com/documentation/libs/"
   gem.license       = "MIT"
@@ -32,4 +32,6 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency 'rspec', "~> 3"
   gem.add_development_dependency 'pry'
+  gem.add_development_dependency 'vcr'
+  gem.add_development_dependency 'webmock'
 end

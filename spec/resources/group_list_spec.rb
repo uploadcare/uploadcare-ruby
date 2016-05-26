@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'uri'
 require 'socket'
 
-describe Uploadcare::Api::File do
+describe Uploadcare::Api::File, vcr: { cassette_name: :file_list} do
   before :all do
     @api = API
     @list = @api.group_list

@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'uri'
 require 'socket'
 
-describe Uploadcare::Api do
+describe Uploadcare::Api, :vcr do
   before :all do
     @api = API
     @file = FILE1
