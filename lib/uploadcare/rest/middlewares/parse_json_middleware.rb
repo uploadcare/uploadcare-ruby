@@ -29,5 +29,3 @@ module Uploadcare
     end
   end
 end
-
-Faraday::Response.register_middleware :parse_json => Uploadcare::Connections::Response::ParseJson
