@@ -1,7 +1,7 @@
 module Uploadcare
   module GroupListApi
-    def group_list from=nil, limit=nil
-      data = get '/groups/', {from: from, limit: limit}
+    def group_list(params = {})
+      data = get '/groups/', params
       list = Uploadcare::Api::GroupList.new self, data
     end
   end
