@@ -15,7 +15,7 @@ describe Uploadcare::Api do
   end
 
   it 'should raise an error when neither file nor url given' do
-    expect { @api.upload 12 }.to raise_error
+    expect { @api.upload 12 }.to raise_error ArgumentError
   end
 
   it 'should upload file' do
@@ -29,7 +29,7 @@ describe Uploadcare::Api do
   end
 
   it 'should not upload from invalid url' do
-    expect { @api.upload 'not.url.' }.to raise_error
+    expect { @api.upload 'not.url.' }.to raise_error, ArgumentError
   end
 
   it 'uploaded file should have valid UUID' do

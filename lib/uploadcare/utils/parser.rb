@@ -41,11 +41,13 @@ module Uploadcare
     def self.parse string
       matched = META_URL.match(string)
 
+      raise ArgumentError.new("Invalid UUID or url was given") if matched.nil?
+
       # just a simple hash - easy to pass next
       captured = Hash[ matched.names.zip( matched.captures ) ]
 
       # raise an error if no uuid was given in the sting
-      raise "Invalid UUID or url was given" if captured["uuid"].nil?
+      raise ArgumentError.new("Invalid UUID or url was given") if captured["uuid"].nil?
 
       # operations sring to array of operations
       if captured["operations"]

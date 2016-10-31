@@ -5,7 +5,7 @@ require 'socket'
 describe Uploadcare::Error do
   before(:all) do
     @settings = Uploadcare.default_settings
-    @codes = [400,401,403,404,406,408,422,429,500,502,503,504]
+    @codes = [400, 401, 403, 404, 406, 408, 422, 429, 500, 502, 503, 504]
     @connection = Uploadcare::Connections::ApiConnection.new(@settings)
   end
 
