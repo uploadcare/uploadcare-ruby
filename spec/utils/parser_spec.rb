@@ -10,9 +10,9 @@ describe Uploadcare::Parser do
 
   it "should parse file uuid string" do
     string = "#{@uuid}"
-    
+
     parsed = Uploadcare::Parser.parse(string)
-    
+
     parsed.should be_kind_of(Uploadcare::Parser::File)
     parsed.uuid.should == @uuid
     parsed.count.should be_nil
@@ -22,9 +22,9 @@ describe Uploadcare::Parser do
 
   it "should parse file cdn string without operations string" do
     string = "http://www.ucarecdn.com/#{@uuid}/"
-    
+
     parsed = Uploadcare::Parser.parse(string)
-    
+
     parsed.should be_kind_of(Uploadcare::Parser::File)
     parsed.uuid.should == @uuid
     parsed.count.should be_nil
@@ -34,9 +34,9 @@ describe Uploadcare::Parser do
 
   it "should parse file cdn string with operations string" do
     string = "http://www.ucarecdn.com/#{@uuid}/#{@operations}"
-    
+
     parsed = Uploadcare::Parser.parse(string)
-    
+
     parsed.should be_kind_of(Uploadcare::Parser::File)
     parsed.uuid.should == @uuid
     parsed.count.should be_nil
@@ -46,9 +46,9 @@ describe Uploadcare::Parser do
 
   it "should parse group uuid string" do
     string = "#{@uuid}~#{@count}"
-    
+
     parsed = Uploadcare::Parser.parse(string)
-    
+
     parsed.should be_kind_of(Uploadcare::Parser::Group)
     parsed.uuid.should == "#{@uuid}~#{@count}"
     parsed.count.should_not be_nil
@@ -59,9 +59,9 @@ describe Uploadcare::Parser do
 
   it "should parse file cdn string without operations string" do
     string = "http://www.ucarecdn.com/#{@uuid}~#{@count}/"
-    
+
     parsed = Uploadcare::Parser.parse(string)
-    
+
     parsed.should be_kind_of(Uploadcare::Parser::Group)
     parsed.uuid.should == "#{@uuid}~#{@count}"
     parsed.count.should_not be_nil
@@ -72,16 +72,14 @@ describe Uploadcare::Parser do
 
   it "should parse file cdn string with operations string" do
     string = "http://www.ucarecdn.com/#{@uuid}~#{@count}/#{@operations}"
-    
+
     parsed = Uploadcare::Parser.parse(string)
-    
+
     parsed.should be_kind_of(Uploadcare::Parser::Group)
     parsed.uuid.should == "#{@uuid}~#{@count}"
     parsed.count.should_not be_nil
     parsed.count.should == @count
     parsed.operations.should be_kind_of(Array)
     parsed.operations.should_not be_empty
-  end  
-
-
+  end
 end
