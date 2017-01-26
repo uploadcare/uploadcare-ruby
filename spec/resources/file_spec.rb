@@ -103,8 +103,20 @@ describe Uploadcare::Api::File do
 
 
   it 'should copy itself' do
-    result = @file.copy
+    # This can cause "File is not ready yet" error if ran too early
+    # In this case we retry it 3 times before giving up
+    result = retry_if(Uploadcare::Error::RequestError::BadRequest){@file.copy}
     result.should be_kind_of(Hash)
     result["type"].should == "file"
   end
+
+
+  def retry_if(error, retries=3, &block)
+    block.call
+  rescue error
+    raise if retries <= 0
+    sleep 0.2
+    retry_if(error, retries-1, &block)
+  end
+
 end
