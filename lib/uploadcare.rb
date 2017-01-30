@@ -11,7 +11,7 @@ module Uploadcare
       private_key: 'demoprivatekey',
       upload_url_base: 'https://upload.uploadcare.com',
       api_url_base: 'https://api.uploadcare.com',
-      static_url_base: 'http://www.ucarecdn.com',
+      static_url_base: 'https://ucarecdn.com',
       api_version: '0.3',
       cache_files: true,
     }

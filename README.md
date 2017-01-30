@@ -43,7 +43,7 @@ require 'uploadcare'
     private_key: 'demoprivatekey', # you need to override this
     upload_url_base: 'https://upload.uploadcare.com',
     api_url_base: 'https://api.uploadcare.com',
-    static_url_base: 'http://www.ucarecdn.com',
+    static_url_base: 'https://ucarecdn.com',
     api_version: '0.3',
     cache_files: true,
   }
@@ -108,7 +108,7 @@ Use file
 
 # url for the file - just paste in your template and you good to go.
 @uc_file.cdn_url
-# => "http://www.ucarecdn.com/c969be02-9925-4a7e-aa6d-b0730368791c/"
+# => "https://ucarecdn.com/c969be02-9925-4a7e-aa6d-b0730368791c/"
 ```
 
 Store or delete file
@@ -172,7 +172,7 @@ It is returning you an array of Uploadcare files.
 # => #<Uploadcare::Api::File uuid="24626d2f-3f23-4464-b190-37115ce7742a">
 
 @uc_files[0].load_data
-# => #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6", original_file_url="http://www.ucarecdn.com/7bb9efa4-05c0-4f36-b0ef-11a4221867f6/view.png", image_info={"width"=>800, "geo_location"=>nil, "datetime_original"=>nil, "height"=>600}, ....>
+# => #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6", original_file_url="https://ucarecdn.com/7bb9efa4-05c0-4f36-b0ef-11a4221867f6/view.png", image_info={"width"=>800, "geo_location"=>nil, "datetime_original"=>nil, "height"=>600}, ....>
 ```
 
 ## File
@@ -189,7 +189,7 @@ So all the operations you do - you do it with the file object.
 # => "c969be02-9925-4a7e-aa6d-b0730368791c"
 
 @uc_file.cdn_url
-# => "http://www.ucarecdn.com/c969be02-9925-4a7e-aa6d-b0730368791c/"
+# => "https://ucarecdn.com/c969be02-9925-4a7e-aa6d-b0730368791c/"
 ```
 
 There is one issue with files - all data associated with it accesible with separate HTTP request only.
@@ -229,7 +229,7 @@ Then you can create file object by passing them into API:
 # => #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6"
 
 # file by CDN url
-@file = @api.file "http://www.ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/"
+@file = @api.file "https://ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/"
 # => #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6"
 
 # not that generated files aren't loaded by initializing, you need to load it.
@@ -243,7 +243,7 @@ Version 1.0.0 of the gem has no specific methods for this kind of operations, we
 For the moment all your file objects can store operations passed by cdn url:
 
 ```ruby
-@file = @api.file "http://www.ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/-/crop/150x150/center/-/format/png/"
+@file = @api.file "https://ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/-/crop/150x150/center/-/format/png/"
 # => #<Uploadcare::Api::File uuid="a8775cf7-0c2c-44fa-b071-4dd48637ecac"
 
 @file.operations
@@ -251,11 +251,11 @@ For the moment all your file objects can store operations passed by cdn url:
 
 # note that by default :cdn_url method will return url without any operations:
 @file.cdn_url
-# => "http://www.ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/""
+# => "https://ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/""
 
 # you can pass true to :cdn_url methods to get url with included operations:
 @file.cdn_url(true)
-# => "http://www.ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/-/crop/150x150/center/-/format/png/"
+# => "https://ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/-/crop/150x150/center/-/format/png/"
 
 # or call specific methods for url with or without them:
 @file.cdn_url_with_operations
