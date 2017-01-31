@@ -12,8 +12,8 @@ module Uploadcare
           frd.adapter :net_http
           frd.headers['User-Agent'] = Uploadcare::user_agent(options)
 
-          frd.response :raise_error
-          frd.response :parse_json
+          frd.response :uploadcare_raise_error
+          frd.response :uploadcare_parse_json
         end
       end
     end

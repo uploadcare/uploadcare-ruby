@@ -30,4 +30,4 @@ module Uploadcare
   end
 end
 
-Faraday::Response.register_middleware :parse_json => Uploadcare::Connections::Response::ParseJson
+Faraday::Response.register_middleware :uploadcare_parse_json => Uploadcare::Connections::Response::ParseJson

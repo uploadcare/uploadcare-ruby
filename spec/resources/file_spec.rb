@@ -109,14 +109,4 @@ describe Uploadcare::Api::File do
     result.should be_kind_of(Hash)
     result["type"].should == "file"
   end
-
-
-  def retry_if(error, retries=3, &block)
-    block.call
-  rescue error
-    raise if retries <= 0
-    sleep 0.2
-    retry_if(error, retries-1, &block)
-  end
-
 end

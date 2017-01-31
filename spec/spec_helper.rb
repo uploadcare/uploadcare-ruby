@@ -22,3 +22,11 @@ config_file = File.join(File.dirname(__FILE__), 'config.yml')
 if File.exists?(config_file)
   CONFIG.update Hash[YAML.parse_file(config_file).to_ruby.map{|a, b| [a.to_sym, b]}]
 end
+
+def retry_if(error, retries=5, &block)
+  block.call
+rescue error
+  raise if retries <= 0
+  sleep 0.2
+  retry_if(error, retries-1, &block)
+end
