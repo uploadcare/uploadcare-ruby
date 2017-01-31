@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Uploadcare::Parser do
   before :all do
-    # http://www.ucarecdn.com/be4e24fb-2cad-476f-9417-ba95e3fefbf2~3/-/crop/123/-/fromat/png/
+    # https://ucarecdn.com/be4e24fb-2cad-476f-9417-ba95e3fefbf2~3/-/crop/123/-/fromat/png/
     @uuid = "be4e24fb-2cad-476f-9417-ba95e3fefbf2"
     @count = "12"
     @operations = "-/crop/123/-/fromat/png/"
@@ -21,7 +21,7 @@ describe Uploadcare::Parser do
   end
 
   it "should parse file cdn string without operations string" do
-    string = "http://www.ucarecdn.com/#{@uuid}/"
+    string = "https://ucarecdn.com/#{@uuid}/"
     
     parsed = Uploadcare::Parser.parse(string)
     
@@ -33,7 +33,7 @@ describe Uploadcare::Parser do
   end
 
   it "should parse file cdn string with operations string" do
-    string = "http://www.ucarecdn.com/#{@uuid}/#{@operations}"
+    string = "https://ucarecdn.com/#{@uuid}/#{@operations}"
     
     parsed = Uploadcare::Parser.parse(string)
     
@@ -58,7 +58,7 @@ describe Uploadcare::Parser do
   end
 
   it "should parse file cdn string without operations string" do
-    string = "http://www.ucarecdn.com/#{@uuid}~#{@count}/"
+    string = "https://ucarecdn.com/#{@uuid}~#{@count}/"
     
     parsed = Uploadcare::Parser.parse(string)
     
@@ -71,7 +71,7 @@ describe Uploadcare::Parser do
   end
 
   it "should parse file cdn string with operations string" do
-    string = "http://www.ucarecdn.com/#{@uuid}~#{@count}/#{@operations}"
+    string = "https://ucarecdn.com/#{@uuid}~#{@count}/#{@operations}"
     
     parsed = Uploadcare::Parser.parse(string)
     
