@@ -14,6 +14,7 @@ module Uploadcare
       static_url_base: 'https://ucarecdn.com',
       api_version: '0.3',
       cache_files: true,
+      auth_scheme: :secure
     }
 
   USER_AGENT = "uploadcare-ruby/#{Gem.ruby_version}/#{Uploadcare::VERSION}"

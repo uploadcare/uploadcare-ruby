@@ -7,7 +7,7 @@ module Uploadcare
         def on_complete(response)
           @error_codes = Uploadcare::Error.errors.keys
           @status = response[:status]
-          
+
           if @error_codes.include?(@status)
             error = Uploadcare::Error.errors[@status].new
             fail(error)
@@ -18,4 +18,4 @@ module Uploadcare
   end
 end
 
-Faraday::Response.register_middleware :raise_error => Uploadcare::Connections::Response::RaiseError
+Faraday::Response.register_middleware :uploadcare_raise_error => Uploadcare::Connections::Response::RaiseError
