@@ -270,6 +270,94 @@ Until operations wrapper is released the best way for you to manage operation is
 # or something like that
 ```
 
+### Copying files
+
+Our API allows you to create copies of a file. There are several options for that.
+
+First of all, you can make a copy in Uploadcare storage:
+
+```ruby
+@uc_file.internal_copy
+
+# =>
+{
+  "type"=>"file",
+  "result"=> {
+    "uuid"=>"a191a3df-2c43-4939-9590-784aa371ad6d",
+    "original_file_url"=>"https://ucarecdn.com/a191a3df-2c43-4939-9590-784aa371ad6d/19xldj.jpg",
+    "image_info"=>nil,
+    "datetime_stored"=>nil,
+    "mime_type"=>"application/octet-stream",
+    "is_ready"=>true,
+    "url"=>"https://api.uploadcare.com/files/a191a3df-2c43-4939-9590-784aa371ad6d/",
+    "original_filename"=>"19xldj.jpg",
+    "datetime_uploaded"=>"2017-02-10T14:14:18.690581Z",
+    "size"=>0,
+    "is_image"=>nil,
+    "datetime_removed"=>nil,
+    "source"=>"/4ea293d5-153f-422f-a24e-350237109606/"
+  }
+}
+```
+
+A copy becomes a separate file with its own UUID and attributes.
+
+The only (optional) argument this method takes is an options hash. Available options are:
+
+- *store*
+
+  By default copy is being created unstored, so it will be deleted within 24 hours. To create a stored copy pass `store: true` option to `#internal_copy` method.
+
+  Example:
+
+  ```ruby
+  @uc_file.internal_copy(store: true)
+  ```
+
+- *strip_operations*
+
+  If your file is an image and any operations are applied to it, then by default all of them will be also applied to a copy. You can override this passing `strip_operations: true` to `#internal_copy` method.
+
+  Example:
+
+  ```ruby
+  file = @api.file "https://ucarecdn.com/24626d2f-3f23-4464-b190-37115ce7742a/-/resize/50x50/"
+  file.internal_copy
+  # => This will trigger POST /files/ with {"source": "https://ucarecdn.com/24626d2f-3f23-4464-b190-37115ce7742a/-/resize/50x50/"} in body
+  file.internal_copy(strip_operations: true)
+  # => This will trigger POST /files/ with {"source": "https://ucarecdn.com/24626d2f-3f23-4464-b190-37115ce7742a/"} in body
+  ```
+
+Secondly, you can copy your file to a custom storage.
+
+```ruby
+@uc_file.external_copy('my_custom_storage_name')
+
+# => 
+{
+  "type"=>"url",
+  "result"=>"s3://my_bucket_name/c969be02-9925-4a7e-aa6d-b0730368791c/view.png"
+}
+```
+
+First argument of this method is a name of a custom storage you wish to copy your file to.
+
+Second argument is an (optional) options hash. Available options are:
+
+  - *make_public*
+
+  Make a copy available via public links. Can be either `true` or `false`
+
+  - *pattern*
+
+  Name pattern for a copy. If parameter is omitted, custom storage pattern is used.
+
+  - *strip_operations*
+
+  Same as for `#internal_copy`
+
+You can read more about about storages here: <https://uploadcare.com/documentation/storages/>, about copying files here: https://uploadcare.com/documentation/rest/#files-post
+
 ## File list and pagination
 File list is a paginated collection of files for you project. You could read more at https://uploadcare.com/documentation/rest/#pagination.
 In our gem file list is a single page containing 20 (by default, value may change) files and some methods for navigating through pages.
