@@ -5,9 +5,8 @@ describe Uploadcare::Api::GroupList do
     @api = API
 
     # ensure that current project has at least three groups
-    if @api.get('/groups/', limit: 3)['results'].size < 3
-      (3 - count).times{ @api.create_group([@api.upload(IMAGE_URL)]) }
-    end
+    count = @api.get('/groups/', limit: 3)['results'].size
+    (3 - count).times{ @api.create_group([@api.upload(IMAGE_URL)]) } if count < 3
 
     @list = @api.group_list(limit: 1)
   end

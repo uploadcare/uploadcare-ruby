@@ -88,7 +88,6 @@ shared_examples 'resource list' do
       i, uuids = 0, []
       subject.each{|object| uuids << object.uuid; i+=1; break if i >= 2 }
 
-      expect(uuids.size).to eq 2
       expect(uuids).to eq([subject[0].uuid, subject[1].uuid])
     end
 

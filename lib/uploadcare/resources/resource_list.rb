@@ -26,8 +26,6 @@ module Uploadcare
         self
       end
 
-      # TODO: #delete and #store methods
-
       def total
         meta['total']
       end
@@ -41,6 +39,7 @@ module Uploadcare
       end
 
       private
+
       attr_reader :api
 
       def build_data(data_hash)

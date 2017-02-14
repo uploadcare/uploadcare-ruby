@@ -21,5 +21,6 @@ module Uploadcare
     include Uploadcare::FileListApi
     include Uploadcare::GroupApi
     include Uploadcare::GroupListApi
+    include Uploadcare::FileStorageApi
   end
 end
