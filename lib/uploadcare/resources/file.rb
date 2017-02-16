@@ -95,6 +95,7 @@ module Uploadcare
       # copy file to target location
       # note what file copied with operations
       def copy with_operations=true, target=nil
+        warn "[DEPRECATION] `copy` is deprecated and will be removed in version 3.0.  Please use `internal_copy` or `external_copy` instead."
         data = Hash.new
         data[:target] = target if target
         data[:source] = self.cdn_url_with_operations if with_operations
