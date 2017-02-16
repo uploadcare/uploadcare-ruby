@@ -5,7 +5,7 @@ module Uploadcare
     class File < OpenStruct
       def initialize api, uuid_or_cdn_url, data=nil
         result = Uploadcare::Parser.parse_file_string uuid_or_cdn_url
-        
+
         file = {uuid: result.uuid, operations: result.operations}
 
         @api = api
@@ -65,7 +65,7 @@ module Uploadcare
       def store
         data = @api.put "/files/#{uuid}/storage/"
         set_data data
-        self 
+        self
       end
 
       # nil is returning if there is no way to say for sure
@@ -99,6 +99,28 @@ module Uploadcare
         data[:target] = target if target
         data[:source] = self.cdn_url_with_operations if with_operations
         data[:source] = self.cdn_url_without_operations unless with_operations
+
+        @api.post "/files/", data
+      end
+
+      # Create a copy of the file in a default storage
+      def internal_copy(options={})
+        data = {
+          source: cdn_url(!options.fetch(:strip_operations){ false }),
+          store: options.fetch(:store){ nil }
+        }.reject{|_,v| v.nil?}
+
+        @api.post "/files/", data
+      end
+
+      # Copy file to a custom storage
+      def external_copy(target, options={})
+        data = {
+          source: cdn_url(!options.fetch(:strip_operations){ false }),
+          target: target,
+          pattern: options.fetch(:pattern){ nil },
+          make_public: options.fetch(:make_public){ nil },
+        }.reject{|_,v| v.nil?}
 
         @api.post "/files/", data
       end

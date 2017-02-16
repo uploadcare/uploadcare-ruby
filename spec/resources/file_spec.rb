@@ -109,4 +109,113 @@ describe Uploadcare::Api::File do
     result.should be_kind_of(Hash)
     result["type"].should == "file"
   end
+
+
+  describe '#internal_copy' do
+    describe 'integration' do
+      it 'creates an internal copy of the file' do
+        response = retry_if(Uploadcare::Error::RequestError::BadRequest){@file.internal_copy}
+
+        expect( response['type'] ).to eq 'file'
+        expect( response['result']['uuid'] ).not_to eq @file.uuid
+      end
+    end
+
+    describe 'params' do
+      let(:url_without_ops){ @api.file(SecureRandom.uuid).cdn_url }
+      let(:url_with_ops){ url_without_ops + "-/crop/5x5/center/" }
+      let(:file){ @api.file(url_with_ops) }
+
+      context 'if no params given' do
+        it 'requests server to create an unstored copy with operataions applied' do
+          expect(@api).to receive(:post)
+            .with('/files/', source: url_with_ops)
+
+          file.internal_copy
+        end
+      end
+
+      context 'if strip_operations: true given' do
+        it 'passes url without operations as a source for a copy' do
+          expect(@api).to receive(:post)
+            .with('/files/', source: url_without_ops)
+
+          file.internal_copy(strip_operations: true)
+        end
+      end
+
+      context 'if store: true given' do
+        it 'requests server to create a stored copy' do
+          expect(@api).to receive(:post)
+            .with('/files/', source: url_with_ops, store: true)
+
+          file.internal_copy(store: true)
+        end
+      end
+    end
+  end
+
+
+  describe '#external_copy' do
+    let(:target){ 'test' }
+
+    describe 'integration', :payed_feature do
+      it 'creates an external copy of the file' do
+        response = retry_if(Uploadcare::Error::RequestError::BadRequest) do
+                     @file.external_copy(target: target)
+                   end
+
+        expect( response['type'] ).to eq 'url'
+        expect( response['result']['uuid'] ).not_to eq @file.uuid
+      end
+    end
+
+    describe 'params' do
+      let(:url_without_ops){ @api.file(SecureRandom.uuid).cdn_url }
+      let(:url_with_ops){ url_without_ops + "-/resize/50x50/" }
+      let(:file){ @api.file(url_with_ops) }
+
+      context 'if only target is given' do
+        it 'requests server to create a private copy with default name and with operataions applied' do
+          expect(@api).to receive(:post)
+            .with('/files/', source: url_with_ops, target: target)
+
+          file.external_copy(target)
+        end
+      end
+
+      context 'if target is not given' do
+        it 'raises ArgumentError' do
+          expect{ file.external_copy }.to raise_error(ArgumentError)
+        end
+      end
+
+      context 'if strip_operations: true given' do
+        it 'passes url without operations as a source for a copy' do
+          expect(@api).to receive(:post)
+            .with('/files/', source: url_without_ops, target: target)
+
+          file.external_copy(target, strip_operations: true)
+        end
+      end
+
+      context 'if :make_public given' do
+        it 'requests server to create a copy with correspondent permissions' do
+          expect(@api).to receive(:post)
+            .with('/files/', source: url_with_ops, target: target, make_public: false)
+
+          file.external_copy(target, make_public: false)
+        end
+      end
+
+      context 'if :pattern given' do
+        it 'requests server to apply given pattern to name of a copy' do
+          expect(@api).to receive(:post)
+            .with('/files/', source: url_with_ops, target: target, pattern: 'test')
+
+          file.external_copy(target, pattern: 'test')
+        end
+      end
+    end
+  end
 end

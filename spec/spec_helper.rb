@@ -23,6 +23,12 @@ if File.exists?(config_file)
   CONFIG.update Hash[YAML.parse_file(config_file).to_ruby.map{|a, b| [a.to_sym, b]}]
 end
 
+if CONFIG[:public_key] == 'demopublickey'
+  RSpec.configure do |c|
+    c.before(:example, :payed_feature){ skip "Unavailable for demo account" }
+  end
+end
+
 def retry_if(error, retries=5, &block)
   block.call
 rescue error
