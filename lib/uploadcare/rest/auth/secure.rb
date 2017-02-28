@@ -1,3 +1,5 @@
+require 'time'
+
 module Uploadcare
   module Connections
     module Auth
