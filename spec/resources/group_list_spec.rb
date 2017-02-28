@@ -1,6 +1,4 @@
 require 'spec_helper'
-# require 'uri'
-# require 'socket'
 
 describe Uploadcare::Api::GroupList do
   before :all do
