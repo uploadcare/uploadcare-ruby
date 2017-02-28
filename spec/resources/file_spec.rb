@@ -158,7 +158,7 @@ describe Uploadcare::Api::File do
 
 
   describe '#external_copy' do
-    let(:target){ 'test_storage' }
+    let(:target){ 'with-prefix' }
 
     describe 'integration', :payed_feature do
       it 'creates an external copy of the file' do
