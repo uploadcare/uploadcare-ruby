@@ -44,7 +44,7 @@ Here's how the default settings look like:
     upload_url_base: 'https://upload.uploadcare.com',
     api_url_base: 'https://api.uploadcare.com',
     static_url_base: 'https://ucarecdn.com',
-    api_version: '0.3',
+    api_version: '0.5',
     cache_files: true,
     auth_scheme: :secure
   }
@@ -385,6 +385,93 @@ You might want to learn more about
 [copying files](https://uploadcare.com/documentation/rest/#files-post)
 with Uploadcare. 
 
+
+### File lists
+
+`Uploadcare::FileList` represents the whole collection of files (or it's subset) and privides a way to iterate through it, making pagination transparent. FileList objects can be created using `Uploadcare::Api#file_list` method.
+
+```ruby
+@list = @api.file_list # => instance of Uploadcare::FileList
+```
+
+This method accepts some options to controll which files should be fetched and how they should be fetched:
+
+- **:limit** - Controls page size. Accepts values from 1 to 1000, defaults to 100.
+- **:stored** - Can be either `true` or `false`. When true, file list will contain only stored files. When false - only not stored.
+- **:removed** - Can be either `true` or `false`. When true, file list will contain only removed files. When false - all except removed. Defaults to false.
+- **:ordering** - Controls the order of returned files. Available values: `datetime_updated`, `-datetime_updated`, `size`, `-size`. Defaults to `datetime_uploaded`. More info can be found [here](https://uploadcare.com/documentation/rest/#file-files)
+- **:from** - Specifies the starting point for a collection. Resulting collection will contain files from the given value and to the end in a direction set by an **ordering** option. When files are ordered by datetime_updated in any direction, accepts either a `DateTime` object or an ISO 8601 string. When files are ordered by size, acepts non-negative integers (size in bytes). ~~Less~~ More info can be found [here](https://uploadcare.com/documentation/rest/#file-files)
+
+Options used to create a file list can be accessed through `#options` method. Note that, once set, they don't affect file fetching process anymore and are stored just for your convenience. That is why they are frozen.
+
+```ruby
+options = {
+  limit: 10,
+  stored: true,
+  ordering: '-datetime_uploaded',
+  from: "2017-01-01T00:00:00",
+}
+@list = @api.file_list(options)
+@list.options # => same as options hash above, but frozen
+```
+
+`Uploadcare::FileList` implements Enumerable interface and holds a collection of `Uploadcare::File` objects, as well as some meta information.
+
+```ruby
+@list = @api.file_list
+@list.total # => 1977
+@list.meta # => {
+#   "next"=> "https://api.uploadcare.com/files/?from=2017-03-09T10%3A30%3A01.877590%2B00%3A00&offset=0",
+#   "previous"=>nil,
+#   "total"=>1977,
+#   "per_page"=>100
+# }
+
+# Enumerable interface
+@list.first(5) # => array of 5 x Uploadcare::File
+@list.each{|file| puts file.original_filename}
+@list.map{|file| file.uuid}
+@list.reduce(0){|overall_size, file| overall_size += file.size}
+# ...
+```
+
+On the inside, `FileList` loada files page by page. First page is loaded when you call `Uploadcare::Api#file_list` and subsequent pages are being loaded when needed. The size of pages is controlled by a `:limit` option.
+
+Currently loaded files are available through `FileList#objects` or via `:[]`. `FileList#loaded` method returns the number of currently loaded files.
+
+```ruby
+@list = @api.file_list(limit: 5) # will load first 5 files
+@list.loaded # => 5
+
+@list.objects # => array of 5 x Uploadcare::File
+@list[0] # => instance of Uploadcare::File
+
+@list.first(5) # won't load anything, because 5 files are already loaded
+@list.first(6) # will load the next page
+@list.loaded # => 10
+
+# Note that the example below will load all the files left, page by page,
+# and return the count only when they all will be loaded
+@list.count
+```
+
+Loaded files are preserved when `break` statement or an exception occures inside a block provided to #each, #map, etc.
+
+```ruby
+@list = @api.file_list(limit: 10)
+@list.loaded # => 10
+
+i = 0
+@list.map do |file|
+  raise if i >= 19
+  i += 1
+  file.uuid
+end # => RuntimeError
+
+@list.loaded # => 20
+```
+
+
 ### `Group` object
 
 Groups are structures intended to organize sets of separate files.
@@ -433,75 +520,22 @@ are loaded by default.
 Check out our docs to learn more about
 [groups](https://uploadcare.com/documentation/rest/#group).
 
-### File lists and pagination
 
-File list is a paginated collection of files. Such lists are created
-to better represent the contents of your project.
-For this gem, a file list would be a single page containing
-20 files (you can override the number).
-There also are methods for navigating through pages.
-You can find more info about pagination
-[here](https://uploadcare.com/documentation/rest/#pagination).
+### Group lists
+
+`Uploadcare::GroupList` represents a group collection. It works in a same way as `Uploadcare::FileList` does, but with groups. 
 
 ```ruby
-@list = @api.file_list 1 # page number, 1 is the default
-# => #<Uploadcare::Api::FileList ....
-
-
-# method :results returns an array of files
-@list.results
-# => [#<Uploadcare::Api::File uuid="24626d2f-3f23-4464-b190-37115ce7742a" ...>,
-#       ... 20 of them ...
-#     #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6" ...>]
-
-
-# note, every file is already loaded
-@list.results[1].is_loaded?
-# => true
-
-
-# we've also added some shortcuts
-@list.to_a
-# => [#<Uploadcare::Api::File uuid="24626d2f-3f23-4464-b190-37115ce7742a" ...>,
-#       ... 20 of them ...
-#     #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6" ...>]
-
-@list[3]
-# => #<Uploadcare::Api::File ....
+@list = @api.group_list(limit: 10) # => instance of Uploadcare::GroupList
+@list[0] # => instance of Uploadcare::Group
 ```
 
-Here's how we handle navigating through pages:
+The only thing that differs is an available options list: 
 
-```ruby
-@list = @api.files_list 3
+- **:limit** - Controls page size. Accepts values from 1 to 1000, defaults to 100.
+- **:ordering** - Controls the order of returned files. Available values: `datetime_created`, `-datetime_created`. Defaults to `datetime_created`. More info can be found [here](https://uploadcare.com/documentation/rest/#group-groups)
+- **:from** - Specifies the starting point for a collection. Resulting collection will contain files from the given value and to the end in a direction set by an **ordering** option. Accepts either a `DateTime` object or an ISO 8601 string. More info can be found [here](https://uploadcare.com/documentation/rest/#group-groups)
 
-@list.next_page
-# => #<Uploadcare::Api::FileList page=4 ....
-
-@list.previous_page
-# => #<Uploadcare::Api::FileList page=2 ....
-
-@list.go_to 5
-# => #<Uploadcare::Api::FileList page=5 ....
-
-# of course, you can go with any of the methods
-# described in our API docs
-# total pages
-@list.pages
-# => 16
-
-# current page
-@list.page
-# => 3
-
-# files per page
-@list.per_page
-# => 20
-
-# total files in a project
-@list.total
-# => 308
-```
 
 ### `Project` object
 

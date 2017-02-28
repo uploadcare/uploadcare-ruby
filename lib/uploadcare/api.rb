@@ -5,6 +5,7 @@ Dir[File.dirname(__FILE__) + '/errors/*.rb'].each {|file| require file }
 Dir[File.dirname(__FILE__) + '/rest/middlewares/*.rb'].each {|file| require file }
 Dir[File.dirname(__FILE__) + '/rest/connections/*.rb'].each {|file| require file }
 Dir[File.dirname(__FILE__) + '/rest/auth/*.rb'].sort.each {|file| require file }
+Dir[File.dirname(__FILE__) + '/api/validators/*.rb'].each {|file| require file }
 Dir[File.dirname(__FILE__) + '/api/*.rb'].each {|file| require file }
 Dir[File.dirname(__FILE__) + '/resources/*.rb'].each {|file| require file }
 

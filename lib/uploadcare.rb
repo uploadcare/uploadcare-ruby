@@ -12,7 +12,7 @@ module Uploadcare
       upload_url_base: 'https://upload.uploadcare.com',
       api_url_base: 'https://api.uploadcare.com',
       static_url_base: 'https://ucarecdn.com',
-      api_version: '0.3',
+      api_version: '0.5',
       cache_files: true,
       auth_scheme: :secure
     }

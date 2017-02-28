@@ -32,6 +32,8 @@ if CONFIG[:public_key] == 'demopublickey'
   end
 end
 
+Dir[File.join(File.dirname(__FILE__), 'shared/*.rb')].each{|path| require path}
+
 def retry_if(error, retries=5, &block)
   block.call
 rescue error

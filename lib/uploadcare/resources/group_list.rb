@@ -1,30 +1,13 @@
 require 'ostruct'
+require_relative 'resource_list'
 
 module Uploadcare
   class Api
-    class GroupList < OpenStruct
-      def initialize api, data
-        @api = api
+    class GroupList < ResourceList
+      private
 
-        unless data["results"].nil?
-          data["results"].map! do |group|
-            Uploadcare::Api::Group.new @api, group["id"], group
-          end
-        end
-
-        super data
-      end
-
-      def [] index
-        results[index] if defined?(:results)
-      end
-
-      def to_a
-        results if defined?(:results)
-      end
-
-      def groups
-        results if defined?(:results)
+      def to_resource(api, group_data)
+        Uploadcare::Api::Group.new @api, group_data["id"], group_data
       end
     end
   end
