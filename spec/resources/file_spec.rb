@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'uri'
 require 'socket'
+require 'securerandom'
 
 describe Uploadcare::Api::File do
   before :each do
