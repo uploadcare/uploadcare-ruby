@@ -158,16 +158,16 @@ describe Uploadcare::Api::File do
 
 
   describe '#external_copy' do
-    let(:target){ 'test' }
+    let(:target){ 'with-prefix' }
 
     describe 'integration', :payed_feature do
       it 'creates an external copy of the file' do
         response = retry_if(Uploadcare::Error::RequestError::BadRequest) do
-                     @file.external_copy(target: target)
+                     @file.external_copy(target)
                    end
 
         expect( response['type'] ).to eq 'url'
-        expect( response['result']['uuid'] ).not_to eq @file.uuid
+        expect( response['result'] ).to match(URI.regexp)
       end
     end
 

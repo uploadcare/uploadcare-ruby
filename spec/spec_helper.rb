@@ -7,7 +7,10 @@ require 'rspec'
 require 'uploadcare'
 require 'yaml'
 
-CONFIG = Uploadcare.default_settings
+CONFIG = Uploadcare.default_settings.merge!(
+  public_key: ENV['UPLOADCARE_PUBLIC_KEY'] || 'demopublickey',
+  private_key: ENV['UPLOADCARE_SECRET_KEY'] || 'demoprivatekey',
+)
 UUID_REGEX = /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/
 
 API = Uploadcare::Api.new(CONFIG)
