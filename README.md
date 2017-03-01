@@ -1,42 +1,42 @@
 [![Build Status](https://secure.travis-ci.org/uploadcare/uploadcare-ruby.png?branch=master)](http://travis-ci.org/uploadcare/uploadcare-ruby)
 
-A ruby wrapper for [Uploadcare.com](https://uploadcare.com) service.
-
+A [Ruby](https://www.ruby-lang.org/en/) wrapper for [Uploadcare](https://uploadcare.com).
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Installing `uploadcare-ruby` is quite simple and takes a couple of steps.
+First of, add the following line to your app's Gemfile:
 
 ```ruby
 gem 'uploadcare-ruby'
 ```
 
-And then execute:
+Once you've added the line, execute this:
 
 ```shell
 $ bundle install
 ```
 
-Or install it yourself:
+Or that (for manual install):
 
 ```shell
 $ gem install uploadcare-ruby
 ```
 
---
+## Initialization
 
-## Initalizations
-Just create an API object - and you're good to go.
+Init is simply done through creating an API object.
 
 ```ruby
 require 'uploadcare'
 
-@api = Uploadcare::Api.new #with default settings
+@api = Uploadcare::Api.new # default settings are used
 
-@api = Uploadcare::Api.new(settings)
+@api = Uploadcare::Api.new(settings) # using user-defined settings
 ```
 
-### Default settings 
+Here's how the default settings look like:
+
 ``` ruby
   {
     public_key: 'demopublickey',   # you need to override this
@@ -50,48 +50,38 @@ require 'uploadcare'
   }
 ```
 
-[Upload API](https://uploadcare.com/documentation/upload/) requires public key and [REST API](https://uploadcare.com/documentation/rest/) requires both public and private keys for authentication.  
+You're free to use both `demopublickey` and `demoprivatekey`
+for initial testing purposes. We wipe out files loaded to our
+demo account periodically. For a better experience,
+consider creating an Uploadcare account. Check out
+[this](http://kb.uploadcare.com/article/234-uc-project-and-account)
+article to get up an running in minutes.
 
-You can find and manage your project's API keys on project's overview page.
-Open [dashboard](https://uploadcare.com/dashboard/), click on the project's name and find "Keys" section.  
+Please note, in order to use [Upload API](https://uploadcare.com/documentation/upload/)
+you will only need the public key alone. However, using 
+[REST API](https://uploadcare.com/documentation/rest/) requires you to
+use both public and private keys for authentication.  
+While “private key” is a common way to name a key from an
+authentication key pair, the actual thing for our `auth-param` is `secret_key`.
 
-If you haven't found what you were looking for in these docs, try looking in our [Knowledge Base](http://kb.uploadcare.com/).
+## Usage
 
---
+This section contains practical usage examples. Please note,
+everything that follows gets way more clear once you've looked
+through our docs [intro](https://uploadcare.com/documentation/).
 
-## Raw API
-Raw API is a simple interface that allows you to make custom requests to Uploadcare REST API.
-Just in case you want some low-level control over your app.
+### Basic usage: uploading a single file, manipulations
 
-```ruby
-# any request
-@api.request :get, "/files/", {page: 2}
+Using Uploadcare is simple, and here are the basics of handling files.
 
-# you also have the shortcuts for methods
-@api.get '/files', {page: 2}
-
-@api.post ...
-
-@api.put ...
-
-@api.delete ...
-
-```
-All raw API methods return parsed JSON response or raise an error (which you should handle yourself).
-
---
-
-## Basic usage
-Using Uploadcare is pretty easy (which is the essence of the service itself).
-
-Create the API object:
+First of, create the API object:
 
 ```ruby
 @api = Uploadcare::Api.new(CONFIG)
 
 ```
 
-Upload file
+And yeah, now you can upload a file:
 
 ```ruby
 @file_to_upload = File.open("your-file.png")
@@ -100,62 +90,56 @@ Upload file
 # => #<Uploadcare::Api::File ...
 ```
 
-Use file
+Then, let's check out UUID and URL of the
+file you've just uploaded:
 
 ```ruby
-# file uuid (you probably want to store it somewhere)
+# file uuid (you'd probably want to store those somewhere)
 @uc_file.uuid
-# => "c969be02-9925-4a7e-aa6d-b0730368791c"
+# => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
 
-# url for the file - just paste in your template and you good to go.
+# url for the file, can be used with your website or app right away
 @uc_file.cdn_url
-# => "https://ucarecdn.com/c969be02-9925-4a7e-aa6d-b0730368791c/"
+# => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
 ```
 
-Store or delete file
+Your might then want to store or delete the uploaded file.
+Storing files could be crucial if you aren't using the
+“Automatic file storing” option for your Uploadcare project.
+If not stored manually or automatically, files get deleted
+within a 24-hour period.
 
 ```ruby
-# store file (if you dont use autostore option)
+# that's how you store a file
 @uc_file.store
 # => #<Uploadcare::Api::File ...
 
-# and delete file
+# and that works for deleting it
 @uc_file.delete
 # => #<Uploadcare::Api::File ...
 ```
-## Uploading
-You can upload either File object (array of files will also cut it) or custom URL.
 
-### Uploading from URL
-Just throw your URL into API - and you're good to go.
+### Uploading a file from URL
+
+Now, this one is also quick. Just pass your URL into our API
+and you're good to go.
 
 ```ruby
-# smart upload
+# the smart upload
 @file  = @api.upload "http://your.awesome/avatar.jpg" 
 # =>  #<Uploadcare::Api::File ...
 
-# explicitly upload from URL
+# use this one if you want to explicitly upload from URL
 @file = @api.upload_from_url "http://your.awesome/avatar.jpg" 
 # =>  #<Uploadcare::Api::File ...
 ```
-Keep in mind that invalid URL will raise an `ArgumentError`.
+Keep in mind that providing invalid URL
+will raise `ArgumentError`.
 
-### Uploading a single file
-Like with URL - just start throwing your file into API
+### Uploading multiple files
 
-```ruby
-
-file = File.open("path/to/your/file.png")
-
-@uc_file  = @api.upload file
-# =>  #<Uploadcare::Api::File ...
-
-```
-And that's it.
-
-### Uploading an array of files
-Uploading of an array is just as easy as uploading a single file.
-Note, that every object in array must be an instance of `File`.
+Uploading multiple files is as simple as passing an array
+of `File` instances into our API.
 
 ```ruby
 file1 = File.open("path/to/your/file.png")
@@ -163,22 +147,30 @@ file2 = File.open("path/to/your/another-file.png")
 files = [file1, file2]
 
 @uc_files = @api.upload files
-# => [#<Uploadcare::Api::File uuid="24626d2f-3f23-4464-b190-37115ce7742a">,
-#     #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6">]
+# => [#<Uploadcare::Api::File uuid="dc99200d-9bd6-4b43-bfa9-aa7bfaefca40">,
+#     #<Uploadcare::Api::File uuid="96cdc400-adc3-435b-9c94-04cd87633fbb">]
 ```
-It is returning you an array of Uploadcare files. 
+
+In case of multiple input, the respective output would also be an array.
+You can iterate through the array to address to single files.
+You might also want to request more info about a file using `load_data`.
 
 ```ruby
 @uc_files[0]
-# => #<Uploadcare::Api::File uuid="24626d2f-3f23-4464-b190-37115ce7742a">
+# => #<Uploadcare::Api::File uuid="dc99200d-9bd6-4b43-bfa9-aa7bfaefca40">
 
-@uc_files[0].load_data
-# => #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6", original_file_url="https://ucarecdn.com/7bb9efa4-05c0-4f36-b0ef-11a4221867f6/view.png", image_info={"width"=>800, "geo_location"=>nil, "datetime_original"=>nil, "height"=>600}, ....>
+@uc_files[1].load_data
+# => #<Uploadcare::Api::File uuid="96cdc400-adc3-435b-9c94-04cd87633fbb", original_file_url="https://ucarecdn.com/96cdc400-adc3-435b-9c94-04cd87633fbb/samuelzeller118195.jpg", image_info={"width"=>4896, "geo_location"=>nil, "datetime_original"=>nil, "height"=>3264}, ....>
 ```
 
-## File
-`File` - is the primary object for Uploadcare API. Basically it's an avatar for file stored for you ).
-So all the operations you do - you do it with the file object.
+### `File` object
+
+Now that we've already outlined using arrays of `File` instances
+to upload multiple files, let's fix on the `File` itself.
+It's the the primary object for Uploadcare API.
+Basically, it's an avatar for a file you uploaded.
+And all the further operations are performed using this avatar,
+the `File` object.
 
 ```ruby
 @file_to_upload = File.open("your-file.png")
@@ -187,28 +179,32 @@ So all the operations you do - you do it with the file object.
 # => #<Uploadcare::Api::File ...
 
 @uc_file.uuid
-# => "c969be02-9925-4a7e-aa6d-b0730368791c"
+# => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
 
 @uc_file.cdn_url
-# => "https://ucarecdn.com/c969be02-9925-4a7e-aa6d-b0730368791c/"
+# => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
 ```
 
-There is one issue with files - all data associated with it accesible with separate HTTP request only.
-So if don't *specificaly* need image data (like file name, geolocation data etc.) - you could just use :uuid and :cdn_url methods for file output:
+Please note, all the data associated with files is only accessible
+through separate HTTP requests only. So if you don't specifically
+need file data (filenames, image dimensions, etc.), you'll be just
+fine with using `:uuid` and `:cdn_url` methods for file output:
 
 ```erb
 <img src="#{@file.cdn_url}"/>
 ```
 
-And that's it. Saves precious loading time.
-
-If you do however need image data - you could do it manualy:
+Great, we've just lowered a precious loading time.
+However, if you do need the data, you can always request
+it manually:
 
 ```ruby
 @uc_file.load_data
 ```
 
-Then your file object will respond to any method, described in API documentation (it basicaly an OpenStruct, so you know what to do):
+That way your file object will respond to any method described
+in [API docs](https://uploadcare.com/documentation/rest/#file).
+Basically, that's an an OpenStruct, so you know what to do:
 
 ```ruby
 @uc_file.original_filename
@@ -218,7 +214,36 @@ Then your file object will respond to any method, described in API documentation
 # => {"width"=>397, "geo_location"=>nil, "datetime_original"=>nil, "height"=>81}
 ```
 
-You could read more: https://uploadcare.com/documentation/rest/#file
+### Raw API
+
+Raw API is a simple interface allowing you to make
+custom requests to Uploadcare REST API.
+It's mainly used when you want a low-level control
+over your app.
+
+```ruby
+# here's how you make any requests
+@api.request :get, "/files/", {page: 2}
+
+# and there also are shortcuts for methods
+@api.get '/files', {page: 2}
+
+@api.post ...
+
+@api.put ...
+
+@api.delete ...
+
+```
+
+All of the raw API methods return a parsed JSON response
+or raise an error (handling those is done on your side in the case).
+
+
+## Uploading
+You can upload either File object (array of files will also cut it) or custom URL.
+
+
 
 ### Generating files from stored info
 At this point you probably store your files UUIDs or CDN urls in some kind of storage.
@@ -547,6 +572,22 @@ public_key: 'PUBLIC KEY'
 private_key: 'PRIVATE KEY'
 ```
 
-## Contributing
+## Contributors
 
-This is open source, fork, hack, request a pull, receive a discount)
+This is open source so fork, hack, request a pull — get a discount.
+
+- [@romanonthego](https://github.com/romanonthego)
+- [@vizvamitra](https://github.com/vizvamitra)
+- [@dmitry-mukhin](https://github.com/dmitry-mukhin)
+- [@zenati](https://github.com/zenati)
+- [@renius](https://github.com/renius)
+
+## Security issues
+
+If you think you ran into something in Uploadcare libraries
+which might have security implications, please hit us up at
+[bugbounty@uploadcare.com](mailto:bugbounty@uploadcare.com)
+or Hackerone.
+
+We'll contact you personally in a short time to fix an issue
+through co-op and prior to any public disclosure.
