@@ -214,81 +214,65 @@ Basically, that's an an OpenStruct, so you know what to do:
 # => {"width"=>397, "geo_location"=>nil, "datetime_original"=>nil, "height"=>81}
 ```
 
-### Raw API
+### `File` object from UUID or CDN URL
 
-Raw API is a simple interface allowing you to make
-custom requests to Uploadcare REST API.
-It's mainly used when you want a low-level control
-over your app.
-
-```ruby
-# here's how you make any requests
-@api.request :get, "/files/", {page: 2}
-
-# and there also are shortcuts for methods
-@api.get '/files', {page: 2}
-
-@api.post ...
-
-@api.put ...
-
-@api.delete ...
-
-```
-
-All of the raw API methods return a parsed JSON response
-or raise an error (handling those is done on your side in the case).
-
-
-## Uploading
-You can upload either File object (array of files will also cut it) or custom URL.
-
-
-
-### Generating files from stored info
-At this point you probably store your files UUIDs or CDN urls in some kind of storage.
-Then you can create file object by passing them into API:
+`File` objects are needed to manipulate files on our CDN.
+The usual case would be you as a client storing file UUIDs
+or CDN URLs somewhere on your side, e.g. in a database.
+This is how you can use those to create `File` objects:
 
 ```ruby
-# file by UUID
-@file = @api.file "c969be02-9925-4a7e-aa6d-b0730368791c"
-# => #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6"
+# file object from UUID
+@file = @api.file "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
+# => #<Uploadcare::Api::File uuid="dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
 
-# file by CDN url
-@file = @api.file "https://ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/"
-# => #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6"
+# file object from CDN URL
+@file = @api.file "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
+# => #<Uploadcare::Api::File uuid="dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
 
-# not that generated files aren't loaded by initializing, you need to load it.
+# note, files you generate won't be loaded on init,
+# you'll need to load those manually
 @file.is_loaded?
 # => false
 ```
 
 ### Operations
-Uploadcare gives you some awesome CDN operations for croping, resizing, rotation, format convertation etc. You could read more at https://uploadcare.com/documentation/cdn/ .
-Version 1.0.0 of the gem has no specific methods for this kind of operations, we expect to add support for it later in 1.1 releases.
-For the moment all your file objects can store operations passed by cdn url:
+
+Another way to mainpulate files on CDN is through operations.
+This is particularly useful for images.
+We've got on-the-fly crop, resize, rotation, format conversions, and
+[more](https://uploadcare.com/documentation/cdn/).
+Image operations are there to help you build responsive designs,
+generate thumbnails and galleries, change formats, etc.
+Currently, this gem has no specific methods for image operations,
+we're planning to implement those in further versions.
+However, we do support applying image operations through
+adding them to CDN URLs. That's an Uploadcare CDN-native
+way described in our [docs](https://uploadcare.com/documentation/cdn/).
 
 ```ruby
-@file = @api.file "https://ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/-/crop/150x150/center/-/format/png/"
-# => #<Uploadcare::Api::File uuid="a8775cf7-0c2c-44fa-b071-4dd48637ecac"
+@file = @api.file "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/-/crop/150x150/center/-/format/png/"
+# => #<Uploadcare::Api::File uuid="dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
 
 @file.operations
 # => ["crop/150x150/center", "format/png"]
 
-# note that by default :cdn_url method will return url without any operations:
+# note that by default :cdn_url method returns URLs with no operations:
 @file.cdn_url
-# => "https://ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/""
+# => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/""
 
-# you can pass true to :cdn_url methods to get url with included operations:
+# you can pass "true" into the :cdn_url method to get URL including operations:
 @file.cdn_url(true)
 # => "https://ucarecdn.com/a8775cf7-0c2c-44fa-b071-4dd48637ecac/-/crop/150x150/center/-/format/png/"
 
-# or call specific methods for url with or without them:
+# there also are specific methods to either dump or include image operations
+# in the output URL:
 @file.cdn_url_with_operations
 @file.cdn_url_without_operations
 ```
 
-Until operations wrapper is released the best way for you to manage operation is simply add them to URL as a string:
+While there's no operation wrapper, the best way of handling operations
+is through adding them to URLs as strings:
 
 ```ruby
 <img src="#{file.cdn_url}-/crop/#{width}x#{height}/center/"/>
@@ -297,9 +281,14 @@ Until operations wrapper is released the best way for you to manage operation is
 
 ### Copying files
 
-Our API allows you to create copies of a file. There are several options for that.
+You can also create file copies using our API.
+There are multiple ways of creating those.
+Also, copying is important for image files because
+it allows you to “apply” all the CDN operations
+specified in the source URL to a separate static image.
 
-First of all, you can make a copy in Uploadcare storage:
+First of all, a copy of your file can be put in the Uploadcare storage.
+This is called “internal copy”, and here's how it works:
 
 ```ruby
 @uc_file.internal_copy
@@ -325,13 +314,18 @@ First of all, you can make a copy in Uploadcare storage:
 }
 ```
 
-A copy becomes a separate file with its own UUID and attributes.
+Once the procedure is complete, a copy would be a separate file
+with its own UUID and attributes.
 
-The only (optional) argument this method takes is an options hash. Available options are:
+`#internal_copy` can optionally be used with the options hash argument.
+The available options are:
 
 - *store*
 
-  By default copy is being created unstored, so it will be deleted within 24 hours. To create a stored copy pass `store: true` option to `#internal_copy` method.
+  By default a copy is created without “storing”.
+  Which means it will be deleted within a 24-hour period.
+  You can make your output copy permanent by passing the
+  `store: true` option to the `#internal_copy` method.
 
   Example:
 
@@ -341,19 +335,23 @@ The only (optional) argument this method takes is an options hash. Available opt
 
 - *strip_operations*
 
-  If your file is an image and any operations are applied to it, then by default all of them will be also applied to a copy. You can override this passing `strip_operations: true` to `#internal_copy` method.
+  If your file is an image and you applied some operations to it,
+  then by default the same set of operations is also applied to a copy.
+  You can override this by passing `strip_operations: true` to the
+  `#internal_copy` method.
 
   Example:
 
   ```ruby
   file = @api.file "https://ucarecdn.com/24626d2f-3f23-4464-b190-37115ce7742a/-/resize/50x50/"
   file.internal_copy
-  # => This will trigger POST /files/ with {"source": "https://ucarecdn.com/24626d2f-3f23-4464-b190-37115ce7742a/-/resize/50x50/"} in body
+  # => This will trigger POST /files/ with {"source": "https://ucarecdn.com/24626d2f-3f23-4464-b190-37115ce7742a/-/resize/50x50/"} in the body
   file.internal_copy(strip_operations: true)
-  # => This will trigger POST /files/ with {"source": "https://ucarecdn.com/24626d2f-3f23-4464-b190-37115ce7742a/"} in body
+  # => This will trigger POST /files/ with {"source": "https://ucarecdn.com/24626d2f-3f23-4464-b190-37115ce7742a/"} in the body
   ```
 
-Secondly, you can copy your file to a custom storage.
+Another option is copying your file to a custom storage.
+We call it “external copy” and here's the usage example:
 
 ```ruby
 @uc_file.external_copy('my_custom_storage_name')
@@ -365,46 +363,104 @@ Secondly, you can copy your file to a custom storage.
 }
 ```
 
-First argument of this method is a name of a custom storage you wish to copy your file to.
+First argument of the `#external_copy` method is a name of
+a custom destination storage for your file.
 
-Second argument is an (optional) options hash. Available options are:
+There's also an optional second argument — options hash. The available options are:
 
   - *make_public*
 
-  Make a copy available via public links. Can be either `true` or `false`
+  Make a copy available via public links. Can be either `true` or `false`.
 
   - *pattern*
 
-  Name pattern for a copy. If parameter is omitted, custom storage pattern is used.
+  Name pattern for a copy. If the parameter is omitted, custom storage pattern is used.
 
   - *strip_operations*
 
   Same as for `#internal_copy`
 
-You can read more about about storages here: <https://uploadcare.com/documentation/storages/>, about copying files here: https://uploadcare.com/documentation/rest/#files-post
+You might want to learn more about
+[storage options](https://uploadcare.com/documentation/storages/) or
+[copying files](https://uploadcare.com/documentation/rest/#files-post)
+with Uploadcare. 
 
-## File list and pagination
-File list is a paginated collection of files for you project. You could read more at https://uploadcare.com/documentation/rest/#pagination.
-In our gem file list is a single page containing 20 (by default, value may change) files and some methods for navigating through pages.
+### `Group` object
+
+Groups are structures intended to organize sets of separate files.
+Each group is assigned UUID.
+Note, group UUIDs include a `~#{files_count}` part at the end.
+That's a requirement of our API.
 
 ```ruby
-@list = @api.file_list 1 #page number, 1 by default
+# group can be created from an array of Uploadcare files
+@files_ary = [@file, @file2]
+@files = @api.upload @files_ary
+@group = @api.create_group @files
+# => #<Uploadcare::Api::Group uuid="0d192d66-c7a6-4465-b2cd-46716c5e3df3~2", files_count=2 ...
+
+# another way to from a group is via an array of strings holding UUIDs
+@uuids_ary = ["c969be02-9925-4a7e-aa6d-b0730368791c", "c969be02-9925-4a7e-aa6d-b0730368791c"]
+@group = @api.create_group @uuids_ary
+# => #<Uploadcare::Api::Group uuid="0d192d66-c7a6-4465-b2cd-46716c5e3df3~2", files_count=2 ...
+
+# also, you can create a group object via group UUID
+@group_uloaded = @api.group "#{uuid}"
+```
+
+As with files, groups created via UUIDs are not loaded by default.
+You need to load the data manually, as it requires a separate
+HTTP GET request. New groups created with the `:create_group` method
+are loaded by default.
+
+```ruby
+@group = @api.group "#{uuid}"
+
+@group.is_loaded?
+# => false
+
+@group.load_data
+# => #<Uploadcare::Api::Group uuid="0d192d66-c7a6-4465-b2cd-46716c5e3df3~2", files_count=2 ...
+
+# once a group is loaded, you can use any methods described in our API docs
+# the files within a loaded group are loaded by default
+@group.files
+# => [#<Uploadcare::Api::File uuid="24626d2f-3f23-4464-b190-37115ce7742a" ...>,
+#       ... #{files_count} of them ...
+#     #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6" ...>]
+```
+
+Check out our docs to learn more about
+[groups](https://uploadcare.com/documentation/rest/#group).
+
+### File lists and pagination
+
+File list is a paginated collection of files. Such lists are created
+to better represent the contents of your project.
+For this gem, a file list would be a single page containing
+20 files (you can override the number).
+There also are methods for navigating through pages.
+You can find more info about pagination
+[here](https://uploadcare.com/documentation/rest/#pagination).
+
+```ruby
+@list = @api.file_list 1 # page number, 1 is the default
 # => #<Uploadcare::Api::FileList ....
 
 
-# method :resulst will return you an array of files
+# method :results returns an array of files
 @list.results
 # => [#<Uploadcare::Api::File uuid="24626d2f-3f23-4464-b190-37115ce7742a" ...>,
 #       ... 20 of them ...
 #     #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6" ...>]
 
 
-# note that every file is already loaded
+# note, every file is already loaded
 @list.results[1].is_loaded?
 # => true
 
 
-# there is also shortcuts for you
+# we've also added some shortcuts
 @list.to_a
 # => [#<Uploadcare::Api::File uuid="24626d2f-3f23-4464-b190-37115ce7742a" ...>,
 #       ... 20 of them ...
@@ -414,7 +470,7 @@ In our gem file list is a single page containing 20 (by default, value may chang
 # => #<Uploadcare::Api::File ....
 ```
 
-And don't forget that you can navigate throught pages:
+Here's how we handle navigating through pages:
 
 ```ruby
 @list = @api.files_list 3
@@ -428,9 +484,8 @@ And don't forget that you can navigate throught pages:
 @list.go_to 5
 # => #<Uploadcare::Api::FileList page=5 ....
 
-
-
-# there is also methods described in API docs avaliable for you:
+# of course, you can go with any of the methods
+# described in our API docs
 # total pages
 @list.pages
 # => 16
@@ -443,16 +498,16 @@ And don't forget that you can navigate throught pages:
 @list.per_page
 # => 20
 
-# total files in project
+# total files in a project
 @list.total
 # => 308
 ```
 
-## Project
-Project provides basic information about the connecting project.
-Project object is basicly openstruct so every method described in
-[API docs](https://uploadcare.com/documentation/rest/#project)
-accessible to you:
+### `Project` object
+
+`Project` provides basic info about the connected Uploadcare project.
+That object is also an OpenStruct, so every methods out of
+[these](https://uploadcare.com/documentation/rest/#project) will work.
 
 ```ruby
 project = @api.project
@@ -463,56 +518,42 @@ project.name
 
 p.collaborators
 # => []
-# more often it should look like
+# while that one was empty, it usually goes like this:
 # [{"email": collaborator@gmail.com, "name": "Collaborator"}, {"email": collaborator@gmail.com, "name": "Collaborator"}]
 ```
 
+### Raw API
 
-## Groups of files
-Groups of files - https://uploadcare.com/documentation/rest/#group.
-Stores files as group by the single UUID.
-Note that UUID has a `~#{files_count}` part at the end and it is required by API to work properly.
-
-```ruby
-# group can be created eather by array of Uploadcare Files:
-@files_ary = [@file, @file2]
-@files = @api.upload @files_ary
-@group = @api.create_group @files
-# => #<Uploadcare::Api::Group uuid="0d192d66-c7a6-4465-b2cd-46716c5e3df3~2", files_count=2 ...
-
-# or by array of strings containing UUIDs
-@uuids_ary = ["c969be02-9925-4a7e-aa6d-b0730368791c", "c969be02-9925-4a7e-aa6d-b0730368791c"]
-@group = @api.create_group @uuids_ary
-# => #<Uploadcare::Api::Group uuid="0d192d66-c7a6-4465-b2cd-46716c5e3df3~2", files_count=2 ...
-
-# you can also create group object just by passing group UUID
-@group_uloaded = @api.group "#{uuid}"
-```
-
-As with files, group created by passing just the UUID is not loaded by default - you need to load data manually, as it requires separate HTTP GET request.
-New groups created by :create_group method is loaded by default.
+Raw API is a simple interface allowing you to make
+custom requests to Uploadcare REST API.
+It's mainly used when you want a low-level control
+over your app.
 
 ```ruby
-@group = @api.group "#{uuid}"
+# here's how you make any requests
+@api.request :get, "/files/", {page: 2}
 
-@group.is_loaded?
-# => false
+# and there also are shortcuts for methods
+@api.get '/files', {page: 2}
 
-@group.load_data
-# => #<Uploadcare::Api::Group uuid="0d192d66-c7a6-4465-b2cd-46716c5e3df3~2", files_count=2 ...
+@api.post ...
 
-# loaded group has methods described by API docs and more importantly an array of files
-# this files are loaded by default.
-@group.files
-# => [#<Uploadcare::Api::File uuid="24626d2f-3f23-4464-b190-37115ce7742a" ...>,
-#       ... #{files_count} of them ...
-#     #<Uploadcare::Api::File uuid="7bb9efa4-05c0-4f36-b0ef-11a4221867f6" ...>]
+@api.put ...
+
+@api.delete ...
+
 ```
 
-## Errors handling
-From version 1.0.2 we have a custom exceptions which will raise when Uploadcare service return something with 4xx or 5xx HTTP status.
+All of the raw API methods return a parsed JSON response
+or raise an error (handling those is done on your side in the case).
 
-List of custom errors:
+### Error handling
+
+Starting from the version 1.0.2, we've got have custom exceptions
+that will be raised in case the Uploadcare service returns
+something with 4xx or 5xx HTTP status.
+
+Check out the list of custom errors:
 
 ```ruby
 400 => Uploadcare::Error::RequestError::BadRequest,
@@ -529,7 +570,8 @@ List of custom errors:
 504 => Uploadcare::Error::ServerError::GatewayTimeout
 ```
 
-so now you could escape particular error (in that case 404: Not Found error):
+That's how you handle a particular error
+(in this case, a “404: Not Found” error):
 
 ```ruby
 begin
@@ -539,7 +581,7 @@ rescue Uploadcare::Error::RequestError::NotFound => e
 end
 ```
 
-... any request error (covers all 4xx status codes): 
+Handling any request error (covers all 4xx status codes): 
 
 ```ruby
 begin
@@ -549,7 +591,7 @@ rescue Uploadcare::Error::RequestError => e
 end
 ```
 
-...and actually any Uploadcare service errors:
+Handling any Uploadcare service error:
 
 ```ruby
 begin
@@ -559,13 +601,15 @@ rescue Uploadcare::Error => e
 end
 ```
 
-Please note what almost all actions depends on Uploadcare servers and it will be wise of you to expect that servers will return error code (at least some times).
+Since many of the above listed things depend on Uploadcare servers,
+errors might occasionally occur. Be prepared to handle those.
 
 ## Testing
 
-Run `bundle exec rspec`.
+For testing purposes, run `bundle exec rspec`.
 
-To run tests with your own keys, make a `spec/config.yml` file like this:
+Please note, if you're willing to run tests using your own keys,
+make a `spec/config.yml` file containing the following:
 
 ```yaml
 public_key: 'PUBLIC KEY'
