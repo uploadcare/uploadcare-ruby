@@ -1,6 +1,6 @@
 #Changelog
 
-### 1.1.0
+### 1.1.0, 21.03.2017
 
 - Deprecated `Uploadcare::Api::File#copy` in favor of `#internal_copy` and `#external_copy`.
 - Added to new methods to Uploadcare::Api::File, #internal_copy and #external_copy.
