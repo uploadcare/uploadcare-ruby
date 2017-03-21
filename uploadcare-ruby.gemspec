@@ -5,7 +5,8 @@ Gem::Specification.new do |gem|
   gem.name          = "uploadcare-ruby"
   gem.authors       = ["@rastyagaev (Vadim Rastyagaev)",
                        "@dimituri (Dimitry Solovyov)",
-                       "@romanonthego (Roman Dubinin)"]
+                       "@romanonthego (Roman Dubinin)",
+                       "@vizvamitra (Dmitrii Krasnov)"]
   gem.email         = ["hello@uploadcare.com"]
   gem.summary       = "Ruby gem for Uploadcare"
   gem.description   = <<-EOF
