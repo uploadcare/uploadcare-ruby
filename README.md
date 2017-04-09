@@ -400,7 +400,7 @@ This method accepts some options to controll which files should be fetched and h
 - **:stored** - Can be either `true` or `false`. When true, file list will contain only stored files. When false - only not stored.
 - **:removed** - Can be either `true` or `false`. When true, file list will contain only removed files. When false - all except removed. Defaults to false.
 - **:ordering** - Controls the order of returned files. Available values: `datetime_updated`, `-datetime_updated`, `size`, `-size`. Defaults to `datetime_uploaded`. More info can be found [here](https://uploadcare.com/documentation/rest/#file-files)
-- **:from** - Specifies the starting point for a collection. Resulting collection will contain files from the given value and to the end in a direction set by an **ordering** option. When files are ordered by datetime_updated in any direction, accepts either a `DateTime` object or an ISO 8601 string. When files are ordered by size, acepts non-negative integers (size in bytes). ~~Less~~ More info can be found [here](https://uploadcare.com/documentation/rest/#file-files)
+- **:from** - Specifies the starting point for a collection. Resulting collection will contain files from the given value and to the end in a direction set by an **ordering** option. When files are ordered by datetime_updated in any direction, accepts either a `DateTime` object or an ISO 8601 string. When files are ordered by size, acepts non-negative integers (size in bytes). More info can be found [here](https://uploadcare.com/documentation/rest/#file-files)
 
 Options used to create a file list can be accessed through `#options` method. Note that, once set, they don't affect file fetching process anymore and are stored just for your convenience. That is why they are frozen.
 
@@ -442,6 +442,7 @@ Currently loaded files are available through `FileList#objects` or via `:[]`. `F
 ```ruby
 @list = @api.file_list(limit: 5) # will load first 5 files
 @list.loaded # => 5
+@list.fully_loaded? # => false
 
 @list.objects # => array of 5 x Uploadcare::File
 @list[0] # => instance of Uploadcare::File
@@ -452,7 +453,8 @@ Currently loaded files are available through `FileList#objects` or via `:[]`. `F
 
 # Note that the example below will load all the files left, page by page,
 # and return the count only when they all will be loaded
-@list.count
+@list.count # => 132
+@list.fully_loaded? # => true
 ```
 
 Loaded files are preserved when `break` statement or an exception occures inside a block provided to #each, #map, etc.

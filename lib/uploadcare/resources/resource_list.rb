@@ -26,7 +26,7 @@ module Uploadcare
 
         objects.each{|object| yield object}
 
-        unless last?
+        unless fully_loaded?
           next_page = get_next_page
           next_page.each(&Proc.new)
         end
@@ -49,18 +49,18 @@ module Uploadcare
         objects.size
       end
 
+      def fully_loaded?
+        meta['next'].nil?
+      end
+
       private
       attr_reader :api
 
       def get_next_page
-        return nil if last?
+        return nil if fully_loaded?
 
         next_page_data = api.get(@data.meta['next'])
         next_page = self.class.new(api, next_page_data, options)
-      end
-
-      def last?
-        meta['next'].nil?
       end
 
       def to_resource(*args)

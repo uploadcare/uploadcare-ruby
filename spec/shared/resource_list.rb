@@ -42,6 +42,20 @@ shared_examples 'resource list' do
     end
   end
 
+  describe '#fully_loaded?' do
+    subject{ @list.fully_loaded? }
+
+    context 'if there is no more next pages left' do
+      before { allow(@list).to receive(:meta){ {"next" => nil} } }
+      it { is_expected.to be_truthy }
+    end
+
+    context 'if there is a next page' do
+      before { allow(@list).to receive(:meta){ {"next" => 'example.com'} } }
+      it { is_expected.to be_falsey }
+    end
+  end
+
   describe '#each' do
     it 'when called without a block, returns an Enumerator' do
       expect( subject.each ).to be_an(Enumerator)
