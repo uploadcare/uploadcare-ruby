@@ -101,6 +101,14 @@ shared_examples 'resource list' do
       expect(objects.size).to eq(2)
     end
 
+    it 'doesn\'t load more objects than needed' do
+      expect(@api).to receive(:get).once.and_call_original
+
+      objects = subject.first(2)
+
+      expect(objects.size).to eq(2)
+    end
+
     it "loads different objects" do
       expect(@api).to receive(:get)
         .with(subject.meta["next"]).and_call_original

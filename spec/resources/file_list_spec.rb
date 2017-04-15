@@ -4,9 +4,9 @@ describe Uploadcare::Api::FileList do
   before :all do
     @api = API
 
-    # ensure that current project has at least two files
-    count = @api.get('/files/', limit: 2)['results'].size
-    (2 - count).times{ @api.upload(IMAGE_URL) } if count < 2
+    # ensure that current project has at least three files
+    count = @api.get('/files/', limit: 3)['results'].size
+    (3 - count).times{ @api.upload(IMAGE_URL) } if count < 3
 
     @list = @api.file_list(limit: 1)
   end
