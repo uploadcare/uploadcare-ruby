@@ -46,6 +46,7 @@ Here's how the default settings look like:
     static_url_base: 'https://ucarecdn.com',
     api_version: '0.5',
     cache_files: true,
+    store_files_upon_uploading: false,
     auth_scheme: :secure
   }
 ```
@@ -63,6 +64,13 @@ you will only need the public key alone. However, using
 use both public and private keys for authentication.  
 While “private key” is a common way to name a key from an
 authentication key pair, the actual thing for our `auth-param` is `secret_key`.
+
+`:store_files_upon_uploading` option allows you to set the default storage
+behaviour upon uploads. For more info see [`store` flag][uploads from url] for
+url uploads and [`UPLOADCARE_STORE` flag][in-body file uploads] for file uploads 
+
+[in-body file uploads]: https://uploadcare.com/documentation/upload/#upload-body
+[uploads from url]: https://uploadcare.com/documentation/upload/#from-url
 
 ## Usage
 
@@ -161,6 +169,15 @@ You might also want to request more info about a file using `load_data`.
 
 @uc_files[1].load_data
 # => #<Uploadcare::Api::File uuid="96cdc400-adc3-435b-9c94-04cd87633fbb", original_file_url="https://ucarecdn.com/96cdc400-adc3-435b-9c94-04cd87633fbb/samuelzeller118195.jpg", image_info={"width"=>4896, "geo_location"=>nil, "datetime_original"=>nil, "height"=>3264}, ....>
+```
+
+### Upload options
+
+You can override global [`:store_files_upon_upload`](#initialization) option for each upload request:
+
+```ruby
+@api.upload(files, store: true)
+@api.upload_from_url(url, store: :auto)
 ```
 
 ### `File` object

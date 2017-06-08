@@ -2,6 +2,7 @@
 
 ### 2.0.0
 
+- Added support for [UPLOADCARE_STORE](https://uploadcare.com/documentation/upload/#upload-body) flag
 - All POST/PUT/DELETE params are now being sent as json instead of being form-encoded
 - Added methods to store/delete multiple files at once: `Uploadcare::Api#store_files` & `Uploadcare::Api#delete_files`
 - Changed pagination implementation for files and groups
