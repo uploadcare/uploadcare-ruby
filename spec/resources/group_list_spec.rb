@@ -1,30 +1,28 @@
 require 'spec_helper'
-require 'uri'
-require 'socket'
+# require 'uri'
+# require 'socket'
 
-describe Uploadcare::Api::File do
+describe Uploadcare::Api::GroupList do
   before :all do
     @api = API
-    @list = @api.group_list
+
+    # ensure that current project has at least three groups
+    if @api.get('/groups/', limit: 3)['results'].size < 3
+      (3 - count).times{ @api.create_group([@api.upload(IMAGE_URL)]) }
+    end
+
+    @list = @api.group_list(limit: 1)
   end
 
-  it "basic group list" do
-    @list.should be_kind_of Uploadcare::Api::GroupList
-  end
+  let(:resource_class){ Uploadcare::Api::Group }
+  subject{ @list }
 
-  it "should contain groups and results" do
-    @list.should respond_to(:results)
-    @list.should respond_to(:groups)
-    @list.groups.should be_kind_of(Array)
-  end
+  it_behaves_like 'resource list'
 
-  it "results should contain groups" do
-    group = @list.groups.sample
-    group.should be_kind_of(Uploadcare::Api::Group)
-  end
+  describe '#objects' do
+    subject{ @list.objects }
 
-  it "group should no be loaded" do
-    group = @list.groups.sample
-    group.is_loaded?.should == false
+    it{ is_expected.to all(be_a(resource_class)) }
+    it{ is_expected.not_to include(be_loaded) }
   end
 end

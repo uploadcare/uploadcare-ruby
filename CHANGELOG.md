@@ -1,5 +1,9 @@
 #Changelog
 
+### 2.0.0
+
+- Changed pagination implementation for files and groups
+- Moved to API v0.5
 
 ### 1.1.0, 21.03.2017
 
