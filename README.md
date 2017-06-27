@@ -238,7 +238,7 @@ This is how you can use those to create `File` objects:
 
 ### Operations
 
-Another way to mainpulate files on CDN is through operations.
+Another way to manipulate files on CDN is through operations.
 This is particularly useful for images.
 We've got on-the-fly crop, resize, rotation, format conversions, and
 [more](https://uploadcare.com/documentation/cdn/).
