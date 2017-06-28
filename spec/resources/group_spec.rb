@@ -68,7 +68,7 @@ describe Uploadcare::Api::Group do
     group_unloaded.is_stored?.should == true
   end
 
-  it "should automatically store based on params" do
+  it "should store automatically when given store=true" do
     @files = @api.upload FILES_ARY, true
     group = @api.create_group @files
 
