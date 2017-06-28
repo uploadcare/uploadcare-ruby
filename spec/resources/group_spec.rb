@@ -68,6 +68,14 @@ describe Uploadcare::Api::Group do
     group_unloaded.is_stored?.should == true
   end
 
+  it "should store automatically when given store=true" do
+    @files = @api.upload FILES_ARY, true
+    group = @api.create_group @files
+
+    group.load
+    group.is_stored?.should == true
+  end
+
   it "group should have datetime attributes" do
     group = @api.create_group @files
     group.should respond_to(:datetime_created)

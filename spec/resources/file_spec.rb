@@ -53,6 +53,12 @@ describe Uploadcare::Api::File do
     @file.is_stored?.should == true
   end
 
+  it 'should store automatically when given store=true' do
+    @stored_file = @api.upload IMAGE_URL, true
+    @stored_file.load
+    @stored_file.is_stored?.should == true
+  end
+
   it 'should delete itself' do
     expect { @file.delete }.to_not raise_error
   end
