@@ -7,12 +7,6 @@ module Uploadcare
         ca_path = '/etc/ssl/certs' if File.exists?('/etc/ssl/certs')
 
         super ssl: { ca_path: ca_path }, url: options[:upload_url_base] do |frd|
-
-          #log = Logger.new $stderr
-
-          #frd.request :logger, log, bodies:true
-          #frd.response :logger, log, bodies:true
-
           frd.request :multipart
           frd.request :url_encoded
           frd.adapter :net_http
