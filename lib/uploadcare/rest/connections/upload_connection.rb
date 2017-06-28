@@ -1,4 +1,4 @@
-  require "faraday"
+require "faraday"
 
 module Uploadcare
   module Connections
