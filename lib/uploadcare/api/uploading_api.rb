@@ -4,18 +4,18 @@ require 'mime/types'
 module Uploadcare
   module UploadingApi
     # intelegent guess for file or url uploading
-    def upload object
+    def upload object, store=false
       # if object is file - uploading it as file
       if object.kind_of?(File)
-        upload_file(object)
+        upload_file(object,store)
 
       # if a string - try to upload as url
       elsif object.kind_of?(String)
-        upload_url(object)
+        upload_url(object,store)
 
       # array of files
       elsif object.kind_of?(Array)
-        upload_files(object)
+        upload_files(object,store)
 
       else
         raise ArgumentError.new "you should give File object, array of files or valid url string"
@@ -23,7 +23,7 @@ module Uploadcare
     end
 
 
-    def upload_files files
+    def upload_files files, store=false
       raise ArgumentError.new "one or more of given files is not actually files" if files.select {|f| !f.kind_of?(File)}.any?
 
       data = {UPLOADCARE_PUB_KEY: @options[:public_key]}
@@ -32,7 +32,7 @@ module Uploadcare
         data["file[#{i}]"] = build_upload_io(file)
       end
 
-      response = @upload_connection.send :post, '/base/', data
+      response = @upload_connection.send :post, '/base/', {store: (store ? 'true' : 0)}, data
       uuids = response.body
 
       files = uuids.values.map! {|f| Uploadcare::Api::File.new self, f }
@@ -40,12 +40,13 @@ module Uploadcare
 
 
     # upload file to servise
-    def upload_file file
+    def upload_file file, store=false
       raise ArgumentError.new 'expecting File object' unless file.kind_of?(File)
 
       response = @upload_connection.send :post, '/base/', {
         UPLOADCARE_PUB_KEY: @options[:public_key],
-        file: build_upload_io(file)
+        file: build_upload_io(file),
+        store: (store ? 'true' : 0)
       }
       
       uuid = response.body["file"]
@@ -58,12 +59,12 @@ module Uploadcare
 
 
     #upload from url
-    def upload_url url
+    def upload_url url, store=false
       uri = URI.parse(url)
 
       raise ArgumentError.new 'invalid url was given' unless uri.kind_of?(URI::HTTP)
       
-      token = get_token(url)
+      token = get_token(url, store)
 
       while !['success', 'error'].include?((response = get_status_response(token))['status'])
         sleep 0.5
@@ -96,8 +97,8 @@ module Uploadcare
       end
 
 
-      def get_token url
-        response = @upload_connection.send :post, '/from_url/', { source_url: url, pub_key: @options[:public_key] }
+      def get_token url, store=false
+        response = @upload_connection.send :post, '/from_url/', { source_url: url, pub_key: @options[:public_key], store: (store ? 'true' : 0) }
         token = response.body["token"]
       end
 
