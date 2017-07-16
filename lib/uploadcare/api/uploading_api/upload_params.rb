@@ -35,7 +35,7 @@ module Uploadcare
       def store
         mapping = { true => 1, false => 0, auto: 'auto' }
 
-        global_value = global_options[:store_files_upon_uploading]
+        global_value = global_options[:autostore]
         per_request_value = request_options[:store]
 
         mapping[per_request_value] || mapping[global_value]

@@ -14,7 +14,7 @@ module Uploadcare
     static_url_base: 'https://ucarecdn.com',
     api_version: '0.5',
     cache_files: true,
-    store_files_upon_uploading: false,
+    autostore: :auto,
     auth_scheme: :secure
   }
 

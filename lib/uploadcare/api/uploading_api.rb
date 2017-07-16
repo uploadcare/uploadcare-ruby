@@ -2,15 +2,16 @@ require_relative 'uploading_api/upload_params'
 
 module Uploadcare
   module UploadingApi
-    # intelegent guess for file or url uploading
+    # intelegent guess for file or URL uploading
     def upload object, options = {}
       case object
       when File then upload_file(object, options)
       when Array then upload_files(object, options)
-      # if object is a string, try to upload it as an url
+      # if object is a string, try to upload it as an URL
       when String then upload_url(object, options)
       else
-        raise ArgumentError, "you should give File object, array of files or valid url string"
+        raise ArgumentError, "Expected `object` to be an Uploadcare::Api::File, "\
+          "an Array or a valid URL string, received: `#{object}`"
       end
     end
 
@@ -29,7 +30,7 @@ module Uploadcare
     end
     alias_method :create_file, :upload_file
 
-    # Upload from url
+    # Upload from an URL
     def upload_url(url, options = {})
       params = upload_params(options).for_url_upload(url)
       token = request_file_upload(params)

@@ -48,9 +48,9 @@ describe Uploadcare::Api::File do
 
   it 'should be able to tell thenever file was stored' do
     @file.load
-    @file.is_stored?.should == false
-    @file.store
-    @file.is_stored?.should == true
+    expect(@file.stored?).to be(true)
+    @file.delete
+    expect(@file.stored?).to be(false)
   end
 
   it 'should delete itself' do

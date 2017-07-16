@@ -14,14 +14,14 @@ describe Uploadcare::UploadingApi::UploadParams do
       it { is_expected.to include(key_name => 'auto') }
     end
 
-    context 'when only global :store_files_upon_uploading option is set' do
+    context 'when only global :autostore option is set' do
       context 'to true' do
-        before { global_options.merge!(store_files_upon_uploading: true) }
+        before { global_options.merge!(autostore: true) }
         it { is_expected.to include(key_name => true_value) }
       end
 
       context 'to false' do
-        before { global_options.merge!(store_files_upon_uploading: false) }
+        before { global_options.merge!(autostore: false) }
         it { is_expected.to include(key_name => false_value) }
       end
     end
@@ -40,7 +40,7 @@ describe Uploadcare::UploadingApi::UploadParams do
 
     context 'when both global and per-request store options are set' do
       before do
-        global_options.merge!(store_files_upon_uploading: false)
+        global_options.merge!(autostore: false)
         request_options.merge!(store: true)
       end
 

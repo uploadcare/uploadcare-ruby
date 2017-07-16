@@ -46,7 +46,7 @@ Here's how the default settings look like:
     static_url_base: 'https://ucarecdn.com',
     api_version: '0.5',
     cache_files: true,
-    store_files_upon_uploading: false,
+    autostore: :auto,
     auth_scheme: :secure
   }
 ```
@@ -65,9 +65,9 @@ use both public and private keys for authentication.
 While “private key” is a common way to name a key from an
 authentication key pair, the actual thing for our `auth-param` is `secret_key`.
 
-`:store_files_upon_uploading` option allows you to set the default storage
+`:autostore` option allows you to set the default storage
 behaviour upon uploads. For more info see [`store` flag][uploads from url] for
-url uploads and [`UPLOADCARE_STORE` flag][in-body file uploads] for file uploads 
+uploads via URL and [`UPLOADCARE_STORE` flag][in-body file uploads] for file uploads 
 
 [in-body file uploads]: https://uploadcare.com/documentation/upload/#upload-body
 [uploads from url]: https://uploadcare.com/documentation/upload/#from-url
@@ -106,7 +106,7 @@ file you've just uploaded:
 @uc_file.uuid
 # => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
 
-# url for the file, can be used with your website or app right away
+# URL for the file, can be used with your website or app right away
 @uc_file.cdn_url
 # => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
 ```
@@ -173,7 +173,7 @@ You might also want to request more info about a file using `load_data`.
 
 ### Upload options
 
-You can override global [`:store_files_upon_upload`](#initialization) option for each upload request:
+You can override global [`:autostore`](#initialization) option for each upload request:
 
 ```ruby
 @api.upload(files, store: true)
