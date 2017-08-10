@@ -1,21 +1,25 @@
 module Uploadcare
   module FileStorageApi
-    BATCH_SIZE = 100
+    MAX_BATCH_SIZE = 100
     UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 
     def store_files(objects)
-      in_batches(objects) { |batch| put "/files/storage/", to_uuids(batch) }
+      if objects.size > MAX_BATCH_SIZE
+        raise ArgumentError, "Up to #{MAX_BATCH_SIZE} files are supported per request, #{objects.size} given"
+      end
+
+      put "/files/storage/", to_uuids(objects)
     end
 
     def delete_files(objects)
-      in_batches(objects) { |batch| delete "/files/storage/", to_uuids(batch) }
+      if objects.size > MAX_BATCH_SIZE
+        raise ArgumentError, "Up to #{MAX_BATCH_SIZE} files are supported per request, #{objects.size} given"
+      end
+
+      delete "/files/storage/", to_uuids(objects)
     end
 
     private
-
-    def in_batches(enum)
-      enum.each_slice(BATCH_SIZE) { |batch| yield batch }
-    end
 
     def to_uuids(objects)
       objects.map do |object|

@@ -34,10 +34,18 @@ end
 
 Dir[File.join(File.dirname(__FILE__), 'shared/*.rb')].each{|path| require path}
 
-def retry_if(error, retries=5, &block)
+def retry_if(error, retries=10, &block)
   block.call
 rescue error
   raise if retries <= 0
   sleep 0.2
   retry_if(error, retries-1, &block)
+end
+
+def wait_until_ready(file)
+  unless file.is_ready
+    sleep 0.2
+    file.load_data!
+    wait_until_ready(file)
+  end
 end

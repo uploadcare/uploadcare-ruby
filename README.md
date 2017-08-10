@@ -476,28 +476,26 @@ end # => RuntimeError
 
 ### Store / delete multiple files at once
 
-There are two methods to do that: `Uploadcare::Api#store_files` and
-`Uploadcare::Api#delete_files`. Both of them accept either a list of
-UUIDs/`Uploadcare::Api::File`s or an `Uploadcare::Api::FileList`:
+There are two methods to do so: `Uploadcare::Api#store_files` and
+`Uploadcare::Api#delete_files`. Both of them accept a list of either
+UUIDs or `Uploadcare::Api::File`s:
 
 ```ruby
 uuids_to_store = ['f5c477e0-22af-469d-859a-712e14e14361', 'ec72c6eb-5ea8-4057-a009-52ffffb27c94']
 @api.store_files(uuids_to_store)
+# => {'status' => 'ok', 'problems' => {}, 'result' => [{...}, {...}]}
 
 old_files = @api.file_list(stored: true, ordering: '-datetime_uploaded', from: "2015-01-01T00:00:00")
-@api.delete_files(old_files)
+old_files.each_slice(100) do |batch|
+  response = @api.delete_files(batch)
+  # Do something with response if you need to
+end
 ```
 
 Our API supports up to 100 files per request. Calling `#store_files` or
-`#delete_files` with more than 100 files at once will cause multiple store/delete
-requests because files will be divided into batches of 100 in order to comply
-with this limitation.
+`#delete_files` with more than 100 files at once will cause an ArgumentError.
 
-Note that when you pass in an `Uploadcare::Api::FileList` additional requests can
-potentially be made because FileList may need to load files first. Depending on
-the value of the `:limit` option with which the FileList was created, it may
-perform more than one load request before each store/delete request.
-
+For more details see our [documentation on batch file storage/deletion](https://uploadcare.com/documentation/rest/#files-storage)
 
 ### `Group` object
 

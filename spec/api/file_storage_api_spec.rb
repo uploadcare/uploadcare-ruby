@@ -32,13 +32,9 @@ describe Uploadcare::FileStorageApi do
       end
     end
 
-    it 'breaks large input arrays into batches' do
-      stub_const("Uploadcare::FileStorageApi::BATCH_SIZE", 1)
-
-      expect(api).to receive(http_method).with(api_endpoint, [uuids[0]]).ordered
-      expect(api).to receive(http_method).with(api_endpoint, [uuids[1]]).ordered
-
-      subject.call(uuids)
+    it 'raises ArgumentError if input size is grater then max batch size' do
+      stub_const("Uploadcare::FileStorageApi::MAX_BATCH_SIZE", 1)
+      expect { subject.call(uuids) }.to raise_error(ArgumentError)
     end
   end
 
@@ -49,11 +45,19 @@ describe Uploadcare::FileStorageApi do
     it_behaves_like 'batch action on files'
 
     describe 'integration test' do
-      before { file.delete if file.stored? }
+      before { file.tap { |f| wait_until_ready(f) }.delete if file.stored? }
+      subject(:store_files) { -> { api.store_files([file]) } }
 
       it 'stores files with given uuids' do
-        expect { api.store_files([file]) }
-          .to change { file.load!.stored? }.from(false).to(true)
+        is_expected.to change { file.load!.stored? }.from(false).to(true)
+      end
+
+      it 'returns the API response' do
+        expect(store_files.call).to include(
+          "status" => "ok",
+          "problems" => {},
+          "result" => [be_a(Hash)]
+        )
       end
     end
   end
@@ -66,10 +70,18 @@ describe Uploadcare::FileStorageApi do
 
     describe 'integration test' do
       before { file.store if file.deleted? }
+      subject(:delete_files) { -> { api.delete_files([file]) } }
 
       it 'deletes files with given uuids' do
-        expect { api.delete_files([file]) }
-          .to change { file.load!.deleted? }.from(false).to(true)
+        is_expected.to change { file.load!.deleted? }.from(false).to(true)
+      end
+
+      it 'returns the API response' do
+        expect(delete_files.call).to include(
+          "status" => "ok",
+          "problems" => {},
+          "result" => [be_a(Hash)]
+        )
       end
     end
   end

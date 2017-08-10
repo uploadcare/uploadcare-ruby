@@ -2,8 +2,8 @@ require 'faraday'
 require 'json'
 require 'ostruct'
 
-require 'uploadcare/api'
-require 'uploadcare/version'
+require_relative 'uploadcare/api'
+require_relative 'uploadcare/version'
 
 module Uploadcare
   DEFAULT_SETTINGS = {
