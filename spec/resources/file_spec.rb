@@ -49,6 +49,7 @@ describe Uploadcare::Api::File do
   it 'should be able to tell thenever file was stored' do
     @file.load
     expect(@file.stored?).to be(true)
+    wait_until_ready(@file)
     @file.delete
     expect(@file.stored?).to be(false)
   end
@@ -60,6 +61,7 @@ describe Uploadcare::Api::File do
   it 'should be able to tell thenever file was deleted' do
     @file.load
     @file.is_deleted?.should == false
+    wait_until_ready(@file)
     @file.delete
     @file.is_deleted?.should == true
   end
@@ -96,6 +98,7 @@ describe Uploadcare::Api::File do
 
   it 'should respond to datetime_removed' do
     @file.load
+    wait_until_ready(@file)
     @file.delete
     @file.datetime_removed.should be_kind_of(DateTime)
     @file.datetime_deleted.should be_kind_of(DateTime)
