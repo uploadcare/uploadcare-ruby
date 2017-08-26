@@ -388,10 +388,10 @@ with Uploadcare.
 
 ### File lists
 
-`Uploadcare::FileList` represents the whole collection of files (or it's subset) and privides a way to iterate through it, making pagination transparent. FileList objects can be created using `Uploadcare::Api#file_list` method.
+`Uploadcare::Api::FileList` represents the whole collection of files (or it's subset) and privides a way to iterate through it, making pagination transparent. FileList objects can be created using `Uploadcare::Api#file_list` method.
 
 ```ruby
-@list = @api.file_list # => instance of Uploadcare::FileList
+@list = @api.file_list # => instance of Uploadcare::Api::FileList
 ```
 
 This method accepts some options to controll which files should be fetched and how they should be fetched:
@@ -415,7 +415,7 @@ options = {
 @list.options # => same as options hash above, but frozen
 ```
 
-`Uploadcare::FileList` implements Enumerable interface and holds a collection of `Uploadcare::File` objects, as well as some meta information.
+`Uploadcare::Api::FileList` implements Enumerable interface and holds a collection of `Uploadcare::Api::File` objects, as well as some meta information.
 
 ```ruby
 @list = @api.file_list
@@ -428,7 +428,7 @@ options = {
 # }
 
 # Enumerable interface
-@list.first(5) # => array of 5 x Uploadcare::File
+@list.first(5) # => array of 5 x Uploadcare::Api::File
 @list.each{|file| puts file.original_filename}
 @list.map{|file| file.uuid}
 @list.reduce(0){|overall_size, file| overall_size += file.size}
@@ -444,8 +444,8 @@ Currently loaded files are available through `FileList#objects` or via `:[]`. `F
 @list.loaded # => 5
 @list.fully_loaded? # => false
 
-@list.objects # => array of 5 x Uploadcare::File
-@list[0] # => instance of Uploadcare::File
+@list.objects # => array of 5 x Uploadcare::Api::File
+@list[0] # => instance of Uploadcare::Api::File
 
 @list.first(5) # won't load anything, because 5 files are already loaded
 @list.first(6) # will load the next page
@@ -473,6 +473,29 @@ end # => RuntimeError
 @list.loaded # => 20
 ```
 
+
+### Store / delete multiple files at once
+
+There are two methods to do so: `Uploadcare::Api#store_files` and
+`Uploadcare::Api#delete_files`. Both of them accept a list of either
+UUIDs or `Uploadcare::Api::File`s:
+
+```ruby
+uuids_to_store = ['f5c477e0-22af-469d-859a-712e14e14361', 'ec72c6eb-5ea8-4057-a009-52ffffb27c94']
+@api.store_files(uuids_to_store)
+# => {'status' => 'ok', 'problems' => {}, 'result' => [{...}, {...}]}
+
+old_files = @api.file_list(stored: true, ordering: '-datetime_uploaded', from: "2015-01-01T00:00:00")
+old_files.each_slice(100) do |batch|
+  response = @api.delete_files(batch)
+  # Do something with response if you need to
+end
+```
+
+Our API supports up to 100 files per request. Calling `#store_files` or
+`#delete_files` with more than 100 files at once will cause an ArgumentError.
+
+For more details see our [documentation on batch file storage/deletion](https://uploadcare.com/documentation/rest/#files-storage)
 
 ### `Group` object
 
@@ -525,11 +548,11 @@ Check out our docs to learn more about
 
 ### Group lists
 
-`Uploadcare::GroupList` represents a group collection. It works in a same way as `Uploadcare::FileList` does, but with groups. 
+`Uploadcare::Api::GroupList` represents a group collection. It works in a same way as `Uploadcare::Api::FileList` does, but with groups. 
 
 ```ruby
-@list = @api.group_list(limit: 10) # => instance of Uploadcare::GroupList
-@list[0] # => instance of Uploadcare::Group
+@list = @api.group_list(limit: 10) # => instance of Uploadcare::Api::GroupList
+@list[0] # => instance of Uploadcare::Api::Group
 ```
 
 The only thing that differs is an available options list: 
