@@ -1,110 +1,71 @@
-require "uri"
-require 'mime/types'
+require_relative 'uploading_api/upload_params'
 
 module Uploadcare
   module UploadingApi
-    # intelegent guess for file or url uploading
-    def upload object
-      # if object is file - uploading it as file
-      if object.kind_of?(File)
-        upload_file(object)
-
-      # if a string - try to upload as url
-      elsif object.kind_of?(String)
-        upload_url(object)
-
-      # array of files
-      elsif object.kind_of?(Array)
-        upload_files(object)
-
+    # intelegent guess for file or URL uploading
+    def upload object, options = {}
+      case object
+      when File then upload_file(object, options)
+      when Array then upload_files(object, options)
+      # if object is a string, try to upload it as an URL
+      when String then upload_url(object, options)
       else
-        raise ArgumentError.new "you should give File object, array of files or valid url string"
+        raise ArgumentError, "Expected `object` to be an Uploadcare::Api::File, "\
+          "an Array or a valid URL string, received: `#{object}`"
       end
     end
 
+    # Upload multiple files
+    def upload_files(files, options = {})
+      data = upload_params(options).for_file_upload(files)
 
-    def upload_files files
-      raise ArgumentError.new "one or more of given files is not actually files" if files.select {|f| !f.kind_of?(File)}.any?
+      response = @upload_connection.post('/base/', data)
 
-      data = {UPLOADCARE_PUB_KEY: @options[:public_key]}
-
-      files.each_with_index do |file, i|
-        data["file[#{i}]"] = build_upload_io(file)
-      end
-
-      response = @upload_connection.send :post, '/base/', data
-      uuids = response.body
-
-      files = uuids.values.map! {|f| Uploadcare::Api::File.new self, f }
+      response.body.values.map! { |f| Uploadcare::Api::File.new(self, f) }
     end
 
-
-    # upload file to servise
-    def upload_file file
-      raise ArgumentError.new 'expecting File object' unless file.kind_of?(File)
-
-      response = @upload_connection.send :post, '/base/', {
-        UPLOADCARE_PUB_KEY: @options[:public_key],
-        file: build_upload_io(file)
-      }
-      
-      uuid = response.body["file"]
-
-      Uploadcare::Api::File.new self, uuid
+    # Upload single file
+    def upload_file(file, options = {})
+      upload_files([file], options).first
     end
-    
-    # create file is the same as uplaod file
     alias_method :create_file, :upload_file
 
+    # Upload from an URL
+    def upload_url(url, options = {})
+      params = upload_params(options).for_url_upload(url)
+      token = request_file_upload(params)
 
-    #upload from url
-    def upload_url url
-      uri = URI.parse(url)
-
-      raise ArgumentError.new 'invalid url was given' unless uri.kind_of?(URI::HTTP)
-      
-      token = get_token(url)
-
-      while !['success', 'error'].include?((response = get_status_response(token))['status'])
-        sleep 0.5
+      upload_status = poll_upload_result(token)
+      if upload_status['status'] == 'error'
+        raise ArgumentError.new(upload_status['error'])
       end
-      
-      raise ArgumentError.new(response['error']) if response['status'] == 'error'
-      uuid = response['file_id']
-      Uploadcare::Api::File.new self, uuid
+
+      Uploadcare::Api::File.new(self, upload_status['file_id'])
     end
     alias_method :upload_from_url, :upload_url
 
-
-
-
-    protected
-      # DEPRECATRED but still works
-      def upload_request method, path, params = {}
-        response = @upload_connection.send method, path, params
-      end
-
-      def build_upload_io file
-        Faraday::UploadIO.new file.path, extract_mime_type(file)
-      end
-
-
     private
-      def get_status_response token
-        response = @upload_connection.send :post, '/from_url/status/', {token: token}
-        response.body
+
+    def get_status_response(token)
+      response = @upload_connection.post('/from_url/status/', {token: token})
+      response.body
+    end
+
+    def request_file_upload(upload_params)
+      response = @upload_connection.post('/from_url/', upload_params)
+      token = response.body["token"]
+    end
+
+    def poll_upload_result(token)
+      while true
+        response = get_status_response(token)
+        break(response) if ['success', 'error'].include?(response['status'])
+        sleep 0.5
       end
+    end
 
-
-      def get_token url
-        response = @upload_connection.send :post, '/from_url/', { source_url: url, pub_key: @options[:public_key] }
-        token = response.body["token"]
-      end
-
-
-      def extract_mime_type file
-        types = MIME::Types.of(file.path)
-        types[0].content_type
-      end
+    def upload_params(request_options)
+      UploadParams.new(@options, request_options)
+    end
   end
 end

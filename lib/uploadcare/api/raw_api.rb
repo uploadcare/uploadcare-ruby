@@ -10,9 +10,9 @@ module Uploadcare
     end
 
 
-    # basic request method 
+    # basic request method
     def request method = :get, path = "/files/", params = {}
-      response = @api_connection.send method, path, params 
+      response = @api_connection.send method, path, params
       response.body
     end
     alias_method :api_request, :request
@@ -26,7 +26,7 @@ module Uploadcare
 
     # request with POST verb
     def post path= "/files/", params={}
-      request :post, path, params 
+      request :post, path, params
     end
 
 
