@@ -28,10 +28,9 @@ It **won't work anymore**. For the details on the new file/group lists interface
 
 The core features of the new file/group list API are: 
 
-- transparent pagination via..
-- enumerable interface
-- loading objects at demand
-- ordering, filtering and sliceing
+- transparent pagination via enumerable interface
+- loading objects on demand
+- ordering, filtering and slicing
 
 [uploadcare-changelog-rest-api-v05]: https://uploadcare.com/changelog/tag/rest-api#rest-api-version-05
 [readme]: https://github.com/uploadcare/uploadcare-ruby#file-lists
