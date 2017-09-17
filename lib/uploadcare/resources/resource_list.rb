@@ -8,7 +8,6 @@ module Uploadcare
       extend Forwardable
       def_delegator :@data, :meta
       def_delegator :@data, :objects
-      def_delegator :objects, :[]
 
       attr_reader :options
 
@@ -16,6 +15,10 @@ module Uploadcare
         @api = api
         @data = build_data(data)
         @options = options.dup.freeze
+      end
+
+      def [](index)
+        first(index + 1).last
       end
 
       def each
