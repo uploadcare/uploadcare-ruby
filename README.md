@@ -58,9 +58,9 @@ consider creating an Uploadcare account. Check out
 article to get up an running in minutes.
 
 Please note, in order to use [Upload API](https://uploadcare.com/documentation/upload/)
-you will only need the public key alone. However, using 
+you will only need the public key alone. However, using
 [REST API](https://uploadcare.com/documentation/rest/) requires you to
-use both public and private keys for authentication.  
+use both public and private keys for authentication.
 While “private key” is a common way to name a key from an
 authentication key pair, the actual thing for our `auth-param` is `secret_key`.
 
@@ -126,11 +126,11 @@ and you're good to go.
 
 ```ruby
 # the smart upload
-@file  = @api.upload "http://your.awesome/avatar.jpg" 
+@file  = @api.upload "http://your.awesome/avatar.jpg"
 # =>  #<Uploadcare::Api::File ...
 
 # use this one if you want to explicitly upload from URL
-@file = @api.upload_from_url "http://your.awesome/avatar.jpg" 
+@file = @api.upload_from_url "http://your.awesome/avatar.jpg"
 # =>  #<Uploadcare::Api::File ...
 ```
 Keep in mind that providing invalid URL
@@ -356,7 +356,7 @@ We call it “external copy” and here's the usage example:
 ```ruby
 @uc_file.external_copy('my_custom_storage_name')
 
-# => 
+# =>
 {
   "type"=>"url",
   "result"=>"s3://my_bucket_name/c969be02-9925-4a7e-aa6d-b0730368791c/view.png"
@@ -383,7 +383,7 @@ There's also an optional second argument — options hash. The available options
 You might want to learn more about
 [storage options](https://uploadcare.com/documentation/storages/) or
 [copying files](https://uploadcare.com/documentation/rest/#files-post)
-with Uploadcare. 
+with Uploadcare.
 
 
 ### File lists
@@ -437,7 +437,7 @@ options = {
 
 On the inside, `FileList` loada files page by page. First page is loaded when you call `Uploadcare::Api#file_list` and subsequent pages are being loaded when needed. The size of pages is controlled by a `:limit` option.
 
-Currently loaded files are available through `FileList#objects` or via `:[]`. `FileList#loaded` method returns the number of currently loaded files.
+Currently loaded files are available through `FileList#objects`. `FileList#loaded` method returns the number of currently loaded files.
 
 ```ruby
 @list = @api.file_list(limit: 5) # will load first 5 files
@@ -445,10 +445,11 @@ Currently loaded files are available through `FileList#objects` or via `:[]`. `F
 @list.fully_loaded? # => false
 
 @list.objects # => array of 5 x Uploadcare::Api::File
-@list[0] # => instance of Uploadcare::Api::File
+@list.objects[4] # => #<Uploadcare::Api::File ...>
+@list.objects[5] # => nil (since 6th file is not yet loaded)
 
-@list.first(5) # won't load anything, because 5 files are already loaded
-@list.first(6) # will load the next page
+@list[4] # won't load anything, because 5 files are already loaded
+@list[5] # will load the next page
 @list.loaded # => 10
 
 # Note that the example below will load all the files left, page by page,
@@ -548,14 +549,14 @@ Check out our docs to learn more about
 
 ### Group lists
 
-`Uploadcare::Api::GroupList` represents a group collection. It works in a same way as `Uploadcare::Api::FileList` does, but with groups. 
+`Uploadcare::Api::GroupList` represents a group collection. It works in a same way as `Uploadcare::Api::FileList` does, but with groups.
 
 ```ruby
 @list = @api.group_list(limit: 10) # => instance of Uploadcare::Api::GroupList
 @list[0] # => instance of Uploadcare::Api::Group
 ```
 
-The only thing that differs is an available options list: 
+The only thing that differs is an available options list:
 
 - **:limit** - Controls page size. Accepts values from 1 to 1000, defaults to 100.
 - **:ordering** - Controls the order of returned files. Available values: `datetime_created`, `-datetime_created`. Defaults to `datetime_created`. More info can be found [here](https://uploadcare.com/documentation/rest/#group-groups)
@@ -640,7 +641,7 @@ rescue Uploadcare::Error::RequestError::NotFound => e
 end
 ```
 
-Handling any request error (covers all 4xx status codes): 
+Handling any request error (covers all 4xx status codes):
 
 ```ruby
 begin

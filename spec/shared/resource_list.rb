@@ -72,8 +72,17 @@ shared_examples 'resource list' do
   end
 
   describe '#[]' do
+    subject{ @list.dup }
+
     it "returns instances of a resource class" do
       expect( subject[0] ).to be_a(resource_class)
+    end
+
+    it 'loads additional objects when needed' do
+      expect(@api).to receive(:get)
+        .with(subject.meta["next"]).and_call_original
+
+      expect { subject[1] }.to change { subject.objects.size }.by(1)
     end
   end
 
