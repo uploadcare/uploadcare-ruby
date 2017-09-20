@@ -13,11 +13,11 @@ describe Uploadcare::Parser do
     
     parsed = Uploadcare::Parser.parse(string)
     
-    parsed.should be_kind_of(Uploadcare::Parser::File)
-    parsed.uuid.should == @uuid
-    parsed.count.should be_nil
-    parsed.operations.should be_kind_of(Array)
-    parsed.operations.should be_empty
+    expect(parsed).to be_kind_of(Uploadcare::Parser::File)
+    expect(parsed.uuid).to eq @uuid
+    expect(parsed.count).to be_nil
+    expect(parsed.operations).to be_kind_of(Array)
+    expect(parsed.operations).to be_empty
   end
 
   it "should parse file cdn string without operations string" do
@@ -25,11 +25,11 @@ describe Uploadcare::Parser do
     
     parsed = Uploadcare::Parser.parse(string)
     
-    parsed.should be_kind_of(Uploadcare::Parser::File)
-    parsed.uuid.should == @uuid
-    parsed.count.should be_nil
-    parsed.operations.should be_kind_of(Array)
-    parsed.operations.should be_empty
+    expect(parsed).to be_kind_of(Uploadcare::Parser::File)
+    expect(parsed.uuid).to eq @uuid
+    expect(parsed.count).to be_nil
+    expect(parsed.operations).to be_kind_of(Array)
+    expect(parsed.operations).to be_empty
   end
 
   it "should parse file cdn string with operations string" do
@@ -37,11 +37,11 @@ describe Uploadcare::Parser do
     
     parsed = Uploadcare::Parser.parse(string)
     
-    parsed.should be_kind_of(Uploadcare::Parser::File)
-    parsed.uuid.should == @uuid
-    parsed.count.should be_nil
-    parsed.operations.should be_kind_of(Array)
-    parsed.operations.should_not be_empty
+    expect(parsed).to be_kind_of(Uploadcare::Parser::File)
+    expect(parsed.uuid).to eq @uuid
+    expect(parsed.count).to be_nil
+    expect(parsed.operations).to be_kind_of(Array)
+    expect(parsed.operations).not_to be_empty
   end
 
   it "should parse group uuid string" do
@@ -49,12 +49,12 @@ describe Uploadcare::Parser do
     
     parsed = Uploadcare::Parser.parse(string)
     
-    parsed.should be_kind_of(Uploadcare::Parser::Group)
-    parsed.uuid.should == "#{@uuid}~#{@count}"
-    parsed.count.should_not be_nil
-    parsed.count.should == @count
-    parsed.operations.should be_kind_of(Array)
-    parsed.operations.should be_empty
+    expect(parsed).to be_kind_of(Uploadcare::Parser::Group)
+    expect(parsed.uuid).to eq "#{@uuid}~#{@count}"
+    expect(parsed.count).not_to be_nil
+    expect(parsed.count).to eq @count
+    expect(parsed.operations).to be_kind_of(Array)
+    expect(parsed.operations).to be_empty
   end
 
   it "should parse file cdn string without operations string" do
@@ -62,12 +62,12 @@ describe Uploadcare::Parser do
     
     parsed = Uploadcare::Parser.parse(string)
     
-    parsed.should be_kind_of(Uploadcare::Parser::Group)
-    parsed.uuid.should == "#{@uuid}~#{@count}"
-    parsed.count.should_not be_nil
-    parsed.count.should == @count
-    parsed.operations.should be_kind_of(Array)
-    parsed.operations.should be_empty
+    expect(parsed).to be_kind_of(Uploadcare::Parser::Group)
+    expect(parsed.uuid).to eq "#{@uuid}~#{@count}"
+    expect(parsed.count).not_to be_nil
+    expect(parsed.count).to eq @count
+    expect(parsed.operations).to be_kind_of(Array)
+    expect(parsed.operations).to be_empty
   end
 
   it "should parse file cdn string with operations string" do
@@ -75,13 +75,11 @@ describe Uploadcare::Parser do
     
     parsed = Uploadcare::Parser.parse(string)
     
-    parsed.should be_kind_of(Uploadcare::Parser::Group)
-    parsed.uuid.should == "#{@uuid}~#{@count}"
-    parsed.count.should_not be_nil
-    parsed.count.should == @count
-    parsed.operations.should be_kind_of(Array)
-    parsed.operations.should_not be_empty
+    expect(parsed).to be_kind_of(Uploadcare::Parser::Group)
+    expect(parsed.uuid).to eq "#{@uuid}~#{@count}"
+    expect(parsed.count).not_to be_nil
+    expect(parsed.count).to eq @count
+    expect(parsed.operations).to be_kind_of(Array)
+    expect(parsed.operations).not_to be_empty
   end  
-
-
 end
