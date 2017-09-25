@@ -15,7 +15,7 @@ module Uploadcare
     api_version: '0.5',
     cache_files: true,
     autostore: :auto,
-    auth_scheme: :secure
+    auth_scheme: :secure,
   }
 
   USER_AGENT = "uploadcare-ruby/#{Gem.ruby_version}/#{Uploadcare::VERSION}"
