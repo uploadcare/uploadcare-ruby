@@ -1,6 +1,6 @@
 # Changelog
 
-### 2.0.0
+### 2.0.0, 26.09.2017
 
 - There are **breaking** changes in this release, please read [upgrade notes](UPGRADE_NOTES.md#v1---v2)
 - Added support for `store` flag in [Upload API](https://uploadcare.com/documentation/upload/) methods
