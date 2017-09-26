@@ -3,7 +3,7 @@ require_relative 'uploading_api/upload_params'
 module Uploadcare
   module UploadingApi
     # intelegent guess for file or URL uploading
-    def upload object, options = {}
+    def upload(object, options = {})
       case object
       when File then upload_file(object, options)
       when Array then upload_files(object, options)
@@ -53,7 +53,7 @@ module Uploadcare
 
     def request_file_upload(upload_params)
       response = @upload_connection.post('/from_url/', upload_params)
-      token = response.body["token"]
+      token = response.body['token']
     end
 
     def poll_upload_result(token)
