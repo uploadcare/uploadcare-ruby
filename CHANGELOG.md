@@ -3,15 +3,15 @@
 ### 2.0.0
 
 - Added support for `store` flag in [Upload API](https://uploadcare.com/documentation/upload/) methods
-- All POST/PUT/DELETE params are now being sent as json instead of being form-encoded
+- Upgraded to REST API v0.5
+- All POST/PUT/DELETE params are now being sent as JSON instead of being form-encoded
 - Added methods to store/delete multiple files at once: `Uploadcare::Api#store_files` & `Uploadcare::Api#delete_files`
 - Changed pagination implementation for files and groups
-- Moved to API v0.5
 
 ### 1.1.0, 21.03.2017
 
 - Deprecated `Uploadcare::Api::File#copy` in favor of `#internal_copy` and `#external_copy`.
-- Added to new methods to Uploadcare::Api::File, #internal_copy and #external_copy.
+- Added to new methods to `Uploadcare::Api::File`, `#internal_copy` and `#external_copy`.
 - Added support of [secure authorization](https://uploadcare.com/documentation/rest/#request) for REST API. It is now used by default (can be overriden in config)
 - Fixed middleware names that could break other gems ([#13](https://github.com/uploadcare/uploadcare-ruby/issues/13)).
 
