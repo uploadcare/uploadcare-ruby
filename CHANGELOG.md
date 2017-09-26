@@ -2,6 +2,7 @@
 
 ### 2.0.0
 
+- There are **breaking** changes in this release, please read [upgrade notes](UPGRADE_NOTES.md#v1---v2)
 - Added support for `store` flag in [Upload API](https://uploadcare.com/documentation/upload/) methods
 - Upgraded to REST API v0.5
 - All POST/PUT/DELETE params are now being sent as JSON instead of being form-encoded
