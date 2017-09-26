@@ -1,4 +1,8 @@
 [![Build Status](https://secure.travis-ci.org/uploadcare/uploadcare-ruby.png?branch=master)](http://travis-ci.org/uploadcare/uploadcare-ruby)
+[![Uploadcare stack on StackShare][stack-img]][stack]
+
+[stack-img]: https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat
+[stack]: https://stackshare.io/uploadcare/stacks/
 
 A [Ruby](https://www.ruby-lang.org/en/) wrapper for [Uploadcare](https://uploadcare.com).
 
