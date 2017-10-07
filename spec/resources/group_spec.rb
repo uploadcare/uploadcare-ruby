@@ -96,6 +96,6 @@ describe Uploadcare::Api::Group do
 
   it 'should raise an error if index is greater than files count in group' do
     group = @api.create_group @files
-    expect {group.file_cdn_url(5)}.to raise_error
+    expect {group.file_cdn_url(5)}.to raise_error ArgumentError
   end
 end
