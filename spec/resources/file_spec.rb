@@ -12,7 +12,7 @@ describe Uploadcare::Api::File do
   end
 
   it 'is not initialized without correct UUID given' do
-    expect {Uploadcare::Api::File.new(api, "not-uuid")}.to raise_error
+    expect {Uploadcare::Api::File.new(api, "not-uuid")}.to raise_error NoMethodError
   end
 
   it 'has a valid url' do
