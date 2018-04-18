@@ -7,6 +7,9 @@ require 'rspec'
 require 'uploadcare'
 require 'yaml'
 
+require 'coveralls'
+Coveralls.wear!
+
 CONFIG = Uploadcare.default_settings.merge!(
   public_key: ENV['UPLOADCARE_PUBLIC_KEY'] || 'demopublickey',
   private_key: ENV['UPLOADCARE_SECRET_KEY'] || 'demoprivatekey',
