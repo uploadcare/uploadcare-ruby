@@ -19,7 +19,7 @@ describe Uploadcare::Connections::ApiConnection do
     end
 
     it 'includes correct User-Agent header' do
-      expected = Uploadcare::user_agent(settings)
+      expected = Uploadcare::UserAgent.new.call(settings)
       expect(subject['User-Agent']).to eq expected
     end
   end

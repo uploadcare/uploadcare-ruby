@@ -1,5 +1,9 @@
 #Changelog
 
+### 1.1.1, FIXME
+
+- `User-Agent` header format updated to conform the format common for all Uploadcare libraries.
+
 ### 1.1.0, 21.03.2017
 
 - Deprecated `Uploadcare::Api::File#copy` in favor of `#internal_copy` and `#external_copy`.
