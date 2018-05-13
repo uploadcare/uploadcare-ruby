@@ -10,7 +10,7 @@ module Uploadcare
           auth_strategy = Auth.strategy(options)
 
           frd.headers['Accept'] = "application/vnd.uploadcare-v#{options[:api_version]}+json"
-          frd.headers['User-Agent'] = Uploadcare::user_agent(options)
+          frd.headers['User-Agent'] = UserAgent.new.call(options)
 
           # order of middleware matters!
 
@@ -48,7 +48,6 @@ module Uploadcare
           yield(request) if block_given?
         }
       end
-
     end
   end
 end

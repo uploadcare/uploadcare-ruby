@@ -1,5 +1,9 @@
 # Changelog
 
+### 2.0.1, FIXME
+
+- `User-Agent` header format updated to conform the format common for all Uploadcare libraries.
+
 ### 2.0.0, 26.09.2017
 
 - There are **breaking** changes in this release, please read [upgrade notes](UPGRADE_NOTES.md#v1---v2)
