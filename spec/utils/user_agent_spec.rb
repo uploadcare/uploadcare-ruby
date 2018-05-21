@@ -16,19 +16,31 @@ describe Uploadcare::UserAgent do
     it { is_expected.to eq('predefined user agent') }
   end
 
-  context 'when user_agent_extension option is set' do
+  context 'when user_agent_environment option is set' do
     let(:options) do
-      { public_key: 'pubkey', user_agent_extension: 'ext' }
+      {
+        public_key: 'pubkey',
+        user_agent_environment: {
+          framework_name: 'rails',
+          framework_version: '5.1.0',
+          extension_name: 'UploadcareRails',
+          extension_version: '1.1.0'
+        }
+      }
     end
 
-    it { is_expected.to eq('UploadcareRuby/123/pubkey (Ruby/456; ext)') }
+    it do
+      is_expected.to eq(
+        'UploadcareRuby/123/pubkey (Ruby/456; rails/5.1.0; UploadcareRails/1.1.0)'
+      )
+    end
   end
 
-  context 'when user_agent_extension option is not set' do
+  context 'when user_agent_environment option is not set' do
     let(:options) do
       { public_key: 'pubkey' }
     end
 
-    it { is_expected.to eq('UploadcareRuby/123/pubkey (Ruby/456;)') }
+    it { is_expected.to eq('UploadcareRuby/123/pubkey (Ruby/456)') }
   end
 end

@@ -1,8 +1,9 @@
 #Changelog
 
-### 1.1.1, FIXME
+### 1.2.0, FIXME
 
-- `User-Agent` header format updated to conform the format common for all Uploadcare libraries.
+- Allow user to override User-Agent header
+- Change User-Agent format to report gem name, version and environment
 
 ### 1.1.0, 21.03.2017
 
