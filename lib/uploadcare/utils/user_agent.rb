@@ -6,30 +6,39 @@ module Uploadcare
     # @param options [Hash]
     # @option options [String] :user_agent (nil)
     # @option options [String] :public_key (nil)
-    # @option options [String] :user_agent_extension (nil)
+    # @option options [String] :user_agent_environment (nil)
     # @return [String]
     #
     def call(options)
       return options[:user_agent].to_s if options[:user_agent]
-      user_agent_string(options)
+
+      user_agent_string(
+        options.fetch(:public_key, nil),
+        options.fetch(:user_agent_environment, {})
+      )
     end
 
     private
 
-    def user_agent_string(options)
+    def user_agent_string(public_key, extensions)
       format(
-        '%<library_string>s/%<public_key>s (%<environment_string>s)',
-        library_string: "UploadcareRuby/#{Uploadcare::VERSION}",
-        public_key: options.fetch(:public_key, nil),
-        environment_string: environment_string(options)
+        '%<library>s/%<pubkey>s (%<environment>s)',
+        library: versioned('UploadcareRuby', Uploadcare::VERSION),
+        pubkey: public_key,
+        environment: environment_string(extensions)
       )
     end
 
-    def environment_string(options)
+    def environment_string(extensions)
       [
-        "Ruby/#{Gem.ruby_version};",
-        options.fetch(:user_agent_extension, nil)
-      ].compact.join(' ')
+        versioned('Ruby', Gem.ruby_version),
+        versioned(extensions[:framework_name], extensions[:framework_version]),
+        versioned(extensions[:extension_name], extensions[:extension_version])
+      ].compact.join('; ')
+    end
+
+    def versioned(name, version = nil)
+      name ? [name, version].compact.join('/') : nil
     end
   end
 end
