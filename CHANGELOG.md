@@ -1,6 +1,6 @@
 #Changelog
 
-### 1.2.0, FIXME
+### 1.2.1, 23.05.2018
 
 - Allow user to override User-Agent header
 - Change User-Agent format to report gem name, version and environment
