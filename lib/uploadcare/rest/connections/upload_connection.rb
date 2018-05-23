@@ -10,7 +10,7 @@ module Uploadcare
           frd.request :multipart
           frd.request :url_encoded
           frd.adapter :net_http
-          frd.headers['User-Agent'] = Uploadcare::user_agent(options)
+          frd.headers['User-Agent'] = UserAgent.new.call(options)
 
           frd.response :uploadcare_raise_error
           frd.response :uploadcare_parse_json

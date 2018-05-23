@@ -1,20 +1,16 @@
 require 'spec_helper'
 
 describe Uploadcare do
-
   describe '::user_agent' do
-    context "if :user_agent is specified in method's options" do
-      it "returns it's stringified version" do
-        expect( Uploadcare.user_agent(user_agent: 123) ).to eq '123'
-      end
-    end
+    subject(:user_agent) { described_class.user_agent(options) }
+    let(:options) { {user_agent: 'user/agent'} }
+    let(:user_agent_builder) { instance_double('Uploadcare::UserAgent') }
 
-    context "if user_agent is not specified in method's options" do
-      it 'builds user-agent from ruby version, gem version and public key' do
-        expected = /#{Gem.ruby_version}\/#{described_class::VERSION}\/test/
-        expect( Uploadcare.user_agent(public_key: 'test') ).to match(expected)
-      end
+    it 'returns user agent string' do
+      allow(Uploadcare::UserAgent).to receive(:new) { user_agent_builder }
+      expect(user_agent_builder).to receive(:call).with(options) { 'user/agent' }
+
+      expect(user_agent).to eq('user/agent')
     end
   end
-
 end

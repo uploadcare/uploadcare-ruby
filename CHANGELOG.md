@@ -1,5 +1,10 @@
 #Changelog
 
+### 1.2.0, FIXME
+
+- Allow user to override User-Agent header
+- Change User-Agent format to report gem name, version and environment
+
 ### 1.1.0, 21.03.2017
 
 - Deprecated `Uploadcare::Api::File#copy` in favor of `#internal_copy` and `#external_copy`.
