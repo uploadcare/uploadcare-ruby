@@ -2,7 +2,7 @@
 [![Coverage Status][coverals-img]][coverals]
 [![Uploadcare stack on StackShare][stack-img]][stack]
 
-[travis-img]: https://secure.travis-ci.org/uploadcare/uploadcare-ruby.png?branch=master
+[travis-img]: https://secure.travis-ci.org/uploadcare/uploadcare-ruby.svg?branch=master
 [travis]: http://travis-ci.org/uploadcare/uploadcare-ruby
 [coverals-img]: https://coveralls.io/repos/github/uploadcare/uploadcare-ruby/badge.svg?branch=master
 [coverals]: https://coveralls.io/github/uploadcare/uploadcare-ruby?branch=master
