@@ -28,6 +28,14 @@ There are **breaking** changes in this release, please read [upgrade notes](UPGR
 - All POST/PUT/DELETE params are now being sent as JSON instead of being form-encoded
 - Pagination implementation for files and groups
 
+
+### [1.2.1] - 2018-05-24
+
+### Changed
+- Allow user to override User-Agent header
+- User-Agent format reports gem name, version and environment
+
+
 ## 1.1.0 - 2017-03-21
 
 ### Added
@@ -52,3 +60,4 @@ There are **breaking** changes in this release, please read [upgrade notes](UPGR
 
 [Unreleased]: https://github.com/uploadcare/uploadcare-ruby/compare/v2.1.1...HEAD
 [2.1.1]: https://github.com/uploadcare/uploadcare-ruby/compare/v2.0.0...v2.1.1
+[1.2.1]: https://github.com/uploadcare/uploadcare-ruby/compare/6dde...v1.2.1
