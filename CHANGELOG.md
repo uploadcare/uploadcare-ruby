@@ -34,4 +34,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Incorrect dependencies
 
 
-[1.2.1]: https://github.com/uploadcare/uploadcare-ruby/compare/v1.1.0...v1.2.1
+[1.2.1]: https://github.com/uploadcare/uploadcare-ruby/compare/6dde...v1.2.1
