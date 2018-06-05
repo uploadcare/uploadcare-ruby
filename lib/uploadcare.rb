@@ -18,9 +18,6 @@ module Uploadcare
     auth_scheme: :secure,
   }
 
-  warn '[DEPRECATION] `Uploadcare::USER_AGENT` constant is deprecated and will be removed in version 3.0'
-  USER_AGENT = "uploadcare-ruby/#{Gem.ruby_version}/#{Uploadcare::VERSION}"
-
   def self.default_settings
     DEFAULT_SETTINGS
   end
@@ -28,5 +25,14 @@ module Uploadcare
   def self.user_agent(options={})
     warn '[DEPRECATION] `Uploadcare::user_agent` method is deprecated and will be removed in version 3.0'
     UserAgent.new.call(options)
+  end
+
+  def self.const_missing(name)
+    if name == :USER_AGENT
+      warn '[DEPRECATION] `Uploadcare::USER_AGENT` constant is deprecated and will be removed in version 3.0'
+      "uploadcare-ruby/#{Gem.ruby_version}/#{Uploadcare::VERSION}"
+    else
+      super
+    end
   end
 end
