@@ -56,7 +56,7 @@ module Uploadcare
       end
 
       def build_upload_io(file)
-        unless file.is_a?(File)
+        unless file.is_a?(File) || file.is_a?(Tempfile)
           raise ArgumentError, "expected File object, #{file} given"
         end
 
