@@ -5,7 +5,7 @@ module Uploadcare
     # intelegent guess for file or URL uploading
     def upload(object, options = {})
       case object
-      when File then upload_file(object, options)
+      when File, Tempfile then upload_file(object, options)
       when Array then upload_files(object, options)
       # if object is a string, try to upload it as an URL
       when String then upload_url(object, options)
