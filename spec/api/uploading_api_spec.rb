@@ -25,21 +25,36 @@ describe Uploadcare::Api do
   context 'when uploading single object' do
     subject(:uploaded) { api.upload(object, upload_options) }
 
-    context 'when uploading a file' do
-      let(:object) { FILE1 }
-
+    shared_examples 'a successfull upload' do
       it { is_expected.to be_a(Uploadcare::Api::File) }
       it { is_expected.to have_attributes(uuid: match(UUID_REGEX)) }
       include_examples 'respects :store option'
     end
 
+    context 'when uploading a file' do
+      let(:object) { FILE1 }
+      it_behaves_like 'a successfull upload'
+    end
+
+    context 'when uploading a Tempfile' do
+      let(:object) do
+        Tempfile.new(['test', '.png']).tap { |f| f.write(FILE1.read) }
+      end
+
+      it_behaves_like 'a successfull upload'
+    end
+
+    context 'when mime-type could not be determined' do
+      let(:object) { Tempfile.new('test').tap { |f| f.write(FILE1.read) } }
+
+      it_behaves_like 'a successfull upload'
+    end
+
     context 'when uploading from url' do
       let(:object) { IMAGE_URL }
 
-      it { is_expected.to be_a(Uploadcare::Api::File) }
-      it { is_expected.to have_attributes(uuid: match(UUID_REGEX)) }
+      it_behaves_like 'a successfull upload'
       it { expect { api.upload('invalid.url.') }.to raise_error(ArgumentError) }
-      include_examples 'respects :store option'
     end
   end
 

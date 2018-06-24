@@ -4,14 +4,11 @@ module Uploadcare
   module UploadingApi
     # intelegent guess for file or URL uploading
     def upload(object, options = {})
-      case object
-      when File then upload_file(object, options)
-      when Array then upload_files(object, options)
-      # if object is a string, try to upload it as an URL
-      when String then upload_url(object, options)
+      if file?(object)           then upload_file(object, options)
+      elsif object.is_a?(Array)  then upload_files(object, options)
+      elsif object.is_a?(String) then upload_url(object, options)
       else
-        raise ArgumentError, "Expected `object` to be an Uploadcare::Api::File, "\
-          "an Array or a valid URL string, received: `#{object}`"
+        raise ArgumentError, "Expected input to be a file/Array/URL, given: `#{object}`"
       end
     end
 
@@ -66,6 +63,11 @@ module Uploadcare
 
     def upload_params(request_options)
       UploadParams.new(@options, request_options)
+    end
+
+    def file?(object)
+      # will also be true for ActionDispatch::Http::UploadedFile
+      object.respond_to?(:path) && File.exist?(object.path)
     end
   end
 end
