@@ -56,7 +56,7 @@ module Uploadcare
       end
 
       def build_upload_io(file)
-        unless file.is_a?(File)
+        unless file.respond_to?(:path) && File.exist?(file.path)
           raise ArgumentError, "expected File object, #{file} given"
         end
 
@@ -65,7 +65,7 @@ module Uploadcare
 
       def extract_mime_type file
         types = MIME::Types.of(file.path)
-        types[0].content_type
+        types.any? ? types.first.content_type : nil
       end
     end
   end
