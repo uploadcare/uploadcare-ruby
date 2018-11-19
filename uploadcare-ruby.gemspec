@@ -30,6 +30,7 @@ Gem::Specification.new do |gem|
   gem.add_runtime_dependency 'faraday_middleware', '~> 0.9'
   gem.add_runtime_dependency 'multipart-post'
   gem.add_runtime_dependency 'mime-types'
+  gem.add_runtime_dependency 'activesupport'
 
   gem.add_development_dependency 'rspec', '~> 3.6'
   gem.add_development_dependency 'rake'
