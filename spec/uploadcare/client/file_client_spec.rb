@@ -8,7 +8,9 @@ RSpec.describe Uploadcare::FileClient do
   end
 
   describe 'authentication' do
-    it 'performs a simple authentication'
+    it 'performs a simple authentication' do
+      # byebug
+    end
 
     it 'performs Uploadcare authentication'
   end
