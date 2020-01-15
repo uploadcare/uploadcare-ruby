@@ -3,7 +3,8 @@ module Uploadcare
     rest_api 'files'
 
     def index
-      get(path: 'files/', headers: AuthenticationHeader.call)
+      get(path: 'files/', headers: SimpleAuthenticationHeader.call)
     end
+
   end
 end
