@@ -1,26 +1,33 @@
 # This object returns headers needed for authentication
-# Simple header is relatively unsafe, but can be useful for debug
-# uploadcare headers are safer; therefore they are default
+# This authentication method is more secure, but more tedious
+# https://uploadcare.com/docs/api_reference/rest/requests_auth/#auth-uploadcare
+
+require 'digest/md5'
 
 module Uploadcare
   class AuthenticationHeader
-    def self.call
-      if AUTH_TYPE == 'Uploadcare'
-        self.call_secure
-      else
-        self.call_simple
-      end
+    def self.call(method: 'GET', content: '', content_type: 'application/json', uri: '')
+      @method = method
+      @content = content
+      @content_type = content_type
+      @uri = uri
+      @date_for_header = self.timestamp
+      {
+        'Date': @date_for_header,
+        'Authorization': "Uploadcare #{PUBLIC_KEY}:#{self.signature}"
+      }
     end
 
-    def self.call_simple
-      { 'Authorization': "Uploadcare.Simple #{PUBLIC_KEY}:#{SECRET_KEY}" }
+    protected
+
+    def self.signature
+      content_md5 = Digest::MD5.hexdigest(@content)
+      sign_string = [@method, content_md5, @content_type, @date_for_header, @uri].join("\n")
+      digest = OpenSSL::Digest.new('sha1')
+      OpenSSL::HMAC.hexdigest(digest, SECRET_KEY, sign_string)
     end
 
-    def self.call_secure
-      raise('Not implemented yet')
-    end
-
-    def timestamp
+    def self.timestamp
       Time.now.gmtime.strftime('%a, %d %b %Y %H:%M:%S GMT')
     end
   end
