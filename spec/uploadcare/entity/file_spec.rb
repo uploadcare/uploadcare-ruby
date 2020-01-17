@@ -30,7 +30,7 @@ module Uploadcare
       it 'makes a copy of a file' do
         VCR.use_cassette('rest_file_copy') do
           uid = '8f64f313-e6b1-4731-96c0-6751f1e7a50a'
-          file = Uploadcare::File.copy(source: uid)
+          response = Uploadcare::File.copy(source: uid)
         end
       end
 
@@ -39,6 +39,17 @@ module Uploadcare
           uid = '8f64f313-e6b1-4731-96c0-6751f1e7a50a'
           response = Uploadcare::File.copy(source: uid, target: 'nowhere')
           expect(response[:body].to_s).to include('Project has no storage with provided name.')
+        end
+      end
+    end
+
+    describe 'delete' do
+      it 'deletes a file' do
+        VCR.use_cassette('rest_file_delete') do
+          uuid = 'e9a9f291-cc52-4388-bf65-9feec1c75ff9'
+          response = Uploadcare::File.delete(uuid)
+          expect(response[:datetime_removed]).not_to be_empty
+          expect(response[:uuid]).to eq(uuid)
         end
       end
     end

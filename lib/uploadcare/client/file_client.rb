@@ -18,5 +18,10 @@ module Uploadcare
     def copy(**options)
       post(path: 'files/', headers: SimpleAuthenticationHeader.call, body: options.to_json)
     end
+
+    alias :_delete :delete
+    def delete(uuid)
+      _delete(path: "files/#{uuid}/", headers: SimpleAuthenticationHeader.call)
+    end
   end
 end
