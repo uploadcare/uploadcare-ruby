@@ -31,17 +31,26 @@ Or install it yourself as:
 ## Usage
 
 ## Development
+### Docs
+https://uploadcare.com/docs/api_reference/
+https://uploadcare.com/api-refs/rest-api/
+
+### Architecture
 Project uses [ApiStruct](https://github.com/rubygarage/api_struct) architecture.
-### uploadcare_settings.rb
+#### uploadcare_settings.rb
 This file lists used endpoints and their defaults
-### Client
+#### Client
 This folder contains services that interact with API endpoints
-### Entity
+#### Entity
 This folder contains representations of entities existing in API
-### Headers
+#### Headers
 This folder contains anything related to unusual headers
-### Service
+#### Service
 Object that don't fit any pattern
+
+-----
+
+### Headers
 
 ## Contributing
 
