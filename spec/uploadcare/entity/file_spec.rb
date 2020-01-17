@@ -25,5 +25,22 @@ module Uploadcare
         end
       end
     end
+
+    describe 'copy' do
+      it 'makes a copy of a file' do
+        VCR.use_cassette('rest_file_copy') do
+          uid = '8f64f313-e6b1-4731-96c0-6751f1e7a50a'
+          file = Uploadcare::File.copy(source: uid)
+        end
+      end
+
+      it 'accepts other arguments' do
+        VCR.use_cassette('rest_file_copy_arg') do
+          uid = '8f64f313-e6b1-4731-96c0-6751f1e7a50a'
+          response = Uploadcare::File.copy(source: uid, target: 'nowhere')
+          expect(response[:body].to_s).to include('Project has no storage with provided name.')
+        end
+      end
+    end
   end
 end
