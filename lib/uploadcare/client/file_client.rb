@@ -8,8 +8,8 @@ module Uploadcare
       response.fmap { |i| i[:results] }
     end
 
-    def show
-
+    def info(uuid)
+      response = get(path: "files/#{uuid}/", headers: SimpleAuthenticationHeader.call)
     end
   end
 end
