@@ -3,8 +3,13 @@ module Uploadcare
     rest_api 'files'
 
     def index
-      get(path: 'files/', headers: SimpleAuthenticationHeader.call)
+      # Gets list of files without pagination fields
+      response = get(path: 'files/', headers: SimpleAuthenticationHeader.call)
+      response.fmap { |i| i[:results] }
     end
 
+    def show
+
+    end
   end
 end
