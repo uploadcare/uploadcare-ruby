@@ -1,5 +1,8 @@
 require "bundler/setup"
-require "uploadcare/ruby"
+require 'api_struct'
+require 'byebug'
+require 'webmock/rspec'
+require 'uploadcare'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

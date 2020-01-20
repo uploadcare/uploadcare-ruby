@@ -1,7 +1,7 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "uploadcare/version"
+require "uploadcare/ruby/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "uploadcare-ruby"
@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   end
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  spec.require_paths = ["lib"]
+  spec.require_paths = ["lib", 'lib/uploadcare', 'lib/uploadcare/rest']
 
   spec.add_dependency 'api_struct', '~> 0.1.0'
   spec.add_dependency 'dry-configurable', '~> 0.7.0'
@@ -43,4 +43,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency 'rubocop', '~> 0.55.0'
+  spec.add_development_dependency 'byebug'
+  spec.add_development_dependency 'webmock'
 end
