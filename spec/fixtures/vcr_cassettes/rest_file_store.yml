@@ -11,8 +11,10 @@ http_interactions:
       - application/json
       Accept:
       - application/vnd.uploadcare-v0.5+json
+      Date:
+      - Mon, 20 Jan 2020 16:05:13 GMT
       Authorization:
-      - Uploadcare.Simple c8499ee6dc44194c00d2:81d1ab1b5e9cb74d1ab1
+      - Uploadcare c8499ee6dc44194c00d2:427a8a7a3b35ceead97c28c0c133334e7ab55ad9
       Connection:
       - close
       Host:
@@ -25,7 +27,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 20 Jan 2020 08:40:00 GMT
+      - Mon, 20 Jan 2020 16:05:13 GMT
       Content-Type:
       - application/vnd.uploadcare-v0.5+json
       Content-Length:
@@ -48,7 +50,7 @@ http_interactions:
       - SAMEORIGIN
     body:
       encoding: ASCII-8BIT
-      string: '{"datetime_removed":null,"datetime_stored":"2020-01-20T08:40:00.661533Z","datetime_uploaded":"2020-01-17T14:46:41.919939Z","image_info":{"color_mode":"RGB","orientation":null,"format":"JPEG","sequence":false,"height":183,"width":190,"geo_location":null,"datetime_original":null,"dpi":null},"is_image":true,"is_ready":true,"mime_type":"image/jpeg","original_file_url":"https://ucarecdn.com/e9a9f291-cc52-4388-bf65-9feec1c75ff9/imagepng.jpeg","original_filename":"image.png.jpeg","size":5345,"url":"https://api.uploadcare.com/files/e9a9f291-cc52-4388-bf65-9feec1c75ff9/","uuid":"e9a9f291-cc52-4388-bf65-9feec1c75ff9","source":null}'
+      string: '{"datetime_removed":null,"datetime_stored":"2020-01-20T15:53:29.507216Z","datetime_uploaded":"2020-01-17T14:46:41.919939Z","image_info":{"color_mode":"RGB","orientation":null,"format":"JPEG","sequence":false,"height":183,"width":190,"geo_location":null,"datetime_original":null,"dpi":null},"is_image":true,"is_ready":true,"mime_type":"image/jpeg","original_file_url":"https://ucarecdn.com/e9a9f291-cc52-4388-bf65-9feec1c75ff9/imagepng.jpeg","original_filename":"image.png.jpeg","size":5345,"url":"https://api.uploadcare.com/files/e9a9f291-cc52-4388-bf65-9feec1c75ff9/","uuid":"e9a9f291-cc52-4388-bf65-9feec1c75ff9","source":null}'
     http_version: 
-  recorded_at: Mon, 20 Jan 2020 08:40:00 GMT
+  recorded_at: Mon, 20 Jan 2020 16:05:14 GMT
 recorded_with: VCR 5.0.0

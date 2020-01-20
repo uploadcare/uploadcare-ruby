@@ -16,7 +16,10 @@ module Uploadcare
     # from: number of files skipped
 
     def file_list(**options)
-      get(path: 'files/', headers: SimpleAuthenticationHeader.call, params: options)
+      query = ''
+      query = '?' + options.to_a.map { |x| "#{x[0]}=#{x[1]}" }.join("&") unless options.empty?
+      headers = AuthenticationHeader.call(method: 'GET', uri: "/files/#{query}")
+      get(path: 'files/', headers: headers, params: options)
     end
     alias list file_list
 

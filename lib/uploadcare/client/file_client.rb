@@ -6,7 +6,7 @@ module Uploadcare
   # https://uploadcare.com/api-refs/rest-api/v0.5.0/#tag/File
   class FileClient < ApiStruct::Client
     rest_api 'files'
-
+    
     # Acquire file info
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/fileInfo
 

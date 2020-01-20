@@ -2,21 +2,18 @@
 
 require 'spec_helper'
 
-RSpec.describe Uploadcare::AuthenticationHeader do
-  describe 'Uploadcare' do
-    describe 'signature' do
-      before(:each) do
-        allow(Time).to receive(:now).and_return(Time.parse('2017.02.02 12:58:50 +0000'))
-        Uploadcare::PUBLIC_KEY = 'pub'
-        Uploadcare::SECRET_KEY = 'priv'
-      end
+module Uploadcare
+  RSpec.describe AuthenticationHeader do
+    before do
+      allow(SimpleAuthHeader).to receive(:call).and_return('SimpleAuth called')
+      allow(SecureAuthHeader).to receive(:call).and_return('SecureAuth called')
+    end
 
-      it 'returns correct headers for complex authentication' do
-        headers = Uploadcare::AuthenticationHeader.call(method: 'POST',
-          uri: '/path', content_type: 'application/x-www-form-urlencoded')
-        expected = '47af79c7f800de03b9e0f2dbb1e589cba7b210c2'
-        expect(headers[:Authorization]).to eq "Uploadcare pub:#{expected}"
-      end
+    it 'decides which header to use depending on configuration' do
+      AUTH_TYPE = 'Uploadcare.Simple'
+      expect(AuthenticationHeader.call).to eq('SimpleAuth called')
+      AUTH_TYPE = 'Uploadcare'
+      expect(AuthenticationHeader.call).to eq('SecureAuth called')
     end
   end
 end

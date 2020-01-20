@@ -8,7 +8,7 @@ module Uploadcare
 
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#tag/Project
     def show
-      get(path: 'project/', headers: SimpleAuthenticationHeader.call)
+      get(path: "project/", headers: AuthenticationHeader.call(method: 'GET', uri: '/project/'))
     end
   end
 end
