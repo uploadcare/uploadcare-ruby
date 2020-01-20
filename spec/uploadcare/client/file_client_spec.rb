@@ -67,5 +67,25 @@ module Uploadcare
         end
       end
     end
+
+    describe 'batch_store' do
+      it 'changes files` statuses to stored' do
+        VCR.use_cassette('rest_file_batch_store') do
+          uuids = ['e9a9f291-cc52-4388-bf65-9feec1c75ff9', 'c724feac-86f7-447c-b2d6-b0ced220173d']
+          response = subject.batch_store(uuids)
+          response_value = response.value!
+          expect(response_value[:problems]).to be_empty
+          expect(uuids.all? { |uuid| response_value[:result].to_s.include?(uuid) }).to be true
+        end
+      end
+
+      it 'changes files` statuses to stored' do
+        VCR.use_cassette('rest_file_batch_store_fail') do
+          uuids = ['nonexistent', 'nonexistent', 'other_nonexistent']
+          response = subject.batch_store(uuids)
+          expect(response.value![:problems]).not_to be_empty
+        end
+      end
+    end
   end
 end

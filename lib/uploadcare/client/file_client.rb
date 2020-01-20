@@ -27,5 +27,9 @@ module Uploadcare
     def store(uuid)
       put(path: "files/#{uuid}/storage/", headers: SimpleAuthenticationHeader.call)
     end
+
+    def batch_store(uuids)
+      put(path: "files/storage/", headers: SimpleAuthenticationHeader.call, body: uuids.to_json)
+    end
   end
 end
