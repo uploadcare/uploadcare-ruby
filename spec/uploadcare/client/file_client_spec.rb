@@ -3,7 +3,7 @@ require 'spec_helper'
 module Uploadcare
   RSpec.describe FileClient do
     subject { FileClient.new }
-    
+
     describe 'index' do
       before do
         VCR.use_cassette('file') do
@@ -18,7 +18,7 @@ module Uploadcare
 
     describe 'info' do
       it 'shows insider info about that file' do
-        VCR.use_cassette('file_info') do
+        VCR.use_cassette('rest_file_info') do
           uuid = '8f64f313-e6b1-4731-96c0-6751f1e7a50a'
           file = subject.info(uuid)
           expect(file.value![:uuid]).to eq(uuid)
@@ -54,6 +54,16 @@ module Uploadcare
           response_value = response.value!
           expect(response_value[:datetime_removed]).not_to be_empty
           expect(response_value[:uuid]).to eq(uuid)
+        end
+      end
+    end
+
+    describe 'store' do
+      it 'changes file`s status to stored' do
+        VCR.use_cassette('rest_file_store') do
+          uuid = 'e9a9f291-cc52-4388-bf65-9feec1c75ff9'
+          response = subject.store(uuid)
+          expect(response.value![:datetime_stored]).not_to be_empty
         end
       end
     end
