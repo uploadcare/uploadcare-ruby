@@ -4,8 +4,8 @@ module Uploadcare
   class FileListClient < ApiStruct::Client
     rest_api 'files'
 
-    def file_list
-      get(path: 'files/', headers: SimpleAuthenticationHeader.call)
+    def file_list(**options)
+      get(path: 'files/', headers: SimpleAuthenticationHeader.call, params: options)
     end
   end
 end
