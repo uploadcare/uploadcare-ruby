@@ -24,6 +24,14 @@ module Uploadcare
           expect(file.value![:uuid]).to eq(uuid)
         end
       end
+
+      it 'shows nothing on invalid file' do
+        VCR.use_cassette('rest_file_info_fail') do
+          uuid = 'nonexistent'
+          file = subject.info(uuid)
+          expect(file.failure?).to be true
+        end
+      end
     end
 
     describe 'copy' do
