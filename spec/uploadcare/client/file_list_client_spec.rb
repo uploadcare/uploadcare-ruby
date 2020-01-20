@@ -14,6 +14,16 @@ module Uploadcare
           end
         end
       end
+
+      it 'processes options' do
+        VCR.use_cassette('rest_file_list_limited') do
+          first_page = subject.file_list(limit: 2).value!
+          second_page = subject.file_list(limit: 2).value!
+          expect(first_page[:per_page]).to eq(2)
+          expect(first_page[:results].length).to eq(2)
+          expect(first_page[:results]).not_to eq(second_page[:result])
+        end
+      end
     end
   end
 end
