@@ -23,5 +23,9 @@ module Uploadcare
     def delete(uuid)
       _delete(path: "files/#{uuid}/", headers: SimpleAuthenticationHeader.call)
     end
+
+    def store(uuid)
+      put(path: "files/#{uuid}/storage/", headers: SimpleAuthenticationHeader.call)
+    end
   end
 end
