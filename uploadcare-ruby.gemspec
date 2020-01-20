@@ -1,17 +1,17 @@
 
 lib = File.expand_path("../lib", __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "uploadcare/version"
+require "uploadcare/ruby/version"
 
 Gem::Specification.new do |spec|
   spec.name          = "uploadcare-ruby"
   spec.version       = Uploadcare::VERSION
   spec.authors       = ['Stepan Redka']
-  spec.email         = ['stepan.redka@jetruby.com']
+  spec.email         = ['stepan.redka@railsmuffin.com']
 
   spec.summary       = 'Ruby wrapper for uploadcare API'
   spec.description   = spec.summary
-  spec.homepage      = "https://gl.jetru.by/uploadcare/uploadcare-ruby"
+  spec.homepage      = 'https://github.com/uploadcare/uploadcare-ruby-next'
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -20,8 +20,8 @@ Gem::Specification.new do |spec|
     spec.metadata["allowed_push_host"] = "TODO: Set to 'http://mygemserver.com'"
 
     spec.metadata["homepage_uri"] = spec.homepage
-    spec.metadata["source_code_uri"] = "https://gl.jetru.by/uploadcare/uploadcare-ruby"
-    spec.metadata["changelog_uri"] = "https://gl.jetru.by/uploadcare/uploadcare-ruby/CHANGELOG.md"
+    spec.metadata["source_code_uri"] = 'https://github.com/uploadcare/uploadcare-ruby-next'
+    spec.metadata["changelog_uri"] = 'https://github.com/uploadcare/uploadcare-ruby-next/CHANGELOG.md'
   else
     raise "RubyGems 2.0 or newer is required to protect against " \
       "public gem pushes."
@@ -34,7 +34,7 @@ Gem::Specification.new do |spec|
   end
   spec.bindir        = "exe"
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
-  spec.require_paths = ["lib"]
+  spec.require_paths = ["lib", 'lib/uploadcare', 'lib/uploadcare/rest']
 
   spec.add_dependency 'api_struct', '~> 0.1.0'
   spec.add_dependency 'dry-configurable', '~> 0.7.0'
@@ -43,4 +43,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "rspec", "~> 3.0"
   spec.add_development_dependency 'rubocop', '~> 0.55.0'
+  spec.add_development_dependency 'byebug'
+  spec.add_development_dependency 'webmock'
 end
