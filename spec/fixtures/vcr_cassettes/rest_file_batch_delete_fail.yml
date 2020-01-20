@@ -1,0 +1,54 @@
+---
+http_interactions:
+- request:
+    method: delete
+    uri: https://api.uploadcare.com/files/storage/
+    body:
+      encoding: UTF-8
+      string: '["nonexistent","other_nonexistent"]'
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.5+json
+      Authorization:
+      - Uploadcare.Simple c8499ee6dc44194c00d2:81d1ab1b5e9cb74d1ab1
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 20 Jan 2020 09:22:48 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.5+json
+      Content-Length:
+      - '94'
+      Connection:
+      - close
+      Server:
+      - nginx
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Vary:
+      - Accept
+      Allow:
+      - DELETE, OPTIONS, PUT
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"ok","problems":{"other_nonexistent":"Invalid","nonexistent":"Invalid"},"result":[]}'
+    http_version: 
+  recorded_at: Mon, 20 Jan 2020 09:22:48 GMT
+recorded_with: VCR 5.0.0

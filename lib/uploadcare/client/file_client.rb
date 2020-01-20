@@ -31,5 +31,9 @@ module Uploadcare
     def batch_store(uuids)
       put(path: "files/storage/", headers: SimpleAuthenticationHeader.call, body: uuids.to_json)
     end
+
+    def batch_delete(uuids)
+      _delete(path: "files/storage/", headers: SimpleAuthenticationHeader.call, body: uuids.to_json)
+    end
   end
 end
