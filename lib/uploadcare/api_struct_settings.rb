@@ -1,5 +1,8 @@
+<<<<<<< 492757944f839e4ad48d57d1fecd75f39acfb644
 # frozen_string_literal: true
 
+=======
+>>>>>>> feat: basic requests
 ApiStruct::Settings.configure do |config|
   config.endpoints = {
     rest_api: {
