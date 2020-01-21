@@ -1,0 +1,56 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.uploadcare.com/webhooks/unsubscribe/
+    body:
+      encoding: UTF-8
+      string: '{"name":"example.com"}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.5+json
+      Date:
+      - Tue, 21 Jan 2020 12:36:27 GMT
+      Authorization:
+      - Uploadcare c8499ee6dc44194c00d2:150aff672213117a39e2a2a9800b89ed55a3b6ff
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 403
+      message: Forbidden
+    headers:
+      Date:
+      - Tue, 21 Jan 2020 12:36:28 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.5+json
+      Content-Length:
+      - '35'
+      Connection:
+      - close
+      Server:
+      - nginx
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Vary:
+      - Accept
+      Allow:
+      - OPTIONS, POST
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: ASCII-8BIT
+      string: '{"detail":"You can''t use webhooks"}'
+    http_version: 
+  recorded_at: Tue, 21 Jan 2020 12:36:28 GMT
+recorded_with: VCR 5.0.0

@@ -4,7 +4,7 @@ module Uploadcare
   RSpec.describe Webhook do
     subject { Webhook }
     it 'responds to expected methods' do
-      %i[list].each do |method|
+      %i[list delete].each do |method|
         expect(subject).to respond_to(method)
       end
     end
