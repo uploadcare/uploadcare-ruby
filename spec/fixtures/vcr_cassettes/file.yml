@@ -1,0 +1,54 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.uploadcare.com/files/
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.5+json
+      Authorization:
+      - Uploadcare.Simple c8499ee6dc44194c00d2:81d1ab1b5e9cb74d1ab1
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 17 Jan 2020 09:41:57 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.5+json
+      Content-Length:
+      - '1938'
+      Connection:
+      - close
+      Server:
+      - nginx
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Vary:
+      - Accept
+      Allow:
+      - GET, HEAD, OPTIONS, POST
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: ASCII-8BIT
+      string: '{"next":null,"previous":null,"total":3,"per_page":100,"results":[{"datetime_removed":null,"datetime_stored":"2020-01-16T14:48:46.897379Z","datetime_uploaded":"2020-01-16T14:48:46.776894Z","image_info":{"color_mode":"RGBA","orientation":null,"format":"PNG","sequence":false,"height":300,"width":300,"geo_location":null,"datetime_original":null,"dpi":[72,72]},"is_image":true,"is_ready":true,"mime_type":"image/png","original_file_url":"https://ucarecdn.com/bf3aba03-2213-46d0-83f0-4a240002f3ec/Test.png","original_filename":"Test.png","size":3118,"url":"https://api.uploadcare.com/files/bf3aba03-2213-46d0-83f0-4a240002f3ec/","uuid":"bf3aba03-2213-46d0-83f0-4a240002f3ec","source":null},{"datetime_removed":null,"datetime_stored":"2020-01-16T15:02:30.430281Z","datetime_uploaded":"2020-01-16T15:02:30.308894Z","image_info":{"color_mode":"RGBA","orientation":null,"format":"PNG","sequence":false,"height":300,"width":300,"geo_location":null,"datetime_original":null,"dpi":[72,72]},"is_image":true,"is_ready":true,"mime_type":"image/png","original_file_url":"https://ucarecdn.com/c724feac-86f7-447c-b2d6-b0ced220173d/Test.png","original_filename":"Test.png","size":3118,"url":"https://api.uploadcare.com/files/c724feac-86f7-447c-b2d6-b0ced220173d/","uuid":"c724feac-86f7-447c-b2d6-b0ced220173d","source":null},{"datetime_removed":null,"datetime_stored":"2020-01-16T15:03:15.315064Z","datetime_uploaded":"2020-01-16T15:03:14.676902Z","image_info":{"color_mode":"RGB","orientation":null,"format":"JPEG","sequence":false,"height":183,"width":190,"geo_location":null,"datetime_original":null,"dpi":null},"is_image":true,"is_ready":true,"mime_type":"image/jpeg","original_file_url":"https://ucarecdn.com/8f64f313-e6b1-4731-96c0-6751f1e7a50a/imagepng.jpeg","original_filename":"image.png.jpeg","size":5345,"url":"https://api.uploadcare.com/files/8f64f313-e6b1-4731-96c0-6751f1e7a50a/","uuid":"8f64f313-e6b1-4731-96c0-6751f1e7a50a","source":null}]}'
+    http_version: 
+  recorded_at: Fri, 17 Jan 2020 09:41:58 GMT
+recorded_with: VCR 5.0.0
