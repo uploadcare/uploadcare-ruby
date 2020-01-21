@@ -14,5 +14,10 @@ module Uploadcare
       headers = AuthenticationHeader.call(method: 'POST', uri: '/webhooks/unsubscribe/', content: body)
       post(path: 'webhooks/unsubscribe/', headers: headers, body: body)
     end
+
+    def update(id)
+      headers = AuthenticationHeader.call(method: 'POST', uri: "/webhooks/#{id}/")
+      post(path: "webhooks/#{id}/", headers: headers)
+    end
   end
 end

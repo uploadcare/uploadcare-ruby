@@ -24,5 +24,15 @@ module Uploadcare
         end
       end
     end
+
+    describe 'update' do
+      it 'updates a webhook' do
+        VCR.use_cassette('rest_webhook_update') do
+          response = subject.update(1)
+          response_value = response.value!
+          expect(response_value[:id]).to eq(1)
+        end
+      end
+    end
   end
 end
