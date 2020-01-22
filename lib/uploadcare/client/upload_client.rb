@@ -29,7 +29,8 @@ module Uploadcare
     def upload_params(store = false)
       {
         'UPLOADCARE_PUB_KEY': PUBLIC_KEY,
-        'UPLOADCARE_STORE': (store == true) ? '1' : '0'
+        'UPLOADCARE_STORE': (store == true) ? '1' : '0',
+        'signature': Upload::SignatureGenerator.call
       }
     end
 
