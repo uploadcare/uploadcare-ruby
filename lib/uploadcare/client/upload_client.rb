@@ -16,9 +16,10 @@ module Uploadcare
       body = HTTP::FormData::Multipart.new(
         upload_params(store).merge(files_formdata(arr))
       )
-      post(path: 'base/',
+      response = post(path: 'base/',
            headers: { 'Content-type': body.content_type },
            body: body)
+      response.fmap { |files| { 'files': files.map { |fname, uuid| { original_filename: fname.to_s, uuid: uuid } } } }
     end
 
     private

@@ -18,7 +18,7 @@ module Uploadcare
         VCR.use_cassette('upload_upload_many') do
           response = subject.upload([file, another_file])
           expect(response.success?).to be true
-          expect(response.success.length).to eq 2
+          expect(response.success[:files].length).to eq 2
         end
       end
     end
