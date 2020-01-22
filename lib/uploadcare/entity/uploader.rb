@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Uploadcare
+  # https://uploadcare.com/api-refs/upload-api/#tag/Upload
   class Uploader < ApiStruct::Entity
     client_service UploadClient
 
