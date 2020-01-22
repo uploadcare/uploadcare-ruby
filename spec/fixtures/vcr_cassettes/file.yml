@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - application/vnd.uploadcare-v0.5+json
       Authorization:
-      - Uploadcare.Simple c8499ee6dc44194c00d2:81d1ab1b5e9cb74d1ab1
+      - Uploadcare.Simple public:secret
       Connection:
       - close
       Host:
