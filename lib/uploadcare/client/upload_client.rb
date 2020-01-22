@@ -5,8 +5,13 @@ module Uploadcare
     upload_api
 
     def upload(object, store: false)
-      if file?(object)           then upload_many([object], store: store)
-      elsif object.is_a?(Array)  then upload_many(object, store: store)
+      case
+      when file?(object)
+        upload_many([object], store: store)
+      when object.is_a?(Array)
+        upload_many(object, store: store)
+      when object.is_a?(String)
+        raise ArgumentError, 'uploading from strings is not implemented yet'
       else
         raise ArgumentError, "Expected input to be a file/Array/URL, given: `#{object}`"
       end
