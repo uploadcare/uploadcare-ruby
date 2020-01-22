@@ -4,6 +4,6 @@ module Uploadcare
   class Uploader < ApiStruct::Entity
     client_service UploadClient
 
-    attr_entity :file
+    attr_entity :files
   end
 end
