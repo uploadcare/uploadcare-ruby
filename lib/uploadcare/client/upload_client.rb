@@ -7,7 +7,7 @@ module Uploadcare
     upload_api
 
     # https://uploadcare.com/api-refs/upload-api/#operation/baseUpload
-    
+
     def upload_many(arr, **options)
       body = HTTP::FormData::Multipart.new(
         upload_params(options[:store]).merge(files_formdata(arr))
