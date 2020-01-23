@@ -1,0 +1,271 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/multipart/start/
+    body:
+      encoding: UTF-8
+      string: "-----------------------f4dfcb3b86e4a9faff02edcd0cbaee22c9a2d3bc93\r\nContent-Disposition:
+        form-data; name=\"UPLOADCARE_PUB_KEY\"\r\n\r\nc8499ee6dc44194c00d2\r\n-----------------------f4dfcb3b86e4a9faff02edcd0cbaee22c9a2d3bc93\r\nContent-Disposition:
+        form-data; name=\"UPLOADCARE_STORE\"\r\n\r\n0\r\n-----------------------f4dfcb3b86e4a9faff02edcd0cbaee22c9a2d3bc93\r\nContent-Disposition:
+        form-data; name=\"filename\"\r\n\r\nbig.jpg\r\n-----------------------f4dfcb3b86e4a9faff02edcd0cbaee22c9a2d3bc93\r\nContent-Disposition:
+        form-data; name=\"size\"\r\n\r\n14679474\r\n-----------------------f4dfcb3b86e4a9faff02edcd0cbaee22c9a2d3bc93\r\nContent-Disposition:
+        form-data; name=\"content_type\"\r\n\r\napplication/octet-stream\r\n-----------------------f4dfcb3b86e4a9faff02edcd0cbaee22c9a2d3bc93--\r\n"
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - multipart/form-data; boundary=---------------------f4dfcb3b86e4a9faff02edcd0cbaee22c9a2d3bc93
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 23 Jan 2020 13:03:13 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1596'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      X-Content-Type-Options:
+      - nosniff
+      Access-Control-Max-Age:
+      - '1'
+      X-Xss-Protection:
+      - 1; mode=block
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - POST, OPTIONS
+    body:
+      encoding: ASCII-8BIT
+      string: '{"parts":["https://uploadcare.s3-accelerate.amazonaws.com/d8c914e3-3aef-4976-b0b6-855a9638da2d/big.jpg?partNumber=1&uploadId=CS0G.NW9gLI4Sp6rpfvYjezk.kn7hFKjaDRCwHwEh1F7lhSHezIwdQeFf19sg0C2wklpXq3Sa43hKehb6YEyjP6cABRiQ8vNdMbwEuSOUriJPA4F68godAaaP1jHS.Tk&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Expires=86400&X-Amz-Credential=AKIAI24Z75ZC7N6QJQHA%2F20200123%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-SignedHeaders=host&X-Amz-Date=20200123T130313Z&X-Amz-Signature=5c514bdf7d4ab3fc3a3cf45d57dc013870a82472fcae36572cbfb0bdf19f0383","https://uploadcare.s3-accelerate.amazonaws.com/d8c914e3-3aef-4976-b0b6-855a9638da2d/big.jpg?partNumber=2&uploadId=CS0G.NW9gLI4Sp6rpfvYjezk.kn7hFKjaDRCwHwEh1F7lhSHezIwdQeFf19sg0C2wklpXq3Sa43hKehb6YEyjP6cABRiQ8vNdMbwEuSOUriJPA4F68godAaaP1jHS.Tk&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Expires=86400&X-Amz-Credential=AKIAI24Z75ZC7N6QJQHA%2F20200123%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-SignedHeaders=host&X-Amz-Date=20200123T130313Z&X-Amz-Signature=a4d93e4b4ae072b4a5537aa5abf6f34d41df511a71b1eee7fbaf5382d1c850be","https://uploadcare.s3-accelerate.amazonaws.com/d8c914e3-3aef-4976-b0b6-855a9638da2d/big.jpg?partNumber=3&uploadId=CS0G.NW9gLI4Sp6rpfvYjezk.kn7hFKjaDRCwHwEh1F7lhSHezIwdQeFf19sg0C2wklpXq3Sa43hKehb6YEyjP6cABRiQ8vNdMbwEuSOUriJPA4F68godAaaP1jHS.Tk&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Expires=86400&X-Amz-Credential=AKIAI24Z75ZC7N6QJQHA%2F20200123%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-SignedHeaders=host&X-Amz-Date=20200123T130313Z&X-Amz-Signature=a58ad64a1e632cf212637d0a5dab983cafcb36a93fb4daf0db00781095725daf"],"uuid":"d8c914e3-3aef-4976-b0b6-855a9638da2d"}'
+    http_version: 
+  recorded_at: Thu, 23 Jan 2020 13:03:13 GMT
+- request:
+    method: put
+    uri: https://uploadcare.s3-accelerate.amazonaws.com/d8c914e3-3aef-4976-b0b6-855a9638da2d/big.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAI24Z75ZC7N6QJQHA/20200123/us-east-1/s3/aws4_request&X-Amz-Date=20200123T130313Z&X-Amz-Expires=86400&X-Amz-Signature=5c514bdf7d4ab3fc3a3cf45d57dc013870a82472fcae36572cbfb0bdf19f0383&X-Amz-SignedHeaders=host&partNumber=1&uploadId=CS0G.NW9gLI4Sp6rpfvYjezk.kn7hFKjaDRCwHwEh1F7lhSHezIwdQeFf19sg0C2wklpXq3Sa43hKehb6YEyjP6cABRiQ8vNdMbwEuSOUriJPA4F68godAaaP1jHS.Tk
+    body:
+      encoding: UTF-8
+      string: 5 MB string in binary
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/octet-stream
+      Connection:
+      - close
+      Host:
+      - uploadcare.s3-accelerate.amazonaws.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Length:
+      - '0'
+      Connection:
+      - close
+      X-Amz-Id-2:
+      - KPImERA3QoNsKJb+wF1kVOYCXxOH3ydfUqKSOpJrhH44mYEIum9xMgbuP067CdvF+W6MQE+si5g=
+      X-Amz-Request-Id:
+      - 49423F5B7457ACF4
+      Date:
+      - Thu, 23 Jan 2020 13:03:18 GMT
+      Etag:
+      - '"be18919d68022a42053129186a3c7da1"'
+      X-Amz-Server-Side-Encryption:
+      - AES256
+      Server:
+      - AmazonS3
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 ec9e3bc729d9c6d55ed32446408ad62f.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - FRA2-C2
+      X-Amz-Cf-Id:
+      - YAapyVivTrdXmYS7voMWf0KeET_L1dbd64nbbhrcf3yFvYqfTjUrNA==
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    http_version: 
+  recorded_at: Thu, 23 Jan 2020 13:03:18 GMT
+- request:
+    method: put
+    uri: https://uploadcare.s3-accelerate.amazonaws.com/d8c914e3-3aef-4976-b0b6-855a9638da2d/big.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAI24Z75ZC7N6QJQHA/20200123/us-east-1/s3/aws4_request&X-Amz-Date=20200123T130313Z&X-Amz-Expires=86400&X-Amz-Signature=a4d93e4b4ae072b4a5537aa5abf6f34d41df511a71b1eee7fbaf5382d1c850be&X-Amz-SignedHeaders=host&partNumber=2&uploadId=CS0G.NW9gLI4Sp6rpfvYjezk.kn7hFKjaDRCwHwEh1F7lhSHezIwdQeFf19sg0C2wklpXq3Sa43hKehb6YEyjP6cABRiQ8vNdMbwEuSOUriJPA4F68godAaaP1jHS.Tk
+    body:
+      encoding: UTF-8
+      string: 5 MB string in binary
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/octet-stream
+      Connection:
+      - close
+      Host:
+      - uploadcare.s3-accelerate.amazonaws.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Length:
+      - '0'
+      Connection:
+      - close
+      X-Amz-Id-2:
+      - 4U/5cvO6NIRd+bgLqhgKlEmhal6e3pabLZEwYhftDB+79VYoa8QYgbj8gjQiR0lrk9NcAC8vV0c=
+      X-Amz-Request-Id:
+      - E252405AA1F0E700
+      Date:
+      - Thu, 23 Jan 2020 13:03:22 GMT
+      Etag:
+      - '"f4ff1342ee44e1c27405fb7c88a18140"'
+      X-Amz-Server-Side-Encryption:
+      - AES256
+      Server:
+      - AmazonS3
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 216b2e0a8a27f8fca1b540a1c4ea6922.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - FRA2-C2
+      X-Amz-Cf-Id:
+      - ey0AKh_C00bwD1RXPFAUhRGyloWv0mIl-GlYhDAxsLWg8g0VV6JtWQ==
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    http_version: 
+  recorded_at: Thu, 23 Jan 2020 13:03:22 GMT
+- request:
+    method: put
+    uri: https://uploadcare.s3-accelerate.amazonaws.com/d8c914e3-3aef-4976-b0b6-855a9638da2d/big.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAI24Z75ZC7N6QJQHA/20200123/us-east-1/s3/aws4_request&X-Amz-Date=20200123T130313Z&X-Amz-Expires=86400&X-Amz-Signature=a58ad64a1e632cf212637d0a5dab983cafcb36a93fb4daf0db00781095725daf&X-Amz-SignedHeaders=host&partNumber=3&uploadId=CS0G.NW9gLI4Sp6rpfvYjezk.kn7hFKjaDRCwHwEh1F7lhSHezIwdQeFf19sg0C2wklpXq3Sa43hKehb6YEyjP6cABRiQ8vNdMbwEuSOUriJPA4F68godAaaP1jHS.Tk
+    body:
+      encoding: UTF-8
+      string: 3 MB string in binary
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/octet-stream
+      Connection:
+      - close
+      Host:
+      - uploadcare.s3-accelerate.amazonaws.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Length:
+      - '0'
+      Connection:
+      - close
+      X-Amz-Id-2:
+      - 7qoevhxZd5lfo4bcCUDrq2Ab/wliYiK2dP00eMO92r1ZdMjuAkV/dhllmKGQzHDbsp0PGZ4x5ow=
+      X-Amz-Request-Id:
+      - '088A0D5FA1AD3EC9'
+      Date:
+      - Thu, 23 Jan 2020 13:03:26 GMT
+      Etag:
+      - '"b37ea7944af3a36e79a9c4e803b0afc0"'
+      X-Amz-Server-Side-Encryption:
+      - AES256
+      Server:
+      - AmazonS3
+      X-Cache:
+      - Miss from cloudfront
+      Via:
+      - 1.1 56fad5a50ef67bd961b9722ed0931839.cloudfront.net (CloudFront)
+      X-Amz-Cf-Pop:
+      - FRA2-C2
+      X-Amz-Cf-Id:
+      - K2Lq84BVetMN-KWtnCYtmvI2je1yhXs-j4QIiYU9fPz1Md_9nzhRmw==
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    http_version: 
+  recorded_at: Thu, 23 Jan 2020 13:03:25 GMT
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/multipart/complete/
+    body:
+      encoding: UTF-8
+      string: "-----------------------86861ae86ae21f739a9befba64db0b3ed3662d821c\r\nContent-Disposition:
+        form-data; name=\"UPLOADCARE_PUB_KEY\"\r\n\r\nc8499ee6dc44194c00d2\r\n-----------------------86861ae86ae21f739a9befba64db0b3ed3662d821c\r\nContent-Disposition:
+        form-data; name=\"uuid\"\r\n\r\nd8c914e3-3aef-4976-b0b6-855a9638da2d\r\n-----------------------86861ae86ae21f739a9befba64db0b3ed3662d821c--\r\n"
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - multipart/form-data; boundary=---------------------86861ae86ae21f739a9befba64db0b3ed3662d821c
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 23 Jan 2020 13:03:27 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '492'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      X-Content-Type-Options:
+      - nosniff
+      Access-Control-Max-Age:
+      - '1'
+      X-Xss-Protection:
+      - 1; mode=block
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - POST, OPTIONS
+    body:
+      encoding: ASCII-8BIT
+      string: '{"is_stored":false,"done":14679474,"file_id":"d8c914e3-3aef-4976-b0b6-855a9638da2d","total":14679474,"size":14679474,"uuid":"d8c914e3-3aef-4976-b0b6-855a9638da2d","is_image":true,"filename":"big.jpg","video_info":null,"is_ready":true,"original_filename":"big.jpg","image_info":{"color_mode":"RGB","orientation":1,"format":"JPEG","sequence":false,"height":4542,"width":10109,"geo_location":null,"datetime_original":"2010-07-31T15:18:35","dpi":[300,300]},"mime_type":"application/octet-stream"}'
+    http_version: 
+  recorded_at: Thu, 23 Jan 2020 13:03:27 GMT
+recorded_with: VCR 5.0.0
