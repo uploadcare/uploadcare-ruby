@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # https://uploadcare.com/docs/api_reference/rest/accessing_files/
 # https://uploadcare.com/api-refs/rest-api/v0.5.0/#tag/File
 

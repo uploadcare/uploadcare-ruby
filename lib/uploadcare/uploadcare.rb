@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'api_struct'
 require 'dry-configurable'
 require 'api_struct_settings'
