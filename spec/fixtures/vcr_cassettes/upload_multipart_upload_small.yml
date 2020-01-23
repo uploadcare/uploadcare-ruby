@@ -1,0 +1,63 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/multipart/start/
+    body:
+      encoding: UTF-8
+      string: "-----------------------530f9f66d729ba85d2263b46051af812e2c82ad02c\r\nContent-Disposition:
+        form-data; name=\"UPLOADCARE_PUB_KEY\"\r\n\r\nc8499ee6dc44194c00d2\r\n-----------------------530f9f66d729ba85d2263b46051af812e2c82ad02c\r\nContent-Disposition:
+        form-data; name=\"UPLOADCARE_STORE\"\r\n\r\n0\r\n-----------------------530f9f66d729ba85d2263b46051af812e2c82ad02c\r\nContent-Disposition:
+        form-data; name=\"filename\"\r\n\r\nkitten.jpeg\r\n-----------------------530f9f66d729ba85d2263b46051af812e2c82ad02c\r\nContent-Disposition:
+        form-data; name=\"size\"\r\n\r\n1290\r\n-----------------------530f9f66d729ba85d2263b46051af812e2c82ad02c\r\nContent-Disposition:
+        form-data; name=\"content_type\"\r\n\r\napplication/octet-stream\r\n-----------------------530f9f66d729ba85d2263b46051af812e2c82ad02c--\r\n"
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - multipart/form-data; boundary=---------------------530f9f66d729ba85d2263b46051af812e2c82ad02c
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 23 Jan 2020 13:42:06 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '139'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      X-Content-Type-Options:
+      - nosniff
+      Access-Control-Max-Age:
+      - '1'
+      X-Xss-Protection:
+      - 1; mode=block
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - POST, OPTIONS
+    body:
+      encoding: ASCII-8BIT
+      string: '{"error": {"content": "File size can not be less than 10485760 bytes.
+        Please use direct upload instead of multipart.", "status_code": 400}}'
+    http_version: 
+  recorded_at: Thu, 23 Jan 2020 13:42:06 GMT
+recorded_with: VCR 5.0.0

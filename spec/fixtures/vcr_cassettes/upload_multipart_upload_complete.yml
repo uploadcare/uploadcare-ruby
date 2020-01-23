@@ -2,16 +2,17 @@
 http_interactions:
 - request:
     method: post
-    uri: https://upload.uploadcare.com/base/
+    uri: https://upload.uploadcare.com/multipart/complete/
     body:
-      encoding: ASCII-8BIT
-      string: !binary |-
-        file_in_binary==
+      encoding: UTF-8
+      string: "-----------------------9dda007cd5345719a4a6e281318749ca789ea05adb\r\nContent-Disposition:
+        form-data; name=\"UPLOADCARE_PUB_KEY\"\r\n\r\nc8499ee6dc44194c00d2\r\n-----------------------9dda007cd5345719a4a6e281318749ca789ea05adb\r\nContent-Disposition:
+        form-data; name=\"uuid\"\r\n\r\nd8c914e3-3aef-4976-b0b6-855a9638da2d\r\n-----------------------9dda007cd5345719a4a6e281318749ca789ea05adb--\r\n"
     headers:
       Accept:
       - application/json
       Content-Type:
-      - multipart/form-data; boundary=---------------------5e9647b451ff33402608d2ba9b9ea385ed1c4baef6
+      - multipart/form-data; boundary=---------------------9dda007cd5345719a4a6e281318749ca789ea05adb
       Connection:
       - close
       Host:
@@ -24,11 +25,11 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 22 Jan 2020 10:05:12 GMT
+      - Thu, 23 Jan 2020 13:38:17 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '54'
+      - '71'
       Connection:
       - close
       Server:
@@ -52,7 +53,7 @@ http_interactions:
       - POST, OPTIONS
     body:
       encoding: ASCII-8BIT
-      string: '{"kitten.jpeg":"091c2e84-0ae1-4b76-a049-bfcc879bf6c3"}'
-    http_version:
-  recorded_at: Wed, 22 Jan 2020 10:05:12 GMT
+      string: '{"error": {"content": "File is already uploaded.", "status_code": 400}}'
+    http_version: 
+  recorded_at: Thu, 23 Jan 2020 13:38:17 GMT
 recorded_with: VCR 5.0.0

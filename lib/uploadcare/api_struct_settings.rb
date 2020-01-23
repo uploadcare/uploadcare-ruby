@@ -14,6 +14,9 @@ ApiStruct::Settings.configure do |config|
     },
     upload_api: {
       root: 'https://upload.uploadcare.com'
+    },
+    amazon_api: {
+      root: ''
     }
   }
 end

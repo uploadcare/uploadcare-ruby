@@ -2,16 +2,17 @@
 http_interactions:
 - request:
     method: post
-    uri: https://upload.uploadcare.com/base/
+    uri: https://upload.uploadcare.com/multipart/complete/
     body:
-      encoding: ASCII-8BIT
-      string: !binary |-
-        file_in_binary==
+      encoding: UTF-8
+      string: "-----------------------6f683a202a218fb4fb14bfe430a02eabd22ed765f5\r\nContent-Disposition:
+        form-data; name=\"UPLOADCARE_PUB_KEY\"\r\n\r\nc8499ee6dc44194c00d2\r\n-----------------------6f683a202a218fb4fb14bfe430a02eabd22ed765f5\r\nContent-Disposition:
+        form-data; name=\"uuid\"\r\n\r\nnonexistent\r\n-----------------------6f683a202a218fb4fb14bfe430a02eabd22ed765f5--\r\n"
     headers:
       Accept:
       - application/json
       Content-Type:
-      - multipart/form-data; boundary=---------------------5e9647b451ff33402608d2ba9b9ea385ed1c4baef6
+      - multipart/form-data; boundary=---------------------6f683a202a218fb4fb14bfe430a02eabd22ed765f5
       Connection:
       - close
       Host:
@@ -24,11 +25,11 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 22 Jan 2020 10:05:12 GMT
+      - Thu, 23 Jan 2020 13:32:20 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '54'
+      - '64'
       Connection:
       - close
       Server:
@@ -52,7 +53,7 @@ http_interactions:
       - POST, OPTIONS
     body:
       encoding: ASCII-8BIT
-      string: '{"kitten.jpeg":"091c2e84-0ae1-4b76-a049-bfcc879bf6c3"}'
-    http_version:
-  recorded_at: Wed, 22 Jan 2020 10:05:12 GMT
+      string: '{"error": {"content": "File is not found.", "status_code": 404}}'
+    http_version: 
+  recorded_at: Thu, 23 Jan 2020 13:32:20 GMT
 recorded_with: VCR 5.0.0

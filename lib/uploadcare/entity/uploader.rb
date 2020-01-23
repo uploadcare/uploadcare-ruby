@@ -3,6 +3,7 @@
 module Uploadcare
   class Uploader < ApiStruct::Entity
     client_service UploadClient
+    client_service MultipartUploadClient, only: :upload, prefix: :multipart
 
     attr_entity :files
 
