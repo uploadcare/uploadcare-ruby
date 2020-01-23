@@ -8,15 +8,12 @@ module Uploadcare
       end
     end
 
-    it "is instantiated project" do
+    it 'represents a project as an entity' do
       expect(@project).to be_kind_of Uploadcare::Project
     end
 
-    it "is respond to project api methods" do
-      expect(@project).to respond_to :collaborators
-      expect(@project).to respond_to :name
-      expect(@project).to respond_to :pub_key
-      expect(@project).to respond_to :autostore_enabled
+    it 'respond to project api methods' do
+      expect(@project).to respond_to(:collaborators, :name, :pub_key, :autostore_enabled)
     end
   end
 end
