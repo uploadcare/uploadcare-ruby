@@ -6,18 +6,6 @@ module Uploadcare
   RSpec.describe FileClient do
     subject { FileClient.new }
 
-    describe 'index' do
-      before do
-        VCR.use_cassette('file') do
-          @files = subject.index.value!
-        end
-      end
-
-      it 'lists a bunch of files' do
-        expect(@files.length).to eq(3)
-      end
-    end
-
     describe 'info' do
       it 'shows insider info about that file' do
         VCR.use_cassette('rest_file_info') do
