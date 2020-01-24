@@ -6,7 +6,7 @@ module Uploadcare
   RSpec.describe File do
     subject { File }
     it 'responds to expected methods' do
-      expect(subject).to respond_to(:index, :info, :copy, :delete, :store)
+      expect(subject).to respond_to(:info, :copy, :delete, :store)
     end
 
     it 'represents a file as entity' do
