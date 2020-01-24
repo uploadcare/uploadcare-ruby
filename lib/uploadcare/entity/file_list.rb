@@ -1,11 +1,9 @@
 # frozen_string_literal: true
 
-# Resource representing lists of files -
-# both as collection and as a paginated list of files with info about whole collection
-
 require 'uploadcare/entity/file'
 
 module Uploadcare
+  # Resource representing lists of files
   class FileList < ApiStruct::Entity
     client_service FileListClient
 

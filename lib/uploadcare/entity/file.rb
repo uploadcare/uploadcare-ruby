@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# https://uploadcare.com/docs/api_reference/rest/handling_projects/
-
 module Uploadcare
+  # Resource representing single file
+  # https://uploadcare.com/docs/api_reference/rest/handling_projects/
   class File < ApiStruct::Entity
     client_service FileClient
 
