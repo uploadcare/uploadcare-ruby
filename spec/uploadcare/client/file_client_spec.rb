@@ -84,8 +84,7 @@ module Uploadcare
           uuids = ['e9a9f291-cc52-4388-bf65-9feec1c75ff9', 'c724feac-86f7-447c-b2d6-b0ced220173d']
           response = subject.batch_store(uuids)
           response_value = response.value!
-          expect(response_value[:problems]).to be_empty
-          expect(uuids.all? { |uuid| response_value[:result].to_s.include?(uuid) }).to be true
+          expect(uuids.all? { |uuid| response_value.to_s.include?(uuid) }).to be true
         end
       end
 
@@ -94,7 +93,7 @@ module Uploadcare
           VCR.use_cassette('rest_file_batch_store_fail') do
             uuids = ['nonexistent', 'other_nonexistent']
             response = subject.batch_store(uuids)
-            expect(response.value![:problems]).not_to be_empty
+            expect(response.success).to be_empty
           end
         end
       end
@@ -106,8 +105,7 @@ module Uploadcare
           uuids = ['935ff093-a5cf-48c5-81cf-208511bac6e6', '63be5a6e-9b6b-454b-8aec-9136d5f83d0c']
           response = subject.batch_delete(uuids)
           response_value = response.value!
-          expect(response_value[:problems]).to be_empty
-          expect(response_value[:result][0][:datetime_removed]).not_to be_empty
+          expect(response_value[0][:datetime_removed]).not_to be_empty
         end
       end
 
@@ -116,7 +114,7 @@ module Uploadcare
           VCR.use_cassette('rest_file_batch_delete_fail') do
             uuids = ['nonexistent', 'other_nonexistent']
             response = subject.batch_delete(uuids)
-            expect(response.value![:problems]).not_to be_empty
+            expect(response.success).to be_empty
           end
         end
       end
