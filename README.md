@@ -46,7 +46,7 @@ This folder contains representations of entities existing in API
 #### Headers
 This folder contains anything related to unusual headers
 #### Service
-Object that don't fit any pattern
+Objects that don't fit any pattern
 
 -----
 
