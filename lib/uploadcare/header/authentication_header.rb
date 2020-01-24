@@ -13,10 +13,10 @@ module Uploadcare
       @content = content
       @content_type = content_type
       @uri = uri
-      @date_for_header = self.timestamp
+      @date_for_header = timestamp
       {
         'Date': @date_for_header,
-        'Authorization': "Uploadcare #{PUBLIC_KEY}:#{self.signature}"
+        'Authorization': "Uploadcare #{PUBLIC_KEY}:#{signature}"
       }
     end
 
