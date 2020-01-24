@@ -31,11 +31,13 @@ module Uploadcare
     end
 
     def batch_store(uuids)
-      put(path: "files/storage/", headers: SimpleAuthenticationHeader.call, body: uuids.to_json)
+      result = put(path: "files/storage/", headers: SimpleAuthenticationHeader.call, body: uuids.to_json)
+      Dry::Monads::Success(result.success[:result])
     end
 
     def batch_delete(uuids)
-      _delete(path: "files/storage/", headers: SimpleAuthenticationHeader.call, body: uuids.to_json)
+      result = _delete(path: "files/storage/", headers: SimpleAuthenticationHeader.call, body: uuids.to_json)
+      Dry::Monads::Success(result.success[:result])
     end
   end
 end

@@ -8,6 +8,7 @@ Gem.find_files("client/**/*.rb").each { |path| require path }
 Gem.find_files("entity/**/*.rb").each { |path| require path }
 Gem.find_files("header/**/*.rb").each { |path| require path }
 Gem.find_files("service/**/*.rb").each { |path| require path }
+Gem.find_files("monkey_patch/**/*.rb").each { |path| require path }
 
 module Uploadcare
 end
