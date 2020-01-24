@@ -29,15 +29,5 @@ module Uploadcare
     def store(uuid)
       put(path: "files/#{uuid}/storage/", headers: SimpleAuthenticationHeader.call)
     end
-
-    def batch_store(uuids)
-      result = put(path: "files/storage/", headers: SimpleAuthenticationHeader.call, body: uuids.to_json)
-      Dry::Monads::Success(result.success[:result])
-    end
-
-    def batch_delete(uuids)
-      result = _delete(path: "files/storage/", headers: SimpleAuthenticationHeader.call, body: uuids.to_json)
-      Dry::Monads::Success(result.success[:result])
-    end
   end
 end
