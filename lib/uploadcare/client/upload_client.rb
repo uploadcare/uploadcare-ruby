@@ -35,7 +35,9 @@ module Uploadcare
       return token_response if options[:async]
 
       uploaded_response = poll_upload_result(token_response.success[:token])
-      Dry::Monads::Success(files: [uploaded_response])
+      return Dry::Monads::Success(uploaded_response) if uploaded_response[:status] == 'error'
+
+      Dry::Monads::Success({ files: [uploaded_response] })
     end
 
     private

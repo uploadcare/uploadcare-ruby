@@ -46,6 +46,16 @@ module Uploadcare
           end
         end
       end
+
+      context 'invalid file' do
+        it 'returns token' do
+          VCR.use_cassette('upload_upload_invalid') do
+            url = 'https://example.com/foo/bar'
+            response = subject.upload_from_url(url)
+            expect(response.value![:status]).to eq 'error'
+          end
+        end
+      end
     end
   end
 end
