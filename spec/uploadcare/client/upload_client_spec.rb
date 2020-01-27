@@ -23,5 +23,27 @@ module Uploadcare
         end
       end
     end
+
+    describe 'upload_from_url' do
+      context 'async' do
+        it 'returns token' do
+          VCR.use_cassette('upload_upload_from_url_async') do
+            url = 'https://placekitten.com/225/225'
+            response = subject.upload_from_url(url, async: true)
+            expect(response.value![:token]).not_to be_empty
+          end
+        end
+      end
+
+      context 'normal' do
+        it 'polls server and returns file' do
+          VCR.use_cassette('upload_upload_from_url') do
+            url = 'https://placekitten.com/2250/2250'
+            response = subject.upload_from_url(url)
+            expect(response.success[:files][0][:original_filename]).to eq('2250')
+          end
+        end
+      end
+    end
   end
 end
