@@ -7,7 +7,7 @@ module Uploadcare
     upload_api
 
     # https://uploadcare.com/api-refs/upload-api/#operation/baseUpload
-    
+
     def upload_many(arr, **options)
       body = HTTP::FormData::Multipart.new(
         upload_params(options[:store]).merge(files_formdata(arr))
@@ -31,19 +31,19 @@ module Uploadcare
         'source_url': url,
         'store': store
       }.merge(options))
-      token_response = post(path: 'from_url/',
-           headers: { 'Content-type': body.content_type },
-           body: body)
+      token_response = post(path: 'from_url/', headers: { 'Content-type': body.content_type }, body: body)
       return token_response if options[:async]
 
       uploaded_response = poll_upload_result(token_response.success[:token])
       Dry::Monads::Success(files: [uploaded_response])
     end
 
+    private
+
     def poll_upload_result(token)
-      while true
+      loop do
         response = get_status_response(token).value!
-        break(response) if ['success', 'error'].include?(response[:status])
+        break(response) if %w[success error].include?(response[:status])
         sleep 0.5
       end
     end
@@ -53,18 +53,18 @@ module Uploadcare
       get(path: 'from_url/status/', params: query_params)
     end
 
-    private
-
     def upload_params(store = false)
       {
         'UPLOADCARE_PUB_KEY': PUBLIC_KEY,
-        'UPLOADCARE_STORE': (store == true) ? '1' : '0'
+        'UPLOADCARE_STORE': store == true ? '1' : '0'
       }
     end
 
     def files_formdata(arr)
-      arr.map { |file| [HTTP::FormData::File.new(file).filename,
-                        HTTP::FormData::File.new(file)] }.to_h
+      arr.map do |file|
+        [HTTP::FormData::File.new(file).filename,
+         HTTP::FormData::File.new(file)]
+      end .to_h
     end
   end
 end
