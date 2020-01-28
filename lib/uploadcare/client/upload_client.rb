@@ -34,18 +34,18 @@ module Uploadcare
       token_response = post(path: 'from_url/', headers: { 'Content-type': body.content_type }, body: body)
       return token_response if options[:async]
 
-      uploaded_response = poll_upload_result(token_response.success[:token])
-      return Dry::Monads::Success(uploaded_response) if uploaded_response[:status] == 'error'
+      uploaded_response = poll_upload_response(token_response.success[:token])
+      return uploaded_response if uploaded_response.success[:status] == 'error'
 
-      Dry::Monads::Success({ files: [uploaded_response] })
+      Dry::Monads::Success({ files: [uploaded_response.success] })
     end
 
     private
 
-    def poll_upload_result(token)
+    def poll_upload_response(token)
       loop do
-        response = get_status_response(token).value!
-        break(response) if %w[success error].include?(response[:status])
+        response = get_status_response(token)
+        break(response) if %w[success error].include?(response.success[:status])
         sleep 0.5
       end
     end
