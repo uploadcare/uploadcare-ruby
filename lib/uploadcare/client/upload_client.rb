@@ -1,30 +1,20 @@
-# https://uploadcare.com/api-refs/upload-api/#tag/Upload
+# frozen_string_literal: true
 
 module Uploadcare
+  # This is client for general uploads
+  # https://uploadcare.com/api-refs/upload-api/#tag/Upload
   class UploadClient < ApiStruct::Client
     upload_api
 
-    def upload(object, store: false)
-      case
-      when file?(object)
-        upload_many([object], store: store)
-      when object.is_a?(Array)
-        upload_many(object, store: store)
-      when object.is_a?(String)
-        raise ArgumentError, 'uploading from strings is not implemented yet'
-      else
-        raise ArgumentError, "Expected input to be a file/Array/URL, given: `#{object}`"
-      end
-    end
-
-    def upload_many(arr, store: false)
+    # https://uploadcare.com/api-refs/upload-api/#operation/baseUpload
+    
+    def upload_many(arr, **options)
       body = HTTP::FormData::Multipart.new(
-        upload_params(store).merge(files_formdata(arr))
+        upload_params(options[:store]).merge(files_formdata(arr))
       )
-      response = post(path: 'base/',
+      post(path: 'base/',
            headers: { 'Content-type': body.content_type },
            body: body)
-      response.fmap { |files| { 'files': files.map { |fname, uuid| { original_filename: fname.to_s, uuid: uuid } } } }
     end
 
     private
@@ -39,10 +29,6 @@ module Uploadcare
     def files_formdata(arr)
       arr.map { |file| [HTTP::FormData::File.new(file).filename,
                         HTTP::FormData::File.new(file)] }.to_h
-    end
-
-    def file?(object)
-      object.respond_to?(:path) && ::File.exist?(object.path)
     end
   end
 end
