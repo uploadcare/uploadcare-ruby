@@ -13,7 +13,7 @@ module Uploadcare
       when object.is_a?(Array)
         upload_files(object, **options)
       when object.is_a?(String)
-        raise ArgumentError, 'uploading from strings is not implemented yet'
+        upload_from_url(object, **options)
       else
         raise ArgumentError, "Expected input to be a file/Array/URL, given: `#{object}`"
       end

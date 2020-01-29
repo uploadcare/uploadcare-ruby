@@ -25,11 +25,10 @@ module Uploadcare
     # - save_URL_duplicates
     # - async - returns upload token instead of upload data
 
-    def upload_from_url(url, store: false, **options)
+    def upload_from_url(url, **options)
       body = HTTP::FormData::Multipart.new({
         'pub_key': PUBLIC_KEY,
         'source_url': url,
-        'store': store
       }.merge(options))
       token_response = post(path: 'from_url/', headers: { 'Content-type': body.content_type }, body: body)
       return token_response if options[:async]
