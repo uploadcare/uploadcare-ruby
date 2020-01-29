@@ -28,6 +28,16 @@ module Uploadcare
           end
         end
       end
+
+      context 'from_url' do
+        it 'polls server and returns file' do
+          VCR.use_cassette('upload_upload_from_url') do
+            url = 'https://placekitten.com/2250/2250'
+            upload = subject.upload_from_url(url)
+            expect(upload.files[0]).to be_kind_of(Uploadcare::File)
+          end
+        end
+      end
     end
   end
 end

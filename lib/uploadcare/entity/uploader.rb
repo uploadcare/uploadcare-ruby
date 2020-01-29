@@ -16,5 +16,7 @@ module Uploadcare
     def self.upload(object, **options)
       UploadAdapter.call(object, options)
     end
+
+    attr_entity :file, as: Uploadcare::File
   end
 end
