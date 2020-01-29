@@ -15,7 +15,7 @@ ApiStruct::Settings.configure do |config|
     upload_api: {
       root: 'https://upload.uploadcare.com'
     },
-    amazon_api: {
+    chunks_api: {
       root: ''
     }
   }
