@@ -7,13 +7,13 @@ module Uploadcare
     def self.call(object, **options)
       case
       when big_file?(object)
-        raise ArgumentError, 'multipart upload isnt implemented yet'
+        upload_big_file(object, **options)
       when file?(object)
         upload_file(object, **options)
       when object.is_a?(Array)
         upload_files(object, **options)
       when object.is_a?(String)
-        raise ArgumentError, 'uploading from strings is not implemented yet'
+        upload_from_url(object, **options)
       else
         raise ArgumentError, "Expected input to be a file/Array/URL, given: `#{object}`"
       end
@@ -29,6 +29,11 @@ module Uploadcare
     def self.upload_files(object, **options)
       response = UploadClient.new.upload_many(object, **options)
       Hashie::Mash.new(files: response.success.map { |pair| { original_filename: pair[0], uuid: pair[1] } })
+    end
+
+    def self.upload_big_file(object, **options)
+      response = MultipartUploadClient.new.upload(object)
+      File.new(response.success)
     end
 
     def self.file?(object)
