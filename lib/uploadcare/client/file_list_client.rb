@@ -16,24 +16,26 @@ module Uploadcare
 
     def file_list(**options)
       query = ''
-      query = '?' + options.to_a.map { |x| "#{x[0]}=#{x[1]}" }.join("&") unless options.empty?
+      query = '?' + options.to_a.map { |x| "#{x[0]}=#{x[1]}" }.join('&') unless options.empty?
       signed_request(method: 'GET', uri: "/files/#{query}")
     end
 
-    # Store multiple files, preventing them from being deleted in 2 weeks
+    # Make a group of files "stored". This will prevent them from being deleted automatically
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/filesStoring
+    # uuids: Array
 
     def batch_store(uuids)
       body = uuids.to_json
-      signed_request(method: 'PUT', uri: '/files/storage/', content: body)
+      signed_request(method: 'PUT', uri: '/files/storage/', body: body)
     end
 
-    # Delete multiple files
+    # Delete several files by list of uids
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/filesDelete
+    # uuids: Array
 
     def batch_delete(uuids)
       body = uuids.to_json
-      signed_request(method: 'DELETE', uri: '/files/storage/', content: body)
+      signed_request(method: 'DELETE', uri: '/files/storage/', body: body)
     end
 
     alias store batch_store

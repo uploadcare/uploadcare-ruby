@@ -8,7 +8,7 @@ module Uploadcare
     # Gets list of files without pagination fields
 
     def index
-      response = signed_request(method: 'GET', uri: "/files/")
+      response = signed_request(method: 'GET', uri: '/files/')
       response.fmap { |i| i[:results] }
     end
 
@@ -23,7 +23,7 @@ module Uploadcare
     # Source files MAY either be stored or just uploaded and MUST NOT be deleted.
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/copyFile
 
-    def copy(options)
+    def copy(**options)
       body = options.compact.to_json
       signed_request(method: 'POST', uri: "/files/", content: body)
     end

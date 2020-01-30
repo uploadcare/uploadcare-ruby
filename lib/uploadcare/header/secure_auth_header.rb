@@ -6,9 +6,9 @@ require 'digest/md5'
 
 module Uploadcare
   class SecureAuthHeader
-    def self.call(method: 'GET', content: '', content_type: 'application/json', uri: '')
+    def self.call(method: 'GET', body: '', content_type: 'application/json', uri: '')
       @method = method
-      @content = content
+      @body = body
       @content_type = content_type
       @uri = uri
       @date_for_header = self.timestamp
@@ -21,7 +21,7 @@ module Uploadcare
     protected
 
     def self.signature
-      content_md5 = Digest::MD5.hexdigest(@content)
+      content_md5 = Digest::MD5.hexdigest(@body)
       sign_string = [@method, content_md5, @content_type, @date_for_header, @uri].join("\n")
       digest = OpenSSL::Digest.new('sha1')
       OpenSSL::HMAC.hexdigest(digest, SECRET_KEY, sign_string)

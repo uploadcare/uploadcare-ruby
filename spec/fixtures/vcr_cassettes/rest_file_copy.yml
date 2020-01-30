@@ -12,9 +12,9 @@ http_interactions:
       Accept:
       - application/vnd.uploadcare-v0.5+json
       Date:
-      - Mon, 20 Jan 2020 15:45:39 GMT
+      - Thu, 30 Jan 2020 12:34:27 GMT
       Authorization:
-      - Uploadcare c8499ee6dc44194c00d2:ac8975200dffc088391f0adc8be19ef1feca6490
+      - Uploadcare c8499ee6dc44194c00d2:d19ca50e5e06113a69a1fde9dd31e791635eb21a
       Connection:
       - close
       Host:
@@ -27,7 +27,7 @@ http_interactions:
       message: Created
     headers:
       Date:
-      - Mon, 20 Jan 2020 15:45:41 GMT
+      - Thu, 30 Jan 2020 12:34:28 GMT
       Content-Type:
       - application/vnd.uploadcare-v0.5+json
       Content-Length:
@@ -43,7 +43,7 @@ http_interactions:
       Vary:
       - Accept
       Location:
-      - https://api.uploadcare.com/files/68cf87d7-2986-4584-bc0c-49606fa2968e/
+      - https://api.uploadcare.com/files/a811d802-f555-453f-a717-bf23ab0b309a/
       Allow:
       - GET, HEAD, OPTIONS, POST
       Access-Control-Allow-Origin:
@@ -52,7 +52,7 @@ http_interactions:
       - SAMEORIGIN
     body:
       encoding: ASCII-8BIT
-      string: '{"type":"file","result":{"datetime_removed":null,"datetime_stored":null,"datetime_uploaded":"2020-01-20T15:45:40.772211Z","image_info":null,"is_image":null,"is_ready":true,"mime_type":"application/octet-stream","original_file_url":"https://ucarecdn.com/68cf87d7-2986-4584-bc0c-49606fa2968e/imagepng.jpeg","original_filename":"image.png.jpeg","size":0,"url":"https://api.uploadcare.com/files/68cf87d7-2986-4584-bc0c-49606fa2968e/","uuid":"68cf87d7-2986-4584-bc0c-49606fa2968e","source":"/8f64f313-e6b1-4731-96c0-6751f1e7a50a/"}}'
+      string: '{"type":"file","result":{"datetime_removed":null,"datetime_stored":null,"datetime_uploaded":"2020-01-30T12:34:28.501482Z","image_info":null,"is_image":null,"is_ready":true,"mime_type":"application/octet-stream","original_file_url":"https://ucarecdn.com/a811d802-f555-453f-a717-bf23ab0b309a/imagepng.jpeg","original_filename":"image.png.jpeg","size":0,"url":"https://api.uploadcare.com/files/a811d802-f555-453f-a717-bf23ab0b309a/","uuid":"a811d802-f555-453f-a717-bf23ab0b309a","source":"/8f64f313-e6b1-4731-96c0-6751f1e7a50a/"}}'
     http_version: 
-  recorded_at: Mon, 20 Jan 2020 15:45:41 GMT
+  recorded_at: Thu, 30 Jan 2020 12:34:28 GMT
 recorded_with: VCR 5.0.0

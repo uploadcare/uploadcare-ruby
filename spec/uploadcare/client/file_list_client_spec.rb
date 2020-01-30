@@ -41,7 +41,7 @@ module Uploadcare
       context 'invalid uuids' do
         it 'returns a list of problems' do
           VCR.use_cassette('rest_file_batch_store_fail') do
-            uuids = ['nonexistent', 'other_nonexistent']
+            uuids = %w[nonexistent other_nonexistent]
             response = subject.batch_store(uuids)
             expect(response.success[:files]).to be_nil
             expect(response.success[:problems]).not_to be_empty
@@ -63,7 +63,7 @@ module Uploadcare
       context 'invalid uuids' do
         it 'returns a list of problems' do
           VCR.use_cassette('rest_file_batch_delete_fail') do
-            uuids = ['nonexistent', 'other_nonexistent']
+            uuids = %w[nonexistent other_nonexistent]
             response = subject.batch_delete(uuids)
             expect(response.success[:files]).to be_nil
             expect(response.success[:problems]).not_to be_empty
