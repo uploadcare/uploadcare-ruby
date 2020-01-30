@@ -19,7 +19,6 @@ module Uploadcare
       query = '?' + options.to_a.map { |x| "#{x[0]}=#{x[1]}" }.join("&") unless options.empty?
       signed_request(method: 'GET', uri: "/files/#{query}")
     end
-    alias list file_list
 
     # Store multiple files, preventing them from being deleted in 2 weeks
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/filesStoring
@@ -29,8 +28,6 @@ module Uploadcare
       signed_request(method: 'PUT', uri: '/files/storage/', content: body)
     end
 
-    alias _delete delete
-
     # Delete multiple files
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/filesDelete
 
@@ -38,5 +35,9 @@ module Uploadcare
       body = uuids.to_json
       signed_request(method: 'DELETE', uri: '/files/storage/', content: body)
     end
+
+    alias store batch_store
+    alias delete batch_delete
+    alias list file_list
   end
 end
