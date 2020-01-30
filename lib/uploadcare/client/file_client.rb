@@ -4,22 +4,28 @@ module Uploadcare
   # API client for handling single files
   # https://uploadcare.com/docs/api_reference/rest/accessing_files/
   # https://uploadcare.com/api-refs/rest-api/v0.5.0/#tag/File
-  class FileClient < ApiStruct::Client
-    rest_api 'files'
-    
+  class FileClient < RestClient
+    # Gets list of files without pagination fields
+
+    def index
+      response = signed_request(method: 'GET', uri: "/files/")
+      response.fmap { |i| i[:results] }
+    end
+
     # Acquire file info
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/fileInfo
 
     def info(uuid)
-      get(path: "files/#{uuid}/", headers: SimpleAuthenticationHeader.call)
+      signed_request(method: 'GET', uri: "/files/#{uuid}/")
     end
 
     # 'copy' method is used to copy original files or their modified versions to default storage.
     # Source files MAY either be stored or just uploaded and MUST NOT be deleted.
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/copyFile
 
-    def copy(**options)
-      post(path: 'files/', headers: SimpleAuthenticationHeader.call, body: options.compact.to_json)
+    def copy(options)
+      body = options.compact.to_json
+      signed_request(method: 'POST', uri: "/files/", content: body)
     end
 
     # Copies file to current project
@@ -43,14 +49,14 @@ module Uploadcare
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/deleteFile
 
     def delete(uuid)
-      _delete(path: "files/#{uuid}/", headers: SimpleAuthenticationHeader.call)
+      signed_request(method: 'DELETE', uri: "/files/#{uuid}/")
     end
 
     # Store a single file, preventing it from being deleted in 2 weeks
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/storeFile
 
     def store(uuid)
-      put(path: "files/#{uuid}/storage/", headers: SimpleAuthenticationHeader.call)
+      signed_request(method: 'PUT', uri: "/files/#{uuid}/storage/")
     end
   end
 end
