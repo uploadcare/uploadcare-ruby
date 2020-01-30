@@ -1,10 +1,11 @@
-# This object returns headers needed for authentication
-# This authentication method is more secure, but more tedious
-# https://uploadcare.com/docs/api_reference/rest/requests_auth/#auth-uploadcare
+# frozen_string_literal: true
 
 require 'digest/md5'
 
 module Uploadcare
+  # This object returns headers needed for authentication
+  # This authentication method is more secure, but more tedious
+  # https://uploadcare.com/docs/api_reference/rest/requests_auth/#auth-uploadcare
   class SecureAuthHeader
     def self.call(method: 'GET', body: '', content_type: 'application/json', uri: '')
       @method = method

@@ -11,7 +11,7 @@ module Uploadcare
 
     def signed_request(method: 'GET', uri:, **options)
       headers = AuthenticationHeader.call(method: method.upcase, uri: uri, **options)
-      method = '_delete' if method.downcase == 'delete'
+      method = '_delete' if method.casecmp('delete').zero?
       send(method.downcase, path: remove_trailing_slash(uri), headers: headers, body: options[:content])
     end
 
