@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 
+require 'uploadcare/concerns/error_handler'
+
 module Uploadcare
   # General client for signed REST requests
   class RestClient < ApiStruct::Client
+    include Uploadcare::ErrorHandler
     rest_api 'files'
 
     alias _delete delete

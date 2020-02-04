@@ -18,8 +18,7 @@ module Uploadcare
       it 'shows nothing on invalid file' do
         VCR.use_cassette('rest_file_info_fail') do
           uuid = 'nonexistent'
-          file = subject.info(uuid)
-          expect(file.failure?).to be true
+          expect { subject.info(uuid) }.to raise_error(RequestError)
         end
       end
     end
@@ -38,8 +37,8 @@ module Uploadcare
       it 'accepts other arguments' do
         VCR.use_cassette('rest_file_copy_arg') do
           uuid = '8f64f313-e6b1-4731-96c0-6751f1e7a50a'
-          response = subject.copy(source: uuid, target: 'nowhere')
-          expect(response.to_s).to include('Project has no storage with provided name.')
+          expect { subject.copy(source: uuid, target: 'nowhere') }.to raise_error(RequestError,
+            'Project has no storage with provided name.')
         end
       end
     end

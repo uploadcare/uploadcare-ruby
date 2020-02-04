@@ -1,0 +1,58 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.uploadcare.com/files/nonexistent/
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.5+json
+      Authorization:
+      - Uploadcare.Simple c8499ee6dc44194c00d2:81d1ab1b5e9cb74d1ab1
+      Connection:
+      - close
+      Host:
+      - google.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 301
+      message: Moved Permanently
+    headers:
+      Location:
+      - https://www.google.com/files/nonexistent/
+      Content-Type:
+      - text/html; charset=UTF-8
+      X-Content-Type-Options:
+      - nosniff
+      Date:
+      - Tue, 04 Feb 2020 14:13:49 GMT
+      Expires:
+      - Wed, 05 Feb 2020 14:13:49 GMT
+      Cache-Control:
+      - public, max-age=86400
+      Server:
+      - sffe
+      Content-Length:
+      - '238'
+      X-Xss-Protection:
+      - '0'
+      Alt-Svc:
+      - quic=":443"; ma=2592000; v="46,43",h3-Q050=":443"; ma=2592000,h3-Q049=":443";
+        ma=2592000,h3-Q048=":443"; ma=2592000,h3-Q046=":443"; ma=2592000,h3-Q043=":443";
+        ma=2592000
+      Connection:
+      - close
+    body:
+      encoding: UTF-8
+      string: "<HTML><HEAD><meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">\n<TITLE>301
+        Moved</TITLE></HEAD><BODY>\n<H1>301 Moved</H1>\nThe document has moved\n<A
+        HREF=\"https://www.google.com/files/nonexistent/\">here</A>.\r\n</BODY></HTML>\r\n"
+    http_version:
+  recorded_at: Tue, 04 Feb 2020 14:13:49 GMT
+recorded_with: VCR 5.0.0
