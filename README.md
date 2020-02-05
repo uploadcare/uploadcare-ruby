@@ -9,8 +9,8 @@ environment variables `UPLOADCARE_PUBLIC_KEY` and `UPLOADCARE_SECRET_KEY`
 ```ruby
 # config/uploadcare_settings.rb
 module Uploadcare
-  PUBLIC_KEY = ENV.fetch('UPLOADCARE_PUBLIC_KEY') || 'demopublickey'
-  SECRET_KEY = ENV.fetch('UPLOADCARE_SECRET_KEY') || 'demoprivatekey'
+  PUBLIC_KEY = ENV.fetch('UPLOADCARE_PUBLIC_KEY') || 'your_public_key'
+  SECRET_KEY = ENV.fetch('UPLOADCARE_SECRET_KEY') || 'your_secret_key'
 end
 ```
 
