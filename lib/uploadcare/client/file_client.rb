@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'rest_client'
+
 module Uploadcare
   # API client for handling single files
   # https://uploadcare.com/docs/api_reference/rest/accessing_files/
@@ -8,7 +10,7 @@ module Uploadcare
     # Gets list of files without pagination fields
 
     def index
-      response = signed_request(method: 'GET', uri: '/files/')
+      response = signed_get(uri: '/files/')
       response.fmap { |i| i[:results] }
     end
 
@@ -16,7 +18,7 @@ module Uploadcare
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/fileInfo
 
     def info(uuid)
-      signed_request(method: 'GET', uri: "/files/#{uuid}/")
+      signed_get(uri: "/files/#{uuid}/")
     end
 
     # 'copy' method is used to copy original files or their modified versions to default storage.
@@ -25,7 +27,7 @@ module Uploadcare
 
     def copy(**options)
       body = options.compact.to_json
-      signed_request(method: 'POST', uri: "/files/", content: body)
+      signed_post(uri: '/files/', content: body)
     end
 
     # Copies file to current project
@@ -44,19 +46,19 @@ module Uploadcare
       copy(source: source, target: target, make_public: make_public, pattern: pattern)
     end
 
-    alias _delete delete
+    # alias _delete delete
 
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/deleteFile
 
     def delete(uuid)
-      signed_request(method: 'DELETE', uri: "/files/#{uuid}/")
+      signed_delete(uri: "/files/#{uuid}/")
     end
 
     # Store a single file, preventing it from being deleted in 2 weeks
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/storeFile
 
     def store(uuid)
-      signed_request(method: 'PUT', uri: "/files/#{uuid}/storage/")
+      signed_put(uri: "/files/#{uuid}/storage/")
     end
   end
 end

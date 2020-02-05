@@ -8,7 +8,7 @@ module Uploadcare
 
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#tag/Project
     def show
-      signed_request(method: 'GET', uri: '/project/')
+      signed_get(uri: '/project/')
     end
   end
 end
