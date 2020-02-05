@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 require "bundler/setup"
 require 'api_struct'
 require 'byebug'
 require 'webmock/rspec'
 require 'uploadcare'
+Dir[File.expand_path(File.join(File.dirname(__FILE__),'support','**','*.rb'))].each { |f| require f }
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

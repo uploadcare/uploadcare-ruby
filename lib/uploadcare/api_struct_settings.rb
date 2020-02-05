@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 ApiStruct::Settings.configure do |config|
   config.endpoints = {
     rest_api: {

@@ -1,0 +1,54 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.uploadcare.com/project/
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.5+json
+      Authorization:
+      - Uploadcare.Simple foo:81d1ab1b5e9cb74d1ab1
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 16 Jan 2020 14:04:33 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.5+json
+      Content-Length:
+      - '99'
+      Connection:
+      - close
+      Server:
+      - nginx
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Vary:
+      - Accept
+      Allow:
+      - GET, HEAD, OPTIONS
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: ASCII-8BIT
+      string: '{"collaborators":[],"name":"New project","pub_key":"foo","autostore_enabled":true}'
+    http_version:
+  recorded_at: Thu, 16 Jan 2020 14:04:33 GMT
+recorded_with: VCR 5.0.0
