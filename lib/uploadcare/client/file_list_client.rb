@@ -20,7 +20,7 @@ module Uploadcare
       signed_request(method: 'GET', uri: "/files/#{query}")
     end
 
-    # Make a group of files "stored". This will prevent them from being deleted automatically
+    # Make a set of files "stored". This will prevent them from being deleted automatically
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/filesStoring
     # uuids: Array
 
