@@ -4,4 +4,7 @@ module Uploadcare
   # Standard error for invalid API responses
   class RequestError < StandardError
   end
+
+  class ThrottleError < StandardError
+  end
 end
