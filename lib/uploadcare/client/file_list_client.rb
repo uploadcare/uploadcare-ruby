@@ -16,7 +16,7 @@ module Uploadcare
     def file_list(**options)
       query = ''
       query = '?' + options.to_a.map { |x| "#{x[0]}=#{x[1]}" }.join('&') unless options.empty?
-      signed_get(uri: "/files/#{query}")
+      get(uri: "/files/#{query}")
     end
 
     # Make a set of files "stored". This will prevent them from being deleted automatically
@@ -25,8 +25,10 @@ module Uploadcare
 
     def batch_store(uuids)
       body = uuids.to_json
-      signed_put(uri: '/files/storage/', body: body)
+      put(uri: '/files/storage/', body: body)
     end
+
+    alias request_delete delete
 
     # Delete several files by list of uids
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/filesDelete
@@ -34,7 +36,7 @@ module Uploadcare
 
     def batch_delete(uuids)
       body = uuids.to_json
-      signed_delete(uri: '/files/storage/', body: body)
+      request_delete(uri: '/files/storage/', body: body)
     end
 
     alias store batch_store

@@ -12,25 +12,25 @@ module Uploadcare
 
     # Send request with authentication header
 
-    def signed_request(method: 'GET', uri:, **options)
+    def request(method: 'GET', uri:, **options)
       headers = AuthenticationHeader.call(method: method.upcase, uri: uri, **options)
       send('api_struct_' + method.downcase, path: remove_trailing_slash(uri), headers: headers, body: options[:content])
     end
 
-    def signed_get(**options)
-      signed_request(method: 'GET', **options)
+    def get(**options)
+      request(method: 'GET', **options)
     end
 
-    def signed_post(**options)
-      signed_request(method: 'POST', **options)
+    def post(**options)
+      request(method: 'POST', **options)
     end
 
-    def signed_put(**options)
-      signed_request(method: 'PUT', **options)
+    def put(**options)
+      request(method: 'PUT', **options)
     end
 
-    def signed_delete(**options)
-      signed_request(method: 'DELETE', **options)
+    def delete(**options)
+      request(method: 'DELETE', **options)
     end
 
     private
