@@ -19,6 +19,8 @@ http_interactions:
       - api.uploadcare.com
       User-Agent:
       - http.rb/4.3.0
+      Retry-After:
+      - 10
   response:
     status:
       code: 429
@@ -46,6 +48,8 @@ http_interactions:
       - https://uploadcare.com
       X-Frame-Options:
       - SAMEORIGIN
+      Retry-After:
+      - 10
     body:
       encoding: ASCII-8BIT
       string: '{"detail":"Not found."}'
@@ -70,6 +74,8 @@ http_interactions:
       - api.uploadcare.com
       User-Agent:
       - http.rb/4.3.0
+      Retry-After:
+      - 10
   response:
     status:
       code: 429
@@ -97,6 +103,8 @@ http_interactions:
       - https://uploadcare.com
       X-Frame-Options:
       - SAMEORIGIN
+      Retry-After:
+      - 10
     body:
       encoding: ASCII-8BIT
       string: '{"detail":"Not found."}'
@@ -148,6 +156,8 @@ http_interactions:
       - https://uploadcare.com
       X-Frame-Options:
       - SAMEORIGIN
+      Retry-After:
+      - 10
     body:
       encoding: ASCII-8BIT
       string: '{"detail":"Not found."}'
