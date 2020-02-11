@@ -5,7 +5,7 @@
 # https://uploadcare.com/docs/api_reference/rest/requests_auth/#auth-simple
 
 module Uploadcare
-  class SimpleAuthenticationHeader
+  class SimpleAuthHeader
     def self.call
       { 'Authorization': "Uploadcare.Simple #{PUBLIC_KEY}:#{SECRET_KEY}" }
     end

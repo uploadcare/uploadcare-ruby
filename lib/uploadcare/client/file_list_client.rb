@@ -2,9 +2,7 @@
 
 module Uploadcare
   # API client for handling file lists
-  class FileListClient < ApiStruct::Client
-    rest_api 'files'
-
+  class FileListClient < RestClient
     # Returns a pagination json of files stored in project
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/filesList
     #
@@ -16,28 +14,33 @@ module Uploadcare
     # from: number of files skipped
 
     def file_list(**options)
-      get(path: 'files/', headers: SimpleAuthenticationHeader.call, params: options)
+      query = ''
+      query = '?' + options.to_a.map { |x| "#{x[0]}=#{x[1]}" }.join('&') unless options.empty?
+      get(uri: "/files/#{query}")
     end
-    alias list file_list
 
-    # Store multiple files, preventing them from being deleted in 2 weeks
+    # Make a set of files "stored". This will prevent them from being deleted automatically
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/filesStoring
+    # uuids: Array
 
     def batch_store(uuids)
-      result = put(path: 'files/storage/', headers: SimpleAuthenticationHeader.call, body: uuids.to_json)
-      result.success[:files] = result.success[:result]
-      result
+      body = uuids.to_json
+      put(uri: '/files/storage/', body: body)
     end
 
-    alias _delete delete
+    alias request_delete delete
 
-    # Delete multiple files
+    # Delete several files by list of uids
     # https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/filesDelete
+    # uuids: Array
 
     def batch_delete(uuids)
-      result = _delete(path: 'files/storage/', headers: SimpleAuthenticationHeader.call, body: uuids.to_json)
-      result.success[:files] = result.success[:result]
-      result
+      body = uuids.to_json
+      request_delete(uri: '/files/storage/', body: body)
     end
+
+    alias store batch_store
+    alias delete batch_delete
+    alias list file_list
   end
 end

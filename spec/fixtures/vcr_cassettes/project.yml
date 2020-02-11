@@ -11,8 +11,10 @@ http_interactions:
       - application/json
       Accept:
       - application/vnd.uploadcare-v0.5+json
+      Date:
+      - Tue, 21 Jan 2020 08:57:26 GMT
       Authorization:
-      - Uploadcare.Simple foo:81d1ab1b5e9cb74d1ab1
+      - Uploadcare c8499ee6dc44194c00d2:96a46927600d1df193ac33da5c1c9db819d0d31c
       Connection:
       - close
       Host:
@@ -25,7 +27,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 16 Jan 2020 14:04:33 GMT
+      - Tue, 21 Jan 2020 08:57:26 GMT
       Content-Type:
       - application/vnd.uploadcare-v0.5+json
       Content-Length:
@@ -48,7 +50,7 @@ http_interactions:
       - SAMEORIGIN
     body:
       encoding: ASCII-8BIT
-      string: '{"collaborators":[],"name":"New project","pub_key":"foo","autostore_enabled":true}'
-    http_version:
-  recorded_at: Thu, 16 Jan 2020 14:04:33 GMT
+      string: '{"collaborators":[],"name":"New project","pub_key":"c8499ee6dc44194c00d2","autostore_enabled":true}'
+    http_version: 
+  recorded_at: Tue, 21 Jan 2020 08:57:27 GMT
 recorded_with: VCR 5.0.0

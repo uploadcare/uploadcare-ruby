@@ -50,8 +50,6 @@ Objects that don't fit any pattern
 
 -----
 
-### Headers
-
 ## Contributing
 
 ## License
