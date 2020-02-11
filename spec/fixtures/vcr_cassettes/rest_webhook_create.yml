@@ -2,19 +2,19 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.uploadcare.com/webhooks/unsubscribe/
+    uri: https://api.uploadcare.com/webhooks/
     body:
       encoding: UTF-8
-      string: '{"target_url":"http://example.com "}'
+      string: '{"target_url":"http://ohmyz.sh","event":"file.uploaded","is_active":true}'
     headers:
       Content-Type:
       - application/json
       Accept:
       - application/vnd.uploadcare-v0.5+json
       Date:
-      - Wed, 05 Feb 2020 14:24:23 GMT
+      - Wed, 05 Feb 2020 14:53:00 GMT
       Authorization:
-      - Uploadcare ecd779dc169645ce3c91:dfec407713e70bf9c79c93680429dfb2ef0ea38a
+      - Uploadcare ecd779dc169645ce3c91:069af1fe479aecb7248c6146e3674318660c11c6
       Connection:
       - close
       Host:
@@ -23,13 +23,15 @@ http_interactions:
       - http.rb/4.3.0
   response:
     status:
-      code: 204
-      message: No Content
+      code: 201
+      message: Created
     headers:
       Date:
-      - Wed, 05 Feb 2020 14:24:23 GMT
+      - Wed, 05 Feb 2020 14:53:01 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.5+json
       Content-Length:
-      - '0'
+      - '181'
       Connection:
       - close
       Server:
@@ -41,14 +43,14 @@ http_interactions:
       Vary:
       - Accept
       Allow:
-      - OPTIONS, POST
+      - GET, HEAD, OPTIONS, POST
       Access-Control-Allow-Origin:
       - https://uploadcare.com
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: ASCII-8BIT
-      string: ''
+      string: '{"id":616294,"created":"2020-02-05T14:53:01.894511Z","updated":"2020-02-05T14:53:01.895307Z","event":"file.uploaded","target_url":"http://ohmyz.sh","project":86492,"is_active":true}'
     http_version: 
-  recorded_at: Wed, 05 Feb 2020 14:24:23 GMT
+  recorded_at: Wed, 05 Feb 2020 14:53:01 GMT
 recorded_with: VCR 5.0.0

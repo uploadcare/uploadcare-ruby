@@ -14,7 +14,7 @@ module Uploadcare
       expect(@project).to be_kind_of Uploadcare::Project
     end
 
-    it 'respond to project api methods' do
+    it 'responds to project api methods' do
       expect(@project).to respond_to(:collaborators, :name, :pub_key, :autostore_enabled)
     end
   end

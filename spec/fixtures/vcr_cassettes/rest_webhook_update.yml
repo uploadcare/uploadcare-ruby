@@ -2,19 +2,19 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.uploadcare.com/webhooks/1/
+    uri: https://api.uploadcare.com/webhooks/616294/
     body:
       encoding: UTF-8
-      string: ''
+      string: '{"target_url":"https://github.com","is_active":false}'
     headers:
       Content-Type:
       - application/json
       Accept:
       - application/vnd.uploadcare-v0.5+json
       Date:
-      - Tue, 21 Jan 2020 12:43:24 GMT
+      - Wed, 05 Feb 2020 15:11:50 GMT
       Authorization:
-      - Uploadcare c8499ee6dc44194c00d2:5d9901c15e225e66339f0700ca89e6b021ad61b5
+      - Uploadcare ecd779dc169645ce3c91:52fa9e7757b0c07af9df9212645d76ac00ec00c3
       Connection:
       - close
       Host:
@@ -24,14 +24,14 @@ http_interactions:
   response:
     status:
       code: 200
-      message: Success
+      message: OK
     headers:
       Date:
-      - Tue, 21 Jan 2020 12:43:25 GMT
+      - Wed, 05 Feb 2020 15:11:51 GMT
       Content-Type:
       - application/vnd.uploadcare-v0.5+json
       Content-Length:
-      - '35'
+      - '185'
       Connection:
       - close
       Server:
@@ -50,13 +50,7 @@ http_interactions:
       - SAMEORIGIN
     body:
       encoding: ASCII-8BIT
-      string: '{"id": 1,
-    "created": "2016-04-27T11:49:54.948615Z",
-    "updated": "2016-04-27T12:04:57.819933Z",
-    "event": "file.uploaded",
-    "target_url": "http://sometargeturl.com/hooks/receiver",
-    "project": 13,
-    "is_active": true}'
-    http_version:
-  recorded_at: Tue, 21 Jan 2020 12:43:25 GMT
+      string: '{"id":616294,"created":"2020-02-05T14:53:01.894511Z","updated":"2020-02-05T15:11:51.528694Z","event":"file.uploaded","target_url":"https://github.com","project":86492,"is_active":false}'
+    http_version: 
+  recorded_at: Wed, 05 Feb 2020 15:11:51 GMT
 recorded_with: VCR 5.0.0
