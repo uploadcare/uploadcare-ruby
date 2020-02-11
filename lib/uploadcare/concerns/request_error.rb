@@ -6,5 +6,9 @@ module Uploadcare
   end
 
   class ThrottleError < StandardError
+    attr_reader :timeout
+    def initialize(timeout=10.0)
+      @timeout = timeout
+    end
   end
 end

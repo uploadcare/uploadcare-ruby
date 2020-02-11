@@ -17,7 +17,7 @@ module Uploadcare
     def catch_throttling_error(response)
       if response.code == 429
         retry_after = response.headers['Retry-After'].to_i + 1 || 11
-        raise ThrottleError.new("Response throttled, retry #{retry_after} seconds later")
+        raise ThrottleError.new(retry_after), "Response throttled, retry #{retry_after} seconds later"
       end
     end
   end
