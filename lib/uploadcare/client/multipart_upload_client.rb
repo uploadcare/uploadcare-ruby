@@ -37,10 +37,12 @@ module Uploadcare
 
     private
 
-    def upload_params(store = false)
+    def upload_params(store = 'auto')
+      store = '1' if store == true
+      store = '0' if store == false
       {
         'UPLOADCARE_PUB_KEY': PUBLIC_KEY,
-        'UPLOADCARE_STORE': (store == true) ? '1' : '0'
+        'UPLOADCARE_STORE': store
       }
     end
 
@@ -51,13 +53,6 @@ module Uploadcare
         size: file.size,
         content_type: file.content_type
       }
-    end
-
-    def validate_file(object)
-      ten_mb = 10 * 1024 * 1024
-      if object.size < ten_mb
-        raise(ArgumentError, "File is too small: #{object.size/1024.0/1024.0}/10mb")
-      end
     end
   end
 end
