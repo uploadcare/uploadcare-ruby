@@ -25,7 +25,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Mon, 20 Jan 2020 09:20:12 GMT
+      - Mon, 20 Jan 2020 15:53:31 GMT
       Content-Type:
       - application/vnd.uploadcare-v0.5+json
       Content-Length:
@@ -50,5 +50,5 @@ http_interactions:
       encoding: ASCII-8BIT
       string: '{"status":"ok","problems":{},"result":[{"datetime_removed":"2020-01-20T09:20:11.930717Z","datetime_stored":null,"datetime_uploaded":"2020-01-20T09:16:37.250441Z","image_info":{"color_mode":"RGBA","orientation":null,"format":"PNG","sequence":false,"height":300,"width":300,"geo_location":null,"datetime_original":null,"dpi":[72,72]},"is_image":true,"is_ready":true,"mime_type":"image/png","original_file_url":null,"original_filename":"delete.png","size":3118,"url":"https://api.uploadcare.com/files/935ff093-a5cf-48c5-81cf-208511bac6e6/","uuid":"935ff093-a5cf-48c5-81cf-208511bac6e6","source":null},{"datetime_removed":"2020-01-20T09:20:11.930717Z","datetime_stored":null,"datetime_uploaded":"2020-01-20T09:16:45.539533Z","image_info":{"color_mode":"RGBA","orientation":null,"format":"PNG","sequence":false,"height":300,"width":300,"geo_location":null,"datetime_original":null,"dpi":[72,72]},"is_image":true,"is_ready":true,"mime_type":"image/png","original_file_url":null,"original_filename":"delete.png","size":3118,"url":"https://api.uploadcare.com/files/63be5a6e-9b6b-454b-8aec-9136d5f83d0c/","uuid":"63be5a6e-9b6b-454b-8aec-9136d5f83d0c","source":null}]}'
     http_version: 
-  recorded_at: Mon, 20 Jan 2020 09:20:12 GMT
+  recorded_at: Mon, 20 Jan 2020 15:53:31 GMT
 recorded_with: VCR 5.0.0

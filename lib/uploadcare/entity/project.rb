@@ -1,6 +1,8 @@
-# https://uploadcare.com/docs/api_reference/rest/handling_projects/
+# frozen_string_literal: true
 
 module Uploadcare
+  # resource representing projects
+  # https://uploadcare.com/docs/api_reference/rest/handling_projects/
   class Project < ApiStruct::Entity
     client_service ProjectClient
 

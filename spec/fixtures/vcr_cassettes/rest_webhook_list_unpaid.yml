@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.uploadcare.com/project/
+    uri: https://api.uploadcare.com/webhooks/
     body:
       encoding: UTF-8
       string: ''
@@ -12,9 +12,9 @@ http_interactions:
       Accept:
       - application/vnd.uploadcare-v0.5+json
       Date:
-      - Tue, 21 Jan 2020 08:57:26 GMT
+      - Tue, 21 Jan 2020 11:25:18 GMT
       Authorization:
-      - Uploadcare c8499ee6dc44194c00d2:96a46927600d1df193ac33da5c1c9db819d0d31c
+      - Uploadcare c8499ee6dc44194c00d2:337781ec391e70ddaba72ae3f69659a686ef2cbd
       Connection:
       - close
       Host:
@@ -23,15 +23,15 @@ http_interactions:
       - http.rb/4.3.0
   response:
     status:
-      code: 200
-      message: OK
+      code: 403
+      message: Forbidden
     headers:
       Date:
-      - Tue, 21 Jan 2020 08:57:26 GMT
+      - Tue, 21 Jan 2020 11:25:19 GMT
       Content-Type:
       - application/vnd.uploadcare-v0.5+json
       Content-Length:
-      - '99'
+      - '35'
       Connection:
       - close
       Server:
@@ -43,14 +43,14 @@ http_interactions:
       Vary:
       - Accept
       Allow:
-      - GET, HEAD, OPTIONS
+      - GET, HEAD, OPTIONS, POST
       Access-Control-Allow-Origin:
       - https://uploadcare.com
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: ASCII-8BIT
-      string: '{"collaborators":[],"name":"New project","pub_key":"c8499ee6dc44194c00d2","autostore_enabled":true}'
+      string: '{"detail":"You can''t use webhooks"}'
     http_version: 
-  recorded_at: Tue, 21 Jan 2020 08:57:27 GMT
+  recorded_at: Tue, 21 Jan 2020 11:25:19 GMT
 recorded_with: VCR 5.0.0
