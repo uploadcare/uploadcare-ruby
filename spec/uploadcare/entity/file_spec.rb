@@ -18,5 +18,19 @@ module Uploadcare
         expect(file.uuid).to eq(uuid)
       end
     end
+
+    it 'raises error for nonexistent file' do
+      VCR.use_cassette('rest_file_info_fail') do
+        uuid = 'nonexistent'
+        expect { subject.info(uuid) }.to raise_error(RequestError)
+      end
+    end
+
+    it 'raises error when trying to delete nonexistent file' do
+      VCR.use_cassette('rest_file_delete_nonexistent') do
+        uuid = 'nonexistent'
+        expect { subject.delete(uuid) }.to raise_error(RequestError)
+      end
+    end
   end
 end
