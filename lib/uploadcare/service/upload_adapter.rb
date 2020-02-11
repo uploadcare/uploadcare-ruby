@@ -41,8 +41,7 @@ module Uploadcare
     end
 
     def self.big_file?(object)
-      one_hundred_mb = 10 * 1024 * 1024
-      file?(object) && object.size >= one_hundred_mb
+      file?(object) && object.size >= MULTIPART_SIZE_THRESHOLD
     end
   end
 end

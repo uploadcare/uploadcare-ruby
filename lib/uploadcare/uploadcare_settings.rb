@@ -4,4 +4,5 @@ module Uploadcare
   PUBLIC_KEY = ENV.fetch('UPLOADCARE_PUBLIC_KEY')
   SECRET_KEY = ENV.fetch('UPLOADCARE_SECRET_KEY')
   AUTH_TYPE = 'Uploadcare.Simple'
+  MULTIPART_SIZE_THRESHOLD = 10 * 1024 * 1024
 end
