@@ -8,6 +8,11 @@ module Uploadcare
     let!(:file) { ::File.open('spec/fixtures/kitten.jpeg') }
     let!(:another_file) { ::File.open('spec/fixtures/another_kitten.jpeg') }
 
+    before do
+      BASE_REQUEST_SLEEP_SECONDS = 0
+      MAX_REQUEST_SLEEP_SECONDS = 0.1
+    end
+
     describe 'upload' do
       it 'uploads a file' do
         VCR.use_cassette('upload_upload') do
@@ -40,6 +45,16 @@ module Uploadcare
       context 'normal' do
         it 'polls server and returns file' do
           VCR.use_cassette('upload_upload_from_url') do
+            url = 'https://placekitten.com/2250/2250'
+            response = subject.upload_from_url(url)
+            expect(response.success[:files][0][:original_filename]).to eq('2250')
+          end
+        end
+      end
+
+      context 'with progress response' do
+        it 'processes progress response normally; continues waiting for it' do
+          VCR.use_cassette('upload_upload_from_url_progress') do
             url = 'https://placekitten.com/2250/2250'
             response = subject.upload_from_url(url)
             expect(response.success[:files][0][:original_filename]).to eq('2250')

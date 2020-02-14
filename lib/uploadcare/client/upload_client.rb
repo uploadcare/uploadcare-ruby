@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'retries'
 
 module Uploadcare
   # This is client for general uploads
@@ -42,10 +43,11 @@ module Uploadcare
     private
 
     def poll_upload_response(token)
-      loop do
+      with_retries(max_tries: MAX_REQUEST_TRIES, base_sleep_seconds: BASE_REQUEST_SLEEP_SECONDS,
+                   max_sleep_seconds: MAX_REQUEST_SLEEP_SECONDS) do
         response = get_status_response(token)
-        break(response) if %w[success error].include?(response.success[:status])
-        sleep 0.5
+        raise RequestError if %w[progress waiting unknown].include?(response.success[:status])
+        response
       end
     end
 
