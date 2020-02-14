@@ -41,7 +41,7 @@ module Uploadcare
     end
 
     def self.big_file?(object)
-      file?(object) && object.size >= MULTIUPLOAD_SIZE_THRESHOLD
+      file?(object) && object.size >= MULTIPART_SIZE_THRESHOLD
     end
   end
 end

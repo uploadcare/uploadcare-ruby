@@ -2,7 +2,7 @@
 
 # https://uploadcare.com/api-refs/upload-api/#tag/Upload
 
-require 'client/chunks_client'
+require 'client/multipart_upload/chunks_client'
 
 module Uploadcare
   class MultipartUploadClient < ApiStruct::Client
@@ -14,7 +14,7 @@ module Uploadcare
 
       links = response.success[:parts]
       uuid = response.success[:uuid]
-      ChunksClient.new.upload_chunks(object, links)
+      MultipartUpload::ChunksClient.new.upload_chunks(object, links)
       upload_complete(uuid)
     end
 
