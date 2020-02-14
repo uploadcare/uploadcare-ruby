@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 module Uploadcare
@@ -17,7 +16,7 @@ module Uploadcare
 
     def upload_many(arr, store: false)
       body = HTTP::FormData::Multipart.new(
-        upload_params(store).merge(files_formdata(arr))
+        Upload::UploadParamsGenerator.call(store).merge(files_formdata(arr))
       )
       post(path: 'base/',
            headers: { 'Content-type': body.content_type },
@@ -25,14 +24,6 @@ module Uploadcare
     end
 
     private
-
-    def upload_params(store = false)
-      {
-        'UPLOADCARE_PUB_KEY': PUBLIC_KEY,
-        'UPLOADCARE_STORE': (store == true) ? '1' : '0',
-        'signature': (Upload::SignatureGenerator.call if SIGN_UPLOADS)
-      }.reject{ |k, v| v.nil? }
-    end
 
     def files_formdata(arr)
       arr.map { |file| [HTTP::FormData::File.new(file).filename,
