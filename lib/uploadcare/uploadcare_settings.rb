@@ -4,4 +4,5 @@ module Uploadcare
   PUBLIC_KEY = ENV.fetch('UPLOADCARE_PUBLIC_KEY')
   SECRET_KEY = ENV.fetch('UPLOADCARE_SECRET_KEY')
   AUTH_TYPE = 'Uploadcare.Simple'
+  SIGN_UPLOADS = false
 end

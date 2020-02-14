@@ -30,8 +30,8 @@ module Uploadcare
       {
         'UPLOADCARE_PUB_KEY': PUBLIC_KEY,
         'UPLOADCARE_STORE': (store == true) ? '1' : '0',
-        'signature': Upload::SignatureGenerator.call
-      }
+        'signature': (Upload::SignatureGenerator.call if SIGN_UPLOADS)
+      }.reject{ |k, v| v.nil? }
     end
 
     def files_formdata(arr)
