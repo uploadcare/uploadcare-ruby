@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require 'retries'
 
 module Uploadcare
@@ -29,7 +30,7 @@ module Uploadcare
     def upload_from_url(url, **options)
       body = HTTP::FormData::Multipart.new({
         'pub_key': PUBLIC_KEY,
-        'source_url': url,
+        'source_url': url
       }.merge(options))
       token_response = post(path: 'from_url/', headers: { 'Content-type': body.content_type }, body: body)
       return token_response if options[:async]
@@ -37,7 +38,7 @@ module Uploadcare
       uploaded_response = poll_upload_response(token_response.success[:token])
       return uploaded_response if uploaded_response.success[:status] == 'error'
 
-      Dry::Monads::Success({ files: [uploaded_response.success] })
+      Dry::Monads::Success(files: [uploaded_response.success])
     end
 
     private
