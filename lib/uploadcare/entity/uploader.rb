@@ -17,6 +17,6 @@ module Uploadcare
       UploadAdapter.call(object, options)
     end
 
-    attr_entity :file, as: Uploadcare::File
+    has_entities :files, as: Uploadcare::File
   end
 end

@@ -5,7 +5,10 @@ require 'vcr'
 
 VCR.configure do |config|
   config.cassette_library_dir = "spec/fixtures/vcr_cassettes"
-  config.filter_sensitive_data('<LOCATION>', :fat_request) { 'World' }
+  config.filter_sensitive_data('Authorization') { 'Authorization header' }
+  config.filter_sensitive_data('<AUTHORIZATION HEADER>') do |interaction|
+    interaction.request.headers['Authorization'].first if interaction.request.headers['Authorization']
+  end
   config.hook_into :webmock
   config.before_record do |i|
     if i.request.body && i.request.body.size > 1024 * 1024

@@ -1,0 +1,114 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/from_url/
+    body:
+      encoding: UTF-8
+      string: "-----------------------7203b4b5ab386b7d87848488a144b18c0579597f98\r\nContent-Disposition:
+        form-data; name=\"pub_key\"\r\n\r\nc8499ee6dc44194c00d2\r\n-----------------------7203b4b5ab386b7d87848488a144b18c0579597f98\r\nContent-Disposition:
+        form-data; name=\"source_url\"\r\n\r\nhttps://example.com/foo/bar\r\n-----------------------7203b4b5ab386b7d87848488a144b18c0579597f98\r\nContent-Disposition:
+        form-data; name=\"store\"\r\n\r\nfalse\r\n-----------------------7203b4b5ab386b7d87848488a144b18c0579597f98--\r\n"
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - multipart/form-data; boundary=---------------------7203b4b5ab386b7d87848488a144b18c0579597f98
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 27 Jan 2020 15:12:28 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '63'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      X-Content-Type-Options:
+      - nosniff
+      Access-Control-Max-Age:
+      - '1'
+      X-Xss-Protection:
+      - 1; mode=block
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - OPTIONS, GET, POST
+    body:
+      encoding: ASCII-8BIT
+      string: '{"token":"c501c81c-5feb-4e16-9376-701b2073b1ab","type":"token"}'
+    http_version: 
+  recorded_at: Mon, 27 Jan 2020 15:12:28 GMT
+- request:
+    method: get
+    uri: https://upload.uploadcare.com/from_url/status/?token=c501c81c-5feb-4e16-9376-701b2073b1ab
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 27 Jan 2020 15:12:29 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '43'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      X-Content-Type-Options:
+      - nosniff
+      Access-Control-Max-Age:
+      - '1'
+      X-Xss-Protection:
+      - 1; mode=block
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"error","error":"HTTPError: 404"}'
+    http_version: 
+  recorded_at: Mon, 27 Jan 2020 15:12:29 GMT
+recorded_with: VCR 5.0.0

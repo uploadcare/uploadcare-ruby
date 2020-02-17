@@ -1,0 +1,221 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/from_url/
+    body:
+      encoding: UTF-8
+      string: "-----------------------5e4852ca2659a7128e906d4f89adc0123496012c9d\r\nContent-Disposition:
+        form-data; name=\"pub_key\"\r\n\r\necd779dc169645ce3c91\r\n-----------------------5e4852ca2659a7128e906d4f89adc0123496012c9d\r\nContent-Disposition:
+        form-data; name=\"source_url\"\r\n\r\nhttps://placekitten.com/2250/2250\r\n-----------------------5e4852ca2659a7128e906d4f89adc0123496012c9d--\r\n"
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - multipart/form-data; boundary=---------------------5e4852ca2659a7128e906d4f89adc0123496012c9d
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 14 Feb 2020 10:17:10 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '63'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      X-Content-Type-Options:
+      - nosniff
+      Access-Control-Max-Age:
+      - '1'
+      X-Xss-Protection:
+      - 1; mode=block
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - OPTIONS, GET, POST
+    body:
+      encoding: ASCII-8BIT
+      string: '{"token":"6191a97a-f501-4e37-8c8c-d8ec96e251ec","type":"token"}'
+    http_version:
+  recorded_at: Fri, 14 Feb 2020 10:17:10 GMT
+- request:
+    method: get
+    uri: https://upload.uploadcare.com/from_url/status/?token=6191a97a-f501-4e37-8c8c-d8ec96e251ec
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 14 Feb 2020 10:17:19 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '468'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      X-Content-Type-Options:
+      - nosniff
+      Access-Control-Max-Age:
+      - '1'
+      X-Xss-Protection:
+      - 1; mode=block
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"progress","done":"500","total":"400490"}'
+    http_version:
+  recorded_at: Fri, 14 Feb 2020 10:17:20 GMT
+- request:
+    method: get
+    uri: https://upload.uploadcare.com/from_url/status/?token=6191a97a-f501-4e37-8c8c-d8ec96e251ec
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 14 Feb 2020 10:17:20 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '468'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      X-Content-Type-Options:
+      - nosniff
+      Access-Control-Max-Age:
+      - '1'
+      X-Xss-Protection:
+      - 1; mode=block
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"progress","done":"1500","total":"400490"}'
+    http_version:
+  recorded_at: Fri, 14 Feb 2020 10:17:20 GMT
+- request:
+    method: get
+    uri: https://upload.uploadcare.com/from_url/status/?token=6191a97a-f501-4e37-8c8c-d8ec96e251ec
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - application/json
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 14 Feb 2020 10:17:21 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '468'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      X-Content-Type-Options:
+      - nosniff
+      Access-Control-Max-Age:
+      - '1'
+      X-Xss-Protection:
+      - 1; mode=block
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS
+    body:
+      encoding: ASCII-8BIT
+      string: '{"status":"success","uuid":"cb5fb771-1875-456c-9270-8b7d9cf1ae02","is_image":true,"filename":"2250","video_info":null,"is_stored":false,"done":400490,"file_id":"cb5fb771-1875-456c-9270-8b7d9cf1ae02","original_filename":"2250","image_info":{"color_mode":"RGB","orientation":null,"format":"JPEG","sequence":false,"height":2250,"width":2250,"geo_location":null,"datetime_original":null,"dpi":[96,96]},"is_ready":true,"total":400490,"mime_type":"image/jpeg","size":400490}'
+    http_version:
+  recorded_at: Fri, 14 Feb 2020 10:17:21 GMT
+recorded_with: VCR 5.0.0

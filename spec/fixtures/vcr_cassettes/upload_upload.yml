@@ -6,7 +6,7 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: !binary |-
-        file_in_binary==
+        file_in_binary
     headers:
       Accept:
       - application/json

@@ -1,0 +1,61 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/from_url/
+    body:
+      encoding: UTF-8
+      string: "-----------------------a992b9319d6cfa2c392d38c5e759bbcf37adcd84fe\r\nContent-Disposition:
+        form-data; name=\"pub_key\"\r\n\r\nc8499ee6dc44194c00d2\r\n-----------------------a992b9319d6cfa2c392d38c5e759bbcf37adcd84fe\r\nContent-Disposition:
+        form-data; name=\"source_url\"\r\n\r\nhttps://placekitten.com/225/225\r\n-----------------------a992b9319d6cfa2c392d38c5e759bbcf37adcd84fe\r\nContent-Disposition:
+        form-data; name=\"store\"\r\n\r\nfalse\r\n-----------------------a992b9319d6cfa2c392d38c5e759bbcf37adcd84fe\r\nContent-Disposition:
+        form-data; name=\"async\"\r\n\r\ntrue\r\n-----------------------a992b9319d6cfa2c392d38c5e759bbcf37adcd84fe--\r\n"
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - multipart/form-data; boundary=---------------------a992b9319d6cfa2c392d38c5e759bbcf37adcd84fe
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 27 Jan 2020 13:50:56 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '63'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      X-Content-Type-Options:
+      - nosniff
+      Access-Control-Max-Age:
+      - '1'
+      X-Xss-Protection:
+      - 1; mode=block
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - OPTIONS, GET, POST
+    body:
+      encoding: ASCII-8BIT
+      string: '{"token":"ef2fd064-09d6-499a-9452-b982bf219df0","type":"token"}'
+    http_version: 
+  recorded_at: Mon, 27 Jan 2020 13:50:56 GMT
+recorded_with: VCR 5.0.0

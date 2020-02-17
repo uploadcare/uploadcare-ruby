@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Uploadcare::Ruby
 
 Ruby wrapper for Uploadcare API
@@ -56,8 +55,3 @@ Objects that don't fit any pattern
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-=======
-# Next generation Uploadcare Ruby library
-
-Work in progress.
->>>>>>> 3042c1b307d791b9339d784624a7583efb5c151c
