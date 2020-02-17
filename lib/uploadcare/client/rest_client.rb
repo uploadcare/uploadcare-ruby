@@ -1,11 +1,13 @@
 # frozen_string_literal: true
 
 require 'uploadcare/concerns/error_handler'
+require 'uploadcare/concerns/throttle_handler'
 
 module Uploadcare
   # General client for signed REST requests
   class RestClient < ApiStruct::Client
     include Uploadcare::ErrorHandler
+    include Uploadcare::ThrottleHandler
     rest_api 'files'
 
     alias api_struct_delete delete
@@ -17,7 +19,8 @@ module Uploadcare
 
     def request(method: 'GET', uri:, **options)
       headers = AuthenticationHeader.call(method: method.upcase, uri: uri, **options)
-      send('api_struct_' + method.downcase, path: remove_trailing_slash(uri), headers: headers, body: options[:content])
+      handle_throttling { send('api_struct_' + method.downcase, path: remove_trailing_slash(uri),
+         headers: headers, body: options[:content]) }
     end
 
     def get(**options)

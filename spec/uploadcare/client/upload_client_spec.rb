@@ -23,7 +23,7 @@ module Uploadcare
 
       it 'uploads multiple files in one request' do
         VCR.use_cassette('upload_upload_many') do
-          response = subject.upload([file, another_file])
+          response = subject.upload_many([file, another_file])
           expect(response.success?).to be true
           expect(response.success.length).to eq 2
         end

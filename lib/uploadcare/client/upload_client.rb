@@ -11,11 +11,18 @@ module Uploadcare
 
     def upload_many(arr, **options)
       body = HTTP::FormData::Multipart.new(
-        Upload::UploadParamsGenerator.call(store).merge(files_formdata(arr))
+        Upload::UploadParamsGenerator.call(options[:store]).merge(files_formdata(arr))
       )
       post(path: 'base/',
            headers: { 'Content-type': body.content_type },
            body: body)
+    end
+
+    # syntactic sugar for upload_many
+    # There is actual upload method for one file, but it is redundant
+
+    def upload(file, **options)
+      upload_many([file], **options)
     end
 
     # Upload files from url
