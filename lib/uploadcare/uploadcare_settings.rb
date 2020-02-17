@@ -5,4 +5,6 @@ module Uploadcare
   SECRET_KEY = ENV.fetch('UPLOADCARE_SECRET_KEY')
   AUTH_TYPE = 'Uploadcare.Simple'
   MULTIPART_SIZE_THRESHOLD = 100 * 1024 * 1024
+  REST_API_ROOT = 'https://api.uploadcare.com'
+  UPLOAD_API_ROOT = 'https://upload.uploadcare.com'
 end
