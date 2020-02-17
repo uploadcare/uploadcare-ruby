@@ -12,17 +12,20 @@ module Uploadcare
       body = HTTP::FormData::Multipart.new(
         upload_params(options[:store]).merge(files_formdata(arr))
       )
-      post(path: 'base/',
+      response = post(path: 'base/',
            headers: { 'Content-type': body.content_type },
            body: body)
+      response.fmap { |files| { 'files': files.map { |fname, uuid| { original_filename: fname.to_s, uuid: uuid } } } }
     end
 
     private
 
-    def upload_params(store = false)
+    def upload_params(store = 'auto')
+      store = '1' if store == true
+      store = '0' if store == false
       {
         'UPLOADCARE_PUB_KEY': PUBLIC_KEY,
-        'UPLOADCARE_STORE': (store == true) ? '1' : '0'
+        'UPLOADCARE_STORE': store
       }
     end
 
