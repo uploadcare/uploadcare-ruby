@@ -7,7 +7,7 @@ module Uploadcare
   module Upload
     class SignatureGenerator
       def self.call
-        expires_at = Time.now.to_i + 60 * 30
+        expires_at = Time.now.to_i + UPLOAD_SIGNATURE_LIFETIME
         to_sign = SECRET_KEY + (expires_at).to_s
         signature = Digest::MD5.hexdigest(to_sign)
         {
