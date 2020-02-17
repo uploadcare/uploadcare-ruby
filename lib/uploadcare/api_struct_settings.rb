@@ -3,6 +3,7 @@
 require 'uploadcare_settings'
 
 # File with api endpoints
+
 ApiStruct::Settings.configure do |config|
   config.endpoints = {
     rest_api: {

@@ -11,7 +11,7 @@ http_interactions:
       Accept:
       - application/json
       Content-Type:
-      - multipart/form-data; boundary=---------------------5e9647b451ff33402608d2ba9b9ea385ed1c4baef6
+      - multipart/form-data; boundary=---------------------47b597cd80d11fbc177ecaf345b84c534cd1f3cf30
       Connection:
       - close
       Host:
@@ -24,7 +24,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Wed, 22 Jan 2020 10:05:12 GMT
+      - Wed, 22 Jan 2020 14:26:32 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -52,7 +52,7 @@ http_interactions:
       - POST, OPTIONS
     body:
       encoding: ASCII-8BIT
-      string: '{"kitten.jpeg":"091c2e84-0ae1-4b76-a049-bfcc879bf6c3"}'
+      string: '{"kitten.jpeg":"1f5770e6-d029-4814-998c-165144f771e6"}'
     http_version:
-  recorded_at: Wed, 22 Jan 2020 10:05:12 GMT
+  recorded_at: Wed, 22 Jan 2020 14:26:32 GMT
 recorded_with: VCR 5.0.0

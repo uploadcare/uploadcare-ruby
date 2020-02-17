@@ -11,12 +11,11 @@ module Uploadcare
 
     def upload_many(arr, **options)
       body = HTTP::FormData::Multipart.new(
-        upload_params(options[:store]).merge(files_formdata(arr))
+        Upload::UploadParamsGenerator.call(store).merge(files_formdata(arr))
       )
-      response = post(path: 'base/',
+      post(path: 'base/',
            headers: { 'Content-type': body.content_type },
            body: body)
-      # response.fmap { |files| { 'files': files.map { |fname, uuid| { original_filename: fname.to_s, uuid: uuid } } } }
     end
 
     # Upload files from url
@@ -71,6 +70,10 @@ module Uploadcare
         'UPLOADCARE_PUB_KEY': PUBLIC_KEY,
         'UPLOADCARE_STORE': store
       }
+    end
+
+    def file?(object)
+      object.respond_to?(:path) && ::File.exist?(object.path)
     end
   end
 end
