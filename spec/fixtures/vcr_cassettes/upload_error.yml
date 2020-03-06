@@ -1,0 +1,288 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/base/
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        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
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - multipart/form-data; boundary=---------------------f4a5a7d1a875311213d344cd64fc234e8168a8bc5e
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 17 Feb 2020 12:46:22 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '76'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      X-Content-Type-Options:
+      - nosniff
+      Access-Control-Max-Age:
+      - '1'
+      X-Xss-Protection:
+      - 1; mode=block
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - POST, OPTIONS
+    body:
+      encoding: ASCII-8BIT
+      string: '{"error": {"content": "UPLOADCARE_PUB_KEY is invalid.", "status_code":
+        403}}'
+    http_version: 
+  recorded_at: Mon, 17 Feb 2020 12:46:22 GMT
+- request:
+    method: get
+    uri: https://api.uploadcare.com/files/%7B:content=%3E%22UPLOADCARE_PUB_KEY%20is%20invalid.%22,%20:status_code=%3E403%7D/
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.5+json
+      Authorization:
+      - "<AUTHORIZATION HEADER>"
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Mon, 17 Feb 2020 12:46:26 GMT
+      Content-Type:
+      - text/html; charset=utf-8
+      Content-Length:
+      - '19376'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Cookie
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: UTF-8
+      string: "<!DOCTYPE HTML>\n\n\n\n\n<html lang=\"en\" id=\"root\">\n<head>\n  <meta
+        charset=\"UTF-8\">\n  <title>\n    \n    Uploadcare\n    \n  </title>\n  \n<link
+        rel=\"apple-touch-icon\" sizes=\"57x57\" href=\"https://ucarecdn.com/assets/images/favicons/apple-touch-icon-57x57.ac85b3e8fddc.png\">\n<link
+        rel=\"apple-touch-icon\" sizes=\"60x60\" href=\"https://ucarecdn.com/assets/images/favicons/apple-touch-icon-60x60.3d72cc6c3b19.png\">\n<link
+        rel=\"apple-touch-icon\" sizes=\"72x72\" href=\"https://ucarecdn.com/assets/images/favicons/apple-touch-icon-72x72.80914b596af9.png\">\n<link
+        rel=\"apple-touch-icon\" sizes=\"76x76\" href=\"https://ucarecdn.com/assets/images/favicons/apple-touch-icon-76x76.14086d029e04.png\">\n<link
+        rel=\"apple-touch-icon\" sizes=\"114x114\" href=\"https://ucarecdn.com/assets/images/favicons/apple-touch-icon-114x114.7d5df140ee4f.png\">\n<link
+        rel=\"apple-touch-icon\" sizes=\"120x120\" href=\"https://ucarecdn.com/assets/images/favicons/apple-touch-icon-120x120.42f37b826666.png\">\n<link
+        rel=\"apple-touch-icon\" sizes=\"144x144\" href=\"https://ucarecdn.com/assets/images/favicons/apple-touch-icon-144x144.c0df64fe7ba5.png\">\n<link
+        rel=\"apple-touch-icon\" sizes=\"152x152\" href=\"https://ucarecdn.com/assets/images/favicons/apple-touch-icon-152x152.cf17afc546ce.png\">\n<link
+        rel=\"apple-touch-icon\" sizes=\"180x180\" href=\"https://ucarecdn.com/assets/images/favicons/apple-touch-icon-180x180.07a8d576d230.png\">\n<link
+        rel=\"icon\" type=\"image/png\" href=\"https://ucarecdn.com/assets/images/favicons/favicon-32x32.c27f006b6232.png\"
+        sizes=\"32x32\">\n<link rel=\"icon\" type=\"image/png\" href=\"https://ucarecdn.com/assets/images/favicons/android-chrome-192x192.2279e9807512.png\"
+        sizes=\"192x192\">\n<link rel=\"icon\" type=\"image/png\" href=\"https://ucarecdn.com/assets/images/favicons/favicon-96x96.7ff2588e373c.png\"
+        sizes=\"96x96\">\n<link rel=\"icon\" type=\"image/png\" href=\"https://ucarecdn.com/assets/images/favicons/favicon-16x16.16da246cfaa6.png\"
+        sizes=\"16x16\">\n<link rel=\"manifest\" href=\"https://ucarecdn.com/assets/images/favicons/manifest.39888339e87c.json\">\n<link
+        rel=\"mask-icon\" href=\"https://ucarecdn.com/assets/images/favicons/safari-pinned-tab.f5f74da2ffb6.svg\"
+        color=\"#ffd800\">\n<link rel=\"shortcut icon\" href=\"https://ucarecdn.com/assets/images/favicons/favicon.d82a823f08a8.ico\">\n<meta
+        name=\"msapplication-TileColor\" content=\"#603cba\">\n<meta name=\"msapplication-TileImage\"
+        content=\"https://ucarecdn.com/assets/images/favicons/mstile-144x144.1e7522cf4c24.png\">\n<meta
+        name=\"msapplication-config\" content=\"https://ucarecdn.com/assets/images/favicons/browserconfig.df0a45215b92.xml\">\n<meta
+        name=\"theme-color\" content=\"#ffffff\">\n\n  <meta name=\"viewport\" content=\"width=device-width,
+        initial-scale=1\"/>\n  <meta name=\"referrer\" content=\"origin\">\n  \n  <meta
+        name=\"robots\" content=\"noindex, nofollow\" />\n  \n\n  \n  <link href=\"https://ucarecdn.com/assets/stylesheets/bundle/application.7d19310d0107.css\"
+        rel=\"stylesheet\" type=\"text/css\" />\n  \n\n  \n  <!-- Rollbar JS -->\n<script>\nvar
+        _rollbarConfig = {\n    accessToken: \"de5c8decd3a54e8fb082b46e03358333\",\n
+        \   captureUncaught: true,\n    captureUnhandledRejections: true,\n    payload:
+        {\n\t\t\tenvironment: \"production\",\n\t\t\tclient: {\n\t\t\t\tjavascript:
+        {\n\t\t\t\t\tsource_map_enabled: true,\n\t\t\t\t\tguess_uncaught_frames: true,\n\t\t\t\t},\n\t\t\t},\n
+        \   },\n};\n<!-- Rollbar Snippet -->\n!function(r){function e(n){if(o[n])return
+        o[n].exports;var t=o[n]={exports:{},id:n,loaded:!1};return r[n].call(t.exports,t,t.exports,e),t.loaded=!0,t.exports}var
+        o={};return e.m=r,e.c=o,e.p=\"\",e(0)}([function(r,e,o){\"use strict\";var
+        n=o(1),t=o(4);_rollbarConfig=_rollbarConfig||{},_rollbarConfig.rollbarJsUrl=_rollbarConfig.rollbarJsUrl||\"https://cdnjs.cloudflare.com/ajax/libs/rollbar.js/2.4.6/rollbar.min.js\",_rollbarConfig.async=void
+        0===_rollbarConfig.async||_rollbarConfig.async;var a=n.setupShim(window,_rollbarConfig),l=t(_rollbarConfig);window.rollbar=n.Rollbar,a.loadFull(window,document,!_rollbarConfig.async,_rollbarConfig,l)},function(r,e,o){\"use
+        strict\";function n(r){return function(){try{return r.apply(this,arguments)}catch(r){try{console.error(\"[Rollbar]:
+        Internal error\",r)}catch(r){}}}}function t(r,e){this.options=r,this._rollbarOldOnError=null;var
+        o=s++;this.shimId=function(){return o},\"undefined\"!=typeof window&&window._rollbarShims&&(window._rollbarShims[o]={handler:e,messages:[]})}function
+        a(r,e){if(r){var o=e.globalAlias||\"Rollbar\";if(\"object\"==typeof r[o])return
+        r[o];r._rollbarShims={},r._rollbarWrappedError=null;var t=new p(e);return
+        n(function(){e.captureUncaught&&(t._rollbarOldOnError=r.onerror,i.captureUncaughtExceptions(r,t,!0),i.wrapGlobals(r,t,!0)),e.captureUnhandledRejections&&i.captureUnhandledRejections(r,t,!0);var
+        n=e.autoInstrument;return e.enabled!==!1&&(void 0===n||n===!0||\"object\"==typeof
+        n&&n.network)&&r.addEventListener&&(r.addEventListener(\"load\",t.captureLoad.bind(t)),r.addEventListener(\"DOMContentLoaded\",t.captureDomContentLoaded.bind(t))),r[o]=t,t})()}}function
+        l(r){return n(function(){var e=this,o=Array.prototype.slice.call(arguments,0),n={shim:e,method:r,args:o,ts:new
+        Date};window._rollbarShims[this.shimId()].messages.push(n)})}var i=o(2),s=0,d=o(3),c=function(r,e){return
+        new t(r,e)},p=function(r){return new d(c,r)};t.prototype.loadFull=function(r,e,o,t,a){var
+        l=function(){var e;if(void 0===r._rollbarDidLoad){e=new Error(\"rollbar.js
+        did not load\");for(var o,n,t,l,i=0;o=r._rollbarShims[i++];)for(o=o.messages||[];n=o.shift();)for(t=n.args||[],i=0;i<t.length;++i)if(l=t[i],\"function\"==typeof
+        l){l(e);break}}\"function\"==typeof a&&a(e)},i=!1,s=e.createElement(\"script\"),d=e.getElementsByTagName(\"script\")[0],c=d.parentNode;s.crossOrigin=\"\",s.src=t.rollbarJsUrl,o||(s.async=!0),s.onload=s.onreadystatechange=n(function(){if(!(i||this.readyState&&\"loaded\"!==this.readyState&&\"complete\"!==this.readyState)){s.onload=s.onreadystatechange=null;try{c.removeChild(s)}catch(r){}i=!0,l()}}),c.insertBefore(s,d)},t.prototype.wrap=function(r,e,o){try{var
+        n;if(n=\"function\"==typeof e?e:function(){return e||{}},\"function\"!=typeof
+        r)return r;if(r._isWrap)return r;if(!r._rollbar_wrapped&&(r._rollbar_wrapped=function(){o&&\"function\"==typeof
+        o&&o.apply(this,arguments);try{return r.apply(this,arguments)}catch(o){var
+        e=o;throw e&&(\"string\"==typeof e&&(e=new String(e)),e._rollbarContext=n()||{},e._rollbarContext._wrappedSource=r.toString(),window._rollbarWrappedError=e),e}},r._rollbar_wrapped._isWrap=!0,r.hasOwnProperty))for(var
+        t in r)r.hasOwnProperty(t)&&(r._rollbar_wrapped[t]=r[t]);return r._rollbar_wrapped}catch(e){return
+        r}};for(var u=\"log,debug,info,warn,warning,error,critical,global,configure,handleUncaughtException,handleUnhandledRejection,captureEvent,captureDomContentLoaded,captureLoad\".split(\",\"),f=0;f<u.length;++f)t.prototype[u[f]]=l(u[f]);r.exports={setupShim:a,Rollbar:p}},function(r,e){\"use
+        strict\";function o(r,e,o){if(r){var t;if(\"function\"==typeof e._rollbarOldOnError)t=e._rollbarOldOnError;else
+        if(r.onerror){for(t=r.onerror;t._rollbarOldOnError;)t=t._rollbarOldOnError;e._rollbarOldOnError=t}var
+        a=function(){var o=Array.prototype.slice.call(arguments,0);n(r,e,t,o)};o&&(a._rollbarOldOnError=t),r.onerror=a}}function
+        n(r,e,o,n){r._rollbarWrappedError&&(n[4]||(n[4]=r._rollbarWrappedError),n[5]||(n[5]=r._rollbarWrappedError._rollbarContext),r._rollbarWrappedError=null),e.handleUncaughtException.apply(e,n),o&&o.apply(r,n)}function
+        t(r,e,o){if(r){\"function\"==typeof r._rollbarURH&&r._rollbarURH.belongsToShim&&r.removeEventListener(\"unhandledrejection\",r._rollbarURH);var
+        n=function(r){var o,n,t;try{o=r.reason}catch(r){o=void 0}try{n=r.promise}catch(r){n=\"[unhandledrejection]
+        error getting `promise` from event\"}try{t=r.detail,!o&&t&&(o=t.reason,n=t.promise)}catch(r){t=\"[unhandledrejection]
+        error getting `detail` from event\"}o||(o=\"[unhandledrejection] error getting
+        `reason` from event\"),e&&e.handleUnhandledRejection&&e.handleUnhandledRejection(o,n)};n.belongsToShim=o,r._rollbarURH=n,r.addEventListener(\"unhandledrejection\",n)}}function
+        a(r,e,o){if(r){var n,t,a=\"EventTarget,Window,Node,ApplicationCache,AudioTrackList,ChannelMergerNode,CryptoOperation,EventSource,FileReader,HTMLUnknownElement,IDBDatabase,IDBRequest,IDBTransaction,KeyOperation,MediaController,MessagePort,ModalWindow,Notification,SVGElementInstance,Screen,TextTrack,TextTrackCue,TextTrackList,WebSocket,WebSocketWorker,Worker,XMLHttpRequest,XMLHttpRequestEventTarget,XMLHttpRequestUpload\".split(\",\");for(n=0;n<a.length;++n)t=a[n],r[t]&&r[t].prototype&&l(e,r[t].prototype,o)}}function
+        l(r,e,o){if(e.hasOwnProperty&&e.hasOwnProperty(\"addEventListener\")){for(var
+        n=e.addEventListener;n._rollbarOldAdd&&n.belongsToShim;)n=n._rollbarOldAdd;var
+        t=function(e,o,t){n.call(this,e,r.wrap(o),t)};t._rollbarOldAdd=n,t.belongsToShim=o,e.addEventListener=t;for(var
+        a=e.removeEventListener;a._rollbarOldRemove&&a.belongsToShim;)a=a._rollbarOldRemove;var
+        l=function(r,e,o){a.call(this,r,e&&e._rollbar_wrapped||e,o)};l._rollbarOldRemove=a,l.belongsToShim=o,e.removeEventListener=l}}r.exports={captureUncaughtExceptions:o,captureUnhandledRejections:t,wrapGlobals:a}},function(r,e){\"use
+        strict\";function o(r,e){this.impl=r(e,this),this.options=e,n(o.prototype)}function
+        n(r){for(var e=function(r){return function(){var e=Array.prototype.slice.call(arguments,0);if(this.impl[r])return
+        this.impl[r].apply(this.impl,e)}},o=\"log,debug,info,warn,warning,error,critical,global,configure,handleUncaughtException,handleUnhandledRejection,_createItem,wrap,loadFull,shimId,captureEvent,captureDomContentLoaded,captureLoad\".split(\",\"),n=0;n<o.length;n++)r[o[n]]=e(o[n])}o.prototype._swapAndProcessMessages=function(r,e){this.impl=r(this.options);for(var
+        o,n,t;o=e.shift();)n=o.method,t=o.args,this[n]&&\"function\"==typeof this[n]&&(\"captureDomContentLoaded\"===n||\"captureLoad\"===n?this[n].apply(this,[t[0],o.ts]):this[n].apply(this,t));return
+        this},r.exports=o},function(r,e){\"use strict\";r.exports=function(r){return
+        function(e){if(!e&&!window._rollbarInitialized){r=r||{};for(var o,n,t=r.globalAlias||\"Rollbar\",a=window.rollbar,l=function(r){return
+        new a(r)},i=0;o=window._rollbarShims[i++];)n||(n=o.handler),o.handler._swapAndProcessMessages(l,o.messages);window[t]=n,window._rollbarInitialized=!0}}}}]);\n<!--
+        End Rollbar Snippet -->\n\n\n</script>\n\n  \n\n  \n\n  <script>\n    UPLOADCARE_PUBLIC_KEY
+        = 'demopublickey';\n    UPLOADCARE_SOCIAL_BASE = 'https://social.uploadcare.com/';\n
+        \   UPLOADCARE_URL_BASE = 'https://upload.uploadcare.com/';\n    UPLOADCARE_CDN_BASE
+        = 'https://ucarecdn.com/';\n    UPLOADCARE_PUSHER_KEY = '79ae88bd931ea68464d9';\n
+        \   UPLOADCARE_TABS = 'all';\n    UPLOADCARE_INTEGRATION = 'Uploadcare-Site;
+        Dashboard';\n  </script>\n  <script type=\"text/javascript\" src=\"https://ucarecdn.com/assets/javascripts/bundle/jquery.81f4a4b2536f.js\"
+        charset=\"utf-8\" crossorigin=\"anonymous\"></script>\n\n\n  \n  \n\n\n\n\n\n<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':\n
+        \       new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],\n
+        \   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=\n
+        \   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);\n})(window,document,'script','dataLayer','GTM-TL4CC3');</script>\n\n\n<script
+        type=\"text/javascript\">\n  !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error(\"Segment
+        snippet included twice.\");else{analytics.invoked=!0;analytics.methods=[\"trackSubmit\",\"trackClick\",\"trackLink\",\"trackForm\",\"pageview\",\"identify\",\"group\",\"track\",\"ready\",\"alias\",\"page\",\"once\",\"off\",\"on\"];analytics.factory=function(t){return
+        function(){var e=Array.prototype.slice.call(arguments);e.unshift(t);analytics.push(e);return
+        analytics}};for(var t=0;t<analytics.methods.length;t++){var e=analytics.methods[t];analytics[e]=analytics.factory(e)}analytics.load=function(t){var
+        e=document.createElement(\"script\");e.type=\"text/javascript\";e.async=!0;e.src=(\"https:\"===document.location.protocol?\"https://\":\"http://\")+\"cdn.segment.com/analytics.js/v1/\"+t+\"/analytics.min.js\";var
+        n=document.getElementsByTagName(\"script\")[0];n.parentNode.insertBefore(e,n)};analytics.SNIPPET_VERSION=\"3.0.1\";\n
+        \ analytics.load(\"diKLfFMvTZ0paQa0botcfVhCdvoXllKm\");\n  analytics.ready(function()
+        {\n    \n      $(document).on('click', '.intercom, .help', function() {\n
+        \       if(typeof HS !== 'undefined') {\n          HS.beacon.open();\n\n          return
+        false;\n        }\n      });\n    \n\n    Intercom(\"onShow\", function()
+        {\n      if(typeof HS !== 'undefined') {\n        HS.beacon.close();\n      }\n
+        \   })\n\n    function aliasUser() {\n      if (typeof $.cookie === 'undefined')
+        {\n        setTimeout(aliasUser, 1000);\n      }\n      else {\n        var
+        token = $.cookie('test_token');\n\n        if (token){\n          \n          \n
+        \         window.analytics.alias(token);\n        }\n      }\n    }\n    aliasUser()\n
+        \ });\n\n  analytics.page();\n  \n  }}();\n</script>\n\n\n\n<script type=\"text/javascript\">var
+        _kmq = _kmq || [];\n  var _kmk = _kmk || '9aae43a4af7d27ed852ae0f5596c6a8f8c70dcc9';\n
+        \ function _kms(u){\n    setTimeout(function(){\n      var d = document, f
+        = d.getElementsByTagName('script')[0],\n      s = d.createElement('script');\n
+        \     s.type = 'text/javascript'; s.async = true; s.src = u;\n      f.parentNode.insertBefore(s,
+        f);\n    }, 1);\n  }\n  _kms('//i.kissmetrics.com/i.js');\n  _kms('//scripts.kissmetrics.com/'
+        + _kmk + '.2.js');\n</script>\n\n\n\n<meta property=\"og:image\" content=\"https://ucarecdn.com/assets/images/common/facebook-og-image.6b51c5197fb8.png\"
+        />\n<meta property=\"og:image:width\" content=\"200\" />\n<meta property=\"og:image:height\"
+        content=\"200\" />\n\n\n\n<script src=\"https://js.stripe.com/v3/\"></script>\n\n\n<script
+        type=\"text/javascript\" src=\"https://cdn.statuspage.io/se-v2.js\"></script>\n<script>\n
+        \   window.addEventListener('DOMContentLoaded', function() {\n        if (typeof
+        StatusPage !== 'undefined') {\n            var sp = new StatusPage.page({
+        page : 'ltnt1pzqrlmg' });\n            sp.status({\n              success
+        : function(data) {\n                var el = document.querySelector('#statuspage-io')\n\n
+        \               if (el) {\n                    el.href = data.page.url\n                    el.target=
+        \"_blank\"\n                    el.textContent = data.status.description\n
+        \                   el.classList.add('-' + data.status.indicator)\n                }\n
+        \             }\n            });\n        }\n    });\n</script>\n\n  \n\n
+        \ <link rel=\"alternate\" type=\"application/rss+xml\" href=\"https://uploadcare.com/changelog/rss/\"/>\n</head>\n<body
+        class=\"\">\n\n\n\n<div class=\"site-wrap\">\n  \n  \n\n\n<div data-may-be-sticked-on-top
+        data-site-header class=\"site-header\">\n  <div class=\"site-header__inner-wrap\">\n
+        \   <div class=\"site-header__project\" role=\"dropdown-container\">\n      <div
+        class=\"js-current-user-data\" hidden data-email=\"\" ></div>\n      \n\n
+        \     \n      <a href=\"/\" class=\"site-logo\">\n        <img\n          src=\"https://ucarecdn.com/e0367a86-9787-44b1-bc94-878e18ae2928/uploadcare-logo.svg\"\n
+        \         alt=\"Uploadcare\"\n        />\n      </a>\n      \n    </div>\n\n
+        \   <div class=\"site-header__links\">\n      \n\n      \n        <ul class=\"site-header__main-menu\">\n
+        \         <li>\n            <a href=\"/quick_start/\">Quick Start</a>\n          </li>\n\n
+        \         <li>\n            <a href=\"/docs/\">Docs</a>\n          </li>\n\n
+        \         <li>\n            <a href=\"/pricing/\">Pricing</a>\n          </li>\n\n
+        \         <li>\n            <a href=\"https://uploadcare.com/accounts/login/\">Sign
+        In</a>\n          </li>\n\n          <li>\n            <a class=\"smaller-button\"
+        href=\"/accounts/create/free/\" data-call-to-action=\"FreeSignUp Menu Button\">\n
+        \             Free Sign Up\n            </a>\n          </li>\n        </ul>\n
+        \     \n      \n    </div>\n  </div>\n</div>\n\n  \n\n  <noscript>\n    Your
+        browser does not support JavaScript!<br/>\n    Please enable javascript to
+        continue using this application\n  </noscript>\n\n  \n\n  <section class=\"no-design
+        error-page\">\n\n    <img alt=\"error\" src=\"https://ucarecdn.com/assets/images/pages/404/rain.1c0de76a2e94.png\">\n\n
+        \   <h1>\n      Page not found\n    </h1>\n\n    <p>\n      \n  Error 404\n\n
+        \   </p>\n\n    \n      <a href=\"/\" class=\"d4-button d4-button--primary\">Go
+        to main page</a>\n    \n\n  </section>\n\n\n</div>\n\n\n\n\n  <div class=\"site-footer\"
+        data-site-footer>\n  <div class=\"site-footer__inner-wrap\">\n    <div class=\"site-footer__creditionals\">\n
+        \     <a id=\"statuspage-io\" class=\"site-footer__system-status\"></a>\n\n
+        \     <div class=\"site-footer__copy\">&copy; 2011-2020 Uploadcare, Inc.</div>\n\n
+        \     <ul class=\"site-footer__menu\">\n      <li data-current-when-equal><a
+        href=\"/pricing/\">Pricing</a></li>\n      <li data-current-when-equal><a
+        href=\"/about/\">About</a></li>\n      <li data-current-when-equal><a href=\"/about/team/\">Team</a></li>\n
+        \     <!--<li><a href=\"http://blog.uploadcare.com/\" target=\"_blank\">Blog</a></li>-->\n
+        \     <li>\n        <a class=\"help\" href=\"mailto:help@uploadcare.com\">Support</a>\n
+        \     </li>\n    </ul>\n    </div>\n  </div>\n</div>\n\n\n\n\n<script type=\"text/javascript\"
+        src=\"https://ucarecdn.com/assets/javascripts/bundle/application.28df3b03c3f1.js\"
+        charset=\"utf-8\" crossorigin=\"anonymous\"></script>\n\n\n\n\n\n\n<noscript>\n
+        \   <iframe src=\"https://www.googletagmanager.com/ns.html?id=GTM-TL4CC3\"\n
+        \           height=\"0\" width=\"0\" style=\"display:none;visibility:hidden\"></iframe>\n</noscript>\n\n\n\n\n\n<div
+        class='js-gdpr-banner gdpr-banner gdpr-banner_is_hidden'>\n    <div class='gdpr-banner__header'>\n
+        \       <svg xmlns=\"http://www.w3.org/2000/svg\" width=\"32\" height=\"32\"
+        viewBox=\"0 0 32 32\" class=\"gdpr-banner__icon\" role=\"presentation\"><path
+        d=\"M16,3 L5,6.96753247 L5,13.3831169 C5,20.176461 9.69333333,27.4577273 16,29
+        C22.3066667,27.4577273 27,20.176461 27,13.3831169 L27,6.96753247 L16,3 Z\"></path></svg>\n
+        \       <p class='gdpr-banner__title'>Cookies on Uploadcare</p>\n    </div>\n
+        \   <div class='gdpr-banner__body'>\n        <p class='gdpr-banner__text'>\n
+        \           We have placed cookies on your device to improve your experience.&nbsp;\n
+        \           <a class='gdpr-banner__link'\n               target='_blank'\n
+        \              href='/about/privacy_policy/#cookies'>\n                Learn
+        more about how this site works and our compliances\n                <svg xmlns=\"http://www.w3.org/2000/svg\"
+        width=\"7\" height=\"13\" viewBox=\"0 0 7 13\" class=\"gdpr-banner__chevron\"
+        role=\"presentation\"><path d=\"M0.260059927,11.3273272 L1.73994007,12.6726728
+        L6.73994007,7.17267279 C7.08668664,6.79125157 7.08668664,6.20874843 6.73994007,5.82732721
+        L1.73994007,0.327327206 L0.260059927,1.67267279 L4.6485392,6.5 L0.260059927,11.3273272
+        Z\"></path></svg>\n            </a>\n            <button class='js-gdpr-button
+        gdpr-banner__button'>I am fine with this</button>\n        </p>\n    </div>\n</div>\n\n<script>\n
+        \ var $banner = $('.js-gdpr-banner');\n  var $button = $('.js-gdpr-button');\n\n
+        \ var today = (new Date()).getTime()\n  var gdprDay = (new Date(2018, 4, 25)).getTime()\n
+        \ var isHidden\n\n  if (today < gdprDay) {\n    // If we have a test cookies
+        for test purposes\n    isHidden = !$.cookie('test_gdpr_consent')\n  } else
+        {\n    isHidden = $.cookie('gdpr_consent');\n  }\n\n  if (!isHidden) {\n    $banner.removeClass('banner_is_hidden');\n
+        \ }\n\n  $banner.on('click', function() {\n    $(this).addClass('gdpr-banner_is_opened');\n
+        \ });\n  $button.on('click', function () {\n    $banner.addClass('gdpr-banner_is_hidden');\n
+        \   $.cookie('gdpr_consent', true, {expires: 365})\n\n    // If we have a
+        test cookies — remove them for test purposes\n    if ($.cookie('test_gdpr_consent'))
+        {\n      $.removeCookie('test_gdpr_consent')\n    }\n  });\n</script>\n\n\n\n
+        \ \n\n</body>\n</html>\n"
+    http_version: 
+  recorded_at: Mon, 17 Feb 2020 12:46:26 GMT
+recorded_with: VCR 5.0.0

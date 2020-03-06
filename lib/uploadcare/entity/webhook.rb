@@ -1,9 +1,13 @@
-# https://uploadcare.com/docs/api_reference/rest/webhooks/
+# frozen_string_literal: true
 
 module Uploadcare
-  class Webhook < ApiStruct::Entity
-    client_service WebhookClient
+  module Entity
+    # This serializer is responsible for webhook handling
+    # https://uploadcare.com/docs/api_reference/rest/webhooks/
+    class Webhook < ApiStruct::Entity
+      client_service WebhookClient
 
-    attr_entity :id, :created, :updated, :event, :target_url, :project, :is_active
+      attr_entity :id, :created, :updated, :event, :target_url, :project, :is_active
+    end
   end
 end

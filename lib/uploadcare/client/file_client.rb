@@ -20,6 +20,7 @@ module Uploadcare
     def info(uuid)
       get(uri: "/files/#{uuid}/")
     end
+    alias :file :info
 
     # 'copy' method is used to copy original files or their modified versions to default storage.
     # Source files MAY either be stored or just uploaded and MUST NOT be deleted.

@@ -12,9 +12,10 @@ module Uploadcare
       describe 'upload_parts' do
         it 'returns raw document part data' do
           VCR.use_cassette('amazon_upload') do
+            stub = stub_request(:put, /uploadcare.s3-accelerate.amazonaws.com/)
             start_response = MultipartUploadClient.new.upload_start(big_file)
             upload_response = subject.upload_chunks(big_file, start_response.success[:parts])
-            expect(upload_response.to_s).to include('https://uploadcare.s3-accelerate.amazonaws.com')
+            expect(stub).to have_been_requested.at_least_times(3)
           end
         end
       end

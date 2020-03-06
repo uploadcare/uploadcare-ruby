@@ -19,7 +19,7 @@ Gem::Specification.new do |spec|
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = "TODO: Set to 'http://mygemserver.com'"
+    spec.metadata['allowed_push_host'] = 'https://rubygems.org'
 
     spec.metadata['homepage_uri'] = spec.homepage
     spec.metadata['source_code_uri'] = 'https://github.com/uploadcare/uploadcare-ruby-next'
@@ -41,10 +41,11 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'api_struct', '~> 1.0.1'
   spec.add_dependency 'dry-configurable', '~> 0.9.0'
   spec.add_dependency 'retries'
+  spec.add_dependency 'parallel'
 
   spec.add_development_dependency 'bundler', '~> 1.17'
   spec.add_development_dependency 'byebug'
-  spec.add_development_dependency 'rake', '~> 10.0'
+  spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
   spec.add_development_dependency 'rubocop', '~> 0.55.0'
   spec.add_development_dependency 'vcr'

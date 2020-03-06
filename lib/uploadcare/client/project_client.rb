@@ -10,5 +10,7 @@ module Uploadcare
     def show
       get(uri: '/project/')
     end
+
+    alias :project :show
   end
 end

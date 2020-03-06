@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+require 'parallel'
 
 module Uploadcare
   module MultipartUpload
@@ -8,13 +9,20 @@ module Uploadcare
     # https://uploadcare.com/api-refs/upload-api/#tag/Upload/paths/https:~1~1uploadcare.s3-accelerate.amazonaws.com~1%3C%3Cpresigned-url%3E/put
     class ChunksClient < ApiStruct::Client
       chunks_api
+      CHUNK_SIZE = 5242880
+
+      # In multiple threads, split file into chunks and upload those chunks into respective Amazon links
 
       def upload_chunks(object, links)
-        chunk_size = 5242880
-        links.each do |link|
-          chunk = object.read(chunk_size)
-          upload_chunk(chunk, link)
+        Parallel.each(0...links.count, in_threads: Uploadcare.configuration.upload_threads) do |link_id|
+          offset = link_id * CHUNK_SIZE
+          chunk = IO.read(object, CHUNK_SIZE, offset)
+          upload_chunk(chunk, links[link_id])
         end
+      end
+
+      def chunk_experiment(file)
+        chunk_size = 5242880
       end
 
       private

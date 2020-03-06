@@ -1,20 +1,21 @@
 # frozen_string_literal: true
 
-require 'uploadcare_settings'
+require 'uploadcare_configuration'
+require 'default_configuration'
 
 # File with api endpoints
 
 ApiStruct::Settings.configure do |config|
   config.endpoints = {
     rest_api: {
-      root: Uploadcare::REST_API_ROOT,
+      root: Uploadcare.configuration.rest_api_root,
       headers: {
         'Content-type': 'application/json',
         'Accept': 'application/vnd.uploadcare-v0.5+json'
       }
     },
     upload_api: {
-      root: Uploadcare::UPLOAD_API_ROOT
+      root: Uploadcare.configuration.upload_api_root
     },
     chunks_api: {
       root: ''

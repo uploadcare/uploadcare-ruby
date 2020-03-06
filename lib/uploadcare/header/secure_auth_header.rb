@@ -15,7 +15,7 @@ module Uploadcare
       @date_for_header = self.timestamp
       {
         'Date': @date_for_header,
-        'Authorization': "Uploadcare #{PUBLIC_KEY}:#{self.signature}"
+        'Authorization': "Uploadcare #{Uploadcare.configuration.public_key}:#{self.signature}"
       }
     end
 
@@ -25,7 +25,7 @@ module Uploadcare
       content_md5 = Digest::MD5.hexdigest(@body)
       sign_string = [@method, content_md5, @content_type, @date_for_header, @uri].join("\n")
       digest = OpenSSL::Digest.new('sha1')
-      OpenSSL::HMAC.hexdigest(digest, SECRET_KEY, sign_string)
+      OpenSSL::HMAC.hexdigest(digest, Uploadcare.configuration.secret_key, sign_string)
     end
 
     def self.timestamp

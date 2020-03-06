@@ -3,12 +3,10 @@
 module Uploadcare
   # This module lets clients send request multiple times if request is throttled
   module ThrottleHandler
-    ATTEMPTS = 5
-
     # call given block. If ThrottleError is returned, it will wait and attempt again 4 more times
 
     def handle_throttling
-      (ATTEMPTS - 1).times do
+      (Uploadcare.configuration.max_throttle_attempts - 1).times do
         begin
           return yield
         rescue(ThrottleError) => error

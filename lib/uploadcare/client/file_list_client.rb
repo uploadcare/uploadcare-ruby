@@ -14,8 +14,7 @@ module Uploadcare
     # from: number of files skipped
 
     def file_list(**options)
-      query = ''
-      query = '?' + options.to_a.map { |x| "#{x[0]}=#{x[1]}" }.join('&') unless options.empty?
+      query = options.empty? ? '' : '?' + URI.encode_www_form(options)
       get(uri: "/files/#{query}")
     end
 
@@ -39,8 +38,8 @@ module Uploadcare
       request_delete(uri: '/files/storage/', body: body)
     end
 
-    alias store batch_store
-    alias delete batch_delete
+    alias store_files batch_store
+    alias delete_files batch_delete
     alias list file_list
   end
 end

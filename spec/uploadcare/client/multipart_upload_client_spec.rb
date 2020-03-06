@@ -13,8 +13,7 @@ module Uploadcare
       context 'small file' do
         it 'doesnt upload small files' do
           VCR.use_cassette('upload_multipart_upload_start_small') do
-            response = subject.upload_start(small_file)
-            expect(response.to_s).to include('File size can not be less than 10485760 bytes')
+            expect { subject.upload_start(small_file) }.to raise_error(RequestError)
           end
         end
       end
@@ -34,8 +33,8 @@ module Uploadcare
       context 'unfinished' do
         it 'informs about unfinished upload' do
           VCR.use_cassette('upload_multipart_upload_complete_unfinished') do
-            response = subject.upload_complete('7d9f495a-2834-4a2a-a2b3-07dbaf80ac79')
-            expect(response.to_s).to include('File size mismatch. Not all parts uploaded?')
+            msg = 'File size mismatch. Not all parts uploaded?'
+            expect { subject.upload_complete('7d9f495a-2834-4a2a-a2b3-07dbaf80ac79') }.to raise_error(RequestError, /#{msg}/)
           end
         end
       end
@@ -43,8 +42,8 @@ module Uploadcare
       context 'wrong uid' do
         it 'informs that file is not found' do
           VCR.use_cassette('upload_multipart_upload_complete_wrong_id') do
-            response = subject.upload_complete('nonexistent')
-            expect(response.to_s).to include('File is not found')
+            msg = 'File is not found'
+            expect { subject.upload_complete('nonexistent') }.to raise_error(RequestError, /#{msg}/)
           end
         end
       end
@@ -52,8 +51,8 @@ module Uploadcare
       context 'already uploaded' do
         it 'returns file data' do
           VCR.use_cassette('upload_multipart_upload_complete') do
-            response = subject.upload_complete('d8c914e3-3aef-4976-b0b6-855a9638da2d')
-            expect(response.to_s).to include('File is already uploaded')
+            msg = 'File is already uploaded'
+            expect { subject.upload_complete('d8c914e3-3aef-4976-b0b6-855a9638da2d') }.to raise_error(RequestError, /#{msg}/)
           end
         end
       end
@@ -62,6 +61,8 @@ module Uploadcare
     describe 'upload' do
       it 'does the entire multipart upload routine' do
         VCR.use_cassette('upload_multipart_upload') do
+          # Minimum size for size to be valid for multiupload is 10 mb
+          Uploadcare.configuration.multipart_size_threshold = 10 * 1024 * 1024
           response = subject.upload(big_file)
           response_value = response.value!
           expect(response_value[:uuid]).not_to be_empty
@@ -70,8 +71,8 @@ module Uploadcare
 
       it 'returns server answer if file is too small' do
         VCR.use_cassette('upload_multipart_upload_small') do
-          response = subject.upload(small_file)
-          expect(response.to_s).to include('File size can not be less than 10485760 bytes')
+          msg = 'File size can not be less than 10485760 bytes'
+          expect { subject.upload(small_file) }.to raise_error(RequestError, /#{msg}/)
         end
       end
     end

@@ -12,8 +12,8 @@ module Uploadcare
 
       it 'generates basic upload params headers' do
         params = subject.call
-        expect(params[:UPLOADCARE_PUB_KEY]).not_to be_nil
-        expect(params[:UPLOADCARE_STORE]).not_to be_nil
+        expect(params['UPLOADCARE_PUB_KEY']).not_to be_nil
+        expect(params['UPLOADCARE_STORE']).not_to be_nil
       end
     end
   end

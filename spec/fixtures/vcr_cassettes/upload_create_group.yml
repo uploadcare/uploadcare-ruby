@@ -1,0 +1,60 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/group/
+    body:
+      encoding: UTF-8
+      string: "-----------------------1357fb21f6f218e00bf84a7f11241e43959154e75d\r\nContent-Disposition:
+        form-data; name=\"pub_key\"\r\n\r\nc8499ee6dc44194c00d2\r\n-----------------------1357fb21f6f218e00bf84a7f11241e43959154e75d\r\nContent-Disposition:
+        form-data; name=\"files[0]\"\r\n\r\ne9a9f291-cc52-4388-bf65-9feec1c75ff9\r\n-----------------------1357fb21f6f218e00bf84a7f11241e43959154e75d\r\nContent-Disposition:
+        form-data; name=\"files[1]\"\r\n\r\nc724feac-86f7-447c-b2d6-b0ced220173d\r\n-----------------------1357fb21f6f218e00bf84a7f11241e43959154e75d--\r\n"
+    headers:
+      Accept:
+      - application/json
+      Content-Type:
+      - multipart/form-data; boundary=---------------------1357fb21f6f218e00bf84a7f11241e43959154e75d
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 27 Jan 2020 10:45:12 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1247'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      X-Content-Type-Options:
+      - nosniff
+      Access-Control-Max-Age:
+      - '1'
+      X-Xss-Protection:
+      - 1; mode=block
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id":"fc194fec-5793-4403-a593-686af4be412e~2","datetime_created":"2020-01-27T10:45:12.498576Z","datetime_stored":null,"files_count":2,"cdn_url":"https://ucarecdn.com/fc194fec-5793-4403-a593-686af4be412e~2/","url":"https://api.uploadcare.com/groups/fc194fec-5793-4403-a593-686af4be412e~2/","files":[{"default_effects":"","is_stored":true,"done":5345,"file_id":"e9a9f291-cc52-4388-bf65-9feec1c75ff9","total":5345,"size":5345,"uuid":"e9a9f291-cc52-4388-bf65-9feec1c75ff9","is_image":true,"filename":"imagepng.jpeg","video_info":null,"is_ready":true,"original_filename":"image.png.jpeg","image_info":{"color_mode":"RGB","orientation":null,"format":"JPEG","sequence":false,"height":183,"width":190,"geo_location":null,"datetime_original":null,"dpi":null},"mime_type":"image/jpeg"},{"default_effects":"","is_stored":true,"done":3118,"file_id":"c724feac-86f7-447c-b2d6-b0ced220173d","total":3118,"size":3118,"uuid":"c724feac-86f7-447c-b2d6-b0ced220173d","is_image":true,"filename":"Test.png","video_info":null,"is_ready":true,"original_filename":"Test.png","image_info":{"color_mode":"RGBA","orientation":null,"format":"PNG","sequence":false,"height":300,"width":300,"geo_location":null,"datetime_original":null,"dpi":[72,72]},"mime_type":"image/png"}]}'
+    http_version: 
+  recorded_at: Mon, 27 Jan 2020 10:45:12 GMT
+recorded_with: VCR 5.0.0

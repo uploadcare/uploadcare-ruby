@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# https://uploadcare.com/api-refs/rest-api/v0.5.0/#tag/Webhook
-
 module Uploadcare
   # client for webhook management
+  # https://uploadcare.com/api-refs/rest-api/v0.5.0/#tag/Webhook
   class WebhookClient < RestClient
     # Create webhook
     # https://uploadcare.com/docs/api_reference/rest/webhooks/#subscribe
