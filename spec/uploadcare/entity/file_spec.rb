@@ -33,6 +33,25 @@ module Uploadcare
           expect { subject.delete(uuid) }.to raise_error(RequestError)
         end
       end
+
+      describe 'internal_copy' do
+        it 'copies file to same project' do
+          VCR.use_cassette('rest_file_internal_copy') do
+            file = subject.file('35b7fcd7-9bca-40e1-99b1-2adcc21c405d')
+            response = file.internal_copy
+          end
+        end
+      end
+
+      describe 'external_copy' do
+        it 'copies file to different project' do
+          VCR.use_cassette('rest_file_external_copy') do
+            file = subject.file('35b7fcd7-9bca-40e1-99b1-2adcc21c405d')
+            # I don't have custom storage, but this error recognises what this method tries to do
+            expect { file.external_copy('16d8625b4c5c4a372a8f') }.to raise_error(RequestError, 'Project has no storage with provided name.')
+          end
+        end
+      end
     end
   end
 end

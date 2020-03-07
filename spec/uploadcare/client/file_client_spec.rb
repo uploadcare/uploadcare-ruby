@@ -34,11 +34,33 @@ module Uploadcare
         end
       end
 
+      describe 'strip_operations' do
+        it 'doesnt strip operations from source by default' do
+          VCR.use_cassette('rest_file_copy_dont_strip_operations') do
+            source = 'https://ucarecdn.com/35b7fcd7-9bca-40e1-99b1-2adcc21c405d/-/resize/10x10/'
+            response = subject.copy(source: source)
+            file_info = subject.file(response.success.dig(:result, :uuid))
+            expect(file_info.success.dig(:image_info, :height)).to eq 10
+            expect(file_info.success.dig(:image_info, :width)).to eq 10
+          end
+        end
+
+        it 'strips operations from source' do
+          VCR.use_cassette('rest_file_copy_strip_operations') do
+            source = 'https://ucarecdn.com/35b7fcd7-9bca-40e1-99b1-2adcc21c405d/-/resize/10x10/'
+            original_file_info = subject.file('35b7fcd7-9bca-40e1-99b1-2adcc21c405d')
+            response = subject.copy(source: source, strip_operations: true)
+            file_info = subject.file(response.success.dig(:result, :uuid))
+            expect(file_info.success.dig(:image_info)).to eq original_file_info.success.dig(:image_info)
+          end
+        end
+      end
+
       it 'accepts other arguments' do
         VCR.use_cassette('rest_file_copy_arg') do
           uuid = '8f64f313-e6b1-4731-96c0-6751f1e7a50a'
           expect { subject.copy(source: uuid, target: 'nowhere') }.to raise_error(RequestError,
-            'Project has no storage with provided name.')
+                                                                                  'Project has no storage with provided name.')
         end
       end
     end
