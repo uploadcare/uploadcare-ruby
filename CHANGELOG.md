@@ -4,6 +4,7 @@
 
 - Added Upload/group functionality
 - Added user API
+- Added user agent
 [Full Changelog](https://github.com/uploadcare/uploadcare-ruby-next/compare/0baded5593869f1d741f0fff22c58814970726b2...HEAD)
 
 ## [3.0.0-dev] 2020-02-18

@@ -16,4 +16,6 @@ Uploadcare.configure do |config|
   config.upload_signature_lifetime = 30 * 60 # seconds
   config.max_throttle_attempts = 5
   config.upload_threads = 2 # used for multiupload only ATM
+  config.upload_threads = 2 # used for multiupload only ATM
+  config.framework_data = 'UploadcareRuby'
 end
