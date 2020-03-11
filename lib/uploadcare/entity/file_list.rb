@@ -5,12 +5,12 @@ require 'uploadcare/entity/file'
 module Uploadcare
   module Entity
     # This serializer returns lists of files
-    class FileList < ApiStruct::Entity
+    class FileList < Entity
       client_service FileListClient
 
       attr_entity :next, :previous, :total, :per_page
 
-      has_entities :results, as: Uploadcare::Entity::File
+      has_entities :results, as: File
       has_entities :result, as: Uploadcare::Entity::File
 
       def files

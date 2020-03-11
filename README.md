@@ -47,11 +47,9 @@ follows gets way more clear once you've looked through our
 Using Uploadcare is simple, and here are the basics of handling files.
 
 ```ruby
-# Create API object
-@api = Uploadcare::Api.new
-
-# Upload file
 @file_to_upload = File.open("your-file.png")
+
+@uc_file = Uploadcare::Uploader.upload(@file_to_upload)
 
 @uc_file.uuid
 # => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
@@ -82,19 +80,19 @@ Uploadcare supports multiple ways to upload files:
 
 ```ruby
 # Smart upload - detects type of passed object and picks appropriate upload method
-@api.upload('https://placekitten.com/96/139')
+Uploadcare::Uploader.upload('https://placekitten.com/96/139')
 ```
 
 There are explicit ways to select upload type:
 
 ```ruby
 files = [File.open('1.jpg'), File.open('1.jpg']
-@api.upload_files(files)
+Uploadcare::Uploader.upload_files(files)
 
-@api.upload_from_url('https://placekitten.com/96/139')
+Uploadcare::Uploader.upload_from_url('https://placekitten.com/96/139')
 
 # multipart upload - can be useful for files bigger than 10 mb
-@api.multipart_upload(File.open('big_file.bin'))
+Uploadcare::Uploader.multipart_upload(File.open('big_file.bin'))
 ```
 
 ### Upload options
@@ -106,17 +104,23 @@ You can override global [`:autostore`](#initialization) option for each upload r
 @api.upload_from_url(url, store: :auto)
 ```
 
+### Api
+Most methods are also available through `Uploadcare::Api` object:
+```ruby
+# Same as Uploadcare::Uploader.upload
+Uploadcare::Api.upload('https://placekitten.com/96/139')
+```
+
 ### Entity object
 
 Entities are representations of objects in Uploadcare cloud.
 
 #### File
 
-File entity, gotten from `@api.file` or `@api.upload_one`, contains its
-metadata.
+File entity contains its metadata.
 
 ```ruby
-@file = @api.file('8f64f313-e6b1-4731-96c0-6751f1e7a50a')
+@file = Uploadcare::File.file('FILE_ID_IN_YOUR_PROJECT')
 {"datetime_removed"=>nil,
  "datetime_stored"=>"2020-01-16T15:03:15.315064Z",
  "datetime_uploaded"=>"2020-01-16T15:03:14.676902Z",
@@ -134,11 +138,11 @@ metadata.
  "is_ready"=>true,
  "mime_type"=>"image/jpeg",
  "original_file_url"=>
-  "https://ucarecdn.com/8f64f313-e6b1-4731-96c0-6751f1e7a50a/imagepng.jpeg",
+  "https://ucarecdn.com/FILE_ID_IN_YOUR_PROJECT/imagepng.jpeg",
  "original_filename"=>"image.png.jpeg",
  "size"=>5345,
  "url"=>
-  "https://api.uploadcare.com/files/8f64f313-e6b1-4731-96c0-6751f1e7a50a/",
+  "https://api.uploadcare.com/files/FILE_ID_IN_YOUR_PROJECT/",
  "uuid"=>"8f64f313-e6b1-4731-96c0-6751f1e7a50a"}
 
 @file.store # stores file, returns updated metadata
@@ -150,12 +154,12 @@ Metadata of deleted files is stored permanently.
 
 #### FileList
 
-`Uploadcare::Api::FileList` represents the whole collection of files (or it's
+`Uploadcare::Entity::FileList` represents the whole collection of files (or it's
 subset) and provides a way to iterate through it, making pagination transparent.
-FileList objects can be created using `Uploadcare::Api#file_list` method.
+FileList objects can be created using `Uploadcare::Entity.file_list` method.
 
 ```ruby
-@list = @api.file_list # => instance of Uploadcare::Api::FileList
+@list = Uploadcare::Entity.file_list # => instance of Uploadcare::Api::FileList
 ```
 
 This method accepts some options to controll which files should be fetched and
@@ -190,8 +194,8 @@ That's a requirement of our API.
 ```ruby
 # group can be created from an array of Uploadcare files
 @files_ary = [@file, @file2]
-@files = @api.upload @files_ary
-@group = @api.create_group @files
+@files = Uploadcare::Uploader.upload @files_ary
+@group = Uploadcare::Group.create @files
 ```
 
 #### Webhook
@@ -199,8 +203,9 @@ https://uploadcare.com/docs/api_reference/rest/webhooks/
 
 You can use webhooks to provide notifications about your uploads to target urls.
 This gem lets you create and manage webhooks.
-```ruby
 
+```ruby
+Uploadcare::Webhook.create('example.com/listen', event: 'file.uploaded')
 ```
 
 #### Project
@@ -210,7 +215,7 @@ object is also an Hashie::Mash, so every methods out of
 [these](https://uploadcare.com/documentation/rest/#project/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby) will work.
 
 ```ruby
-@project = @api.project
+@project = Uploadcare::Project.project
 # => #<Uploadcare::Api::Project collaborators=[], name="demo", pub_key="demopublickey", autostore_enabled=true>
 
 @project.name
@@ -224,11 +229,11 @@ object is also an Hashie::Mash, so every methods out of
 
 ## Useful links
 
-[Development](/DEVELOPMENT.md)  
-[Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
-[Upload API reference](https://uploadcare.com/api-refs/upload-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
-[REST API reference](https://uploadcare.com/api-refs/rest-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
-[Changelog](/CHANGELOG.md)  
-[Contributing guide](https://github.com/uploadcare/.github/blob/master/CONTRIBUTING.md)  
-[Security policy](https://github.com/uploadcare/uploadcare-ruby/security/policy)  
-[Support](https://github.com/uploadcare/.github/blob/master/SUPPORT.md)  
+* [Development](./DEVELOPMENT.md)  
+* [Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
+* [Upload API reference](https://uploadcare.com/api-refs/upload-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
+* [REST API reference](https://uploadcare.com/api-refs/rest-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
+* [Changelog](./CHANGELOG.md)  
+* [Contributing guide](https://github.com/uploadcare/.github/blob/master/CONTRIBUTING.md)  
+* [Security policy](https://github.com/uploadcare/uploadcare-ruby/security/policy)  
+* [Support](https://github.com/uploadcare/.github/blob/master/SUPPORT.md)  

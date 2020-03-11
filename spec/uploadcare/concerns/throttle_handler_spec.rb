@@ -4,8 +4,8 @@ require 'spec_helper'
 require 'uploadcare/concerns/throttle_handler'
 
 module Uploadcare
-  RSpec.describe ThrottleHandler do
-    include ThrottleHandler
+  RSpec.describe Concerns::ThrottleHandler do
+    include Concerns::ThrottleHandler
     def sleep(_time) ; end
 
     class Throttler

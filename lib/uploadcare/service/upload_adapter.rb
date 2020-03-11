@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-require 'concerns/request_error'
-
 module Uploadcare
   # This object decides which of upload methods to use.
   # Returns either file or array of files
   class UploadAdapter
-    extend Uploadcare::ThrottleHandler
+    include Client
+    extend Uploadcare::Concerns::ThrottleHandler
+    # Choose an upload method
     def self.call(object, **options)
       if big_file?(object)
         upload_big_file(object, **options)
@@ -23,26 +23,26 @@ module Uploadcare
 
     protected
 
-    def self.upload_file(object, **options)
-      response = UploadClient.new.upload_many([object], **options)
+    def self.upload_file(file, **options)
+      response = UploadClient.new.upload_many([file], **options)
       handle_upload_errors(response)
       Entity::File.info(response.success.to_a.flatten[-1])
     end
 
-    def self.upload_files(object, **options)
-      response = handle_throttling { UploadClient.new.upload_many(object, **options) }
+    def self.upload_files(arr, **options)
+      response = handle_throttling { UploadClient.new.upload_many(arr, **options) }
       handle_upload_errors(response)
       Hashie::Mash.new(files: response.success.map { |pair| { original_filename: pair[0], uuid: pair[1] } })
     end
 
-    def self.upload_big_file(object, **_options)
-      response = MultipartUploadClient.new.upload(object)
+    def self.upload_big_file(file, **_options)
+      response = MultipartUploadClient.new.upload(file)
       handle_upload_errors(response)
       Entity::File.new(response.success)
     end
 
-    def self.upload_from_url(object, **options)
-      response = UploadClient.new.upload_from_url(object, **options)
+    def self.upload_from_url(url, **options)
+      response = UploadClient.new.upload_from_url(url, **options)
       handle_upload_errors(response)
       Entity::Uploader.new(response.success)
     end
