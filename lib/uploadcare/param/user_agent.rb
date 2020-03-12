@@ -10,9 +10,9 @@ module Uploadcare
       #   UploadcareRuby/3.0.0-dev/Pubkey_(Ruby/2.6.3;UploadcareRuby)
       def self.call
         framework_data = Uploadcare.configuration.framework_data || ''
-        framework_data_string = ';' + Uploadcare.configuration.framework_data unless framework_data.empty?
+        framework_data_string = '; ' + Uploadcare.configuration.framework_data unless framework_data.empty?
         public_key = Uploadcare.configuration.public_key
-        "UploadcareRuby/#{VERSION}/#{public_key}_(Ruby/#{RUBY_VERSION}#{framework_data_string})"
+        "UploadcareRuby/#{VERSION}/#{public_key} (Ruby/#{RUBY_VERSION}#{framework_data_string})"
       end
     end
   end
