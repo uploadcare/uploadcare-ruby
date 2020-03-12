@@ -11,6 +11,23 @@ module Uploadcare
       attr_entity :datetime_removed, :datetime_stored, :datetime_uploaded, :image_info, :is_image, :is_ready,
                   :mime_type, :original_file_url, :original_filename, :size, :url, :uuid
 
+      # gets file's uuid - even if it's only initialized with url
+      # @return [String]
+
+      def uuid
+        return @entity.uuid if @entity.uuid
+
+        uuid = @entity.url.gsub('https://ucarecdn.com/', '')
+        uuid = uuid.gsub(%r{\/.*}, '')
+        uuid
+      end
+
+      # loads file metadata, if it's initialized with url or uuid
+
+      def load
+        initialize(File.info(uuid).entity)
+      end
+
       # 'copy' method is used to copy original files or their modified versions to default storage.
       #
       # Source files MAY either be stored or just uploaded and MUST NOT be deleted.
@@ -36,7 +53,7 @@ module Uploadcare
       #
       # @see .copy
 
-      def self.internal_copy(source, **args)
+      def self.local_copy(source, **args)
         File.copy(source, **args)
       end
 
@@ -46,7 +63,7 @@ module Uploadcare
       #
       # @see .copy
 
-      def self.external_copy(source, target, **args)
+      def self.remote_copy(source, target, **args)
         File.copy(source: source, target: target, **args)
       end
 
@@ -58,13 +75,13 @@ module Uploadcare
 
       # Instance version of {internal_copy}
 
-      def internal_copy(**args)
-        File.internal_copy(uuid, **args)
+      def local_copy(**args)
+        File.local_copy(uuid, **args)
       end
 
       # Instance version of {external_copy}
 
-      def external_copy(target, **args)
+      def remote_copy(target, **args)
         File.copy(uuid, target: target, **args)
       end
     end

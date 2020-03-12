@@ -31,6 +31,24 @@ module Uploadcare
           expect(@group.files.first).to be_a_kind_of(Uploadcare::Entity::File)
         end
       end
+
+      describe 'id' do
+        it 'returns id, even if only cdn_url is defined' do
+          group = Group.new(cdn_url: 'https://ucarecdn.com/69bafb24-5bfc-45d8-ba85-b3ea88e8eb17~1')
+          expect(group.id).to eq '69bafb24-5bfc-45d8-ba85-b3ea88e8eb17~1'
+        end
+      end
+
+      describe 'load' do
+        it 'performs load request' do
+          VCR.use_cassette('upload_group_info') do
+            cdn_url = 'https://ucarecdn.com/69bafb24-5bfc-45d8-ba85-b3ea88e8eb17~1'
+            group = Group.new(cdn_url: cdn_url)
+            group.load
+            expect(group.files_count).not_to be_nil
+          end
+        end
+      end
     end
   end
 end

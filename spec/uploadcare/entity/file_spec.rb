@@ -38,7 +38,7 @@ module Uploadcare
         it 'copies file to same project' do
           VCR.use_cassette('rest_file_internal_copy') do
             file = subject.file('35b7fcd7-9bca-40e1-99b1-2adcc21c405d')
-            response = file.internal_copy
+            file.local_copy
           end
         end
       end
@@ -48,7 +48,25 @@ module Uploadcare
           VCR.use_cassette('rest_file_external_copy') do
             file = subject.file('35b7fcd7-9bca-40e1-99b1-2adcc21c405d')
             # I don't have custom storage, but this error recognises what this method tries to do
-            expect { file.external_copy('16d8625b4c5c4a372a8f') }.to raise_error(RequestError, 'Project has no storage with provided name.')
+            expect { file.remote_copy('16d8625b4c5c4a372a8f') }.to raise_error(RequestError, 'Project has no storage with provided name.')
+          end
+        end
+      end
+
+      describe 'uuid' do
+        it 'returns uuid, even if only url is defined' do
+          file = File.new(url: 'https://ucarecdn.com/35b7fcd7-9bca-40e1-99b1-2adcc21c405d/123.jpg')
+          expect(file.uuid).to eq '35b7fcd7-9bca-40e1-99b1-2adcc21c405d'
+        end
+      end
+
+      describe 'load' do
+        it 'performs load request' do
+          VCR.use_cassette('file_info') do
+            url = 'https://ucarecdn.com/8f64f313-e6b1-4731-96c0-6751f1e7a50a'
+            file = File.new(Hashie::Mash.new(url: url))
+            file.load
+            expect(file.datetime_uploaded).not_to be_nil
           end
         end
       end

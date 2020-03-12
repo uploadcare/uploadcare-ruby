@@ -22,6 +22,23 @@ module Uploadcare
       def self.store(uuid)
         rest_store(uuid)
       end
+
+      # gets groups's id - even if it's only initialized with cdn_url
+      # @return [String]
+
+      def id
+        return @entity.id if @entity.id
+
+        id = @entity.cdn_url.gsub('https://ucarecdn.com/', '')
+        id = id.gsub(%r{\/.*}, '')
+        id
+      end
+
+      # loads group metadata, if it's initialized with url or id
+
+      def load
+        initialize(Group.info(id).entity)
+      end
     end
   end
 end
