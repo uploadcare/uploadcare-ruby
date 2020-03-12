@@ -4,6 +4,11 @@
 
 [Full Changelog](https://github.com/uploadcare/uploadcare-ruby-next/compare/0baded5593869f1d741f0fff22c58814970726b2...HEAD)
 
+## [3.0.2-dev] 2020-03-11
+
+- Expanded File and Group entities
+- Changed user agent syntax
+
 ## [3.0.1-dev] 2020-03-11
 
 - Added Upload/group functionality
