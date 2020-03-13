@@ -185,6 +185,19 @@ options = {
 @list = @api.file_list(options)
 ```
 
+##### Pagination
+
+Initially, `FileList` is a paginated collection. It can be navigated using following methods:
+```ruby
+  @file_list = Uploadcare::Entity::FileList.file_list
+  # Let's assume there are 250 files in cloud. By default, UC loads 100 files. To get next 100 files, do:
+  @next_page = @file_list.next_page
+  # To get previous page:
+  @previous_page = @next_page.previous_page
+  # To attempt to load all objects without pagination:
+  @all_files = @file_list.load.files
+```
+
 #### Group
 
 Groups are structures intended to organize sets of separate files. Each group is
@@ -197,6 +210,15 @@ That's a requirement of our API.
 @files = Uploadcare::Uploader.upload @files_ary
 @group = Uploadcare::Group.create @files
 ```
+
+#### GroupList
+`GroupList` is a list of `Group`
+
+```ruby
+@group_list = Uploadcare::GroupList.list
+```
+
+This is a paginated list, so [pagination](#Pagination) methods apply
 
 #### Webhook
 https://uploadcare.com/docs/api_reference/rest/webhooks/

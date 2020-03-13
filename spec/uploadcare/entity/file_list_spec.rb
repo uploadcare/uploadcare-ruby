@@ -15,6 +15,14 @@ module Uploadcare
         VCR.use_cassette('rest_file_list') do
           file_list = subject.file_list
           expect(file_list).to respond_to(:next, :previous, :results, :total, :files)
+          expect(file_list.meta).to respond_to(:next, :previous, :total, :per_page)
+        end
+      end
+
+      it 'accepts arguments' do
+        VCR.use_cassette('rest_file_list_params') do
+          fl_with_params = FileList.file_list(limit: 2, ordering: 'size')
+          expect(fl_with_params.meta.per_page).to eq 2
         end
       end
 
@@ -30,7 +38,7 @@ module Uploadcare
 
         it 'returns empty list if those files don`t exist' do
           VCR.use_cassette('rest_file_batch_store_fail') do
-            uuids = ['nonexistent', 'another_nonexistent']
+            uuids = %w[nonexistent another_nonexistent]
             response = subject.batch_store(uuids)
             expect(response.files).to be_empty
           end
@@ -49,7 +57,7 @@ module Uploadcare
 
         it 'returns empty list if those files don`t exist' do
           VCR.use_cassette('rest_file_batch_delete_fail') do
-            uuids = ['nonexistent', 'another_nonexistent']
+            uuids = %w[nonexistent another_nonexistent]
             response = subject.batch_delete(uuids)
             expect(response.files).to be_empty
           end

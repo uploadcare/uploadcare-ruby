@@ -22,6 +22,12 @@ module Uploadcare
         it 'represents a file group' do
           expect(@groups.groups[0]).to be_a_kind_of(Group)
         end
+
+        it 'responds to pagination methods' do
+          %i[previous_page next_page load].each do |method|
+            expect(@groups).to respond_to(method)
+          end
+        end
       end
     end
   end
