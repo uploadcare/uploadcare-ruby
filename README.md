@@ -185,6 +185,11 @@ options = {
 @list = @api.file_list(options)
 ```
 
+To simply get all associated objects:
+```ruby
+@list.all # => returns Array of Files
+```
+
 ##### Pagination
 
 Initially, `FileList` is a paginated collection. It can be navigated using following methods:
@@ -194,8 +199,13 @@ Initially, `FileList` is a paginated collection. It can be navigated using follo
   @next_page = @file_list.next_page
   # To get previous page:
   @previous_page = @next_page.previous_page
-  # To attempt to load all objects without pagination:
-  @all_files = @file_list.load.files
+```
+
+Alternatively, it's possible to iterate through full list of groups or files with `each`:
+```ruby
+@list.each do |file|
+  p file.url
+end
 ```
 
 #### Group
@@ -216,6 +226,8 @@ That's a requirement of our API.
 
 ```ruby
 @group_list = Uploadcare::GroupList.list
+# To get an array of groups:
+@groups = @group_list.all
 ```
 
 This is a paginated list, so [pagination](#Pagination) methods apply

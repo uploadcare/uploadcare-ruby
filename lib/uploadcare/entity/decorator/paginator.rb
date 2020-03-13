@@ -46,9 +46,8 @@ module Uploadcare
         # It's possible to avoid loading objects on previous pages by offsetting them first
 
         def load
-          return if @entity[:next].nil?
+          return if @entity[:next].nil? || @entity[:results].length == @entity[:total]
 
-          maximize_limit!
           np = self
           until np.next.nil?
             np = np.next_page
@@ -64,18 +63,21 @@ module Uploadcare
         # @yield [Block]
 
         def each
-          page = self
-          while page
-            yield page
-            page = page.next_page
+          current_page = self
+          while current_page
+            current_page.results.each do |obj|
+              yield obj
+            end
+            current_page = current_page.next_page
           end
         end
 
-        private
+        # Load and return all objects in list
+        #
+        # @return [Array]
 
-        def maximize_limit!
-          @entity[:next] = @entity[:next].gsub(/limit=\d*/, 'limit=1000') if @entity[:next]
-          @entity[:per_page] = 1000
+        def all
+          load[:results]
         end
       end
     end
