@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'uploadcare'
+
 module Uploadcare
   module Param
     # This header is added to track libraries using Uploadcare API
