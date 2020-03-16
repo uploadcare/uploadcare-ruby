@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+Gem.find_files('ruby/**/*.rb').each { |path| require path }
 Gem.find_files('exception/**/*.rb').each { |path| require path }
 require 'api_struct'
 require 'dry-configurable'
