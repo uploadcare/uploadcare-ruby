@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
 
   spec.summary       = 'Ruby wrapper for uploadcare API'
   spec.description   = spec.summary
-  spec.homepage      = 'https://github.com/uploadcare/uploadcare-ruby-next'
+  spec.homepage      = 'https://github.com/uploadcare/uploadcare-ruby'
   spec.license       = 'MIT'
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
@@ -22,8 +22,8 @@ Gem::Specification.new do |spec|
     spec.metadata['allowed_push_host'] = 'https://rubygems.org'
 
     spec.metadata['homepage_uri'] = spec.homepage
-    spec.metadata['source_code_uri'] = 'https://github.com/uploadcare/uploadcare-ruby-next'
-    spec.metadata['changelog_uri'] = 'https://github.com/uploadcare/uploadcare-ruby-next/CHANGELOG.md'
+    spec.metadata['source_code_uri'] = 'https://github.com/uploadcare/uploadcare-ruby'
+    spec.metadata['changelog_uri'] = 'https://github.com/uploadcare/uploadcare-ruby/CHANGELOG.md'
   else
     raise 'RubyGems 2.0 or newer is required to protect against ' \
       'public gem pushes.'

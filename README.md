@@ -9,6 +9,9 @@ wrapping Upload and REST APIs.
 * [Usage](#usage)
 * [Useful links](#useful-links)
 
+## Requirements
+* ruby 2.4+
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -159,7 +162,20 @@ subset) and provides a way to iterate through it, making pagination transparent.
 FileList objects can be created using `Uploadcare::Entity.file_list` method.
 
 ```ruby
-@list = Uploadcare::Entity.file_list # => instance of Uploadcare::Api::FileList
+@list = Uploadcare::Entity.file_list
+# Returns instance of Uploadcare::Api::FileList
+<Hashie::Mash
+  next=nil
+  per_page=100
+  previous=nil
+  results=[
+    # Array of Entity::File
+  ]
+  total=8>
+# load last page of files
+@files = @list.files
+# load all files
+@all_files = @list.load
 ```
 
 This method accepts some options to controll which files should be fetched and
@@ -263,7 +279,7 @@ object is also an Hashie::Mash, so every methods out of
 
 ## Useful links
 
-* [Development](./DEVELOPMENT.md)  
+* [Development](https://github.com/uploadcare/uploadcare-ruby/blob/master/DEVELOPMENT.md)  
 * [Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
 * [Upload API reference](https://uploadcare.com/api-refs/upload-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
 * [REST API reference](https://uploadcare.com/api-refs/rest-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
