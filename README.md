@@ -1,6 +1,16 @@
 # Ruby integration for Uploadcare
 
 ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)
+[![Build Status][travis-img]][travis]
+[![Coverage Status][coverals-img]][coverals]
+[![Uploadcare stack on StackShare][stack-img]][stack]
+
+[travis-img]: https://secure.travis-ci.org/uploadcare/uploadcare-ruby.svg?branch=master
+[travis]: http://travis-ci.org/uploadcare/uploadcare-ruby
+[coverals-img]: https://coveralls.io/repos/github/uploadcare/uploadcare-ruby/badge.svg?branch=master
+[coverals]: https://coveralls.io/github/uploadcare/uploadcare-ruby?branch=master
+[stack-img]: https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat
+[stack]: https://stackshare.io/uploadcare/stacks/
 
 Uploadcare Ruby integration handles uploads and further operations with files by
 wrapping Upload and REST APIs.
@@ -27,16 +37,20 @@ And then execute:
 If already not, create your project in [Uploadcare dashboard](https://uploadcare.com/dashboard/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby) and copy
 its API keys from there.
 
-Set your Uploadcare keys in config file or through environment variables
-`UPLOADCARE_PUBLIC_KEY` and `UPLOADCARE_SECRET_KEY`.
-
-Or configure your app yourself if you are using different way of storing keys.
-Gem configuration is available in `Uploadcare.configuration`. Full list of
-settings can be seen in [`lib/uploadcare/default_configuration.rb`](lib/uploadcare/default_configuration.rb)
-
+Set your Uploadcare keys in config file or through environment variables:
 ```bash
 export UPLOADCARE_PUBLIC_KEY=demopublickey
 export UPLOADCARE_SECRET_KEY=demoprivatekey
+```
+
+Or configure your app yourself if you are using different way of storing keys.
+Gem configuration is available in `Uploadcare.configuration`. Full list of
+settings can be seen in [`lib/uploadcare.rb`](lib/uploadcare.rb)
+
+```ruby
+# your_config_initializer_file.rb
+Uploadcare.config.public_key = 'demopublickey'
+Uploadcare.config.secret_key = 'demoprivatekey'
 ```
 
 ## Usage
