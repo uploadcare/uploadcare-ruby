@@ -24,8 +24,8 @@ module Uploadcare
           Uploadcare.config.public_key = 'baz'
           begin
             Entity::Uploader.upload(file)
-          rescue StandardError => err
-            expect(err.to_s).to include('UPLOADCARE_PUB_KEY is invalid')
+          rescue StandardError => e
+            expect(e.to_s).to include('UPLOADCARE_PUB_KEY is invalid')
           end
         end
       end

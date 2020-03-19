@@ -11,8 +11,8 @@ module Uploadcare
           # rubocop:disable Style/RedundantBegin
           begin
             return yield
-          rescue(Exception::ThrottleError) => error
-            wait_time = error.timeout
+          rescue(Exception::ThrottleError) => e
+            wait_time = e.timeout
             sleep(wait_time)
             next
           end

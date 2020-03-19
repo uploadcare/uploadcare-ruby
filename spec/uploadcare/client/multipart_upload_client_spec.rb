@@ -34,8 +34,9 @@ module Uploadcare
         context 'unfinished' do
           it 'informs about unfinished upload' do
             VCR.use_cassette('upload_multipart_upload_complete_unfinished') do
+              uuid = '7d9f495a-2834-4a2a-a2b3-07dbaf80ac79'
               msg = 'File size mismatch. Not all parts uploaded?'
-              expect { subject.upload_complete('7d9f495a-2834-4a2a-a2b3-07dbaf80ac79') }.to raise_error(RequestError, /#{msg}/)
+              expect { subject.upload_complete(uuid) }.to raise_error(RequestError, /#{msg}/)
             end
           end
         end
@@ -52,8 +53,9 @@ module Uploadcare
         context 'already uploaded' do
           it 'returns file data' do
             VCR.use_cassette('upload_multipart_upload_complete') do
+              uuid = 'd8c914e3-3aef-4976-b0b6-855a9638da2d'
               msg = 'File is already uploaded'
-              expect { subject.upload_complete('d8c914e3-3aef-4976-b0b6-855a9638da2d') }.to raise_error(RequestError, /#{msg}/)
+              expect { subject.upload_complete(uuid) }.to raise_error(RequestError, /#{msg}/)
             end
           end
         end

@@ -1,13 +1,13 @@
 AllCops:
   TargetRubyVersion: 2.7
 
-Layout/LineLength:
+Metrics/LineLength:
   Max: 120
 
 IneffectiveAccessModifier:
   Enabled: false
 
-Metrics:
+Metrics/BlockLength:
   Exclude:
     - 'bin/'
     - 'spec/**/*'

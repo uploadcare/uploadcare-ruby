@@ -16,6 +16,7 @@ module Uploadcare
       def call
         @called += 1
         raise ThrottleError unless @called >= 3
+
         "Throttler has been called #{@called} times"
       end
     end

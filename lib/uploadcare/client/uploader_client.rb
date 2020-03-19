@@ -57,6 +57,7 @@ module Uploadcare
                      max_sleep_seconds: Uploadcare.config.max_request_sleep) do
           response = get_status_response(token)
           raise RequestError if %w[progress waiting unknown].include?(response.success[:status])
+
           response
         end
       end

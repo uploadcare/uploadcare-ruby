@@ -48,7 +48,8 @@ module Uploadcare
           VCR.use_cassette('rest_file_external_copy') do
             file = subject.file('35b7fcd7-9bca-40e1-99b1-2adcc21c405d')
             # I don't have custom storage, but this error recognises what this method tries to do
-            expect { file.remote_copy('16d8625b4c5c4a372a8f') }.to raise_error(RequestError, 'Project has no storage with provided name.')
+            msg = 'Project has no storage with provided name.'
+            expect { file.remote_copy('16d8625b4c5c4a372a8f') }.to raise_error(RequestError, msg)
           end
         end
       end
