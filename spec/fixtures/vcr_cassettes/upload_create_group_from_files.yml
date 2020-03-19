@@ -1,0 +1,58 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/group/
+    body:
+      encoding: UTF-8
+      string: "-----------------------68a15585d067e127cc10687c157af750a952f8cd50\r\nContent-Disposition:
+        form-data; name=\"pub_key\"\r\n\r\necd779dc169645ce3c91\r\n-----------------------68a15585d067e127cc10687c157af750a952f8cd50\r\nContent-Disposition:
+        form-data; name=\"files[0]\"\r\n\r\n32c93632-3fde-4a10-b8bb-ab9a7c1027ea\r\n-----------------------68a15585d067e127cc10687c157af750a952f8cd50\r\nContent-Disposition:
+        form-data; name=\"files[1]\"\r\n\r\n21c30070-e9e6-408d-a403-0a34c884790d\r\n-----------------------68a15585d067e127cc10687c157af750a952f8cd50--\r\n"
+    headers:
+      User-Agent:
+      - UploadcareRuby/3.0.3-dev/ecd779dc169645ce3c91 (Ruby/2.5.5)
+      Content-Type:
+      - multipart/form-data; boundary=---------------------68a15585d067e127cc10687c157af750a952f8cd50
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 18 Mar 2020 13:25:23 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1249'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      X-Content-Type-Options:
+      - nosniff
+      Access-Control-Max-Age:
+      - '1'
+      X-Xss-Protection:
+      - 1; mode=block
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id":"ea71678e-f3f2-4476-8706-8208a35d13f4~2","datetime_created":"2020-03-18T13:25:23.545952Z","datetime_stored":null,"files_count":2,"cdn_url":"https://ucarecdn.com/ea71678e-f3f2-4476-8706-8208a35d13f4~2/","url":"https://api.uploadcare.com/groups/ea71678e-f3f2-4476-8706-8208a35d13f4~2/","files":[{"default_effects":"","is_stored":false,"done":1290,"file_id":"32c93632-3fde-4a10-b8bb-ab9a7c1027ea","total":1290,"size":1290,"uuid":"32c93632-3fde-4a10-b8bb-ab9a7c1027ea","is_image":true,"filename":"kitten.jpeg","video_info":null,"is_ready":true,"original_filename":"kitten.jpeg","image_info":{"color_mode":"RGB","orientation":null,"format":"JPEG","sequence":false,"height":50,"width":50,"geo_location":null,"datetime_original":null,"dpi":[96,96]},"mime_type":"application/octet-stream"},{"default_effects":"","is_stored":true,"done":8484,"file_id":"21c30070-e9e6-408d-a403-0a34c884790d","total":8484,"size":8484,"uuid":"21c30070-e9e6-408d-a403-0a34c884790d","is_image":true,"filename":"227","video_info":null,"is_ready":true,"original_filename":"227","image_info":{"color_mode":"RGB","orientation":null,"format":"JPEG","sequence":false,"height":227,"width":225,"geo_location":null,"datetime_original":null,"dpi":[96,96]},"mime_type":"image/jpeg"}]}'
+    http_version: 
+  recorded_at: Wed, 18 Mar 2020 13:25:23 GMT
+recorded_with: VCR 5.0.0

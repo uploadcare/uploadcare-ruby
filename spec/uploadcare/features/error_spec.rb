@@ -21,7 +21,7 @@ module Uploadcare
       # You need to actually read the response to find out that it is in fact an error
       it 'raises readable errors with incorrect 200 responses' do
         VCR.use_cassette('upload_error') do
-          Uploadcare.configuration.public_key = 'baz'
+          Uploadcare.config.public_key = 'baz'
           begin
             Entity::Uploader.upload(file)
           rescue StandardError => err

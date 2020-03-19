@@ -15,14 +15,12 @@ module Uploadcare
         @entity ||= Hashie::Mash.new
 
         # meta data of a pagination object
-
         def meta
           Hashie::Mash.new(next: @entity[:next], previous: @entity[:previous],
                            total: @entity[:total], per_page: @entity[:per_page])
         end
 
         # Returns new instance of current object on next page
-
         def next_page
           url = @entity[:next]
           return unless url
@@ -32,7 +30,6 @@ module Uploadcare
         end
 
         # Returns new instance of current object on previous page
-
         def previous_page
           url = @entity[:previous]
           return unless url
@@ -44,7 +41,6 @@ module Uploadcare
         # Attempts to load the entire list after offset into results of current object
         #
         # It's possible to avoid loading objects on previous pages by offsetting them first
-
         def load
           return if @entity[:next].nil? || @entity[:results].length == @entity[:total]
 
@@ -61,7 +57,6 @@ module Uploadcare
         # iterate through pages, starting with current one
         #
         # @yield [Block]
-
         def each
           current_page = self
           while current_page
@@ -75,7 +70,6 @@ module Uploadcare
         # Load and return all objects in list
         #
         # @return [Array]
-
         def all
           load[:results]
         end

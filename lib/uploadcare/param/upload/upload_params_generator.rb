@@ -12,10 +12,10 @@ module Uploadcare
           store = '1' if store == true
           store = '0' if store == false
           {
-            'UPLOADCARE_PUB_KEY' => Uploadcare.configuration.public_key,
+            'UPLOADCARE_PUB_KEY' => Uploadcare.config.public_key,
             'UPLOADCARE_STORE' => store,
-            'signature' => (Upload::SignatureGenerator.call if Uploadcare.configuration.sign_uploads)
-          }.reject{ |k, v| v.nil? }
+            'signature' => (Upload::SignatureGenerator.call if Uploadcare.config.sign_uploads)
+          }.reject { |_k, v| v.nil? }
         end
       end
     end

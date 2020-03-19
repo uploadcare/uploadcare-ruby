@@ -40,8 +40,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'api_struct', '~> 1.0.1'
   spec.add_dependency 'dry-configurable', '~> 0.9.0'
-  spec.add_dependency 'retries'
   spec.add_dependency 'parallel'
+  spec.add_dependency 'retries'
 
   spec.add_development_dependency 'bundler', '~> 1.17'
   spec.add_development_dependency 'byebug'

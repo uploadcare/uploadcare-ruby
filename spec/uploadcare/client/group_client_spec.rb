@@ -20,6 +20,16 @@ module Uploadcare
             expect(response_body[:url]).to include 'https://api.uploadcare.com/groups'
           end
         end
+        context 'array of Entity::Files' do
+          it 'creates a group' do
+            VCR.use_cassette('upload_create_group_from_files') do
+              files = uuids.map { |uuid| Uploadcare::Entity::File.new(uuid: uuid) }
+              response = subject.create(files)
+              response_body = response.success
+              expect(response_body[:files_count]).to eq 2
+            end
+          end
+        end
       end
 
       describe 'info' do

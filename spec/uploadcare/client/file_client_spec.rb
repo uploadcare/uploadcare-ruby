@@ -39,7 +39,7 @@ module Uploadcare
           VCR.use_cassette('rest_file_copy_arg') do
             uuid = '8f64f313-e6b1-4731-96c0-6751f1e7a50a'
             expect { subject.copy(source: uuid, target: 'nowhere') }.to raise_error(RequestError,
-              'Project has no storage with provided name.')
+                                                                                    'Project has no storage with provided name.')
           end
         end
       end

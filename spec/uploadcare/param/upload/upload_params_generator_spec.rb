@@ -1,12 +1,15 @@
+# frozen_string_literal: true
+
 # @see https://uploadcare.com/docs/api_reference/upload/signed_uploads/
 
 require 'spec_helper'
+require 'param/upload/upload_params_generator'
 
 module Uploadcare
   module Param
     module Upload
-      RSpec.describe Uploadcare::Upload::UploadParamsGenerator do
-        subject { Uploadcare::Upload::UploadParamsGenerator }
+      RSpec.describe Uploadcare::Param::Upload::UploadParamsGenerator do
+        subject { Uploadcare::Param::Upload::UploadParamsGenerator }
         before do
           SIGN_UPLOADS = false
         end

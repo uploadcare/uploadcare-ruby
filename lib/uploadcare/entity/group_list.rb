@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'uploadcare/entity/group'
+require 'uploadcare/entity/decorator/paginator'
 
 module Uploadcare
   module Entity
@@ -9,7 +10,7 @@ module Uploadcare
     # @see https://uploadcare.com/docs/api_reference/upload/groups/
     #
     # This is a paginated list, so all pagination methods apply
-    # @see [Uploadcare::Entity::Decorator::Paginator]
+    # @see Uploadcare::Entity::Decorator::Paginator
     class GroupList < Entity
       include Uploadcare::Entity::Decorator::Paginator
       client_service RestGroupClient, only: :list

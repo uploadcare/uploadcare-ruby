@@ -7,14 +7,12 @@ module Uploadcare
       # call given block. If ThrottleError is returned, it will wait and attempt again 4 more times
       # @yield executable block (HTTP request that may be throttled)
       def handle_throttling
-        (Uploadcare.configuration.max_throttle_attempts - 1).times do
-          begin
-            return yield
-          rescue(Exception::ThrottleError) => error
-            wait_time = error.timeout
-            sleep(wait_time)
-            next
-          end
+        (Uploadcare.config.max_throttle_attempts - 1).times do
+          return yield
+        rescue(Exception::ThrottleError) => error
+          wait_time = error.timeout
+          sleep(wait_time)
+          next
         end
         yield
       end

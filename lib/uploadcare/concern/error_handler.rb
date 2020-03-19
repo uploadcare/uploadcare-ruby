@@ -11,7 +11,6 @@ module Uploadcare
       #
       # Raises errors instead of returning falsey objects
       # @see https://github.com/rubygarage/api_struct/blob/master/lib/api_struct/client.rb#L55
-
       def failure(response)
         catch_upload_errors(response)
         parsed_response = JSON.parse(response.body.to_s)
@@ -25,7 +24,6 @@ module Uploadcare
       # Catches throttling errors and Upload API errors
       #
       # @see https://github.com/rubygarage/api_struct/blob/master/lib/api_struct/client.rb#L45
-
       def wrap(response)
         raise_throttling_error(response) if response.status == 429
         return failure(response) if response.status >= 300
@@ -36,6 +34,7 @@ module Uploadcare
 
       private
 
+      # Raise ThrottleError. Also, tells in error when server will be ready for next request
       def raise_throttling_error(response)
         retry_after = response.headers['Retry-After'].to_i + 1 || 11
         raise ThrottleError.new(retry_after), "Response throttled, retry #{retry_after} seconds later"
@@ -43,7 +42,6 @@ module Uploadcare
 
       # Upload API returns its errors with code 200, and stores its actual code and details within response message
       # This methods detects that and raises apropriate error
-
       def catch_upload_errors(response)
         return unless response.code == 200
 

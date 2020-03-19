@@ -18,14 +18,12 @@ module Uploadcare
 
       # Remove these lines and bump api_struct version when this PR is accepted:
       # @see https://github.com/rubygarage/api_struct/pull/15
-
       def self.store(uuid)
         rest_store(uuid)
       end
 
       # gets groups's id - even if it's only initialized with cdn_url
       # @return [String]
-
       def id
         return @entity.id if @entity.id
 
@@ -35,7 +33,6 @@ module Uploadcare
       end
 
       # loads group metadata, if it's initialized with url or id
-
       def load
         initialize(Group.info(id).entity)
       end

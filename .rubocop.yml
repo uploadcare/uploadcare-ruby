@@ -11,3 +11,10 @@ Metrics:
   Exclude:
     - 'bin/'
     - 'spec/**/*'
+    - 'uploadcare-ruby.gemspec'
+
+Metrics/MethodLength:
+  Max: 20
+
+Style/Documentation:
+  Enabled: false

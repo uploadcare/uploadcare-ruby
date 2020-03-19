@@ -4,8 +4,8 @@ require 'spec_helper'
 
 module Uploadcare
   module Client
-    RSpec.describe MultipartUploadClient do
-      subject { MultipartUploadClient.new }
+    RSpec.describe MultipartUploaderClient do
+      subject { MultipartUploaderClient.new }
       let!(:small_file) { ::File.open('spec/fixtures/kitten.jpeg') }
       # Replace this file with actual big file when rewriting fixtures
       let!(:big_file) { ::File.open('spec/fixtures/big.jpeg') }
@@ -63,7 +63,7 @@ module Uploadcare
         it 'does the entire multipart upload routine' do
           VCR.use_cassette('upload_multipart_upload') do
             # Minimum size for size to be valid for multiupload is 10 mb
-            Uploadcare.configuration.multipart_size_threshold = 10 * 1024 * 1024
+            Uploadcare.config.multipart_size_threshold = 10 * 1024 * 1024
             response = subject.upload(big_file)
             response_value = response.value!
             expect(response_value[:uuid]).not_to be_empty

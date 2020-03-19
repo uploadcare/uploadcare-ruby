@@ -4,8 +4,8 @@ require 'spec_helper'
 
 module Uploadcare
   module Client
-    RSpec.describe UploadClient do
-      subject { UploadClient.new }
+    RSpec.describe UploaderClient do
+      subject { UploaderClient.new }
       let!(:file) { ::File.open('spec/fixtures/kitten.jpeg') }
       let!(:another_file) { ::File.open('spec/fixtures/another_kitten.jpeg') }
 

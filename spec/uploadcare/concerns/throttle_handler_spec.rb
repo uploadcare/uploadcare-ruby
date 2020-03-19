@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'uploadcare/concerns/throttle_handler'
+require 'uploadcare/concern/throttle_handler'
 
 module Uploadcare
   RSpec.describe Concerns::ThrottleHandler do
     include Concerns::ThrottleHandler
-    def sleep(_time) ; end
+    def sleep(_time); end
 
     class Throttler
       def initialize

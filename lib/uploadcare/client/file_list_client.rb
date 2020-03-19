@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'rest_client'
+
 module Uploadcare
   module Client
     # API client for handling file lists
@@ -13,7 +15,6 @@ module Uploadcare
       # limit: (1..1000)
       # ordering: ["datetime_uploaded"|"-datetime_uploaded"|"size"|"-size"]
       # from: number of files skipped
-
       def file_list(**options)
         query = options.empty? ? '' : '?' + URI.encode_www_form(options)
         get(uri: "/files/#{query}")
@@ -22,7 +23,6 @@ module Uploadcare
       # Make a set of files "stored". This will prevent them from being deleted automatically
       # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/filesStoring
       # uuids: Array
-
       def batch_store(uuids)
         body = uuids.to_json
         put(uri: '/files/storage/', body: body)
@@ -33,7 +33,6 @@ module Uploadcare
       # Delete several files by list of uids
       # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/filesDelete
       # uuids: Array
-
       def batch_delete(uuids)
         body = uuids.to_json
         request_delete(uri: '/files/storage/', body: body)

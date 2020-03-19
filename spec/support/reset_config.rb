@@ -2,9 +2,9 @@
 
 RSpec.configure do |config|
   config.before(:each) do
-    Uploadcare.configuration.public_key = ENV.fetch('UPLOADCARE_PUBLIC_KEY')
-    Uploadcare.configuration.secret_key = ENV.fetch('UPLOADCARE_SECRET_KEY')
-    Uploadcare.configuration.auth_type = 'Uploadcare.Simple'
-    Uploadcare.configuration.multipart_size_threshold = 100 * 1024 * 1024
+    Uploadcare.config.public_key = ENV.fetch('UPLOADCARE_PUBLIC_KEY')
+    Uploadcare.config.secret_key = ENV.fetch('UPLOADCARE_SECRET_KEY')
+    Uploadcare.config.auth_type = 'Uploadcare'
+    Uploadcare.config.multipart_size_threshold = 100 * 1024 * 1024
   end
 end

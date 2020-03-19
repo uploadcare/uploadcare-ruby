@@ -11,7 +11,6 @@ module Uploadcare
       #
       # Raises errors instead of returning falsey objects
       # @see https://github.com/rubygarage/api_struct/blob/master/lib/api_struct/client.rb#L55
-      
       def failure(response)
         catch_throttling_error(response)
         parsed_response = JSON.parse(response.body.to_s)

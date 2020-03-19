@@ -8,7 +8,7 @@ module Uploadcare
     # This serializer returns lists of files
     #
     # This is a paginated list, so all pagination methods apply
-    # @see [Uploadcare::Entity::Decorator::Paginator]
+    # @see Uploadcare::Entity::Decorator::Paginator
     class FileList < ApiStruct::Entity
       include Uploadcare::Entity::Decorator::Paginator
       client_service Client::FileListClient
@@ -20,7 +20,6 @@ module Uploadcare
 
       # alias for result/results, depending on which API this FileList was initialized from
       # @return [Array] of [Uploadcare::Entity::File]
-
       def files
         results
       rescue ApiStruct::EntityError

@@ -13,7 +13,6 @@ module Uploadcare
 
       # gets file's uuid - even if it's only initialized with url
       # @return [String]
-
       def uuid
         return @entity.uuid if @entity.uuid
 
@@ -23,7 +22,6 @@ module Uploadcare
       end
 
       # loads file metadata, if it's initialized with url or uuid
-
       def load
         initialize(File.info(uuid).entity)
       end
@@ -41,7 +39,6 @@ module Uploadcare
       # @option args [String] :pattern define file naming pattern for the custom storage scenario.
       #
       # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/copyFile
-
       def self.copy(source, **args)
         response = FileClient.new.copy(source: source, **args).success[:result]
         File.new(response)
@@ -52,7 +49,6 @@ module Uploadcare
       # source can be UID or full CDN link
       #
       # @see .copy
-
       def self.local_copy(source, **args)
         File.copy(source, **args)
       end
@@ -62,25 +58,21 @@ module Uploadcare
       # source can be UID or full CDN link
       #
       # @see .copy
-
       def self.remote_copy(source, target, **args)
         File.copy(source: source, target: target, **args)
       end
 
       # Instance version of #{copy}. Copies current file.
-
       def copy(**args)
         File.copy(uuid, **args)
       end
 
       # Instance version of {internal_copy}
-
       def local_copy(**args)
         File.local_copy(uuid, **args)
       end
 
       # Instance version of {external_copy}
-
       def remote_copy(target, **args)
         File.copy(uuid, target: target, **args)
       end
