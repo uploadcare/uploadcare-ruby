@@ -8,11 +8,15 @@ module Uploadcare
       # @yield executable block (HTTP request that may be throttled)
       def handle_throttling
         (Uploadcare.config.max_throttle_attempts - 1).times do
-          return yield
-        rescue(Exception::ThrottleError) => error
-          wait_time = error.timeout
-          sleep(wait_time)
-          next
+          # rubocop:disable Style/RedundantBegin
+          begin
+            return yield
+          rescue(Exception::ThrottleError) => error
+            wait_time = error.timeout
+            sleep(wait_time)
+            next
+          end
+          # rubocop:enable Style/RedundantBegin
         end
         yield
       end

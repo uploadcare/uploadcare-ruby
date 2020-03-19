@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://upload.uploadcare.com/group/info/?group_id=69bafb24-5bfc-45d8-ba85-b3ea88e8eb17~1&pub_key=ecd779dc169645ce3c91
+    uri: https://upload.uploadcare.com/group/info/?group_id=69bafb24-5bfc-45d8-ba85-b3ea88e8eb17~1&pub_key=demopublickey
     body:
       encoding: UTF-8
       string: ''
@@ -52,6 +52,6 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"id":"69bafb24-5bfc-45d8-ba85-b3ea88e8eb17~1","datetime_created":"2020-02-27T10:51:34.474296Z","datetime_stored":null,"files_count":1,"cdn_url":"https://ucarecdn.com/69bafb24-5bfc-45d8-ba85-b3ea88e8eb17~1/","url":"https://api.uploadcare.com/groups/69bafb24-5bfc-45d8-ba85-b3ea88e8eb17~1/","files":[{"default_effects":"","is_stored":false,"done":12585265,"file_id":"b94b57bd-f478-4975-a21a-f0fae1118bb1","total":12585265,"size":12585265,"uuid":"b94b57bd-f478-4975-a21a-f0fae1118bb1","is_image":true,"filename":"big.jpeg","video_info":null,"is_ready":true,"original_filename":"big.jpeg","image_info":{"color_mode":"RGB","orientation":1,"format":"JPEG","sequence":false,"height":1901,"width":5684,"geo_location":null,"datetime_original":null,"dpi":[72,72]},"mime_type":"application/octet-stream"}]}'
-    http_version: 
+    http_version:
   recorded_at: Thu, 27 Feb 2020 10:55:15 GMT
 recorded_with: VCR 5.0.0

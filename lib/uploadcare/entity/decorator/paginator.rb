@@ -25,7 +25,8 @@ module Uploadcare
           url = @entity[:next]
           return unless url
 
-          query = URI.decode_www_form(URI(url).query).to_h.transform_keys(&:to_sym)
+          query = URI.decode_www_form(URI(url).query).to_h
+          query = Hash[query.map { |k, v| [k.to_sym, v] }]
           self.class.list(**query)
         end
 
@@ -34,7 +35,8 @@ module Uploadcare
           url = @entity[:previous]
           return unless url
 
-          query = URI.decode_www_form(URI(url).query).to_h.transform_keys(&:to_sym)
+          query = URI.decode_www_form(URI(url).query).to_h
+          query = Hash[query.map { |k, v| [k.to_sym, v] }]
           self.class.list(**query)
         end
 
