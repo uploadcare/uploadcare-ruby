@@ -23,10 +23,11 @@ module Uploadcare
       #
       # Handle throttling as well
       def request(method: 'GET', uri:, **options)
-        headers = Param::AuthenticationHeader.call(method: method.upcase, uri: uri, **options)
+        request_headers = Param::AuthenticationHeader.call(method: method.upcase, uri: uri,
+                                                           content_type: headers[:'Content-type'], **options)
         handle_throttling do
           send('api_struct_' + method.downcase, path: remove_trailing_slash(uri),
-                                                headers: headers, body: options[:content])
+                                                headers: request_headers, body: options[:content])
         end
       end
 
