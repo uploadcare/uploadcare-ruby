@@ -26,8 +26,8 @@ Gem::Specification.new do |gem|
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ['lib']
   gem.version       = Uploadcare::VERSION
-  gem.add_runtime_dependency 'faraday', '~> 0.8'
-  gem.add_runtime_dependency 'faraday_middleware', '~> 0.9'
+  gem.add_runtime_dependency 'faraday', '>= 0.9'
+  gem.add_runtime_dependency 'faraday_middleware', '>= 0.9'
   gem.add_runtime_dependency 'multipart-post'
   gem.add_runtime_dependency 'mime-types'
 
