@@ -6,7 +6,7 @@
 [![Uploadcare stack on StackShare][stack-img]][stack]
 
 [travis-img]: https://secure.travis-ci.com/uploadcare/uploadcare-ruby.svg?branch=master
-[travis]: http://travis-ci.com/uploadcare/uploadcare-ruby
+[travis]: https://travis-ci.com/uploadcare/uploadcare-ruby
 [coverals-img]: https://coveralls.io/repos/github/uploadcare/uploadcare-ruby/badge.svg?branch=master
 [coverals]: https://coveralls.io/github/uploadcare/uploadcare-ruby?branch=master
 [stack-img]: https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat
