@@ -25,7 +25,7 @@ wrapping Upload and REST APIs.
 
 ## Compatibility
 
-Note that `uploadcare-ruby` **3.x** is not backward compativble with 
+Note that `uploadcare-ruby` **3.x** is not backward compatible with 
 **[2.x](https://github.com/uploadcare/uploadcare-ruby/tree/v2.x)**.
 
 ## Installation
