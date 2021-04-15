@@ -1,7 +1,7 @@
 # Ruby integration for Uploadcare
 
 ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)
-[![Build Status][actions-img][actions-badge]
+[![Build Status][actions-img]][actions-badge]
 [![Coverage Status][coverals-img]][coverals]
 [![Uploadcare stack on StackShare][stack-img]][stack]
 
