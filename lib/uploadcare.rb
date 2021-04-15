@@ -1,6 +1,8 @@
 require 'faraday'
 require 'json'
 require 'ostruct'
+require 'active_support'
+require 'digest'
 
 require_relative 'uploadcare/api'
 require_relative 'uploadcare/version'
