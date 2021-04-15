@@ -1,16 +1,17 @@
 # Ruby integration for Uploadcare
 
 ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)
-[![Build Status][travis-img]][travis]
+[![Build Status][actions-img]][actions-badge]
 [![Coverage Status][coverals-img]][coverals]
 [![Uploadcare stack on StackShare][stack-img]][stack]
 
-[travis-img]: https://secure.travis-ci.com/uploadcare/uploadcare-ruby.svg?branch=master
-[travis]: https://travis-ci.com/uploadcare/uploadcare-ruby
-[coverals-img]: https://coveralls.io/repos/github/uploadcare/uploadcare-ruby/badge.svg?branch=master
-[coverals]: https://coveralls.io/github/uploadcare/uploadcare-ruby?branch=master
+[actions-badge]: https://github.com/uploadcare/uploadcare-ruby/actions/workflows/ruby.yml
+[actions-img]: https://github.com/uploadcare/uploadcare-ruby/actions/workflows/ruby.yml/badge.svg
+[coverals-img]: https://coveralls.io/repos/github/uploadcare/uploadcare-ruby/badge.svg?branch=main
+[coverals]: https://coveralls.io/github/uploadcare/uploadcare-ruby?branch=main
 [stack-img]: https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat
 [stack]: https://stackshare.io/uploadcare/stacks/
+
 
 Uploadcare Ruby integration handles uploads and further operations with files by
 wrapping Upload and REST APIs.
@@ -293,7 +294,7 @@ object is also an Hashie::Mash, so every methods out of
 
 ## Useful links
 
-* [Development](https://github.com/uploadcare/uploadcare-ruby/blob/master/DEVELOPMENT.md)  
+* [Development](https://github.com/uploadcare/uploadcare-ruby/blob/main/DEVELOPMENT.md)
 * [Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
 * [Upload API reference](https://uploadcare.com/api-refs/upload-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
 * [REST API reference](https://uploadcare.com/api-refs/rest-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
