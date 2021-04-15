@@ -1,7 +1,7 @@
 name: Ruby Gem
 
 on:
-  push:
+  create:
     tags:
       - '*'
 
