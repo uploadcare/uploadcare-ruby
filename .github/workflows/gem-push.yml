@@ -13,7 +13,7 @@ jobs:
 
       - name: Release Gem
         if: contains(github.ref, 'refs/tags/v')
-        uses: cadwallion/publish-rubygems-action@v1
+        uses: cadwallion/publish-rubygems-action@v1.0.0
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           RUBYGEMS_API_KEY: ${{secrets.RUBYGEMS_API_KEY}}
