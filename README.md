@@ -2,8 +2,8 @@
 
 ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)
 [![Build Status][actions-img]][actions-badge]
-[![Coverage Status][coverals-img]][coverals]
 [![Uploadcare stack on StackShare][stack-img]][stack]
+<!--[![Coverage Status][coverals-img]][coverals]-->
 
 [actions-badge]: https://github.com/uploadcare/uploadcare-ruby/actions/workflows/ruby.yml
 [actions-img]: https://github.com/uploadcare/uploadcare-ruby/actions/workflows/ruby.yml/badge.svg
@@ -22,6 +22,11 @@ wrapping Upload and REST APIs.
 
 ## Requirements
 * ruby 2.4+
+
+## Compatibility
+
+Note that `uploadcare-ruby` **3.x** is not backward compativble with 
+**[2.x](https://github.com/uploadcare/uploadcare-ruby/tree/v2.x)**.
 
 ## Installation
 
