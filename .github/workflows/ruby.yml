@@ -27,15 +27,30 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Set up Ruby
-    # To automatically get bug fixes and new Ruby versions for ruby/setup-ruby,
-    # change this to (see https://github.com/ruby/setup-ruby#versioning):
-    # uses: ruby/setup-ruby@v1
-      uses: ruby/setup-ruby@473e4d8fe5dd94ee328fdfca9f8c9c7afc9dae5e
+      uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby-version }}
-        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+        bundler-cache: true
     - name: Run tests
       run: bundle exec rake
       env:
         UPLOADCARE_PUBLIC_KEY: demopublickey
         UPLOADCARE_SECRET_KEY: demoprivatekey
+
+  style-check:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    strategy:
+      matrix:
+        ruby-version: ['2.7',]
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby-version }}
+        bundler-cache: true
+    - name: Install Rubocop
+      run: gem install rubocop
+    - name: Check codestyle
+      run: rubocop
