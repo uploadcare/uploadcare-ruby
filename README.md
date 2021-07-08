@@ -12,12 +12,23 @@
 [stack-img]: https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat
 [stack]: https://stackshare.io/uploadcare/stacks/
 
-
 Uploadcare Ruby integration handles uploads and further operations with files by
 wrapping Upload and REST APIs.
 
 * [Installation](#installation)
 * [Usage](#usage)
+  * [Uploading files](#uploading-files)
+    * [Uploading and storing a single file](#uploading-and-storing-a-single-file)
+    * [Multiple ways to upload files](#multiple-ways-to-upload-files)
+    * [Uploading options](#uploading-options)
+  * [File management](#file-management)
+    * [File](#file)
+    * [FileList](#filelist)
+    * [Pagination](#pagination)
+    * [Group](#group)
+    * [GroupList](#grouplist)
+    * [Webhook](#webhook)
+    * [Project](#project)
 * [Useful links](#useful-links)
 
 ## Requirements
@@ -65,7 +76,8 @@ This section contains practical usage examples. Please note, everything that
 follows gets way more clear once you've looked through our
 [docs](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby).
 
-### Uploading and storing a single file
+### Uploading files
+#### Uploading and storing a single file
 
 Using Uploadcare is simple, and here are the basics of handling files.
 
@@ -97,7 +109,7 @@ within a 24-hour period.
 # => #<Uploadcare::Api::File ...
 ```
 
-### Uploads
+#### Multiple ways to upload files
 
 Uploadcare supports multiple ways to upload files:
 
@@ -118,7 +130,7 @@ Uploadcare::Uploader.upload_from_url('https://placekitten.com/96/139')
 Uploadcare::Uploader.multipart_upload(File.open('big_file.bin'))
 ```
 
-### Upload options
+#### Uploading options
 
 You can override global [`:autostore`](#initialization) option for each upload request:
 
@@ -127,14 +139,12 @@ You can override global [`:autostore`](#initialization) option for each upload r
 @api.upload_from_url(url, store: :auto)
 ```
 
-### Api
+### File management
 Most methods are also available through `Uploadcare::Api` object:
 ```ruby
 # Same as Uploadcare::Uploader.upload
 Uploadcare::Api.upload('https://placekitten.com/96/139')
 ```
-
-### Entity object
 
 Entities are representations of objects in Uploadcare cloud.
 
@@ -226,7 +236,7 @@ To simply get all associated objects:
 @list.all # => returns Array of Files
 ```
 
-##### Pagination
+#### Pagination
 
 Initially, `FileList` is a paginated collection. It can be navigated using following methods:
 ```ruby
