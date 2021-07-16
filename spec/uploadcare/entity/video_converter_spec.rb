@@ -1,0 +1,51 @@
+# frozen_string_literal: true
+
+require 'spec_helper'
+
+module Uploadcare
+  module Entity
+    RSpec.describe VideoConverter do
+      subject { Uploadcare::Entity::VideoConverter }
+
+      describe 'convert_many' do
+        shared_examples 'converts videos' do
+          it 'returns a result with video data' do
+            VCR.use_cassette('video_convert_convert_many') do
+              response_value = subject.convert(array_of_params, **options)
+              result = response_value[:result].first
+
+              expect(response_value[:problems]).to be_empty
+              expect(result[:uuid]).not_to be_nil
+            end
+          end
+        end
+
+        let(:array_of_params) do
+          [
+            {
+              uuid: 'e30112d7-3a90-4931-b2c5-688cbb46d3ac',
+              size: { resize_mode: 'change_ratio', width: '600', height: '400' },
+              quality: 'best',
+              format: 'ogg',
+              cut: { start_time: '0:0:0.0', length: '0:0:1.0' },
+              thumbs: { N: 2, number: 1 }
+            }
+          ]
+        end
+        let(:options) { { store: false } }
+
+        context 'when all params are present' do
+          it_behaves_like 'converts videos'
+        end
+
+        %i[size quality format cut thumbs].each do |param|
+          context "when only :#{param} param is present" do
+            let(:arguments) { super().slice(:uuid, param) }
+
+            it_behaves_like 'converts videos'
+          end
+        end
+      end
+    end
+  end
+end
