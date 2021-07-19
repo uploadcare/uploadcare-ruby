@@ -17,7 +17,7 @@ module Uploadcare
             ].freeze
 
             class << self
-              def call(start_time: , length:)
+              def call(start_time:, length:)
                 { start_time: validate_start_time!(start_time), length: validate_length!(length) }
               end
 
@@ -42,8 +42,8 @@ module Uploadcare
 
               def error_message_for(param_name)
                 "The specified cut :#{param_name} is invalid. " \
-                "Please, check https://uploadcare.com/docs/transformations/video-encoding/#operation-cut " \
-                "for more information"
+                'Please, check https://uploadcare.com/docs/transformations/video-encoding/#operation-cut ' \
+                'for more information'
               end
             end
           end

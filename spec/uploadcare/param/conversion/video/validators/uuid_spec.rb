@@ -20,13 +20,13 @@ module Uploadcare
             end
 
             shared_examples 'validation is passed' do
-              it "passes validation" do
+              it 'passes validation' do
                 expect { subject }.not_to raise_error
               end
             end
 
             shared_examples 'validation is failed' do
-              it "fails validation" do
+              it 'fails validation' do
                 expect { subject }.to raise_error(Uploadcare::Exception::ValidationError)
               end
             end
@@ -44,17 +44,17 @@ module Uploadcare
 
               context 'and when validation is failed' do
                 %w[
-                    b054825b1-17f2-4746-9f0c-8feee4d81ca1
-                    35af2b1-fce6-408e-bee5-6ec3c59bb660
-                    b054825b-17f2a-4746-9f0c-8feee4d81ca1
-                    b054825b-17f-4746-9f0c-8feee4d81ca1
-                    b054825b-17f2-47463-9f0c-8feee4d81ca1
-                    b054825b-17f2-474-9f0c-8feee4d81ca1
-                    b054825b-17f2-4746-9f0c1-8feee4d81ca1
-                    b054825b-17f2-4746-90c-8feee4d81ca1
-                    b054825b-17f2-4746-9f0c-8feee4d81ca11
-                    b054825b-17f2-4746-9f0c-8feee4d81ca
-                  ].each do |value|
+                  b054825b1-17f2-4746-9f0c-8feee4d81ca1
+                  35af2b1-fce6-408e-bee5-6ec3c59bb660
+                  b054825b-17f2a-4746-9f0c-8feee4d81ca1
+                  b054825b-17f-4746-9f0c-8feee4d81ca1
+                  b054825b-17f2-47463-9f0c-8feee4d81ca1
+                  b054825b-17f2-474-9f0c-8feee4d81ca1
+                  b054825b-17f2-4746-9f0c1-8feee4d81ca1
+                  b054825b-17f2-4746-90c-8feee4d81ca1
+                  b054825b-17f2-4746-9f0c-8feee4d81ca11
+                  b054825b-17f2-4746-9f0c-8feee4d81ca
+                ].each do |value|
                   context "fails uuid validation with uuid set to #{value}" do
                     let(:uuid) { value }
 

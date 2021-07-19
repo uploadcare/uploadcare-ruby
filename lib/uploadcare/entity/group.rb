@@ -28,8 +28,7 @@ module Uploadcare
         return @entity.id if @entity.id
 
         id = @entity.cdn_url.gsub('https://ucarecdn.com/', '')
-        id = id.gsub(%r{\/.*}, '')
-        id
+        id.gsub(%r{/.*}, '')
       end
 
       # loads group metadata, if it's initialized with url or id

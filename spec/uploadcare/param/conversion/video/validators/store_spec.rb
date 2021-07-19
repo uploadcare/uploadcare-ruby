@@ -25,13 +25,13 @@ module Uploadcare
             end
 
             shared_examples 'validation is passed' do
-              it "passes validation" do
+              it 'passes validation' do
                 expect { subject }.not_to raise_error
               end
             end
 
             shared_examples 'validation is failed' do
-              it "fails validation" do
+              it 'fails validation' do
                 expect { subject }.to raise_error(Uploadcare::Exception::ValidationError)
               end
             end
