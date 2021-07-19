@@ -26,7 +26,7 @@ module Uploadcare
           return unless url
 
           query = URI.decode_www_form(URI(url).query).to_h
-          query = query.map { |k,v| [k.to_sym, v] }.to_h
+          query = query.map { |k, v| [k.to_sym, v] }.to_h
           self.class.list(**query)
         end
 
@@ -36,7 +36,7 @@ module Uploadcare
           return unless url
 
           query = URI.decode_www_form(URI(url).query).to_h
-          query = query.map { |k,v| [k.to_sym, v] }.to_h
+          query = query.map { |k, v| [k.to_sym, v] }.to_h
           self.class.list(**query)
         end
 
