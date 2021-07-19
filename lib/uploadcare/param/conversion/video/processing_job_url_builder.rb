@@ -6,6 +6,7 @@ module Uploadcare
       module Video
         class ProcessingJobUrlBuilder
           class << self
+            # rubocop:disable Metrics/ParameterLists
             def call(uuid:, size: {}, quality: nil, format: nil, cut: {}, thumbs: {})
               [
                 uuid_part(uuid),
@@ -16,6 +17,7 @@ module Uploadcare
                 thumbs_part(thumbs)
               ].compact.join('-')
             end
+            # rubocop:enable Metrics/ParameterLists
 
             private
 
@@ -27,7 +29,7 @@ module Uploadcare
               return if size.empty?
 
               dimensions = "#{size[:width]}x#{size[:height]}"
-              resize_mode = "#{size[:resize_mode]}"
+              resize_mode = (size[:resize_mode]).to_s
               "/size/#{dimensions}/#{resize_mode}/".squeeze('/')
             end
 
