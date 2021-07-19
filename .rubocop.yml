@@ -7,6 +7,14 @@ Metrics/LineLength:
 IneffectiveAccessModifier:
   Enabled: false
 
+Style/HashTransformKeys:
+  Exclude:
+    - 'lib/uploadcare/entity/decorator/paginator.rb'
+
+Gemspec/RequiredRubyVersion:
+  Exclude:
+    - 'uploadcare-ruby.gemspec'
+
 Metrics/BlockLength:
   Exclude:
     - 'bin/'

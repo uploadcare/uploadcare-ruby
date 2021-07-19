@@ -26,7 +26,7 @@ module Uploadcare
           return unless url
 
           query = URI.decode_www_form(URI(url).query).to_h
-          query = Hash[query.map { |k, v| [k.to_sym, v] }]
+          query = query.map { |k, v| [k.to_sym, v] }.to_h
           self.class.list(**query)
         end
 
@@ -36,7 +36,7 @@ module Uploadcare
           return unless url
 
           query = URI.decode_www_form(URI(url).query).to_h
-          query = Hash[query.map { |k, v| [k.to_sym, v] }]
+          query = query.map { |k, v| [k.to_sym, v] }.to_h
           self.class.list(**query)
         end
 
@@ -59,12 +59,10 @@ module Uploadcare
         # iterate through pages, starting with current one
         #
         # @yield [Block]
-        def each
+        def each(&block)
           current_page = self
           while current_page
-            current_page.results.each do |obj|
-              yield obj
-            end
+            current_page.results.each(&block)
             current_page = current_page.next_page
           end
         end

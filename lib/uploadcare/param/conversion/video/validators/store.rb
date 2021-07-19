@@ -25,7 +25,7 @@ module Uploadcare
                 return VALID_VALUES[store] if VALID_VALUES.keys.include?(store)
 
                 raise_error(
-                  message: "The specified :store is invalid. " \
+                  message: 'The specified :store is invalid. ' \
                            "Must be nil or one of: #{VALID_VALUES.keys.compact.join(', ')}"
                 )
               end
