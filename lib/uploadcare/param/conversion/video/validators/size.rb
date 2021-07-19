@@ -44,7 +44,7 @@ module Uploadcare
               def validate_dimension!(param_name, value)
                 int_value = value.to_i if value.respond_to?(:to_i)
                 # The value you specify for any of the dimensions should be a non-zero integer divisible by 4
-                return int_value if int_value&.positive? && (int_value % 4 == 0)
+                return int_value if int_value&.positive? && (int_value % 4).zero?
 
                 raise_error(message: "The parameter :#{param_name} is invalid. Must be non-zero integer divisible by 4")
               end

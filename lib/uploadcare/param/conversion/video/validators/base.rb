@@ -10,15 +10,14 @@ module Uploadcare
         module Validators
           class Base
             SUPPORTED_OPTIONS = JSON.parse(
-              YAML::load_file(File.join(__dir__, '..', 'supported_options.yml')).to_json, object_class: OpenStruct
+              YAML.load_file(File.join(__dir__, '..', 'supported_options.yml')).to_json, object_class: OpenStruct
             )
 
             class << self
-
               private
 
               def raise_error(message: nil, error_class: Uploadcare::Exception::ValidationError)
-                raise error_class.new(message)
+                raise error_class, message
               end
             end
           end

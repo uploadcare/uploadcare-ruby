@@ -17,8 +17,7 @@ module Uploadcare
         return @entity.uuid if @entity.uuid
 
         uuid = @entity.url.gsub('https://ucarecdn.com/', '')
-        uuid = uuid.gsub(%r{\/.*}, '')
-        uuid
+        uuid.gsub(%r{/.*}, '')
       end
 
       # loads file metadata, if it's initialized with url or uuid

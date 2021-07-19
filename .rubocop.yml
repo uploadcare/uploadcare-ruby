@@ -7,6 +7,10 @@ Metrics/LineLength:
 IneffectiveAccessModifier:
   Enabled: false
 
+Gemspec/RequiredRubyVersion:
+  Exclude:
+    - 'uploadcare-ruby.gemspec'
+
 Metrics/BlockLength:
   Exclude:
     - 'bin/'

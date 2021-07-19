@@ -8,24 +8,24 @@ module Uploadcare
       module Video
         module Validators
           class Thumbs < Base
-            VALID_N_RANGE = 1..50
+            VALID_N_RANGE = (1..50).freeze
 
             class << self
-              def call(n: 1, number: 0)
-                n = validate_n!(n)
-                { N: n, number: validate_number!(n.to_i, number) }
+              def call(thumbs_n: 1, number: 0)
+                thumbs_n = validate_thumbs_n!(thumbs_n)
+                { N: thumbs_n, number: validate_number!(thumbs_n.to_i, number) }
               end
 
               private
 
-              def validate_n!(n)
-                return n if n.respond_to?(:to_i) && VALID_N_RANGE.cover?(n.to_i)
+              def validate_thumbs_n!(thumbs_n)
+                return thumbs_n if thumbs_n.respond_to?(:to_i) && VALID_N_RANGE.cover?(thumbs_n.to_i)
 
                 raise_error(message: error_message_for('N', VALID_N_RANGE))
               end
 
-              def validate_number!(n, number)
-                valid_range = 0..(n-1)
+              def validate_number!(thumbs_n, number)
+                valid_range = 0..(thumbs_n - 1)
                 return number if number.respond_to?(:to_i) && valid_range.cover?(number.to_i)
 
                 raise_error(message: error_message_for('number', valid_range))

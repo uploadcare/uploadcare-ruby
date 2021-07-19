@@ -75,7 +75,7 @@ module Uploadcare
         files_formdata = arr.map do |file|
           [HTTP::FormData::File.new(file).filename,
            HTTP::FormData::File.new(file)]
-        end .to_h
+        end.to_h
         HTTP::FormData::Multipart.new(
           Param::Upload::UploadParamsGenerator.call(options[:store]).merge(files_formdata)
         )

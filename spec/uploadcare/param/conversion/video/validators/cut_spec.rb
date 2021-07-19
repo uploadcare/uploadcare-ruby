@@ -13,13 +13,13 @@ module Uploadcare
             subject { described_class.call(start_time: start_time, length: length) }
 
             shared_examples 'validation is passed' do
-              it "passes validation" do
+              it 'passes validation' do
                 expect { subject }.not_to raise_error
               end
             end
 
             shared_examples 'validation is failed' do
-              it "fails validation" do
+              it 'fails validation' do
                 expect { subject }.to raise_error(Uploadcare::Exception::ValidationError)
               end
             end
@@ -28,7 +28,8 @@ module Uploadcare
               let(:length) { 140 }
 
               context 'and when validation is passed' do
-                %w[1:2:40.535 2:20.0 001:02:40.535 2:30.535 1:2:40.535 3760.1 140 999:59:59.999 1:1:1.1].each do |start_time|
+                %w[1:2:40.535 2:20.0 001:02:40.535 2:30.535 1:2:40.535 3760.1 140 999:59:59.999
+                   1:1:1.1].each do |start_time|
                   context "passes cut start_time validation with 'start_time' set to #{start_time}" do
                     let(:start_time) { start_time }
 
@@ -58,7 +59,8 @@ module Uploadcare
               let(:start_time) { '1:2:40.535' }
 
               context 'and when validation is passed' do
-                %w[1:2:40.535 2:20.0 001:02:40.535 2:30.535 1:2:40.535 3760.1 140 999:59:59.999 1:1:1.1 end].each do |length|
+                %w[1:2:40.535 2:20.0 001:02:40.535 2:30.535 1:2:40.535 3760.1 140 999:59:59.999 1:1:1.1
+                   end].each do |length|
                   context "passes cut length validation with 'length' set to #{length}" do
                     let(:length) { length }
 
