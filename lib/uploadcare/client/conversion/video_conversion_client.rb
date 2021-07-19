@@ -12,7 +12,7 @@ module Uploadcare
       #
       # @see https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/videoConvert
       class VideoConversionClient < RestClient
-          VALIDATORS_NAMESPASE = "Uploadcare::Param::Conversion::Video::Validators".freeze
+        VALIDATORS_NAMESPASE = 'Uploadcare::Param::Conversion::Video::Validators'
 
         def convert_many(arr, **options)
           body = build_body_for_many(arr, options)
@@ -35,21 +35,25 @@ module Uploadcare
           {
             "paths": arr.map do |params|
               Uploadcare::Param::Conversion::Video::ProcessingJobUrlBuilder.call(
-                **{
-                  uuid: validator_for('Uuid')&.call(uuid: params[:uuid]),
-                  quality: string_params('Quality', 'quality', params[:quality]),
-                  format: string_params('Format', 'format', params[:format])
-                }.merge(
-                  hashes(params[:size], params[:cut], params[:thumbs])
-                ).compact
+                **build_paths_body(params)
               )
             end,
             "store": (validator_for('Store').call(store: options[:store]) if options[:store])
           }.compact.to_json
         end
 
+        def build_paths_body(params)
+          {
+            uuid: validator_for('Uuid')&.call(uuid: params[:uuid]),
+            quality: string_params('Quality', 'quality', params[:quality]),
+            format: string_params('Format', 'format', params[:format])
+          }.merge(
+            hashes(params[:size], params[:cut], params[:thumbs])
+          ).compact
+        end
+
         def check_array_param(arr)
-          raise Uploadcare::Exception::ValidationError.new("First argument must be an Array") unless arr.is_a?(Array)
+          raise Uploadcare::Exception::ValidationError, 'First argument must be an Array' unless arr.is_a?(Array)
         end
 
         def hashes(size, cut, thumbs)

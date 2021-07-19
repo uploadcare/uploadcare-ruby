@@ -28,7 +28,7 @@ module Uploadcare
               quality: 'best',
               format: 'ogg',
               cut: { start_time: '0:0:0.0', length: '0:0:1.0' },
-              thumbs: { N: 2, number: 1 }
+              thumbs: { thumbs_n: 2, number: 1 }
             }
           ]
         end
