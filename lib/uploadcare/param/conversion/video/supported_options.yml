@@ -1,3 +1,0 @@
-resize_modes: [preserve_ratio, change_ratio, scale_crop, add_padding]
-qualities: [normal, better, best, lighter, lightest]
-formats: [webm, ogg, mp4]
