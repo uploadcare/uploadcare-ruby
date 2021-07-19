@@ -19,6 +19,10 @@ module Uploadcare
           post(uri: '/convert/video/', content: body)
         end
 
+        def get_conversion_status(token)
+          get(uri: "/convert/video/status/#{token}/")
+        end
+
         def headers
           {
             'Content-type': 'application/json',

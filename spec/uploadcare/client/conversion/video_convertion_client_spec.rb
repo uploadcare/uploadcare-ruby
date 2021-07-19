@@ -6,9 +6,9 @@ module Uploadcare
   module Client
     module Conversion
       RSpec.describe Uploadcare::Client::Conversion::VideoConversionClient do
-        subject { described_class.new.convert_many(array_of_params, **options) }
-
         describe 'convert_many' do
+          subject { described_class.new.convert_many(array_of_params, **options) }
+
           shared_examples 'requesting video conversion' do
             it 'returns a convert video response' do
               VCR.use_cassette('video_convert_convert_many') do
@@ -40,6 +40,18 @@ module Uploadcare
               let(:arguments) { super().select { |k, _v| [:uuid, param].include?(k) } }
 
               it_behaves_like 'requesting video conversion'
+            end
+          end
+        end
+
+        describe 'get video conversion status' do
+          subject { described_class.new.get_conversion_status(token) }
+
+          let(:token) { '911933811' }
+
+          it 'returns a video conversion status data' do
+            VCR.use_cassette('video_convert_get_status') do
+              expect(subject.success?).to be true
             end
           end
         end

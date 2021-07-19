@@ -49,6 +49,20 @@ module Uploadcare
           end
         end
       end
+
+      describe 'get video conversion status' do
+        let(:token) { '911933811' }
+
+        it 'returns a video conversion status data', :aggregate_failures do
+          VCR.use_cassette('video_convert_get_status') do
+            response_value = subject.status(token)
+
+            expect(response_value[:status]).to eq 'finished'
+            expect(response_value[:error]).to be_nil
+            expect(response_value[:result].keys).to contain_exactly(:uuid, :thumbnails_group_uuid)
+          end
+        end
+      end
     end
   end
 end
