@@ -326,7 +326,7 @@ Uploadcare::VideoConverter.convert(
       quality: 'best',
       format: 'ogg',
       cut: { start_time: '0:0:0.0', length: '0:0:1.0' },
-      thumbs: { thumbs_n: 2, number: 1 }
+      thumbs: { N: 2, number: 1 }
     }
   ], store: false
 )
@@ -350,8 +350,8 @@ This method accepts options to set properties of an output file:
   - **start_time** - defines the starting point of a fragment to cut based on your input file timeline.
   - **length** - defines the duration of that fragment.
 - **thumbs**:
-  - **thumbs_n** - quantity of thumbnails for your video - non-zero integer ranging from 1 to 50; defaults to 1.
-  - **number** - zero-based index of a particular thumbnail in a created set, ranging from 1 to (thumbs_n - 1).
+  - **N** - quantity of thumbnails for your video - non-zero integer ranging from 1 to 50; defaults to 1.
+  - **number** - zero-based index of a particular thumbnail in a created set, ranging from 1 to (N - 1).
 - **store** - a flag indicating if Uploadcare should store your transformed outputs.
 
 ```ruby
