@@ -29,6 +29,7 @@ wrapping Upload and REST APIs.
     * [GroupList](#grouplist)
     * [Webhook](#webhook)
     * [Project](#project)
+    * [Conversion](#conversion)
 * [Useful links](#useful-links)
 
 ## Requirements
@@ -36,7 +37,7 @@ wrapping Upload and REST APIs.
 
 ## Compatibility
 
-Note that `uploadcare-ruby` **3.x** is not backward compatible with 
+Note that `uploadcare-ruby` **3.x** is not backward compatible with
 **[2.x](https://github.com/uploadcare/uploadcare-ruby/tree/v2.x)**.
 
 ## Installation
@@ -306,6 +307,120 @@ object is also an Hashie::Mash, so every methods out of
 # while that one was empty, it usually goes like this:
 # [{"email": collaborator@gmail.com, "name": "Collaborator"}, {"email": collaborator@gmail.com, "name": "Collaborator"}]
 ```
+
+#### Conversion
+
+##### Video
+
+Uploadcare can encode video files from all popular formats, adjust their quality, format and dimensions, cut out a video fragment, and generate thumbnails via [REST API](https://uploadcare.com/api-refs/rest-api/v0.6.0/).
+
+After each video file upload you obtain a file identifier in UUID format.
+Then you can use this file identifier to convert your video in multiple ways:
+
+```ruby
+Uploadcare::VideoConverter.convert(
+  [
+    {
+      uuid: "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40",
+      size: { resize_mode: 'change_ratio', width: '600', height: '400' },
+      quality: 'best',
+      format: 'ogg',
+      cut: { start_time: '0:0:0.0', length: '0:0:1.0' },
+      thumbs: { thumbs_n: 2, number: 1 }
+    }
+  ], store: false
+)
+```
+This method accepts options to set properties of an output file:
+
+- **uuid** — the file UUID-identifier.
+- **size**:
+  - **resize_mode** - size operation to apply to a video file. Can be `preserve_ratio (default)`, `change_ratio`, `scale_crop` or `add_padding`.
+  - **width** - width for a converted video.
+  - **height** - height for a converted video.
+
+```
+  NOTE: you can choose to provide a single dimension (width OR height).
+        The value you specify for any of the dimensions should be a non-zero integer divisible by 4
+```
+
+- **quality** - sets the level of video quality that affects file sizes and hence loading times and volumes of generated traffic. Can be `normal (default)`, `better`, `best`, `lighter`, `lightest`.
+- **format** - format for a converted video. Can be `mp4 (default)`, `webm`, `ogg`.
+- **cut**:
+  - **start_time** - defines the starting point of a fragment to cut based on your input file timeline.
+  - **length** - defines the duration of that fragment.
+- **thumbs**:
+  - **thumbs_n** - quantity of thumbnails for your video - non-zero integer ranging from 1 to 50; defaults to 1.
+  - **number** - zero-based index of a particular thumbnail in a created set, ranging from 1 to (thumbs_n - 1).
+- **store** - a flag indicating if Uploadcare should store your transformed outputs.
+
+```ruby
+# Response
+{
+  :result => [
+    {
+      :original_source=>"dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/video/-/size/600x400/change_ratio/-/quality/best/-/format/ogg/-/cut/0:0:0.0/0:0:1.0/-/thumbs~2/1/",
+      :token=>911933811,
+      :uuid=>"6f9b88bd-625c-4d60-bfde-145fa3813d95",
+      :thumbnails_group_uuid=>"cf34c5a1-8fcc-4db2-9ec5-62c389e84468~2"
+    }
+  ],
+  :problems=>{}
+}
+```
+Params in the response:
+- **result** - info related to your transformed output(-s):
+  - **original_source** - built path for a particular video with all the conversion operations and parameters.
+  - **token** - a processing job token that can be used to get a [job status](https://uploadcare.com/docs/transformations/video-encoding/#status) (see below).
+  - **uuid** - UUID of your processed video file.
+  - **thumbnails_group_uuid** - holds :uuid-thumb-group, a UUID of a [file group](https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/groupsList) with thumbnails for an output video, based on the thumbs [operation](https://uploadcare.com/docs/transformations/video-encoding/#operation-thumbs) parameters.
+- **problems** - problems related to your processing job, if any.
+
+To convert multiple videos just add params as a hash for each video to the first argument of the `Uploadcare::VideoConverter#convert` method:
+
+```ruby
+Uploadcare::VideoConverter.convert(
+  [
+    { video_one_params }, { video_two_params }, ...
+  ], store: false
+)
+```
+
+
+To check a status of a video processing job you can simply use appropriate method of `Uploadcare::VideoConverter`:
+
+```ruby
+token = 911933811
+Uploadcare::VideoConverter.status(token)
+```
+`token` here is a processing job token, obtained in a response of a convert video request.
+
+```ruby
+# Response
+{
+  :status => "finished",
+  :error => nil,
+  :result => {
+    :uuid => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40",
+    :thumbnails_group_uuid => "0f181f24-7551-42e5-bebc-14b15d9d3838~2"
+  }
+}
+```
+
+Params in the response:
+- **status** - processing job status, can have one of the following values:
+  - *pending* — video file is being prepared for conversion.
+  - *processing* — video file processing is in progress.
+  - *finished* — the processing is finished.
+  - *failed* — we failed to process the video, see error for details.
+  - *canceled* — video processing was canceled.
+- **error** - holds a processing error if we failed to handle your video.
+- **result** - repeats the contents of your processing output.
+- **thumbnails_group_uuid** - holds :uuid-thumb-group, a UUID of a file group with thumbnails for an output video, based on the thumbs operation parameters.
+- **uuid** - a UUID of your processed video file.
+
+More examples and options can be found [here](https://uploadcare.com/docs/transformations/video-encoding/#video-encoding)
+
 
 ## Useful links
 
