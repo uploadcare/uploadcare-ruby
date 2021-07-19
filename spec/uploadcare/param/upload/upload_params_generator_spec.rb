@@ -10,9 +10,6 @@ module Uploadcare
     module Upload
       RSpec.describe Uploadcare::Param::Upload::UploadParamsGenerator do
         subject { Uploadcare::Param::Upload::UploadParamsGenerator }
-        before do
-          SIGN_UPLOADS = false
-        end
 
         it 'generates basic upload params headers' do
           params = subject.call

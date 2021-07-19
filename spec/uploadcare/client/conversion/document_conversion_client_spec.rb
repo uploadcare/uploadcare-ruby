@@ -1,4 +1,3 @@
-
 # frozen_string_literal: true
 
 require 'spec_helper'
@@ -7,7 +6,6 @@ module Uploadcare
   module Client
     module Conversion
       RSpec.describe DocumentConversionClient do
-
         describe 'convert_many' do
           subject { described_class.new.convert_many(array_of_params, **options) }
 
