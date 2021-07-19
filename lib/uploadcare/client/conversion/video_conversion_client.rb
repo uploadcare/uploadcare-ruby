@@ -71,7 +71,9 @@ module Uploadcare
         def hash_params(class_name, params)
           return unless params.is_a?(Hash)
 
-          validator_for(class_name)&.call(**params.transform_keys { |k| k.to_s.downcase.to_sym })
+          validator_for(class_name)&.call(
+            **params.map { |k, v| [k.to_s.downcase.to_sym, v] }.to_h
+          )
         end
 
         def validator_for(class_name)

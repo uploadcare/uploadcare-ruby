@@ -37,7 +37,7 @@ module Uploadcare
 
           %i[size quality format cut thumbs].each do |param|
             context "when only :#{param} param is present" do
-              let(:arguments) { super().slice(:uuid, param) }
+              let(:arguments) { super().select { |k, _v| [:uuid, param].include?(k) } }
 
               it_behaves_like 'requesting video conversion'
             end
