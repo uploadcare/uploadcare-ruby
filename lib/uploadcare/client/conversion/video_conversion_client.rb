@@ -2,6 +2,7 @@
 
 require_relative '../rest_client'
 require 'param/conversion/video/processing_job_url_builder'
+require 'exception/conversion_error'
 
 module Uploadcare
   module Client
@@ -28,6 +29,23 @@ module Uploadcare
         end
 
         private
+
+        def success(response)
+          body = response.body.to_s
+          result = extract_result(body)
+
+          Dry::Monads::Success(result)
+        end
+
+        def extract_result(response_body)
+          return nil if response_body.nil? || response_body.empty?
+
+          parsed_body = JSON.parse(response_body, symbolize_names: true)
+          errors = parsed_body[:error] || parsed_body[:problems]
+          raise ConversionError, errors unless errors.nil? || errors.empty?
+
+          parsed_body
+        end
 
         # Prepares body for convert_many method
         def build_body_for_many(arr, options)
