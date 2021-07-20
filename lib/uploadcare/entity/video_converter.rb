@@ -20,11 +20,6 @@ module Uploadcare
       def self.status(token)
         Conversion::VideoConversionClient.new.get_conversion_status(token)
       end
-
-      def self.status(token)
-        response = Conversion::VideoConversionClient.new.get_conversion_status(token)
-        response.success
-      end
     end
   end
 end

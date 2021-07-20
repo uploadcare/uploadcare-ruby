@@ -55,7 +55,7 @@ module Uploadcare
 
         it 'returns a video conversion status data', :aggregate_failures do
           VCR.use_cassette('video_convert_get_status') do
-            response_value = subject.status(token)
+            response_value = subject.status(token).success
 
             expect(response_value[:status]).to eq 'finished'
             expect(response_value[:error]).to be_nil
