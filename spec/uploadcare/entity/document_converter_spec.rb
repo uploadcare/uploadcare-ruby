@@ -11,7 +11,7 @@ module Uploadcare
         shared_examples 'converts documents' do
           it 'returns a result with document data', :aggregate_failures do
             VCR.use_cassette('document_convert_convert_many') do
-              response_value = subject.convert(array_of_params, **options)
+              response_value = subject.convert(params, **options).success
               result = response_value[:result].first
 
               expect(response_value[:problems]).to be_empty
@@ -24,7 +24,6 @@ module Uploadcare
           end
         end
 
-        let(:array_of_params) { [doc_params] }
         let(:doc_params) do
           {
             uuid: 'a4b9db2f-1591-4f4c-8f68-94018924525d',
@@ -34,7 +33,15 @@ module Uploadcare
         end
         let(:options) { { store: false } }
 
-        context 'when all params are present' do
+        context 'when sending params as an Array' do
+          let(:params) { [doc_params] }
+
+          it_behaves_like 'converts documents'
+        end
+
+        context 'when sending params as a Hash' do
+          let(:params) { doc_params }
+
           it_behaves_like 'converts documents'
         end
       end
@@ -44,7 +51,7 @@ module Uploadcare
 
         it 'returns a document conversion status data', :aggregate_failures do
           VCR.use_cassette('document_convert_get_status') do
-            response_value = subject.status(token)
+            response_value = subject.status(token).success
 
             expect(response_value[:status]).to eq 'finished'
             expect(response_value[:error]).to be_nil
