@@ -11,7 +11,7 @@ module Uploadcare
         shared_examples 'converts videos' do
           it 'returns a result with video data', :aggregate_failures do
             VCR.use_cassette('video_convert_convert_many') do
-              response_value = subject.convert(array_of_params, **options)
+              response_value = subject.convert(array_of_params, **options).success
               result = response_value[:result].first
 
               expect(response_value[:problems]).to be_empty

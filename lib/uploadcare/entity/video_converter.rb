@@ -12,9 +12,13 @@ module Uploadcare
       # @param object [Array] of hashes with params
       # @param [Hash] of options for conversion
       # @option options [Boolean] :store (false) whether to store file on servers.
-      def self.convert(arr, **options)
-        response = Conversion::VideoConversionClient.new.convert_many(arr, **options)
-        response.success
+      def self.convert(video_params, **options)
+        params = video_params.is_a?(Hash) ? [video_params] : video_params
+        Conversion::VideoConversionClient.new.convert_many(params, **options)
+      end
+
+      def self.status(token)
+        Conversion::VideoConversionClient.new.get_conversion_status(token)
       end
 
       def self.status(token)
