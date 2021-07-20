@@ -16,13 +16,10 @@ module Uploadcare
         params = video_params.is_a?(Hash) ? [video_params] : video_params
         Conversion::VideoConversionClient.new.convert_many(params, **options)
       end
-<<<<<<< Updated upstream
-=======
 
       def self.status(token)
         Conversion::VideoConversionClient.new.get_conversion_status(token)
       end
->>>>>>> Stashed changes
     end
   end
 end
