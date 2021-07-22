@@ -29,7 +29,7 @@ module Uploadcare
 
       # Updates webhook
       # @see https://uploadcare.com/docs/api_reference/rest/webhooks/#subscribe-update
-      def update(id, **options)
+      def update(id, options = {})
         body = options.to_json
         post(uri: "/webhooks/#{id}/", content: body)
       end
