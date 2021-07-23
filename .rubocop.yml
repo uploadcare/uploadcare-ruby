@@ -10,7 +10,6 @@ IneffectiveAccessModifier:
 Style/HashTransformKeys:
   Exclude:
     - 'lib/uploadcare/entity/decorator/paginator.rb'
-    - 'lib/uploadcare/client/conversion/video_conversion_client.rb'
 
 Gemspec/RequiredRubyVersion:
   Exclude:
