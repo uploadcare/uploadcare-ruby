@@ -23,11 +23,11 @@ module Uploadcare
       # Send request with authentication header
       #
       # Handle throttling as well
-      def request(method: 'GET', uri:, **options)
+      def request(uri:, method: 'GET', **options)
         request_headers = Param::AuthenticationHeader.call(method: method.upcase, uri: uri,
                                                            content_type: headers[:'Content-type'], **options)
         handle_throttling do
-          send('api_struct_' + method.downcase, path: remove_trailing_slash(uri),
+          send("api_struct_#{method.downcase}", path: remove_trailing_slash(uri),
                                                 headers: request_headers, body: options[:content])
         end
       end
@@ -63,7 +63,7 @@ module Uploadcare
       private
 
       def remove_trailing_slash(str)
-        str.gsub(%r{^\/}, '')
+        str.gsub(%r{^/}, '')
       end
 
       def default_params

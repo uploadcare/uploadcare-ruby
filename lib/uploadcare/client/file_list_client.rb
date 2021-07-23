@@ -16,7 +16,7 @@ module Uploadcare
       # ordering: ["datetime_uploaded"|"-datetime_uploaded"|"size"|"-size"]
       # from: number of files skipped
       def file_list(**options)
-        query = options.empty? ? '' : '?' + URI.encode_www_form(options)
+        query = options.empty? ? '' : "?#{URI.encode_www_form(options)}"
         get(uri: "/files/#{query}")
       end
 

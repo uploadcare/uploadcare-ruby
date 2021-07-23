@@ -15,7 +15,7 @@ module Uploadcare
       # return paginated list of groups
       # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/groupsList
       def list(**options)
-        query = options.empty? ? '' : '?' + URI.encode_www_form(options)
+        query = options.empty? ? '' : "?#{URI.encode_www_form(options)}"
         get(uri: "/groups/#{query}")
       end
     end
