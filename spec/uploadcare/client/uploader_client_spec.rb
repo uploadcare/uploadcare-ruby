@@ -9,11 +9,6 @@ module Uploadcare
       let!(:file) { ::File.open('spec/fixtures/kitten.jpeg') }
       let!(:another_file) { ::File.open('spec/fixtures/another_kitten.jpeg') }
 
-      before do
-        BASE_REQUEST_SLEEP_SECONDS = 0
-        MAX_REQUEST_SLEEP_SECONDS = 0.1
-      end
-
       describe 'upload' do
         it 'uploads a file' do
           VCR.use_cassette('upload_upload') do

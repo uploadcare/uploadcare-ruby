@@ -8,14 +8,12 @@ module Uploadcare
     include Concerns::ThrottleHandler
     def sleep(_time); end
 
-    class Throttler
-      def initialize
-        @called = 0
-      end
+    before { @called = 0 }
 
-      def call
+    let(:throttler) do
+      lambda do
         @called += 1
-        raise ThrottleError unless @called >= 3
+        raise ThrottleError if @called < 3
 
         "Throttler has been called #{@called} times"
       end
@@ -23,8 +21,8 @@ module Uploadcare
 
     describe 'throttling handling' do
       it 'attempts to call block multiple times' do
-        throttler = Throttler.new
         result = handle_throttling { throttler.call }
+
         expect(result).to eq 'Throttler has been called 3 times'
       end
     end
