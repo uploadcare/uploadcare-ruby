@@ -1,0 +1,62 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.uploadcare.com/convert/video/
+    body:
+      encoding: UTF-8
+      string: '{"paths":["e30112d7-3a90-4931-b2c5-688cbb46d3ac/video/-/size/600x400/change_ratio/-/quality/best/-/format/ogg/-/cut/0:0:0.0/0:0:1.0/-/thumbs~2/1/"]}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.6+json
+      User-Agent:
+      - UploadcareRuby/3.0.5/5d5bb5639e3f2df33674 (Ruby/2.6.6)
+      Date:
+      - Fri, 16 Jul 2021 11:40:25 GMT
+      Authorization:
+      - Uploadcare 5d5bb5639e3f2df33674:661e37fbd7b07f40b3e13abc38df58974609b199
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 16 Jul 2021 11:40:26 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '322'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept
+      - Accept-Encoding
+      Warning:
+      - '199 Miscellaneous warning: Please use API version 0.5, not 0.6'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Allow:
+      - OPTIONS, POST
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
+    body:
+      encoding: ASCII-8BIT
+      string: '{"result": [{"original_source": "e30112d7-3a90-4931-b2c5-688cbb46d3ac/video/-/size/600x400/change_ratio/-/quality/best/-/format/ogg/-/cut/0:0:0.0/0:0:1.0/-/thumbs~2/1/",
+        "token": 911162353, "uuid": "f1821874-3d2e-439b-9e13-d0795a3c1d98", "thumbnails_group_uuid":
+        "b99de71f-0ae2-4ac5-806a-c6f0f1744369~2"}], "problems": {}}'
+  recorded_at: Fri, 16 Jul 2021 11:40:26 GMT
+recorded_with: VCR 6.0.0
