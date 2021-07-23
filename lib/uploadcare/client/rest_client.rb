@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'rest_client'
+require 'api_struct'
 require 'uploadcare/concern/error_handler'
 require 'uploadcare/concern/throttle_handler'
 require 'param/authentication_header'
