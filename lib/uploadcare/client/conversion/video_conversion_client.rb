@@ -2,6 +2,7 @@
 
 require 'client/conversion/base_conversion_client'
 require 'param/conversion/video/processing_job_url_builder'
+require 'exception/conversion_error'
 
 module Uploadcare
   module Client
