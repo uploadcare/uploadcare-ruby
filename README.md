@@ -421,6 +421,108 @@ Params in the response:
 
 More examples and options can be found [here](https://uploadcare.com/docs/transformations/video-encoding/#video-encoding)
 
+##### Document
+
+Uploadcare allows converting documents to the following target formats: DOC, DOCX, XLS, XLSX, ODT, ODS, RTF, TXT, PDF, JPG, ENHANCED JPG, PNG. Document Conversion works via our [REST API](https://uploadcare.com/api-refs/rest-api/v0.6.0/).
+
+After each document file upload you obtain a file identifier in UUID format.
+Then you can use this file identifier to convert your document to a new format:
+
+```ruby
+Uploadcare::DocumentConverter.convert(
+  [
+    {
+      uuid: "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40",
+      format: 'pdf'
+    }
+  ], store: false
+)
+```
+or create an image of a particular page (if using image format):
+```ruby
+Uploadcare::DocumentConverter.convert(
+  [
+    {
+      uuid: "a4b9db2f-1591-4f4c-8f68-94018924525d",
+      format: 'png',
+      page: 1
+    }
+  ], store: false
+)
+```
+
+This method accepts options to set properties of an output file:
+
+- **uuid** — the file UUID-identifier.
+- **format** - defines the target format you want a source file converted to. The supported values are: `pdf (default)`, `doc`, `docx`, `xls`, `xlsx`, `odt`, `ods`, `rtf`, `txt`, `jpg`, `enhanced.jpg`, `png`. In case the format operation was not found, your input document will be converted to `pdf`.
+- **page** - a page number of a multi-paged document to either `jpg` or `png`. The method will not work for any other target formats.
+
+```
+  NOTE: Use an enhanced.jpg output format for PDF documents with inline fonts.
+        When converting multi-page documents to an image format (jpg or png), the output will be a zip archive with one image per page.
+```
+
+```ruby
+# Response
+{
+  :result => [
+    {
+      :original_source=>"a4b9db2f-1591-4f4c-8f68-94018924525d/document/-/format/png/-/page/1/",
+      :token=>21120220
+      :uuid=>"88fe5ada-90f1-422a-a233-3a0f3a7cf23c"
+    }
+  ],
+  :problems=>{}
+}
+```
+Params in the response:
+- **result** - info related to your transformed output(-s):
+  - **original_source** - source file identifier including a target format, if present.
+  - **token** - a processing job token that can be used to get a [job status](https://uploadcare.com/docs/transformations/document-conversion/#status) (see below).
+  - **uuid** - UUID of your processed document file.
+- **problems** - problems related to your processing job, if any.
+
+To convert multiple documents just add params as a hash for each document to the first argument of the `Uploadcare::DocumentConverter#convert` method:
+
+```ruby
+Uploadcare::DocumentConverter.convert(
+  [
+    { doc_one_params }, { doc_two_params }, ...
+  ], store: false
+)
+```
+
+To check a status of a document processing job you can simply use appropriate method of `Uploadcare::DocumentConverter`:
+
+```ruby
+token = 21120220
+Uploadcare::DocumentConverter.status(token)
+```
+`token` here is a processing job token, obtained in a response of a convert document request.
+
+```ruby
+# Response
+{
+  :status => "finished",
+  :error => nil,
+  :result => {
+    :uuid => "a4b9db2f-1591-4f4c-8f68-94018924525d"
+  }
+}
+```
+
+Params in the response:
+- **status** - processing job status, can have one of the following values:
+  - *pending* — document file is being prepared for conversion.
+  - *processing* — document file processing is in progress.
+  - *finished* — the processing is finished.
+  - *failed* — we failed to process the document, see error for details.
+  - *canceled* — document processing was canceled.
+- **error** - holds a processing error if we failed to handle your document.
+- **result** - repeats the contents of your processing output.
+- **uuid** - a UUID of your processed document file.
+
+More examples and options can be found [here](https://uploadcare.com/docs/transformations/document-conversion/#document-conversion)
 
 ## Useful links
 
