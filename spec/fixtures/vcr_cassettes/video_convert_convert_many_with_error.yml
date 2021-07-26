@@ -1,0 +1,62 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.uploadcare.com/convert/video/
+    body:
+      encoding: UTF-8
+      string: '{"paths":["e30112d7-3a90-4931-b2c5-688cbb46d3ac/video/-/size/x/change_ratio/-/quality/best/-/format/ogg/-/cut/0:0:0.0/0:0:1.0/-/thumbs~2/1/"],"store":"0"}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.6+json
+      User-Agent:
+      - UploadcareRuby/3.0.5/5d5bb5639e3f2df33674 (Ruby/2.7.2)
+      Date:
+      - Tue, 20 Jul 2021 12:58:35 GMT
+      Authorization:
+      - Uploadcare 5d5bb5639e3f2df33674:e60e226aeaf002aaec1cc0e2414556f14991cd31
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 20 Jul 2021 12:58:36 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '290'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept
+      - Accept-Encoding
+      Warning:
+      - '199 Miscellaneous warning: Please use API version 0.5, not 0.6'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Allow:
+      - OPTIONS, POST
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
+    body:
+      encoding: ASCII-8BIT
+      string: '{"result": [], "problems": {"e30112d7-3a90-4931-b2c5-688cbb46d3ac/video/-/size/x/change_ratio/-/quality/best/-/format/ogg/-/cut/0:0:0.0/0:0:1.0/-/thumbs~2/1/":
+        "CDN Path error: Mandatory argument \"OneOrTwoDimensionsDivisibleByFour(size)\"
+        not found while parsing \"size/x/change_ratio\""}}'
+  recorded_at: Tue, 20 Jul 2021 12:58:36 GMT
+recorded_with: VCR 6.0.0
