@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'api_struct'
 require 'param/user_agent'
 require 'uploadcare/concern/error_handler'
 require 'uploadcare/concern/throttle_handler'

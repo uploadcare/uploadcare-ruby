@@ -22,14 +22,14 @@ module Uploadcare
 
       # Permanently deletes subscription
       # @see https://uploadcare.com/docs/api_reference/rest/webhooks/#unsubscribe
-      def delete(name)
-        body = { 'name': name }.to_json
+      def delete(target_url)
+        body = { 'target_url': target_url }.to_json
         post(uri: '/webhooks/unsubscribe/', content: body)
       end
 
       # Updates webhook
       # @see https://uploadcare.com/docs/api_reference/rest/webhooks/#subscribe-update
-      def update(id, **options)
+      def update(id, options = {})
         body = options.to_json
         post(uri: "/webhooks/#{id}/", content: body)
       end

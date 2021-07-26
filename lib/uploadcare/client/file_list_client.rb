@@ -25,7 +25,7 @@ module Uploadcare
       # uuids: Array
       def batch_store(uuids)
         body = uuids.to_json
-        put(uri: '/files/storage/', body: body)
+        put(uri: '/files/storage/', content: body)
       end
 
       alias request_delete delete
@@ -35,7 +35,7 @@ module Uploadcare
       # uuids: Array
       def batch_delete(uuids)
         body = uuids.to_json
-        request_delete(uri: '/files/storage/', body: body)
+        request_delete(uri: '/files/storage/', content: body)
       end
 
       alias store_files batch_store

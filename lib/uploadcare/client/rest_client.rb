@@ -4,6 +4,7 @@ require_relative 'rest_client'
 require 'uploadcare/concern/error_handler'
 require 'uploadcare/concern/throttle_handler'
 require 'param/authentication_header'
+require 'api_struct'
 
 module Uploadcare
   module Client
