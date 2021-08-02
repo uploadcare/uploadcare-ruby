@@ -11,7 +11,7 @@ module Uploadcare
         it 'creates a webhook' do
           VCR.use_cassette('rest_webhook_create') do
             target_url = 'http://ohmyz.sh'
-            response = subject.create(target_url)
+            response = subject.create(target_url: target_url)
             response_value = response.value!
             expect(response_value[:target_url]).to eq(target_url)
             expect(response_value[:id]).not_to be nil
