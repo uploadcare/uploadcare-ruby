@@ -14,9 +14,9 @@ module Uploadcare
       def failure(response)
         catch_upload_errors(response)
         parsed_response = JSON.parse(response.body.to_s)
-        raise RequestError, parsed_response['detail']
+        raise RequestError, parsed_response['detail'] || parsed_response.map { |k, v| "#{k}: #{v}" }.join('; ')
       rescue JSON::ParserError
-        raise RequestError, response.status
+        raise RequestError, response.body.to_s
       end
 
       # Extension of ApiStruct's wrap method
