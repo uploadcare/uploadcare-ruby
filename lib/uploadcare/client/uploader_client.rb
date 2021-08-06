@@ -74,19 +74,35 @@ module Uploadcare
       def upload_many_body(arr, **options)
         files_formdata = arr.map do |file|
           [HTTP::FormData::File.new(file).filename,
-           HTTP::FormData::File.new(file)]
+           form_data_for(file)]
         end.to_h
+        p Param::Upload::UploadParamsGenerator.call(options[:store]).merge(files_formdata)
         HTTP::FormData::Multipart.new(
           Param::Upload::UploadParamsGenerator.call(options[:store]).merge(files_formdata)
         )
       end
 
+      def form_data_for(file)
+        filename = file.original_filename if file.respond_to?(:original_filename)
+        mime_type = file.content_type if file.respond_to?(:content_type)
+        options = { filename: filename, content_type: mime_type }.compact
+        HTTP::FormData::File.new(file, options)
+      end
+
+      STORE_VALUES = {
+        true => '1',
+        false => '0'
+      }.freeze
+
       # Prepare upload_from_url initial request body
       def upload_from_url_body(url, **options)
-        HTTP::FormData::Multipart.new({
-          'pub_key': Uploadcare.config.public_key,
-          'source_url': url
-        }.merge(**options))
+        HTTP::FormData::Multipart.new(
+          options.merge(
+            'pub_key' => Uploadcare.config.public_key,
+            'source_url' => url,
+            'store' => STORE_VALUES[options[:store]]
+          )
+        )
       end
     end
   end
