@@ -36,8 +36,10 @@ module Uploadcare
       # When every chunk is uploaded, ask Uploadcare server to finish the upload
       def upload_complete(uuid)
         body = HTTP::FormData::Multipart.new(
-          'UPLOADCARE_PUB_KEY': Uploadcare.config.public_key,
-          'uuid': uuid
+          {
+            'UPLOADCARE_PUB_KEY': Uploadcare.config.public_key,
+            'uuid': uuid
+          }
         )
         post(path: 'multipart/complete/', body: body, headers: { 'Content-type': body.content_type })
       end
