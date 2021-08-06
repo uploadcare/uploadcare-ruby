@@ -52,6 +52,8 @@ module Uploadcare
       # @param url [String]
       def self.upload_from_url(url, **options)
         response = UploaderClient.new.upload_from_url(url, **options)
+        return response.success[:token] unless response.success[:files]
+
         response.success[:files].map { |file_data| Uploadcare::Entity::File.new(file_data) }
       end
 
