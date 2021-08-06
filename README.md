@@ -179,7 +179,7 @@ File entity contains its metadata.
   "https://api.uploadcare.com/files/FILE_ID_IN_YOUR_PROJECT/",
  "uuid"=>"8f64f313-e6b1-4731-96c0-6751f1e7a50a"}
 
-@file.store # copies file, returns a new (copied) file metadata
+@file.copy # copies file, returns a new (copied) file metadata
 
 @file.store # stores file, returns updated metadata
 
