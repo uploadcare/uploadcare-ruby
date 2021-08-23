@@ -423,7 +423,7 @@ More examples and options can be found [here](https://uploadcare.com/docs/transf
 
 ##### Document
 
-Uploadcare allows converting documents to the following target formats: DOC, DOCX, XLS, XLSX, ODT, ODS, RTF, TXT, PDF, JPG, ENHANCED JPG, PNG. Document Conversion works via our [REST API](https://uploadcare.com/api-refs/rest-api/v0.6.0/).
+Uploadcare allows converting documents to the following target formats: doc, docx, xls, xlsx, odt, ods, rtf, txt, pdf, jpg, png. Document Conversion works via our [REST API](https://uploadcare.com/api-refs/rest-api/v0.6.0/).
 
 After each document file upload you obtain a file identifier in UUID format.
 Then you can use this file identifier to convert your document to a new format:
