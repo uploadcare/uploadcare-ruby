@@ -8,13 +8,60 @@ module Uploadcare
       subject { WebhookClient.new }
 
       describe 'create' do
-        it 'creates a webhook' do
-          VCR.use_cassette('rest_webhook_create') do
-            target_url = 'http://ohmyz.sh'
-            response = subject.create(target_url: target_url)
-            response_value = response.value!
-            expect(response_value[:target_url]).to eq(target_url)
-            expect(response_value[:id]).not_to be nil
+        shared_examples 'creating a webhook' do
+          it 'creates a webhook' do
+            VCR.use_cassette('rest_webhook_create') do
+              response = subject.create(params)
+              response_value = response.value!
+
+              expect(response_value[:id]).not_to be nil
+            end
+          end
+
+          it 'send the :post with params' do
+            VCR.use_cassette('rest_webhook_create') do
+              expect_any_instance_of(described_class).to receive(:post).with(
+                uri: '/webhooks/',
+                content: expected_params.to_json
+              )
+              subject.create(params)
+            end
+          end
+        end
+
+        let(:params) { { target_url: 'http://ohmyz.sh', event: 'file.uploaded' } }
+
+        context 'when a new webhook is enabled' do
+          let(:is_active) { true }
+          let(:expected_params) { params }
+
+          context 'and when sending "true"' do
+            it_behaves_like 'creating a webhook' do
+              let(:params) { super().merge(is_active: true) }
+            end
+          end
+
+          context 'and when sending "nil"' do
+            it_behaves_like 'creating a webhook' do
+              let(:expected_params) { params.merge(is_active: true) }
+              let(:params) { super().merge(is_active: nil) }
+            end
+          end
+
+          context 'and when not sending the param' do
+            let(:expected_params) { params.merge(is_active: true) }
+            it_behaves_like 'creating a webhook'
+          end
+        end
+
+        context 'when a new webhook is disabled' do
+          let(:is_active) { false }
+          let(:expected_params) { params }
+
+          context 'and when sending "false"' do
+            it_behaves_like 'creating a webhook' do
+              let(:params) { super().merge(is_active: false) }
+            end
           end
         end
       end
