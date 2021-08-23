@@ -19,14 +19,14 @@ module Uploadcare
 
         links = response.success[:parts]
         uuid = response.success[:uuid]
-        ChunksClient.new.upload_chunks(object, links)
+        ChunksClient.upload_chunks(object, links)
         upload_complete(uuid)
       end
 
       # Asks Uploadcare server to create a number of storage bin for uploads
       def upload_start(object, store: false)
         body = HTTP::FormData::Multipart.new(
-          Param::Upload::UploadParamsGenerator.call(store).merge(multiupload_metadata(object))
+          Param::Upload::UploadParamsGenerator.call(store).merge(form_data_for(object))
         )
         post(path: 'multipart/start/',
              headers: { 'Content-type': body.content_type },
@@ -46,15 +46,12 @@ module Uploadcare
 
       private
 
-      def multiupload_metadata(file)
-        filename = file.original_filename if file.respond_to?(:original_filename)
-        mime_type = file.content_type if file.respond_to?(:content_type)
-        options = { filename: filename, content_type: mime_type }.compact
-        file = HTTP::FormData::File.new(file, options)
+      def form_data_for(file)
+        form_data_file = super(file)
         {
-          filename: file.filename,
-          size: file.size,
-          content_type: file.content_type
+          filename: form_data_file.filename,
+          size: form_data_file.size,
+          content_type: form_data_file.content_type
         }
       end
 

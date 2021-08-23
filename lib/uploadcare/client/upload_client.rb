@@ -28,6 +28,13 @@ module Uploadcare
 
       private
 
+      def form_data_for(file)
+        filename = file.original_filename if file.respond_to?(:original_filename)
+        mime_type = file.content_type if file.respond_to?(:content_type)
+        options = { filename: filename, content_type: mime_type }.compact
+        HTTP::FormData::File.new(file, options)
+      end
+
       def default_params
         {}
       end

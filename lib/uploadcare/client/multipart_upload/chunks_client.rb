@@ -16,12 +16,11 @@ module Uploadcare
         # In multiple threads, split file into chunks and upload those chunks into respective Amazon links
         # @param object [File]
         # @param links [Array] of strings; by default list of Amazon storage urls
-        def upload_chunks(object, links)
+        def self.upload_chunks(object, links)
           Parallel.each(0...links.count, in_threads: Uploadcare.config.upload_threads) do |link_id|
-            client = self.class.new
             offset = link_id * CHUNK_SIZE
             chunk = IO.read(object, CHUNK_SIZE, offset)
-            client.send(:upload_chunk, chunk, links[link_id])
+            new.send(:upload_chunk, chunk, links[link_id])
           end
         end
 
