@@ -12,12 +12,12 @@ module Uploadcare
       # @see https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/videoConvert
       class VideoConversionClient < BaseConversionClient
         def convert_many(
-          arr,
+          params,
           options = {},
-          url_builder_class = Uploadcare::Param::Conversion::Video::ProcessingJobUrlBuilder
+          url_builder_class = Param::Conversion::Video::ProcessingJobUrlBuilder
         )
-          body = build_body_for_many(arr, options, url_builder_class)
-          post(uri: '/convert/video/', content: body)
+          video_params = params.is_a?(Hash) ? [params] : params
+          send_convert_request(video_params, options, url_builder_class)
         end
 
         def get_conversion_status(token)
@@ -25,6 +25,10 @@ module Uploadcare
         end
 
         private
+
+        def convert_uri
+          '/convert/video/'
+        end
 
         def build_paths_body(params)
           {

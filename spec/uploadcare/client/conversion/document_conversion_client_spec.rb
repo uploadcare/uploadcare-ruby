@@ -13,7 +13,7 @@ module Uploadcare
             shared_examples 'succeeds documents conversion' do
               it 'returns a convert documents response' do
                 VCR.use_cassette('document_convert_convert_many') do
-                  expect(subject.success?).to be true
+                  expect(subject).to be_success
                 end
               end
             end
@@ -41,7 +41,7 @@ module Uploadcare
 
             it 'returns a document conversion status data' do
               VCR.use_cassette('document_convert_get_status') do
-                expect(subject.success?).to be true
+                expect(subject).to be_success
               end
             end
           end
@@ -51,9 +51,7 @@ module Uploadcare
           shared_examples 'failed document conversion' do
             it 'raises a conversion error' do
               VCR.use_cassette('document_convert_convert_many_with_error') do
-                expect { subject }.to raise_error(
-                  Uploadcare::Exception::ConversionError, message
-                )
+                expect(subject).to be_failure
               end
             end
           end
