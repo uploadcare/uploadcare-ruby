@@ -447,7 +447,8 @@ Uploadcare::DocumentConverter.convert(
       format: 'png',
       page: 1
     }
-  ], store: false
+  ],
+  store: false
 )
 ```
 
