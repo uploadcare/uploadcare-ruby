@@ -425,7 +425,7 @@ More examples and options can be found [here](https://uploadcare.com/docs/transf
 
 ##### Document
 
-Uploadcare allows converting documents to the following target formats: DOC, DOCX, XLS, XLSX, ODT, ODS, RTF, TXT, PDF, JPG, PNG. Document Conversion works via our [REST API](https://uploadcare.com/api-refs/rest-api/v0.6.0/).
+Uploadcare allows converting documents to the following target formats: doc, docx, xls, xlsx, odt, ods, rtf, txt, pdf, jpg, png. Document Conversion works via our [REST API](https://uploadcare.com/api-refs/rest-api/v0.6.0/).
 
 After each document file upload you obtain a file identifier in UUID format.
 Then you can use this file identifier to convert your document to a new format:
@@ -460,11 +460,6 @@ This method accepts options to set properties of an output file:
 - **uuid** — the file UUID-identifier.
 - **format** - defines the target format you want a source file converted to. The supported values are: `pdf` (default), `doc`, `docx`, `xls`, `xlsx`, `odt`, `ods`, `rtf`, `txt`, `jpg`, `png`. In case the format operation was not found, your input document will be converted to `pdf`.
 - **page** - a page number of a multi-paged document to either `jpg` or `png`. The method will not work for any other target formats.
-
-```
-  NOTE: Use an enhanced.jpg output format for PDF documents with inline fonts.
-        When converting multi-page documents to an image format (jpg or png), the output will be a zip archive with one image per page.
-```
 
 ```ruby
 # Response
