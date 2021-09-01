@@ -29,7 +29,7 @@ module Uploadcare
           Param::Upload::UploadParamsGenerator.call(store).merge(multiupload_metadata(object))
         )
         post(path: 'multipart/start/',
-             headers: { 'Content-type': body.content_type },
+             headers: { 'Content-Type': body.content_type },
              body: body)
       end
 
@@ -41,7 +41,7 @@ module Uploadcare
             'uuid': uuid
           }
         )
-        post(path: 'multipart/complete/', body: body, headers: { 'Content-type': body.content_type })
+        post(path: 'multipart/complete/', body: body, headers: { 'Content-Type': body.content_type })
       end
 
       private

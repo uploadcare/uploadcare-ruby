@@ -35,7 +35,7 @@ module Uploadcare
         private
 
         def upload_chunk(chunk, link)
-          put(path: link, body: chunk, headers: { 'Content-type': 'application/octet-stream' })
+          put(path: link, body: chunk, headers: { 'Content-Type': 'application/octet-stream' })
         end
 
         def default_params
