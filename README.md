@@ -128,8 +128,36 @@ Uploadcare::Uploader.upload_files(files)
 Uploadcare::Uploader.upload_from_url('https://placekitten.com/96/139')
 
 # multipart upload - can be useful for files bigger than 10 mb
-Uploadcare::Uploader.multipart_upload(File.open('big_file.bin'))
+Uploadcare::Uploader.multipart_upload(File.open('big_file.bin'), store: true)
 ```
+
+For the multipart_upload you can pass a block to add some additional logic after each file chunk is sent.
+For example to track file uploading progress you can do something like this:
+
+```ruby
+progress = 0
+file = File.open('big_file.bin')
+Uploadcare::Uploader.multipart_upload(file, store: true) do |options|
+  progress += (100.0 / options[:links_count])
+  puts "PROGRESS = #{progress}"
+end
+```
+Output of the code above looks like:
+```console
+PROGRESS = 4.545454545454546
+PROGRESS = 9.090909090909092
+PROGRESS = 13.636363636363637
+...
+```
+Options available in a block:
+- **:chunk_size** - size of each chunk in bytes;
+- **:client** - client object which will send a chunk;
+- **:object** - File object which is going to be uploaded;
+- **:offset** - offset from the beginning of a File object in bytes;
+- **:link_id** - index of a link provided by Uploadcare API. Might be treated as index of a chunk;
+- **:links** - array of links for uploading file's chunks;
+- **:links_count** - count of the array of links;
+- **:threads_count** - count of threads used for file upload.
 
 #### Uploading options
 
@@ -179,7 +207,7 @@ File entity contains its metadata.
   "https://api.uploadcare.com/files/FILE_ID_IN_YOUR_PROJECT/",
  "uuid"=>"8f64f313-e6b1-4731-96c0-6751f1e7a50a"}
 
-@file.store # copies file, returns a new (copied) file metadata
+@file.copy # copies file, returns a new (copied) file metadata
 
 @file.store # stores file, returns updated metadata
 

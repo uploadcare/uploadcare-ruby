@@ -13,13 +13,13 @@ module Uploadcare
 
       # Upload a big file by splitting it into parts and sending those parts into assigned buckets
       # object should be File
-      def upload(object, store: false)
+      def upload(object, store: false, &block)
         response = upload_start(object, store: store)
         return response unless response.success[:parts] && response.success[:uuid]
 
         links = response.success[:parts]
         uuid = response.success[:uuid]
-        ChunksClient.new.upload_chunks(object, links)
+        ChunksClient.new.upload_chunks(object, links, &block)
         upload_complete(uuid)
       end
 

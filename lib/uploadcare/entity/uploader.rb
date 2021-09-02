@@ -18,7 +18,7 @@ module Uploadcare
       # @option options [Boolean] :store (false) whether to store file on servers.
       def self.upload(object, **options)
         if big_file?(object)
-          upload_big_file(object, **options)
+          multipart_upload(object, **options)
         elsif file?(object)
           upload_file(object, **options)
         elsif object.is_a?(Array)
@@ -43,8 +43,8 @@ module Uploadcare
       end
 
       # upload file of size above 10mb (involves multipart upload)
-      def self.upload_big_file(file, **_options)
-        response = MultipartUploaderClient.new.upload(file)
+      def self.multipart_upload(file, **options, &block)
+        response = MultipartUploaderClient.new.upload(file, **options, &block)
         Uploadcare::Entity::File.new(response.success)
       end
 

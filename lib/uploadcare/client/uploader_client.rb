@@ -76,7 +76,6 @@ module Uploadcare
           [HTTP::FormData::File.new(file).filename,
            form_data_for(file)]
         end.to_h
-        p Param::Upload::UploadParamsGenerator.call(options[:store]).merge(files_formdata)
         HTTP::FormData::Multipart.new(
           Param::Upload::UploadParamsGenerator.call(options[:store]).merge(files_formdata)
         )
