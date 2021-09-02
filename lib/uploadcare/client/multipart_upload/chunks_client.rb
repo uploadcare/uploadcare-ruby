@@ -20,7 +20,7 @@ module Uploadcare
           Parallel.each(0...links.count, in_threads: Uploadcare.config.upload_threads) do |link_id|
             offset = link_id * CHUNK_SIZE
             chunk = IO.read(object, CHUNK_SIZE, offset)
-            new.send(:upload_chunk, chunk, links[link_id])
+            new.upload_chunk(chunk, links[link_id])
           end
         end
 
@@ -32,11 +32,11 @@ module Uploadcare
           {}
         end
 
-        private
-
         def upload_chunk(chunk, link)
           put(path: link, body: chunk, headers: { 'Content-type': 'application/octet-stream' })
         end
+
+        private
 
         def default_params
           {}
