@@ -143,13 +143,12 @@ Uploadcare::Uploader.get_upload_from_url_status('1251ee66-3631-4416-a2fb-96ba59f
 
 In case of the `async` option is disabled, uploadcare-ruby tries to request the upload status several times (depending on the `max_request_tries` config param) and then returns uploaded file attributes.
 
-
 ```ruby
 # multipart upload - can be useful for files bigger than 10 mb
 Uploadcare::Uploader.multipart_upload(File.open('big_file.bin'), store: true)
 ```
 
-For the multipart_upload you can pass a block to add some additional logic after each file chunk is sent.
+For the multipart upload you can pass a block to add some additional logic after each file chunk is uploaded.
 For example to track file uploading progress you can do something like this:
 
 ```ruby
@@ -170,7 +169,7 @@ PROGRESS = 13.636363636363637
 Options available in a block:
 - **:chunk_size** - size of each chunk in bytes;
 - **:client** - client object which will send a chunk;
-- **:object** - File object which is going to be uploaded;
+- **:object** - file object which is going to be uploaded;
 - **:offset** - offset from the beginning of a File object in bytes;
 - **:link_id** - index of a link provided by Uploadcare API. Might be treated as index of a chunk;
 - **:links** - array of links for uploading file's chunks;
