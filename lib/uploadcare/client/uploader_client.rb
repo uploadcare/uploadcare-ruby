@@ -44,6 +44,14 @@ module Uploadcare
         Dry::Monads::Success(files: [uploaded_response.success])
       end
 
+      # Check upload status
+      #
+      # @see https://uploadcare.com/api-refs/upload-api/#operation/fromURLUploadStatus
+      def get_upload_from_url_status(token)
+        query_params = { token: token }
+        get(path: 'from_url/status/', params: query_params)
+      end
+
       private
 
       alias api_struct_post post
@@ -55,19 +63,11 @@ module Uploadcare
         with_retries(max_tries: Uploadcare.config.max_request_tries,
                      base_sleep_seconds: Uploadcare.config.base_request_sleep,
                      max_sleep_seconds: Uploadcare.config.max_request_sleep) do
-          response = get_status_response(token)
+          response = get_upload_from_url_status(token)
           raise RequestError if %w[progress waiting unknown].include?(response.success[:status])
 
           response
         end
-      end
-
-      # Check upload status
-      #
-      # @see https://uploadcare.com/api-refs/upload-api/#operation/fromURLUploadStatus
-      def get_status_response(token)
-        query_params = { token: token }
-        get(path: 'from_url/status/', params: query_params)
       end
 
       # Prepares body for upload_many method

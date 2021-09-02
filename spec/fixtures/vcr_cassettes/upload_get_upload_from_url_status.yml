@@ -1,0 +1,52 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://upload.uploadcare.com/from_url/status/?token=c6e31082-6bdc-4cb1-bef5-14dd10574d73
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      User-Agent:
+      - UploadcareRuby/3.0.5/demopublickey (Ruby/3.0.2)
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 02 Sep 2021 04:50:21 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '321'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+    body:
+      encoding: ASCII-8BIT
+      string: '{"size":28511,"total":28511,"done":28511,"uuid":"dd378130-28e5-41b3-8c56-f1bbf2840d57","file_id":"dd378130-28e5-41b3-8c56-f1bbf2840d57","original_filename":"video.ogg","is_image":false,"is_stored":false,"image_info":null,"video_info":null,"is_ready":true,"filename":"video.ogg","mime_type":"audio/ogg","status":"success"}'
+  recorded_at: Thu, 02 Sep 2021 04:50:21 GMT
+recorded_with: VCR 6.0.0

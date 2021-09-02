@@ -55,6 +55,16 @@ module Uploadcare
             end
           end
         end
+
+        describe 'get_upload_from_url_status' do
+          it 'gets a status of upload-from-URL' do
+            VCR.use_cassette('upload_get_upload_from_url_status') do
+              token = 'c6e31082-6bdc-4cb1-bef5-14dd10574d73'
+              status_info = subject.get_upload_from_url_status(token).success
+              expect(status_info[:status]).to eq 'success'
+            end
+          end
+        end
       end
     end
   end

@@ -57,6 +57,12 @@ module Uploadcare
         response.success[:files].map { |file_data| Uploadcare::Entity::File.new(file_data) }
       end
 
+      # gets a status of upload from url
+      # @param url [String]
+      def self.get_upload_from_url_status(token)
+        UploaderClient.new.get_upload_from_url_status(token)
+      end
+
       class << self
         private
 
