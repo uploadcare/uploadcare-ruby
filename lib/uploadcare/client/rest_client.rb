@@ -25,7 +25,7 @@ module Uploadcare
       # Handle throttling as well
       def request(uri:, method: 'GET', **options)
         request_headers = Param::AuthenticationHeader.call(method: method.upcase, uri: uri,
-                                                           content_type: headers[:'Content-type'], **options)
+                                                           content_type: headers[:'Content-Type'], **options)
         handle_throttling do
           send("api_struct_#{method.downcase}", path: remove_trailing_slash(uri),
                                                 headers: request_headers, body: options[:content])
@@ -54,7 +54,7 @@ module Uploadcare
 
       def headers
         {
-          'Content-type': 'application/json',
+          'Content-Type': 'application/json',
           'Accept': 'application/vnd.uploadcare-v0.5+json',
           'User-Agent': Uploadcare::Param::UserAgent.call
         }

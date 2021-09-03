@@ -14,9 +14,7 @@ module Uploadcare
 
         def headers
           {
-            # This is probably should be 'Content-Type' key, but the API does not accept this.
-            # Invalid signature error occurs
-            'Content-type': 'application/json',
+            'Content-Type': 'application/json',
             'Accept': API_VERSION_HEADER_VALUE,
             'User-Agent': Uploadcare::Param::UserAgent.call
           }
