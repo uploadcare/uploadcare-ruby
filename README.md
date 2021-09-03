@@ -179,6 +179,8 @@ File entity contains its metadata.
   "https://api.uploadcare.com/files/FILE_ID_IN_YOUR_PROJECT/",
  "uuid"=>"8f64f313-e6b1-4731-96c0-6751f1e7a50a"}
 
+@file.copy # copies file, returns a new (copied) file metadata
+
 @file.store # stores file, returns updated metadata
 
 @file.delete #deletes file. Returns updated metadata
@@ -262,10 +264,15 @@ assigned UUID. Note, group UUIDs include a `~#{files_count}` part at the end.
 That's a requirement of our API.
 
 ```ruby
-# group can be created from an array of Uploadcare files
+# group can be created from an array of Uploadcare files (UUIDs)
+@file = '134dc30c-093e-4f48-a5b9-966fe9cb1d01'
+@file2 = '134dc30c-093e-4f48-a5b9-966fe9cb1d02'
 @files_ary = [@file, @file2]
 @files = Uploadcare::Uploader.upload @files_ary
 @group = Uploadcare::Group.create @files
+
+# group can be stored by group ID. It means that all files of a group will be stored on Uploadcare servers permanently
+Uploadcare::Group.store(group.id)
 ```
 
 #### GroupList
@@ -286,7 +293,10 @@ You can use webhooks to provide notifications about your uploads to target urls.
 This gem lets you create and manage webhooks.
 
 ```ruby
-Uploadcare::Webhook.create("example.com/listen", event: "file.uploaded")
+Uploadcare::Webhook.create(target_url: 'https://example.com/listen', event: 'file.uploaded', is_active: true)
+Uploadcare::Webhook.update(<webhook_id>, target_url: 'https://newexample.com/listen/new', event: 'file.uploaded', is_active: true)
+Uploadcare::Webhook.delete('https://example.com/listen')
+Uploadcare::Webhook.list
 ```
 
 #### Project
