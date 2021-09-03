@@ -10,31 +10,36 @@ module Uploadcare
       #
       # @see https://uploadcare.com/api-refs/rest-api/v0.6.0/#tag/Conversion
       class BaseConversionClient < RestClient
+        API_VERSION_HEADER_VALUE = 'application/vnd.uploadcare-v0.5+json'
+
         def headers
           {
-            'Content-type': 'application/json',
-            'Accept': 'application/vnd.uploadcare-v0.6+json',
+            'Content-Type': 'application/json',
+            'Accept': API_VERSION_HEADER_VALUE,
             'User-Agent': Uploadcare::Param::UserAgent.call
           }
         end
 
         private
 
+        def send_convert_request(arr, options, url_builder_class)
+          body = build_body_for_many(arr, options, url_builder_class)
+          post(uri: convert_uri, content: body)
+        end
+
         def success(response)
           body = response.body.to_s
-          result = extract_result(body)
-
-          Dry::Monads::Success(result)
+          extract_result(body)
         end
 
         def extract_result(response_body)
-          return nil if response_body.nil? || response_body.empty?
+          return nil if response_body.empty?
 
           parsed_body = JSON.parse(response_body, symbolize_names: true)
           errors = parsed_body[:error] || parsed_body[:problems]
-          raise ConversionError, errors unless errors.nil? || errors.empty?
+          return Dry::Monads::Failure(errors) unless errors.nil? || errors.empty?
 
-          parsed_body
+          Dry::Monads::Success(parsed_body)
         end
 
         # Prepares body for convert_many method

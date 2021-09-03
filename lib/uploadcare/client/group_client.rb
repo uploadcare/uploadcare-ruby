@@ -14,7 +14,7 @@ module Uploadcare
         body_hash = group_body_hash(file_list, **options)
         body = HTTP::FormData::Multipart.new(body_hash)
         post(path: 'group/',
-             headers: { 'Content-type': body.content_type },
+             headers: { 'Content-Type': body.content_type },
              body: body)
       end
 

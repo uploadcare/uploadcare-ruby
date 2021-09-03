@@ -45,7 +45,7 @@ Note that `uploadcare-ruby` **3.x** is not backward compatible with
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'uploadcare-ruby'
+gem "uploadcare-ruby"
 ```
 
 And then execute:
@@ -67,8 +67,8 @@ settings can be seen in [`lib/uploadcare.rb`](lib/uploadcare.rb)
 
 ```ruby
 # your_config_initializer_file.rb
-Uploadcare.config.public_key = 'demopublickey'
-Uploadcare.config.secret_key = 'demoprivatekey'
+Uploadcare.config.public_key = "demopublickey"
+Uploadcare.config.secret_key = "demoprivatekey"
 ```
 
 ## Usage
@@ -116,13 +116,13 @@ Uploadcare supports multiple ways to upload files:
 
 ```ruby
 # Smart upload - detects type of passed object and picks appropriate upload method
-Uploadcare::Uploader.upload('https://placekitten.com/96/139')
+Uploadcare::Uploader.upload("https://placekitten.com/96/139")
 ```
 
 There are explicit ways to select upload type:
 
 ```ruby
-files = [File.open('1.jpg'), File.open('1.jpg']
+files = [File.open("1.jpg"), File.open("1.jpg"]
 Uploadcare::Uploader.upload_files(files)
 
 Uploadcare::Uploader.upload_from_url('https://placekitten.com/96/139')
@@ -152,8 +152,8 @@ For the multipart upload you can pass a block to add some additional logic after
 For example to track file uploading progress you can do something like this:
 
 ```ruby
-progress = 0
 file = File.open('big_file.bin')
+progress = 0
 Uploadcare::Uploader.multipart_upload(file, store: true) do |options|
   progress += (100.0 / options[:links_count])
   puts "PROGRESS = #{progress}"
@@ -168,13 +168,11 @@ PROGRESS = 13.636363636363637
 ```
 Options available in a block:
 - **:chunk_size** - size of each chunk in bytes;
-- **:client** - client object which will send a chunk;
 - **:object** - file object which is going to be uploaded;
 - **:offset** - offset from the beginning of a File object in bytes;
 - **:link_id** - index of a link provided by Uploadcare API. Might be treated as index of a chunk;
 - **:links** - array of links for uploading file's chunks;
-- **:links_count** - count of the array of links;
-- **:threads_count** - count of threads used for file upload.
+- **:links_count** - count of the array of links.
 
 #### Uploading options
 
@@ -189,7 +187,7 @@ You can override global [`:autostore`](#initialization) option for each upload r
 Most methods are also available through `Uploadcare::Api` object:
 ```ruby
 # Same as Uploadcare::Uploader.upload
-Uploadcare::Api.upload('https://placekitten.com/96/139')
+Uploadcare::Api.upload("https://placekitten.com/96/139")
 ```
 
 Entities are representations of objects in Uploadcare cloud.
@@ -199,7 +197,7 @@ Entities are representations of objects in Uploadcare cloud.
 File entity contains its metadata.
 
 ```ruby
-@file = Uploadcare::File.file('FILE_ID_IN_YOUR_PROJECT')
+@file = Uploadcare::File.file("FILE_ID_IN_YOUR_PROJECT")
 {"datetime_removed"=>nil,
  "datetime_stored"=>"2020-01-16T15:03:15.315064Z",
  "datetime_uploaded"=>"2020-01-16T15:03:14.676902Z",
@@ -273,7 +271,7 @@ stored just for your convenience. That is why they are frozen.
 options = {
   limit: 10,
   stored: true,
-  ordering: '-datetime_uploaded',
+  ordering: "-datetime_uploaded",
   from: "2017-01-01T00:00:00",
 }
 @list = @api.file_list(options)
@@ -310,8 +308,8 @@ That's a requirement of our API.
 
 ```ruby
 # group can be created from an array of Uploadcare files (UUIDs)
-@file = '134dc30c-093e-4f48-a5b9-966fe9cb1d01'
-@file2 = '134dc30c-093e-4f48-a5b9-966fe9cb1d02'
+@file = "134dc30c-093e-4f48-a5b9-966fe9cb1d01"
+@file2 = "134dc30c-093e-4f48-a5b9-966fe9cb1d02"
 @files_ary = [@file, @file2]
 @files = Uploadcare::Uploader.upload @files_ary
 @group = Uploadcare::Group.create @files
@@ -338,9 +336,9 @@ You can use webhooks to provide notifications about your uploads to target urls.
 This gem lets you create and manage webhooks.
 
 ```ruby
-Uploadcare::Webhook.create(target_url: 'https://example.com/listen', event: 'file.uploaded', is_active: true)
-Uploadcare::Webhook.update(<webhook_id>, target_url: 'https://newexample.com/listen/new', event: 'file.uploaded', is_active: true)
-Uploadcare::Webhook.delete('https://example.com/listen')
+Uploadcare::Webhook.create(target_url: "https://example.com/listen", event: "file.uploaded", is_active: true)
+Uploadcare::Webhook.update(<webhook_id>, target_url: "https://newexample.com/listen/new", event: "file.uploaded", is_active: true)
+Uploadcare::Webhook.delete("https://example.com/listen")
 Uploadcare::Webhook.list
 ```
 
@@ -377,13 +375,14 @@ Uploadcare::VideoConverter.convert(
   [
     {
       uuid: "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40",
-      size: { resize_mode: 'change_ratio', width: '600', height: '400' },
-      quality: 'best',
-      format: 'ogg',
-      cut: { start_time: '0:0:0.0', length: '0:0:1.0' },
+      size: { resize_mode: "change_ratio", width: "600", height: "400" },
+      quality: "best",
+      format: "ogg",
+      cut: { start_time: "0:0:0.0", length: "0:0:1.0" },
       thumbs: { N: 2, number: 1 }
     }
-  ], store: false
+  ],
+  store: false
 )
 ```
 This method accepts options to set properties of an output file:
@@ -437,7 +436,8 @@ To convert multiple videos just add params as a hash for each video to the first
 Uploadcare::VideoConverter.convert(
   [
     { video_one_params }, { video_two_params }, ...
-  ], store: false
+  ],
+  store: false
 )
 ```
 
@@ -478,7 +478,7 @@ More examples and options can be found [here](https://uploadcare.com/docs/transf
 
 ##### Document
 
-Uploadcare allows converting documents to the following target formats: DOC, DOCX, XLS, XLSX, ODT, ODS, RTF, TXT, PDF, JPG, ENHANCED JPG, PNG. Document Conversion works via our [REST API](https://uploadcare.com/api-refs/rest-api/v0.6.0/).
+Uploadcare allows converting documents to the following target formats: doc, docx, xls, xlsx, odt, ods, rtf, txt, pdf, jpg, png. Document Conversion works via our [REST API](https://uploadcare.com/api-refs/rest-api/v0.6.0/).
 
 After each document file upload you obtain a file identifier in UUID format.
 Then you can use this file identifier to convert your document to a new format:
@@ -488,9 +488,10 @@ Uploadcare::DocumentConverter.convert(
   [
     {
       uuid: "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40",
-      format: 'pdf'
+      format: "pdf"
     }
-  ], store: false
+  ],
+  store: false
 )
 ```
 or create an image of a particular page (if using image format):
@@ -499,23 +500,19 @@ Uploadcare::DocumentConverter.convert(
   [
     {
       uuid: "a4b9db2f-1591-4f4c-8f68-94018924525d",
-      format: 'png',
+      format: "png",
       page: 1
     }
-  ], store: false
+  ],
+  store: false
 )
 ```
 
 This method accepts options to set properties of an output file:
 
 - **uuid** — the file UUID-identifier.
-- **format** - defines the target format you want a source file converted to. The supported values are: `pdf (default)`, `doc`, `docx`, `xls`, `xlsx`, `odt`, `ods`, `rtf`, `txt`, `jpg`, `enhanced.jpg`, `png`. In case the format operation was not found, your input document will be converted to `pdf`.
+- **format** - defines the target format you want a source file converted to. The supported values are: `pdf` (default), `doc`, `docx`, `xls`, `xlsx`, `odt`, `ods`, `rtf`, `txt`, `jpg`, `png`. In case the format operation was not found, your input document will be converted to `pdf`.
 - **page** - a page number of a multi-paged document to either `jpg` or `png`. The method will not work for any other target formats.
-
-```
-  NOTE: Use an enhanced.jpg output format for PDF documents with inline fonts.
-        When converting multi-page documents to an image format (jpg or png), the output will be a zip archive with one image per page.
-```
 
 ```ruby
 # Response
@@ -543,7 +540,8 @@ To convert multiple documents just add params as a hash for each document to the
 Uploadcare::DocumentConverter.convert(
   [
     { doc_one_params }, { doc_two_params }, ...
-  ], store: false
+  ],
+  store: false
 )
 ```
 

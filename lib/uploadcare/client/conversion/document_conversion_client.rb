@@ -13,10 +13,9 @@ module Uploadcare
         def convert_many(
           arr,
           options = {},
-          url_builder_class = Uploadcare::Param::Conversion::Document::ProcessingJobUrlBuilder
+          url_builder_class = Param::Conversion::Document::ProcessingJobUrlBuilder
         )
-          body = build_body_for_many(arr, options, url_builder_class)
-          post(uri: '/convert/document/', content: body)
+          send_convert_request(arr, options, url_builder_class)
         end
 
         def get_conversion_status(token)
@@ -24,6 +23,10 @@ module Uploadcare
         end
 
         private
+
+        def convert_uri
+          '/convert/document/'
+        end
 
         def build_paths_body(params)
           {

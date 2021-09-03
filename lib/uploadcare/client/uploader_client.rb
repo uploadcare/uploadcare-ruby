@@ -15,7 +15,7 @@ module Uploadcare
       def upload_many(arr, **options)
         body = upload_many_body(arr, **options)
         post(path: 'base/',
-             headers: { 'Content-type': body.content_type },
+             headers: { 'Content-Type': body.content_type },
              body: body)
       end
 
@@ -35,7 +35,7 @@ module Uploadcare
       # - async - returns upload token instead of upload data
       def upload_from_url(url, **options)
         body = upload_from_url_body(url, **options)
-        token_response = post(path: 'from_url/', headers: { 'Content-type': body.content_type }, body: body)
+        token_response = post(path: 'from_url/', headers: { 'Content-Type': body.content_type }, body: body)
         return token_response if options[:async]
 
         uploaded_response = poll_upload_response(token_response.success[:token])
@@ -81,14 +81,7 @@ module Uploadcare
         )
       end
 
-      def form_data_for(file)
-        filename = file.original_filename if file.respond_to?(:original_filename)
-        mime_type = file.content_type if file.respond_to?(:content_type)
-        options = { filename: filename, content_type: mime_type }.compact
-        HTTP::FormData::File.new(file, options)
-      end
-
-      STORE_VALUES = {
+      STORE_VALUES_MAP = {
         true => '1',
         false => '0'
       }.freeze
@@ -99,7 +92,7 @@ module Uploadcare
           options.merge(
             'pub_key' => Uploadcare.config.public_key,
             'source_url' => url,
-            'store' => STORE_VALUES[options[:store]]
+            'store' => STORE_VALUES_MAP[options[:store]]
           )
         )
       end
