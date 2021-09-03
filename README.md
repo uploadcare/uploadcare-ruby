@@ -265,8 +265,8 @@ That's a requirement of our API.
 
 ```ruby
 # group can be created from an array of Uploadcare files (UUIDs)
-@file = '134dc30c-093e-4f48-a5b9-966fe9cb1d01'
-@file2 = '134dc30c-093e-4f48-a5b9-966fe9cb1d02'
+@file = "134dc30c-093e-4f48-a5b9-966fe9cb1d01"
+@file2 = "134dc30c-093e-4f48-a5b9-966fe9cb1d02"
 @files_ary = [@file, @file2]
 @files = Uploadcare::Uploader.upload @files_ary
 @group = Uploadcare::Group.create @files
@@ -293,9 +293,9 @@ You can use webhooks to provide notifications about your uploads to target urls.
 This gem lets you create and manage webhooks.
 
 ```ruby
-Uploadcare::Webhook.create(target_url: 'https://example.com/listen', event: 'file.uploaded', is_active: true)
-Uploadcare::Webhook.update(<webhook_id>, target_url: 'https://newexample.com/listen/new', event: 'file.uploaded', is_active: true)
-Uploadcare::Webhook.delete('https://example.com/listen')
+Uploadcare::Webhook.create(target_url: "https://example.com/listen", event: "file.uploaded", is_active: true)
+Uploadcare::Webhook.update(<webhook_id>, target_url: "https://newexample.com/listen/new", event: "file.uploaded", is_active: true)
+Uploadcare::Webhook.delete("https://example.com/listen")
 Uploadcare::Webhook.list
 ```
 
