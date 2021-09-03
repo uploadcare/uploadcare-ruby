@@ -50,7 +50,7 @@ module Uploadcare
                 **build_paths_body(params)
               )
             end,
-            "store": options[:store] == true ? '1' : '0'
+            "store": options[:store]
           }.compact.to_json
         end
       end
