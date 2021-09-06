@@ -33,7 +33,7 @@ module Uploadcare
         end
 
         def extract_result(response_body)
-          return nil if response_body.empty?
+          return if response_body.empty?
 
           parsed_body = JSON.parse(response_body, symbolize_names: true)
           errors = parsed_body[:error] || parsed_body[:problems]
@@ -45,12 +45,12 @@ module Uploadcare
         # Prepares body for convert_many method
         def build_body_for_many(arr, options, url_builder_class)
           {
-            "paths": arr.map do |params|
+            paths: arr.map do |params|
               url_builder_class.call(
                 **build_paths_body(params)
               )
             end,
-            "store": options[:store] == true ? '1' : '0'
+            store: options[:store]
           }.compact.to_json
         end
       end

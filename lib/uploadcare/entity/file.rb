@@ -9,7 +9,8 @@ module Uploadcare
       client_service FileClient
 
       attr_entity :datetime_removed, :datetime_stored, :datetime_uploaded, :image_info, :is_image, :is_ready,
-                  :mime_type, :original_file_url, :original_filename, :size, :url, :uuid
+                  :mime_type, :original_file_url, :original_filename, :size, :url, :uuid, :variations, :video_info,
+                  :source, :rekognition_info
 
       # gets file's uuid - even if it's only initialized with url
       # @return [String]

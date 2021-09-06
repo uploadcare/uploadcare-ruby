@@ -6,7 +6,7 @@ module Uploadcare
   module Client
     module MultipartUpload
       RSpec.describe ChunksClient do
-        subject { ChunksClient.new }
+        subject { ChunksClient }
         # Replace this file with actual big file when rewriting fixtures
         let!(:big_file) { ::File.open('spec/fixtures/big.jpeg') }
 

@@ -28,7 +28,7 @@ module Uploadcare
             def size_part(size)
               return if size.empty?
 
-              dimensions = "#{size[:width]}x#{size[:height]}"
+              dimensions = "#{size[:width]}x#{size[:height]}" if size[:width] || size[:height]
               resize_mode = (size[:resize_mode]).to_s
               "/size/#{dimensions}/#{resize_mode}/".squeeze('/')
             end
