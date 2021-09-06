@@ -186,6 +186,46 @@ File entity contains its metadata.
 @file.delete #deletes file. Returns updated metadata
 ```
 
+The File object is also can be converted if it is a document or a video file. Imagine, you have a document file:
+
+```ruby
+@file = Uploadcare::File.file("FILE_ID_IN_YOUR_PROJECT")
+```
+
+To convert it to an another file, just do:
+
+```ruby
+@converted_file = @file.convert_document({ format: "png", page: "1" }, store: true)
+# => {
+#    "uuid"=>"<NEW_FILE_UUID>"}
+#    ...other file info...
+# }
+# OR
+# Failure({:"<FILE_UUID>/document/-/format/png/-/page/1/"=>"the target_format is not a supported 'to' format for this source file. <you_source_file_extension> -> png"})
+```
+
+Same works for video files:
+
+```ruby
+@converted_file = @file.convert_video(
+  {
+    format: "ogg",
+    quality: "best",
+    cut: { start_time: "0:0:0.1", length: "end" },
+    size: { resize_mode: "change_ratio", width: "600", height: "400" },
+    thumb: { N: 1, number: 2 }
+  },
+  store: true
+)
+# => {
+#    "uuid"=>"<NEW_FILE_UUID>"}
+#    ...other file info...
+# }
+# OR
+# Failure({:"<FILE_UUID>/video/-/size/600x400/preserve_ratio/-/quality/best/-/format/ogg/-/cut/0:0:0.1/end/-/thumbs~1/2/"=>"CDN Path error: Failed to parse remainder \"/preserve_ratio\" of \"size/600x400/preserve_ratio\""})
+```
+
+More about file conversion [here](#conversion).
 Metadata of deleted files is stored permanently.
 
 #### FileList

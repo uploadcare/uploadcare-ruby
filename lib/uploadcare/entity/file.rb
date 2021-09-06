@@ -13,7 +13,7 @@ module Uploadcare
                   :source, :rekognition_info
 
       # gets file's uuid - even if it's only initialized with url
-      # @return [String]
+      # @returns [String]
       def uuid
         return @entity.uuid if @entity.uuid
 
@@ -26,10 +26,16 @@ module Uploadcare
         initialize(File.info(uuid).entity)
       end
 
+      # The method to convert a document file to another file
+      # gets (conversion) params [Hash], options (store: Boolean) [Hash], converter [Class]
+      # @returns [File]
       def convert_document(params = {}, options = {}, converter = Conversion::DocumentConverter)
         convert_file(params, converter, options)
       end
 
+      # The method to convert a video file to another file
+      # gets (conversion) params [Hash], options (store: Boolean) [Hash], converter [Class]
+      # @returns [File]
       def convert_video(params = {}, options = {}, converter = Conversion::VideoConverter)
         convert_file(params, converter, options)
       end
