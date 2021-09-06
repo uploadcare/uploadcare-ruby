@@ -9,8 +9,12 @@ module Uploadcare
     class WebhookClient < RestClient
       # Create webhook
       # @see https://uploadcare.com/docs/api_reference/rest/webhooks/#subscribe
-      def create(target_url, event: 'file.uploaded', is_active: true)
-        body = { 'target_url': target_url, 'event': event, 'is_active': is_active }.to_json
+      def create(options = {})
+        body = {
+          'target_url': options[:target_url],
+          'event': options[:event] || 'file.uploaded',
+          'is_active': options[:is_active].nil? ? true : options[:is_active]
+        }.to_json
         post(uri: '/webhooks/', content: body)
       end
 

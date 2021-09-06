@@ -16,7 +16,7 @@ module Uploadcare
         it 'represents a webhook' do
           VCR.use_cassette('rest_webhook_create') do
             target_url = 'http://ohmyz.sh'
-            webhook = subject.create(target_url)
+            webhook = subject.create(target_url: target_url)
             %i[created event id is_active project target_url updated].each do |field|
               expect(webhook[field]).not_to be_nil
             end

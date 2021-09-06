@@ -29,17 +29,19 @@ module Uploadcare
           Param::Upload::UploadParamsGenerator.call(store).merge(multiupload_metadata(object))
         )
         post(path: 'multipart/start/',
-             headers: { 'Content-type': body.content_type },
+             headers: { 'Content-Type': body.content_type },
              body: body)
       end
 
       # When every chunk is uploaded, ask Uploadcare server to finish the upload
       def upload_complete(uuid)
         body = HTTP::FormData::Multipart.new(
-          'UPLOADCARE_PUB_KEY': Uploadcare.config.public_key,
-          'uuid': uuid
+          {
+            UPLOADCARE_PUB_KEY: Uploadcare.config.public_key,
+            uuid: uuid
+          }
         )
-        post(path: 'multipart/complete/', body: body, headers: { 'Content-type': body.content_type })
+        post(path: 'multipart/complete/', body: body, headers: { 'Content-Type': body.content_type })
       end
 
       private

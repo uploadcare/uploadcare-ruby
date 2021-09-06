@@ -15,7 +15,7 @@ module Uploadcare
       def upload_many(arr, **options)
         body = upload_many_body(arr, **options)
         post(path: 'base/',
-             headers: { 'Content-type': body.content_type },
+             headers: { 'Content-Type': body.content_type },
              body: body)
       end
 
@@ -35,7 +35,7 @@ module Uploadcare
       # - async - returns upload token instead of upload data
       def upload_from_url(url, **options)
         body = upload_from_url_body(url, **options)
-        token_response = post(path: 'from_url/', headers: { 'Content-type': body.content_type }, body: body)
+        token_response = post(path: 'from_url/', headers: { 'Content-Type': body.content_type }, body: body)
         return token_response if options[:async]
 
         uploaded_response = poll_upload_response(token_response.success[:token])

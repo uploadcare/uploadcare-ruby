@@ -45,7 +45,7 @@ Note that `uploadcare-ruby` **3.x** is not backward compatible with
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'uploadcare-ruby'
+gem "uploadcare-ruby"
 ```
 
 And then execute:
@@ -67,8 +67,8 @@ settings can be seen in [`lib/uploadcare.rb`](lib/uploadcare.rb)
 
 ```ruby
 # your_config_initializer_file.rb
-Uploadcare.config.public_key = 'demopublickey'
-Uploadcare.config.secret_key = 'demoprivatekey'
+Uploadcare.config.public_key = "demopublickey"
+Uploadcare.config.secret_key = "demoprivatekey"
 ```
 
 ## Usage
@@ -116,19 +116,19 @@ Uploadcare supports multiple ways to upload files:
 
 ```ruby
 # Smart upload - detects type of passed object and picks appropriate upload method
-Uploadcare::Uploader.upload('https://placekitten.com/96/139')
+Uploadcare::Uploader.upload("https://placekitten.com/96/139")
 ```
 
 There are explicit ways to select upload type:
 
 ```ruby
-files = [File.open('1.jpg'), File.open('1.jpg']
+files = [File.open("1.jpg"), File.open("1.jpg"]
 Uploadcare::Uploader.upload_files(files)
 
-Uploadcare::Uploader.upload_from_url('https://placekitten.com/96/139')
+Uploadcare::Uploader.upload_from_url("https://placekitten.com/96/139")
 
 # multipart upload - can be useful for files bigger than 10 mb
-Uploadcare::Uploader.multipart_upload(File.open('big_file.bin'))
+Uploadcare::Uploader.multipart_upload(File.open("big_file.bin"))
 ```
 
 #### Uploading options
@@ -144,7 +144,7 @@ You can override global [`:autostore`](#initialization) option for each upload r
 Most methods are also available through `Uploadcare::Api` object:
 ```ruby
 # Same as Uploadcare::Uploader.upload
-Uploadcare::Api.upload('https://placekitten.com/96/139')
+Uploadcare::Api.upload("https://placekitten.com/96/139")
 ```
 
 Entities are representations of objects in Uploadcare cloud.
@@ -154,7 +154,7 @@ Entities are representations of objects in Uploadcare cloud.
 File entity contains its metadata.
 
 ```ruby
-@file = Uploadcare::File.file('FILE_ID_IN_YOUR_PROJECT')
+@file = Uploadcare::File.file("FILE_ID_IN_YOUR_PROJECT")
 {"datetime_removed"=>nil,
  "datetime_stored"=>"2020-01-16T15:03:15.315064Z",
  "datetime_uploaded"=>"2020-01-16T15:03:14.676902Z",
@@ -178,6 +178,8 @@ File entity contains its metadata.
  "url"=>
   "https://api.uploadcare.com/files/FILE_ID_IN_YOUR_PROJECT/",
  "uuid"=>"8f64f313-e6b1-4731-96c0-6751f1e7a50a"}
+
+@file.copy # copies file, returns a new (copied) file metadata
 
 @file.store # stores file, returns updated metadata
 
@@ -226,7 +228,7 @@ stored just for your convenience. That is why they are frozen.
 options = {
   limit: 10,
   stored: true,
-  ordering: '-datetime_uploaded',
+  ordering: "-datetime_uploaded",
   from: "2017-01-01T00:00:00",
 }
 @list = @api.file_list(options)
@@ -262,10 +264,15 @@ assigned UUID. Note, group UUIDs include a `~#{files_count}` part at the end.
 That's a requirement of our API.
 
 ```ruby
-# group can be created from an array of Uploadcare files
+# group can be created from an array of Uploadcare files (UUIDs)
+@file = "134dc30c-093e-4f48-a5b9-966fe9cb1d01"
+@file2 = "134dc30c-093e-4f48-a5b9-966fe9cb1d02"
 @files_ary = [@file, @file2]
 @files = Uploadcare::Uploader.upload @files_ary
 @group = Uploadcare::Group.create @files
+
+# group can be stored by group ID. It means that all files of a group will be stored on Uploadcare servers permanently
+Uploadcare::Group.store(group.id)
 ```
 
 #### GroupList
@@ -286,7 +293,10 @@ You can use webhooks to provide notifications about your uploads to target urls.
 This gem lets you create and manage webhooks.
 
 ```ruby
-Uploadcare::Webhook.create('example.com/listen', event: 'file.uploaded')
+Uploadcare::Webhook.create(target_url: "https://example.com/listen", event: "file.uploaded", is_active: true)
+Uploadcare::Webhook.update(<webhook_id>, target_url: "https://newexample.com/listen/new", event: "file.uploaded", is_active: true)
+Uploadcare::Webhook.delete("https://example.com/listen")
+Uploadcare::Webhook.list
 ```
 
 #### Project
@@ -322,13 +332,14 @@ Uploadcare::VideoConverter.convert(
   [
     {
       uuid: "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40",
-      size: { resize_mode: 'change_ratio', width: '600', height: '400' },
-      quality: 'best',
-      format: 'ogg',
-      cut: { start_time: '0:0:0.0', length: '0:0:1.0' },
+      size: { resize_mode: "change_ratio", width: "600", height: "400" },
+      quality: "best",
+      format: "ogg",
+      cut: { start_time: "0:0:0.0", length: "0:0:1.0" },
       thumbs: { N: 2, number: 1 }
     }
-  ], store: false
+  ],
+  store: false
 )
 ```
 This method accepts options to set properties of an output file:
@@ -382,7 +393,8 @@ To convert multiple videos just add params as a hash for each video to the first
 Uploadcare::VideoConverter.convert(
   [
     { video_one_params }, { video_two_params }, ...
-  ], store: false
+  ],
+  store: false
 )
 ```
 
@@ -421,6 +433,106 @@ Params in the response:
 
 More examples and options can be found [here](https://uploadcare.com/docs/transformations/video-encoding/#video-encoding)
 
+##### Document
+
+Uploadcare allows converting documents to the following target formats: doc, docx, xls, xlsx, odt, ods, rtf, txt, pdf, jpg, png. Document Conversion works via our [REST API](https://uploadcare.com/api-refs/rest-api/v0.6.0/).
+
+After each document file upload you obtain a file identifier in UUID format.
+Then you can use this file identifier to convert your document to a new format:
+
+```ruby
+Uploadcare::DocumentConverter.convert(
+  [
+    {
+      uuid: "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40",
+      format: "pdf"
+    }
+  ],
+  store: false
+)
+```
+or create an image of a particular page (if using image format):
+```ruby
+Uploadcare::DocumentConverter.convert(
+  [
+    {
+      uuid: "a4b9db2f-1591-4f4c-8f68-94018924525d",
+      format: "png",
+      page: 1
+    }
+  ],
+  store: false
+)
+```
+
+This method accepts options to set properties of an output file:
+
+- **uuid** — the file UUID-identifier.
+- **format** - defines the target format you want a source file converted to. The supported values are: `pdf` (default), `doc`, `docx`, `xls`, `xlsx`, `odt`, `ods`, `rtf`, `txt`, `jpg`, `png`. In case the format operation was not found, your input document will be converted to `pdf`.
+- **page** - a page number of a multi-paged document to either `jpg` or `png`. The method will not work for any other target formats.
+
+```ruby
+# Response
+{
+  :result => [
+    {
+      :original_source=>"a4b9db2f-1591-4f4c-8f68-94018924525d/document/-/format/png/-/page/1/",
+      :token=>21120220
+      :uuid=>"88fe5ada-90f1-422a-a233-3a0f3a7cf23c"
+    }
+  ],
+  :problems=>{}
+}
+```
+Params in the response:
+- **result** - info related to your transformed output(-s):
+  - **original_source** - source file identifier including a target format, if present.
+  - **token** - a processing job token that can be used to get a [job status](https://uploadcare.com/docs/transformations/document-conversion/#status) (see below).
+  - **uuid** - UUID of your processed document file.
+- **problems** - problems related to your processing job, if any.
+
+To convert multiple documents just add params as a hash for each document to the first argument of the `Uploadcare::DocumentConverter#convert` method:
+
+```ruby
+Uploadcare::DocumentConverter.convert(
+  [
+    { doc_one_params }, { doc_two_params }, ...
+  ],
+  store: false
+)
+```
+
+To check a status of a document processing job you can simply use appropriate method of `Uploadcare::DocumentConverter`:
+
+```ruby
+token = 21120220
+Uploadcare::DocumentConverter.status(token)
+```
+`token` here is a processing job token, obtained in a response of a convert document request.
+
+```ruby
+# Response
+{
+  :status => "finished",
+  :error => nil,
+  :result => {
+    :uuid => "a4b9db2f-1591-4f4c-8f68-94018924525d"
+  }
+}
+```
+
+Params in the response:
+- **status** - processing job status, can have one of the following values:
+  - *pending* — document file is being prepared for conversion.
+  - *processing* — document file processing is in progress.
+  - *finished* — the processing is finished.
+  - *failed* — we failed to process the document, see error for details.
+  - *canceled* — document processing was canceled.
+- **error** - holds a processing error if we failed to handle your document.
+- **result** - repeats the contents of your processing output.
+- **uuid** - a UUID of your processed document file.
+
+More examples and options can be found [here](https://uploadcare.com/docs/transformations/document-conversion/#document-conversion)
 
 ## Useful links
 

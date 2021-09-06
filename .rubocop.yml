@@ -27,3 +27,6 @@ Metrics/MethodLength:
 
 Style/Documentation:
   Enabled: false
+
+Style/OptionalBooleanParameter:
+  AllowedMethods: ['create']
