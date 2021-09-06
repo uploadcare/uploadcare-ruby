@@ -65,9 +65,55 @@ module Uploadcare
         it 'performs load request' do
           VCR.use_cassette('file_info') do
             url = 'https://ucarecdn.com/8f64f313-e6b1-4731-96c0-6751f1e7a50a'
-            file = File.new(Hashie::Mash.new(url: url))
+            file = File.new(url: url)
             file.load
             expect(file.datetime_uploaded).not_to be_nil
+          end
+        end
+      end
+
+      describe 'file conversion' do
+        let(:url) { "https://ucarecdn.com/#{source_file_uuid}" }
+        let(:file) { File.new(url: url) }
+
+        shared_examples 'new file conversion' do
+          it 'performs a convert request', :aggregate_failures do
+            VCR.use_cassette(convert_cassette) do
+              VCR.use_cassette(get_file_cassette) do
+                expect(new_file.uuid).not_to be_empty
+                expect(new_file.uuid).not_to eq source_file_uuid
+              end
+            end
+          end
+        end
+
+        context 'when converting a document' do
+          let(:source_file_uuid) { '8f64f313-e6b1-4731-96c0-6751f1e7a50a' }
+          let(:new_file) { file.convert_document({ format: 'png', page: 1 }) }
+
+          it_behaves_like 'new file conversion' do
+            let(:convert_cassette) { 'document_convert_convert_many' }
+            let(:get_file_cassette) { 'document_convert_file_info' }
+          end
+        end
+
+        context 'when converting a video' do
+          let(:source_file_uuid) { 'e30112d7-3a90-4931-b2c5-688cbb46d3ac' }
+          let(:new_file) do
+            file.convert_video(
+              {
+                format: 'ogg',
+                quality: 'best',
+                cut: { start_time: '0:0:0.0', length: 'end' },
+                size: { resize_mode: 'change_ratio', width: '600', height: '400' },
+                thumb: { N: 1, number: 2 }
+              }
+            )
+          end
+
+          it_behaves_like 'new file conversion' do
+            let(:convert_cassette) { 'video_convert_convert_many' }
+            let(:get_file_cassette) { 'video_convert_file_info' }
           end
         end
       end

@@ -26,6 +26,14 @@ module Uploadcare
         initialize(File.info(uuid).entity)
       end
 
+      def convert_document(params = {}, options = {}, converter = Conversion::DocumentConverter)
+        convert_file(params, converter, options)
+      end
+
+      def convert_video(params = {}, options = {}, converter = Conversion::VideoConverter)
+        convert_file(params, converter, options)
+      end
+
       # 'copy' method is used to copy original files or their modified versions to default storage.
       #
       # Source files MAY either be stored or just uploaded and MUST NOT be deleted.
@@ -75,6 +83,17 @@ module Uploadcare
       # Instance version of {external_copy}
       def remote_copy(target, **args)
         File.copy(uuid, target: target, **args)
+      end
+
+      private
+
+      def convert_file(params, converter, options = {})
+        raise Uploadcare::Exception::ConversionError, 'The first argument must be a Hash' unless params.is_a?(Hash)
+
+        params_with_symbolized_keys = params.map { |k, v| [k.to_sym, v] }.to_h
+        params_with_symbolized_keys[:uuid] = uuid
+        result = converter.convert(params_with_symbolized_keys, options)
+        result.success? ? File.info(result.value![:result].first[:uuid]) : result
       end
     end
   end
