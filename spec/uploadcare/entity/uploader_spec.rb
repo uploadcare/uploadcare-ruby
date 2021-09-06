@@ -11,7 +11,7 @@ module Uploadcare
       let!(:big_file) { ::File.open('spec/fixtures/big.jpeg') }
 
       describe 'upload_many' do
-        it 'returns a hash of filenames and uids' do
+        it 'returns a hash of filenames and uids', :aggregate_failures do
           VCR.use_cassette('upload_upload_many') do
             uploads_list = subject.upload([file, another_file])
             expect(uploads_list.length).to eq 2
@@ -22,7 +22,7 @@ module Uploadcare
         end
 
         describe 'upload_one' do
-          it 'returns a file' do
+          it 'returns a file', :aggregate_failures do
             VCR.use_cassette('upload_upload_one') do
               upload = subject.upload(file)
               expect(upload).to be_kind_of(Uploadcare::Entity::File)
@@ -41,14 +41,27 @@ module Uploadcare
           end
         end
 
-        describe 'upload_big_file' do
-          it 'polls server and returns array of files' do
+        describe 'multipart_upload' do
+          let!(:some_var) { nil }
+
+          it 'uploads a file', :aggregate_failures do
             VCR.use_cassette('upload_multipart_upload') do
-              # Minimum size for size to be valid for multiupload is 10 mb
+              # Minimal size for file to be valid for multipart upload is 10 mb
               Uploadcare.config.multipart_size_threshold = 10 * 1024 * 1024
-              file = subject.upload(big_file)
+              expect(some_var).to receive(:to_s).at_least(:once)
+              file = subject.multipart_upload(big_file) { some_var.to_s }
               expect(file).to be_kind_of(Uploadcare::Entity::File)
               expect(file.uuid).not_to be_empty
+            end
+          end
+        end
+
+        describe 'get_upload_from_url_status' do
+          it 'gets a status of upload-from-URL' do
+            VCR.use_cassette('upload_get_upload_from_url_status') do
+              token = 'c6e31082-6bdc-4cb1-bef5-14dd10574d73'
+              status_info = subject.get_upload_from_url_status(token).success
+              expect(status_info[:status]).to eq 'success'
             end
           end
         end

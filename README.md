@@ -126,10 +126,53 @@ files = [File.open("1.jpg"), File.open("1.jpg"]
 Uploadcare::Uploader.upload_files(files)
 
 Uploadcare::Uploader.upload_from_url("https://placekitten.com/96/139")
-
-# multipart upload - can be useful for files bigger than 10 mb
-Uploadcare::Uploader.multipart_upload(File.open("big_file.bin"))
 ```
+It is possible to track progress of the upload-from-URL process. To do that, you should specify the `async` option and get a token:
+
+```ruby
+Uploadcare::Uploader.upload_from_url("https://placekitten.com/96/139", async: true)
+# => "c6e31082-6bdc-4cb3-bef5-14dd10574d72"
+```
+
+After the request for uploading-from-URL is sent, you can check the progress of the upload by sending the `get_upload_from_url_status` request:
+
+```ruby
+Uploadcare::Uploader.get_upload_from_url_status("1251ee66-3631-4416-a2fb-96ba59f5a515")
+# => Success({:size=>28511, :total=>28511, :done=>28511, :uuid=>"b829753b-6b64-4989-a167-ef15e4f3d190", :file_id=>"b859753b-zb64-4989-a167-ef15e4f3a190", :original_filename=>"video.ogg", :is_image=>false, :is_stored=>false, :image_info=>nil, :video_info=>nil, :is_ready=>true, :filename=>"video.ogg", :mime_type=>"audio/ogg", :status=>"success"})
+```
+
+In case of the `async` option is disabled, uploadcare-ruby tries to request the upload status several times (depending on the `max_request_tries` config param) and then returns uploaded file attributes.
+
+```ruby
+# multipart upload - can be useful for files bigger than 10 mb
+Uploadcare::Uploader.multipart_upload(File.open("big_file.bin"), store: true)
+```
+
+For the multipart upload you can pass a block to add some additional logic after each file chunk is uploaded.
+For example to track file uploading progress you can do something like this:
+
+```ruby
+file = File.open("big_file.bin")
+progress = 0
+Uploadcare::Uploader.multipart_upload(file, store: true) do |options|
+  progress += (100.0 / options[:links_count])
+  puts "PROGRESS = #{progress}"
+end
+```
+Output of the code above looks like:
+```console
+PROGRESS = 4.545454545454546
+PROGRESS = 9.090909090909092
+PROGRESS = 13.636363636363637
+...
+```
+Options available in a block:
+- **:chunk_size** - size of each chunk in bytes;
+- **:object** - file object which is going to be uploaded;
+- **:offset** - offset from the beginning of a File object in bytes;
+- **:link_id** - index of a link provided by Uploadcare API. Might be treated as index of a chunk;
+- **:links** - array of links for uploading file's chunks;
+- **:links_count** - count of the array of links.
 
 #### Uploading options
 
