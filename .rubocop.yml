@@ -11,6 +11,7 @@ Style/HashTransformKeys:
   Exclude:
     - 'lib/uploadcare/entity/decorator/paginator.rb'
     - 'lib/uploadcare/client/conversion/video_conversion_client.rb'
+    - 'lib/uploadcare/entity/file.rb'
 
 Gemspec/RequiredRubyVersion:
   Exclude:

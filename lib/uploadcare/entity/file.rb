@@ -13,7 +13,7 @@ module Uploadcare
                   :source, :rekognition_info
 
       # gets file's uuid - even if it's only initialized with url
-      # @return [String]
+      # @returns [String]
       def uuid
         return @entity.uuid if @entity.uuid
 
@@ -24,6 +24,20 @@ module Uploadcare
       # loads file metadata, if it's initialized with url or uuid
       def load
         initialize(File.info(uuid).entity)
+      end
+
+      # The method to convert a document file to another file
+      # gets (conversion) params [Hash], options (store: Boolean) [Hash], converter [Class]
+      # @returns [File]
+      def convert_document(params = {}, options = {}, converter = Conversion::DocumentConverter)
+        convert_file(params, converter, options)
+      end
+
+      # The method to convert a video file to another file
+      # gets (conversion) params [Hash], options (store: Boolean) [Hash], converter [Class]
+      # @returns [File]
+      def convert_video(params = {}, options = {}, converter = Conversion::VideoConverter)
+        convert_file(params, converter, options)
       end
 
       # 'copy' method is used to copy original files or their modified versions to default storage.
@@ -75,6 +89,17 @@ module Uploadcare
       # Instance version of {external_copy}
       def remote_copy(target, **args)
         File.copy(uuid, target: target, **args)
+      end
+
+      private
+
+      def convert_file(params, converter, options = {})
+        raise Uploadcare::Exception::ConversionError, 'The first argument must be a Hash' unless params.is_a?(Hash)
+
+        params_with_symbolized_keys = params.map { |k, v| [k.to_sym, v] }.to_h
+        params_with_symbolized_keys[:uuid] = uuid
+        result = converter.convert(params_with_symbolized_keys, options)
+        result.success? ? File.info(result.value![:result].first[:uuid]) : result
       end
     end
   end

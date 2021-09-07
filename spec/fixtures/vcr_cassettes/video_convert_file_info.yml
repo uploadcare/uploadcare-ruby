@@ -1,0 +1,57 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.uploadcare.com/files/f1821874-3d2e-439b-9e13-d0795a3c1d98/
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.5+json
+      User-Agent:
+      - UploadcareRuby/3.0.5/5d5bb5639e3f2df33674 (Ruby/3.0.2)
+      Date:
+      - Mon, 06 Sep 2021 05:08:26 GMT
+      Authorization:
+      - Uploadcare 5d5bb5639e3f2df33674:98c10bf7844648236704a5dbfb117da9a69f3817
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 06 Sep 2021 05:08:29 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.5+json
+      Content-Length:
+      - '408'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Vary:
+      - Accept
+      Allow:
+      - DELETE, GET, HEAD, OPTIONS
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
+    body:
+      encoding: ASCII-8BIT
+      string: '{"datetime_removed":"2021-07-19T08:32:39.552772Z","datetime_stored":null,"datetime_uploaded":"2021-07-16T11:40:25.916749Z","image_info":null,"is_image":false,"is_ready":true,"mime_type":"audio/ogg","original_file_url":null,"original_filename":"video.ogg","size":276660,"url":"https://api.uploadcare.com/files/f1821874-3d2e-439b-9e13-d0795a3c1d98/","uuid":"f1821874-3d2e-439b-9e13-d0795a3c1d98","source":null}'
+  recorded_at: Mon, 06 Sep 2021 05:08:29 GMT
+recorded_with: VCR 6.0.0
