@@ -8,7 +8,7 @@ http_interactions:
       string: ''
     headers:
       User-Agent:
-      - UploadcareRuby/3.0.5/demopublickey (Ruby/3.0.2)
+      - UploadcareRuby/3.1.0/demopublickey (Ruby/3.0.2)
       Connection:
       - close
       Host:

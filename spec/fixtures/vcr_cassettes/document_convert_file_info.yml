@@ -12,7 +12,7 @@ http_interactions:
       Accept:
       - application/vnd.uploadcare-v0.5+json
       User-Agent:
-      - UploadcareRuby/3.0.5/5d5bb5639e3f2df33674 (Ruby/3.0.2)
+      - UploadcareRuby/3.1.0/5d5bb5639e3f2df33674 (Ruby/3.0.2)
       Date:
       - Mon, 06 Sep 2021 05:03:37 GMT
       Authorization:

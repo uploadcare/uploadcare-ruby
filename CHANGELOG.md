@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.1.0 2021-09-21
+
+- Added documents and videos conversion
+- Added new attributes to the Entity class (variations, video_info, source, rekognition_info)
+- Added an opportunity to add custom logic to large files uploading process
+
 ## 3.0.5 2021-04-15
 
 - Replace Travis-CI with Github Actions
