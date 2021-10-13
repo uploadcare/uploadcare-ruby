@@ -91,7 +91,7 @@ Using Uploadcare is simple, and here are the basics of handling files.
 # => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
 
 # URL for the file, can be used with your website or app right away
-@uc_file.cdn_url
+@uc_file.url
 # => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
 ```
 
@@ -184,11 +184,6 @@ You can override global [`:autostore`](#initialization) option for each upload r
 ```
 
 ### File management
-Most methods are also available through `Uploadcare::Api` object:
-```ruby
-# Same as Uploadcare::Uploader.upload
-Uploadcare::Api.upload("https://placekitten.com/96/139")
-```
 
 Entities are representations of objects in Uploadcare cloud.
 
@@ -273,13 +268,13 @@ Metadata of deleted files is stored permanently.
 
 #### FileList
 
-`Uploadcare::Entity::FileList` represents the whole collection of files (or it's
+`Uploadcare::FileList` represents the whole collection of files (or it's
 subset) and provides a way to iterate through it, making pagination transparent.
-FileList objects can be created using `Uploadcare::Entity.file_list` method.
+FileList objects can be created using `Uploadcare::FileList.file_list` method.
 
 ```ruby
-@list = Uploadcare::Entity.file_list
-# Returns instance of Uploadcare::Api::FileList
+@list = Uploadcare::FileList.file_list
+# Returns instance of Uploadcare::Entity::FileList
 <Hashie::Mash
   next=nil
   per_page=100
@@ -294,7 +289,7 @@ FileList objects can be created using `Uploadcare::Entity.file_list` method.
 @all_files = @list.load
 ```
 
-This method accepts some options to controll which files should be fetched and
+This method accepts some options to control which files should be fetched and
 how they should be fetched:
 
 - **:limit** — Controls page size. Accepts values from 1 to 1000, defaults to 100.
@@ -326,11 +321,11 @@ To simply get all associated objects:
 
 Initially, `FileList` is a paginated collection. It can be navigated using following methods:
 ```ruby
-  @file_list = Uploadcare::Entity::FileList.file_list
+  @file_list = Uploadcare::FileList.file_list
   # Let's assume there are 250 files in cloud. By default, UC loads 100 files. To get next 100 files, do:
   @next_page = @file_list.next_page
   # To get previous page:
-  @previous_page = @next_page.previous_page
+  @previous_page = @file_list.previous_page
 ```
 
 Alternatively, it's possible to iterate through full list of groups or files with `each`:
@@ -351,7 +346,6 @@ That's a requirement of our API.
 @file = "134dc30c-093e-4f48-a5b9-966fe9cb1d01"
 @file2 = "134dc30c-093e-4f48-a5b9-966fe9cb1d02"
 @files_ary = [@file, @file2]
-@files = Uploadcare::Uploader.upload @files_ary
 @group = Uploadcare::Group.create @files
 
 # group can be stored by group ID. It means that all files of a group will be stored on Uploadcare servers permanently

@@ -6,7 +6,7 @@ module Uploadcare
     # @see https://uploadcare.com/docs/api_reference/rest/handling_projects/
     class ProjectClient < RestClient
       # get information about current project
-      # current project is determined by public and private key combination
+      # current project is determined by public and secret key combination
       # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#tag/Project
       def show
         get(uri: '/project/')
