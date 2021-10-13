@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.1 2021-10-13
+
+- Fix Uploadcare::File#store
+- Fix Uploadcare::File#delete
+
 ## 3.1.0 2021-09-21
 
 - Added documents and videos conversion
