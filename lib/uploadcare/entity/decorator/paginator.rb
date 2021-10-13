@@ -44,7 +44,7 @@ module Uploadcare
         #
         # It's possible to avoid loading objects on previous pages by offsetting them first
         def load
-          return if @entity[:next].nil? || @entity[:results].length == @entity[:total]
+          return self if @entity[:next].nil? || @entity[:results].length == @entity[:total]
 
           np = self
           until np.next.nil?

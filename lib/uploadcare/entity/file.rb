@@ -91,6 +91,17 @@ module Uploadcare
         File.copy(uuid, target: target, **args)
       end
 
+      # Store a single file, preventing it from being deleted in 2 weeks
+      # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/storeFile
+      def store
+        File.store(uuid)
+      end
+
+      # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/deleteFile
+      def delete
+        File.delete(uuid)
+      end
+
       private
 
       def convert_file(params, converter, options = {})
