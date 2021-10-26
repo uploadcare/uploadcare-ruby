@@ -52,7 +52,7 @@ And then execute:
 
     $ bundle
 
-If already not, create your project in [Uploadcare dashboard](https://uploadcare.com/dashboard/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby) and copy
+If already not, create your project in [Uploadcare dashboard](https://app.uploadcare.com/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby) and copy
 its API keys from there.
 
 Set your Uploadcare keys in config file or through environment variables:
@@ -75,7 +75,10 @@ Uploadcare.config.secret_key = "demoprivatekey"
 
 This section contains practical usage examples. Please note, everything that
 follows gets way more clear once you've looked through our
-[docs](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby).
+[docs](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
+and [Upload](https://uploadcare.com/api-refs/upload-api/) and [REST](https://uploadcare.com/api-refs/rest-api/) API refs.
+
+You can also find an example project [here](https://github.com/uploadcare/uploadcare-rails-example).
 
 ### Uploading files
 #### Uploading and storing a single file
@@ -295,8 +298,8 @@ how they should be fetched:
 - **:limit** — Controls page size. Accepts values from 1 to 1000, defaults to 100.
 - **:stored** — Can be either `true` or `false`. When true, file list will contain only stored files. When false — only not stored.
 - **:removed** — Can be either `true` or `false`. When true, file list will contain only removed files. When false — all except removed. Defaults to false.
-- **:ordering** — Controls the order of returned files. Available values: `datetime_updated`, `-datetime_updated`, `size`, `-size`. Defaults to `datetime_uploaded`. More info can be found [here](https://uploadcare.com/documentation/rest/#file-files/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby).
-- **:from** — Specifies the starting point for a collection. Resulting collection will contain files from the given value and to the end in a direction set by an **ordering** option. When files are ordered by `datetime_updated` in any direction, accepts either a `DateTime` object or an ISO 8601 string. When files are ordered by size, accepts non-negative integers (size in bytes). More info can be found [here](https://uploadcare.com/documentation/rest/#file-files/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby).
+- **:ordering** — Controls the order of returned files. Available values: `datetime_updated`, `-datetime_updated`, `size`, `-size`. Defaults to `datetime_uploaded`. More info can be found [here](https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/filesList).
+- **:from** — Specifies the starting point for a collection. Resulting collection will contain files from the given value and to the end in a direction set by an **ordering** option. When files are ordered by `datetime_updated` in any direction, accepts either a `DateTime` object or an ISO 8601 string. When files are ordered by size, accepts non-negative integers (size in bytes). More info can be found [here](https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/filesList).
 
 Options used to create a file list can be accessed through `#options` method.
 Note that, once set, they don't affect file fetching process anymore and are
@@ -380,7 +383,7 @@ Uploadcare::Webhook.list
 
 `Project` provides basic info about the connected Uploadcare project. That
 object is also an Hashie::Mash, so every methods out of
-[these](https://uploadcare.com/documentation/rest/#project/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby) will work.
+[these](https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/projectInfo) will work.
 
 ```ruby
 @project = Uploadcare::Project.project
@@ -398,8 +401,6 @@ object is also an Hashie::Mash, so every methods out of
 #### Conversion
 
 ##### Video
-
-Uploadcare can encode video files from all popular formats, adjust their quality, format and dimensions, cut out a video fragment, and generate thumbnails via [REST API](https://uploadcare.com/api-refs/rest-api/v0.6.0/).
 
 After each video file upload you obtain a file identifier in UUID format.
 Then you can use this file identifier to convert your video in multiple ways:
@@ -461,7 +462,7 @@ Params in the response:
   - **original_source** - built path for a particular video with all the conversion operations and parameters.
   - **token** - a processing job token that can be used to get a [job status](https://uploadcare.com/docs/transformations/video-encoding/#status) (see below).
   - **uuid** - UUID of your processed video file.
-  - **thumbnails_group_uuid** - holds :uuid-thumb-group, a UUID of a [file group](https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/groupsList) with thumbnails for an output video, based on the thumbs [operation](https://uploadcare.com/docs/transformations/video-encoding/#operation-thumbs) parameters.
+  - **thumbnails_group_uuid** - holds :uuid-thumb-group, a UUID of a [file group](https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/groupsList) with thumbnails for an output video, based on the thumbs [operation](https://uploadcare.com/docs/transformations/video-encoding/#operation-thumbs) parameters.
 - **problems** - problems related to your processing job, if any.
 
 To convert multiple videos just add params as a hash for each video to the first argument of the `Uploadcare::VideoConverter#convert` method:
@@ -508,11 +509,9 @@ Params in the response:
 - **thumbnails_group_uuid** - holds :uuid-thumb-group, a UUID of a file group with thumbnails for an output video, based on the thumbs operation parameters.
 - **uuid** - a UUID of your processed video file.
 
-More examples and options can be found [here](https://uploadcare.com/docs/transformations/video-encoding/#video-encoding)
+More examples and options can be found [here](https://uploadcare.com/docs/transformations/video-encoding/#video-encoding).
 
 ##### Document
-
-Uploadcare allows converting documents to the following target formats: doc, docx, xls, xlsx, odt, ods, rtf, txt, pdf, jpg, png. Document Conversion works via our [REST API](https://uploadcare.com/api-refs/rest-api/v0.6.0/).
 
 After each document file upload you obtain a file identifier in UUID format.
 Then you can use this file identifier to convert your document to a new format:
