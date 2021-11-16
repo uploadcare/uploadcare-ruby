@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.1.2 2021-11-16
+
+- Add option "signing_secret" to webhooks
+
 ## 3.1.1 2021-10-13
 
 - Fix Uploadcare::File#store

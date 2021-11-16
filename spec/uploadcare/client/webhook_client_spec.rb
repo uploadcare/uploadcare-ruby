@@ -18,7 +18,7 @@ module Uploadcare
             end
           end
 
-          it 'send the :post with params' do
+          it 'sends the :post with params' do
             VCR.use_cassette('rest_webhook_create') do
               expect_any_instance_of(described_class).to receive(:post).with(
                 uri: '/webhooks/',
@@ -51,6 +51,22 @@ module Uploadcare
           context 'and when not sending the param' do
             let(:expected_params) { params.merge(is_active: true) }
             it_behaves_like 'creating a webhook'
+          end
+
+          context 'and when sending a signing secret' do
+            let(:params) do
+              super().merge(is_active: true, signing_secret: '1234')
+            end
+
+            it 'sends the :post with params' do
+              VCR.use_cassette('rest_webhook_create') do
+                expect_any_instance_of(described_class).to receive(:post).with(
+                  uri: '/webhooks/',
+                  content: params.to_json
+                )
+                subject.create(params)
+              end
+            end
           end
         end
 
@@ -90,10 +106,11 @@ module Uploadcare
       describe 'update' do
         it 'updates a webhook' do
           VCR.use_cassette('rest_webhook_update') do
-            sub_id = 616_294
+            sub_id = 887_447
             target_url = 'https://github.com'
             is_active = false
-            response = subject.update(sub_id, target_url: target_url, is_active: is_active)
+            sign_secret = '1234'
+            response = subject.update(sub_id, target_url: target_url, is_active: is_active, signing_secret: sign_secret)
             response_value = response.value!
             expect(response_value[:id]).to eq(sub_id)
             expect(response_value[:target_url]).to eq(target_url)

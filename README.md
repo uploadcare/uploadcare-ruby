@@ -372,9 +372,12 @@ https://uploadcare.com/docs/api_reference/rest/webhooks/
 You can use webhooks to provide notifications about your uploads to target urls.
 This gem lets you create and manage webhooks.
 
+Each webhook payload can be signed with a secret (the `signing_secret` option) to ensure that the request comes from the expected sender.
+More info about secure webhooks [here](https://uploadcare.com/docs/security/secure-webhooks/).
+
 ```ruby
-Uploadcare::Webhook.create(target_url: "https://example.com/listen", event: "file.uploaded", is_active: true)
-Uploadcare::Webhook.update(<webhook_id>, target_url: "https://newexample.com/listen/new", event: "file.uploaded", is_active: true)
+Uploadcare::Webhook.create(target_url: "https://example.com/listen", event: "file.uploaded", is_active: true, signing_secret: "some-secret")
+Uploadcare::Webhook.update(<webhook_id>, target_url: "https://newexample.com/listen/new", event: "file.uploaded", is_active: true, signing_secret: "some-secret")
 Uploadcare::Webhook.delete("https://example.com/listen")
 Uploadcare::Webhook.list
 ```
