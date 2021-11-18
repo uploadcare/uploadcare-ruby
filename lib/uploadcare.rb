@@ -17,6 +17,9 @@ require 'entity/project'
 require 'entity/uploader'
 require 'entity/webhook'
 
+# Param
+require 'param/webhook_signature_verifier'
+
 # General api
 require 'api/api'
 
