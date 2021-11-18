@@ -385,12 +385,12 @@ Uploadcare::Webhook.list
 ### Webhook signature verification
 
 The gem has a helper class to verify a webhook signature from headers - `Uploadcare::Param::WebhookSignatureVerifier`.
-This class accept three important options:
+This class accepts three important options:
 
-- **:webhook_body** — This is a parameters received in the webhook request in json format.
+- **:webhook_body** — This option represents parameters received in the webhook request in json format.
   `NOTE`: if using Rails, you should exclude options "controller", "action" and "post" from the "webhook body".
 - **:signing_secret** — The secret that was set while creating/updating a webhook. This option can be specified as an ENV var with name "UC_SIGNING_SECRET" - then no need to send it to the verifier class.
-- **:x_uc_signature_header** — Th content of the X-Uc-Signature HTTP header in the webhook request.
+- **:x_uc_signature_header** — The content of the `X-Uc-Signature` HTTP header in the webhook request.
 
 Using the `Uploadcare::Param::WebhookSignatureVerifier` class example:
 
@@ -403,7 +403,7 @@ Using the `Uploadcare::Param::WebhookSignatureVerifier` class example:
   Uploadcare::Param::WebhookSignatureVerifier.valid?(signing_secret: signing_secret, x_uc_signature_header: x_uc_signature_header, webhook_body: webhook_body)
 ```
 
-You can write your own verifier though. Example code:
+You can write your own verifier, though. Example code:
 
 ```ruby
 webhook_body_json = '{"payload_hash":"13536412","data":{"uuid":"fe197bf1-9efa-4910-bbb7-5e3ec2637f6c","image_info":{"color_mode":"RGB","format":"JPEG","height":1200,"width":1600,"orientation":1,"dpi":[350,350],"geo_location":{"latitude":43.3835,"longitude":-8.405027777777779},"datetime_original":"2015-08-20T11:06:45","sequence":false},"video_info":null,"mime_type":"image/jpeg","original_filename":"Lighthouse_Torre_de_Hércules_(Tower_of_Hercules)_(21661683502).jpg","size":434405,"is_image":true,"is_ready":true,"datetime_removed":null,"datetime_stored":null,"datetime_uploaded":null,"original_file_url":"https://ucarecdn.com/fe197bf1-9efa-4910-bbb7-5e3ec2637f6c/Lighthouse_Torre_de_Hrcules_Tower_of_Hercules_21661683502.jpg","url":"","source":null,"variations":null,"rekognition_info":null},"hook":{"id":865792,"project_id":130414,"target":"https://example.com/bf63af270b0e4c9e8b31011610acff9e","event":"file.uploaded","is_active":true,"created_at":"2021-10-26T13:43:04.731365Z","updated_at":"2021-10-26T13:43:04.731365Z"},"file":"https://ucarecdn.com/fe197bf1-9efa-4910-bbb7-5e3ec2637f6c/Lighthouse_Torre_de_Hrcules_Tower_of_Hercules_21661683502.jpg"}'

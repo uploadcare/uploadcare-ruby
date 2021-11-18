@@ -3,6 +3,7 @@
 ## 3.2.0 — 2021-11-16
 
 - Added option `signing_secret` to the `Uploadcare::Webhook`
+- Added webhook signature verifier class `Uploadcare::Param::WebhookSignatureVerifier`
 
 ## 3.1.1 — 2021-10-13
 
