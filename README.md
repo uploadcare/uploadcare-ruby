@@ -395,7 +395,7 @@ This class accepts three important options:
 Using the `Uploadcare::Param::WebhookSignatureVerifier` class example:
 
 ```ruby
-  webhook_body = "{\"payload_hash\":\"1844671900\",\"data\":{\"uuid\":\"f08d7c8a-2971-42e0-ab01-780d9039b40b\",\"image_info\":{\"color_mode\":\"RGB\",\"format\":\"JPEG\",\"height\":168,\"width\":300,\"orientation\":null,\"dpi\":null,\"geo_location\":null,\"datetime_original\":null,\"sequence\":false},\"video_info\":null,\"content_info\":{\"mime\":{\"mime\":\"image/jpeg\",\"type\":\"image\",\"subtype\":\"jpeg\"},\"video\":null,\"image\":{\"color_mode\":\"RGB\",\"format\":\"JPEG\",\"height\":168,\"width\":300,\"orientation\":null,\"dpi\":null,\"geo_location\":null,\"datetime_original\":null,\"sequence\":false}},\"mime_type\":\"image/jpeg\",\"original_filename\":\"download.jpeg\",\"size\":10603,\"is_image\":true,\"is_ready\":true,\"datetime_removed\":null,\"datetime_stored\":null,\"datetime_uploaded\":null,\"original_file_url\":\"https://ucarecdn.com/f08d7c8a-2971-42e0-ab01-780d9039b40b/download.jpeg\",\"url\":\"\",\"source\":null,\"variations\":null,\"rekognition_info\":null},\"hook\":{\"id\":889783,\"project_id\":123681,\"target\":\"https://6f48-188-232-175-230.ngrok.io/posts\",\"event\":\"file.uploaded\",\"is_active\":true,\"created_at\":\"2021-11-18T06:17:42.730459Z\",\"updated_at\":\"2021-11-18T06:17:42.730459Z\"},\"file\":\"https://ucarecdn.com/f08d7c8a-2971-42e0-ab01-780d9039b40b/download.jpeg\"}"
+  webhook_body = '{...}'
 
   signing_secret = "12345X"
   x_uc_signature_header = "v1=9b31c7dd83fdbf4a2e12b19d7f2b9d87d547672a325b9492457292db4f513c70"
@@ -406,7 +406,7 @@ Using the `Uploadcare::Param::WebhookSignatureVerifier` class example:
 You can write your own verifier, though. Example code:
 
 ```ruby
-webhook_body_json = '{"payload_hash":"13536412","data":{"uuid":"fe197bf1-9efa-4910-bbb7-5e3ec2637f6c","image_info":{"color_mode":"RGB","format":"JPEG","height":1200,"width":1600,"orientation":1,"dpi":[350,350],"geo_location":{"latitude":43.3835,"longitude":-8.405027777777779},"datetime_original":"2015-08-20T11:06:45","sequence":false},"video_info":null,"mime_type":"image/jpeg","original_filename":"Lighthouse_Torre_de_Hércules_(Tower_of_Hercules)_(21661683502).jpg","size":434405,"is_image":true,"is_ready":true,"datetime_removed":null,"datetime_stored":null,"datetime_uploaded":null,"original_file_url":"https://ucarecdn.com/fe197bf1-9efa-4910-bbb7-5e3ec2637f6c/Lighthouse_Torre_de_Hrcules_Tower_of_Hercules_21661683502.jpg","url":"","source":null,"variations":null,"rekognition_info":null},"hook":{"id":865792,"project_id":130414,"target":"https://example.com/bf63af270b0e4c9e8b31011610acff9e","event":"file.uploaded","is_active":true,"created_at":"2021-10-26T13:43:04.731365Z","updated_at":"2021-10-26T13:43:04.731365Z"},"file":"https://ucarecdn.com/fe197bf1-9efa-4910-bbb7-5e3ec2637f6c/Lighthouse_Torre_de_Hrcules_Tower_of_Hercules_21661683502.jpg"}'
+webhook_body_json = '{...}'
 
 signing_secret = ENV['UC_SIGNING_SECRET']
 x_uc_signature_header = "v1=f4d859ed2fe47b9a4fcc81693d34e58ad12366a841e58a7072c1530483689cc0"
