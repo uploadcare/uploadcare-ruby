@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'rest_client'
+
 module Uploadcare
   module Client
     # API client for getting project info

@@ -2,55 +2,58 @@
 http_interactions:
 - request:
     method: post
-    uri: https://api.uploadcare.com/webhooks/616294/
+    uri: https://api.uploadcare.com/webhooks/887447/
     body:
       encoding: UTF-8
-      string: '{"target_url":"https://github.com","is_active":false}'
+      string: '{"target_url":"https://github.com","is_active":false,"signing_secret":"3ZsQRtl5Ez"}'
     headers:
       Content-Type:
       - application/json
       Accept:
       - application/vnd.uploadcare-v0.5+json
+      User-Agent:
+      - UploadcareRuby/3.1.1/demopublickey (Ruby/3.0.2)
       Date:
-      - Wed, 05 Feb 2020 15:11:50 GMT
+      - Tue, 16 Nov 2021 05:45:13 GMT
       Authorization:
-      - Uploadcare ecd779dc169645ce3c91:52fa9e7757b0c07af9df9212645d76ac00ec00c3
+      - Uploadcare demopublickey:858037812b3dca034de2b35df5c142788bf4bb7f
       Connection:
       - close
       Host:
       - api.uploadcare.com
-      User-Agent:
-      - http.rb/4.3.0
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Wed, 05 Feb 2020 15:11:51 GMT
+      - Tue, 16 Nov 2021 05:45:14 GMT
       Content-Type:
       - application/vnd.uploadcare-v0.5+json
       Content-Length:
-      - '185'
+      - '213'
       Connection:
       - close
       Server:
       - nginx
-      X-Xss-Protection:
-      - 1; mode=block
-      X-Content-Type-Options:
-      - nosniff
+      Warning:
+      - '199 Miscellaneous warning: You are using the demo project'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
       Vary:
       - Accept
       Allow:
       - OPTIONS, POST
-      Access-Control-Allow-Origin:
-      - https://uploadcare.com
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
       X-Frame-Options:
       - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
     body:
       encoding: ASCII-8BIT
-      string: '{"id":616294,"created":"2020-02-05T14:53:01.894511Z","updated":"2020-02-05T15:11:51.528694Z","event":"file.uploaded","target_url":"https://github.com","project":86492,"is_active":false}'
-    http_version: 
-  recorded_at: Wed, 05 Feb 2020 15:11:51 GMT
-recorded_with: VCR 5.0.0
+      string: '{"id":887447,"created":"2021-11-16T05:41:51.040032Z","updated":"2021-11-16T05:45:14.422880Z","event":"file.uploaded","target_url":"https://github.com","project":159,"is_active":false,"signing_secret":"3ZsQRtl5Ez"}'
+  recorded_at: Tue, 16 Nov 2021 05:45:14 GMT
+recorded_with: VCR 6.0.0

@@ -51,6 +51,6 @@ http_interactions:
     body:
       encoding: ASCII-8BIT
       string: '{"id":616294,"created":"2020-02-05T14:53:01.894511Z","updated":"2020-02-05T14:53:01.895307Z","event":"file.uploaded","target_url":"http://ohmyz.sh","project":86492,"is_active":true}'
-    http_version: 
+    http_version:
   recorded_at: Wed, 05 Feb 2020 14:53:01 GMT
 recorded_with: VCR 5.0.0
