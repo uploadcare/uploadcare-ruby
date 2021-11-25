@@ -382,28 +382,34 @@ Uploadcare::Webhook.delete("https://example.com/listen")
 Uploadcare::Webhook.list
 ```
 
-### Webhook signature verification
+##### Webhook signature verification
 
-The gem has a helper class to verify a webhook signature from headers - `Uploadcare::Param::WebhookSignatureVerifier`.
-This class accepts three important options:
+The gem has a helper class to verify a webhook signature from headers —
+`Uploadcare::Param::WebhookSignatureVerifier`. This class accepts three
+important options:
 
-- **:webhook_body** — This option represents parameters received in the webhook request in json format.
-  `NOTE`: if using Rails, you should exclude options "controller", "action" and "post" from the "webhook body".
-- **:signing_secret** — The secret that was set while creating/updating a webhook. This option can be specified as an ENV var with name "UC_SIGNING_SECRET" - then no need to send it to the verifier class.
-- **:x_uc_signature_header** — The content of the `X-Uc-Signature` HTTP header in the webhook request.
+- **:webhook_body** — this option represents parameters received in the webhook
+  request in the JSON format.
+  **NOTE**: if you're using Rails, you should exclude options `controller`,
+  `action` and `post` from the `webhook_body`.
+- **:signing_secret** — the secret that was set while creating/updating a
+  webhook. This option can be specified as an ENV var with the name
+  `UC_SIGNING_SECRET` — then no need to send it to the verifier class.
+- **:x_uc_signature_header** — the content of the `X-Uc-Signature` HTTP header
+  in the webhook request.
 
 Using the `Uploadcare::Param::WebhookSignatureVerifier` class example:
 
 ```ruby
   webhook_body = '{...}'
 
-  signing_secret = "12345X"
-  x_uc_signature_header = "v1=9b31c7dd83fdbf4a2e12b19d7f2b9d87d547672a325b9492457292db4f513c70"
+signing_secret = "12345X"
+x_uc_signature_header = "v1=9b31c7dd83fdbf4a2e12b19d7f2b9d87d547672a325b9492457292db4f513c70"
 
-  Uploadcare::Param::WebhookSignatureVerifier.valid?(signing_secret: signing_secret, x_uc_signature_header: x_uc_signature_header, webhook_body: webhook_body)
+Uploadcare::Param::WebhookSignatureVerifier.valid?(signing_secret: signing_secret, x_uc_signature_header: x_uc_signature_header, webhook_body: webhook_body)
 ```
 
-You can write your own verifier, though. Example code:
+You can write your verifier. Example code:
 
 ```ruby
 webhook_body_json = '{...}'
@@ -421,8 +427,6 @@ else
   puts "WebHook signature mismatch!"
 end
 ```
-
-
 
 #### Project
 
