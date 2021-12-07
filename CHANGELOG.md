@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.1 — 2021-12-07
+
+- Fix dry-configurable warning about deprecated way to set defaults.
+
 ## 3.2.0 — 2021-11-16
 
 - Added option `signing_secret` to the `Uploadcare::Webhook`
