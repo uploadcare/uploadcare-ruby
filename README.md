@@ -119,6 +119,8 @@ Uploadcare supports multiple ways to upload files:
 
 ```ruby
 # Smart upload - detects type of passed object and picks appropriate upload method
+# If you have a large file (more than 100Mb / 10485760 bytes), the uploader will automatically process it with a multipart upload
+
 Uploadcare::Uploader.upload("https://placekitten.com/96/139")
 ```
 
@@ -662,10 +664,10 @@ More examples and options can be found [here](https://uploadcare.com/docs/transf
 ## Useful links
 
 * [Development](https://github.com/uploadcare/uploadcare-ruby/blob/main/DEVELOPMENT.md)
-* [Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
-* [Upload API reference](https://uploadcare.com/api-refs/upload-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
-* [REST API reference](https://uploadcare.com/api-refs/rest-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
-* [Changelog](./CHANGELOG.md)  
-* [Contributing guide](https://github.com/uploadcare/.github/blob/master/CONTRIBUTING.md)  
-* [Security policy](https://github.com/uploadcare/uploadcare-ruby/security/policy)  
-* [Support](https://github.com/uploadcare/.github/blob/master/SUPPORT.md)  
+* [Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
+* [Upload API reference](https://uploadcare.com/api-refs/upload-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
+* [REST API reference](https://uploadcare.com/api-refs/rest-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
+* [Changelog](./CHANGELOG.md)
+* [Contributing guide](https://github.com/uploadcare/.github/blob/master/CONTRIBUTING.md)
+* [Security policy](https://github.com/uploadcare/uploadcare-ruby/security/policy)
+* [Support](https://github.com/uploadcare/.github/blob/master/SUPPORT.md)
