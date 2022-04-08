@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.3.0 — 2022-04-08
+
+- Added `Uploadcare::URLGenerators::AmakaiGenerator`. Use custom domain and CDN provider to deliver files with authenticated URLs.
 ## 3.2.0 — 2021-11-16
 
 - Added option `signing_secret` to the `Uploadcare::Webhook`

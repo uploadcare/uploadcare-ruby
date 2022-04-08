@@ -659,13 +659,29 @@ Params in the response:
 
 More examples and options can be found [here](https://uploadcare.com/docs/transformations/document-conversion/#document-conversion)
 
+## Secure delivery
+
+You can use custom domain and CDN provider to deliver files with authenticated URLs (see [original documentation](https://uploadcare.com/docs/security/secure_delivery/)).
+
+To generate authenticated URL from the library, you should do this:
+
+Choose `Uploadcare::URLGenerators::AmakaiGenerator` or use your generator implementation:
+```ruby
+generator = Uploadcare::URLGenerators::AmakaiGenerator.new(cdn_host: 'example.com', secret_key: 'secret_key'). Optional parameters: ttl: 300, algorithm: 'sha256'
+generator.generate_url(uuid, acl: optional)
+
+generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3") ->
+https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1649405263~acl=/a7d5645e-5cd7-4046-819f-a6a2933bafe3/~hmac=a989cae5342f17013677f5a0e6577fc5594cc4e238fb4c95eda36634eb47018b
+generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3", '/*/') ->
+https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1649405263~acl=/*/~hmac=3ce1152c6af8864b36d4dc721f08ca3cf0b3a20278d7f849e82c6c930d48ccc1
+```
 ## Useful links
 
 * [Development](https://github.com/uploadcare/uploadcare-ruby/blob/main/DEVELOPMENT.md)
-* [Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
-* [Upload API reference](https://uploadcare.com/api-refs/upload-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
-* [REST API reference](https://uploadcare.com/api-refs/rest-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)  
-* [Changelog](./CHANGELOG.md)  
-* [Contributing guide](https://github.com/uploadcare/.github/blob/master/CONTRIBUTING.md)  
-* [Security policy](https://github.com/uploadcare/uploadcare-ruby/security/policy)  
-* [Support](https://github.com/uploadcare/.github/blob/master/SUPPORT.md)  
+* [Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
+* [Upload API reference](https://uploadcare.com/api-refs/upload-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
+* [REST API reference](https://uploadcare.com/api-refs/rest-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
+* [Changelog](./CHANGELOG.md)
+* [Contributing guide](https://github.com/uploadcare/.github/blob/master/CONTRIBUTING.md)
+* [Security policy](https://github.com/uploadcare/uploadcare-ruby/security/policy)
+* [Support](https://github.com/uploadcare/.github/blob/master/SUPPORT.md)
