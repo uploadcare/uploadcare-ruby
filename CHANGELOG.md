@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.3.1 - 2022-04-19
+
+- Fixed README: `Uploadcare::URLGenerators::AmakaiGenerator` > `Uploadcare::SignedUrlGenerators::AmakaiGenerator`
+- Autoload generators constants
+
 ## 3.3.0 — 2022-04-08
 
 - Added `Uploadcare::URLGenerators::AmakaiGenerator`. Use custom domain and CDN provider to deliver files with authenticated URLs.
