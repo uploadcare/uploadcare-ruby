@@ -2,7 +2,7 @@
 
 ## 3.3.1 - 2022-04-19
 
-- Update README `Uploadcare::URLGenerators::AmakaiGenerator > Uploadcare::SignedUrlGenerators::AmakaiGenerator`
+- Fixed README: `Uploadcare::URLGenerators::AmakaiGenerator` > `Uploadcare::SignedUrlGenerators::AmakaiGenerator`
 - Autoload generators constants
 
 ## 3.3.0 — 2022-04-08
