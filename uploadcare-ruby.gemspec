@@ -38,7 +38,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib', 'lib/uploadcare', 'lib/uploadcare/rest']
 
   spec.add_dependency 'api_struct', '~> 1.0.1'
-  spec.add_dependency 'dry-configurable', '~> 0.9'
+  spec.add_dependency 'dry-configurable', '~> 0.15'
   spec.add_dependency 'parallel'
   spec.add_dependency 'retries'
 
