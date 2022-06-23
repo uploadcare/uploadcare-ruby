@@ -39,7 +39,7 @@ module Uploadcare
   # deprecation warnings, we override the dry-configurable's `setting` DSL method.
   def self.setting(name, default:, **options, &block)
     if RUBY_VERSION < '2.6'
-      super name, default = default, &block
+      super name, default, &block
     else
       super
     end
