@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.2 - 2022-07-18
+
+- Fixes dry-configurable deprecation warnings
+
 ## 3.3.1 - 2022-04-19
 
 - Fixed README: `Uploadcare::URLGenerators::AmakaiGenerator` > `Uploadcare::SignedUrlGenerators::AmakaiGenerator`
@@ -7,7 +11,7 @@
 
 ## 3.3.0 — 2022-04-08
 
-- Added `Uploadcare::URLGenerators::AmakaiGenerator`. Use custom domain and CDN provider to deliver files with authenticated URLs.
+- Added `Uploadcare::URLGenerators::AmakaiGenerator`. Use custom domain and CDN provider to deliver files with authenticated URLs
 
 ## 3.2.0 — 2021-11-16
 
@@ -37,6 +41,7 @@
 - Added CI
 
 ## 3.0.3-dev — 2020-03-13
+
 - Added better pagination and iterators for `GroupList` & `FileList`
 
 ## 3.0.2-dev — 2020-03-11
@@ -55,6 +60,7 @@
 ## 3.0.0-dev — 2020-02-18
 
 ### Changed
+
 - Rewrote gem from scratch
 
 ### Added
