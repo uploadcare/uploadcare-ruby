@@ -143,7 +143,7 @@ After the request for uploading-from-URL is sent, you can check the progress of 
 
 ```ruby
 Uploadcare::Uploader.get_upload_from_url_status("1251ee66-3631-4416-a2fb-96ba59f5a515")
-# => Success({:size=>28511, :total=>28511, :done=>28511, :uuid=>"b829753b-6b64-4989-a167-ef15e4f3d190", :file_id=>"b859753b-zb64-4989-a167-ef15e4f3a190", :original_filename=>"video.ogg", :is_image=>false, :is_stored=>false, :image_info=>nil, :video_info=>nil, :is_ready=>true, :filename=>"video.ogg", :mime_type=>"audio/ogg", :status=>"success"})
+# => Success({:size=>453543, :total=>453543, :done=>453543, :uuid=>"5c51a7fe-e45d-42a2-ba5e-79957ff4bdab", :file_id=>"5c51a7fe-e45d-42a2-ba5e-79957ff4bdab", :original_filename=>"2250", :is_image=>true, :is_stored=>false, :image_info=>{:dpi=>[96, 96], :width=>2250, :format=>"JPEG", :height=>2250, :sequence=>false, :color_mode=>"RGB", :orientation=>nil, :geo_location=>nil, :datetime_original=>nil}, :video_info=>nil, :content_info=>{:mime=>{:mime=>"image/jpeg", :type=>"image", :subtype=>"jpeg"}, :image=>{:dpi=>[96, 96], :width=>2250, :format=>"JPEG", :height=>2250, :sequence=>false, :color_mode=>"RGB", :orientation=>nil, :geo_location=>nil, :datetime_original=>nil}}, :is_ready=>true, :filename=>"2250", :mime_type=>"image/jpeg", :metadata=>{}, :status=>"success"})
 ```
 
 In case of the `async` option is disabled, uploadcare-ruby tries to request the upload status several times (depending on the `max_request_tries` config param) and then returns uploaded file attributes.
@@ -188,6 +188,13 @@ You can override global [`:autostore`](#initialization) option for each upload r
 @api.upload_from_url(url, store: :auto)
 ```
 
+You can upload file with custom metadata, for example `subsystem` and `pet`:
+
+```ruby
+@api.upload(files, metadata: { subsystem: 'my_subsystem', pet: 'cat' } )
+@api.upload_from_url(url, metadata: { subsystem: 'my_subsystem', pet: 'cat' })
+```
+
 ### File management
 
 Entities are representations of objects in Uploadcare cloud.
@@ -198,29 +205,103 @@ File entity contains its metadata.
 
 ```ruby
 @file = Uploadcare::File.file("FILE_ID_IN_YOUR_PROJECT")
-{"datetime_removed"=>nil,
- "datetime_stored"=>"2020-01-16T15:03:15.315064Z",
- "datetime_uploaded"=>"2020-01-16T15:03:14.676902Z",
- "image_info"=>
-  {"color_mode"=>"RGB",
-   "orientation"=>nil,
-   "format"=>"JPEG",
-   "sequence"=>false,
-   "height"=>183,
-   "width"=>190,
-   "geo_location"=>nil,
-   "datetime_original"=>nil,
-   "dpi"=>nil},
- "is_image"=>true,
- "is_ready"=>true,
- "mime_type"=>"image/jpeg",
- "original_file_url"=>
-  "https://ucarecdn.com/FILE_ID_IN_YOUR_PROJECT/imagepng.jpeg",
- "original_filename"=>"image.png.jpeg",
- "size"=>5345,
- "url"=>
-  "https://api.uploadcare.com/files/FILE_ID_IN_YOUR_PROJECT/",
- "uuid"=>"8f64f313-e6b1-4731-96c0-6751f1e7a50a"}
+{
+  "datetime_removed"=>nil,
+  "datetime_stored"=>"2018-11-26T12:49:10.477888Z",
+  "datetime_uploaded"=>"2018-11-26T12:49:09.945335Z",
+  "is_image"=>true,
+  "is_ready"=>true,
+  "mime_type"=>"image/jpeg",
+  "original_file_url"=>"https://ucarecdn.com/FILE_ID_IN_YOUR_PROJECT/pineapple.jpg",
+  "original_filename"=>"pineapple.jpg",
+  "size"=>642,
+  "url"=>"https://api.uploadcare.com/files/FILE_ID_IN_YOUR_PROJECT/",
+  "uuid"=>"FILE_ID_IN_YOUR_PROJECT",
+  "variations"=>nil,
+  "content_info"=>{
+    "mime"=>{
+      "mime"=>"image/jpeg",
+      "type"=>"image",
+      "subtype"=>"jpeg"
+    },
+    "image"=>{
+      "format"=>"JPEG",
+      "width"=>500,
+      "height"=>500,
+      "sequence"=>false,
+      "orientation"=>6,
+      "geo_location"=>{
+        "latitude"=>55.62013611111111,
+        "longitude"=>37.66299166666666
+      },
+      "datetime_original"=>"2018-08-20T08:59:50",
+      "dpi"=>[72, 72]
+    }
+  },
+  "metadata"=>{
+    "subsystem"=>"uploader",
+    "pet"=>"cat"
+  },
+  "appdata"=>{
+    "uc_clamav_virus_scan"=>{
+      "data"=>{
+        "infected"=>true,
+        "infected_with"=>"Win.Test.EICAR_HDB-1"
+      },
+      "version"=>"0.104.2",
+      "datetime_created"=>"2021-09-21T11:24:33.159663Z",
+      "datetime_updated"=>"2021-09-21T11:24:33.159663Z"
+    },
+    "remove_bg"=>{
+      "data"=>{
+        "foreground_type"=>"person"
+      },
+      "version"=>"1.0",
+      "datetime_created"=>"2021-07-25T12:24:33.159663Z",
+      "datetime_updated"=>"2021-07-25T12:24:33.159663Z"
+    },
+    "aws_rekognition_detect_labels"=>{
+      "data"=>{
+        "LabelModelVersion"=>"2.0",
+        "Labels"=>[
+          {
+            "Confidence"=>93.41645812988281,
+            "Instances"=>[],
+            "Name"=>"Home Decor",
+            "Parents"=>[]
+          },
+          {
+            "Confidence"=>70.75951385498047,
+            "Instances"=>[],
+            "Name"=>"Linen",
+            "Parents"=>[{ "Name"=>"Home Decor" }]
+          },
+          {
+            "Confidence"=>64.7123794555664,
+            "Instances"=>[],
+            "Name"=>"Sunlight",
+            "Parents"=>[]
+          },
+          {
+            "Confidence"=>56.264793395996094,
+            "Instances"=>[],
+            "Name"=>"Flare",
+            "Parents"=>[{ "Name"=>"Light" }]
+          },
+          {
+            "Confidence"=>50.47153854370117,
+            "Instances"=>[],
+            "Name"=>"Tree",
+            "Parents"=>[{ "Name"=>"Plant" }]
+          }
+        ]
+      },
+      "version"=>"2016-06-27",
+      "datetime_created"=>"2021-09-21T11:25:31.259763Z",
+      "datetime_updated"=>"2021-09-21T11:27:33.359763Z"
+    }
+  }
+}
 
 @file.copy # copies file, returns a new (copied) file metadata
 
@@ -338,6 +419,25 @@ Alternatively, it's possible to iterate through full list of groups or files wit
 @list.each do |file|
   p file.url
 end
+```
+
+#### Custom File Metadata
+
+File metadata is additional, arbitrary data, associated with uploaded file.
+As an example, you could store unique file identifier from your system.
+
+```ruby
+# Get file's metadata keys and values.
+Uploadcare::FileMetadata.index('FILE_ID_IN_YOUR_PROJECT')
+
+# Get the value of a single metadata key.
+Uploadcare::FileMetadata.show('FILE_ID_IN_YOUR_PROJECT', 'KEY')
+
+# Update the value of a single metadata key. If the key does not exist, it will be created.
+Uploadcare::FileMetadata.update('FILE_ID_IN_YOUR_PROJECT', 'KEY', 'VALUE')
+
+# Delete a file's metadata key.
+Uploadcare::FileMetadata.delete('FILE_ID_IN_YOUR_PROJECT', 'KEY')
 ```
 
 #### Group

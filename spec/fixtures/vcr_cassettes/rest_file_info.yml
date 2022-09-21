@@ -2,55 +2,61 @@
 http_interactions:
 - request:
     method: get
-    uri: https://api.uploadcare.com/files/8f64f313-e6b1-4731-96c0-6751f1e7a50a/
+    uri: https://api.uploadcare.com/files/2e17f5d1-d423-4de6-8ee5-6773cc4a7fa6/
     body:
       encoding: UTF-8
       string: ''
     headers:
       Content-Type:
       - application/json
-      Accept:
-      - application/vnd.uploadcare-v0.5+json
+      User-Agent:
+      - UploadcareRuby/3.3.2/99d8e355c5811c2c26ae (Ruby/2.6.0)
       Date:
-      - Mon, 20 Jan 2020 15:53:25 GMT
+      - Mon, 19 Sep 2022 17:27:31 GMT
       Authorization:
-      - Uploadcare c8499ee6dc44194c00d2:30b3c7008968e64d7bebc4499a6ff7cb7f6d8a65
+      - Uploadcare 99d8e355c5811c2c26ae:0abb21ae52a6a9da15bc1a84e6a9ff16aea1af2e
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
       Connection:
       - close
       Host:
       - api.uploadcare.com
-      User-Agent:
-      - http.rb/4.3.0
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 20 Jan 2020 15:53:26 GMT
+      - Mon, 19 Sep 2022 17:27:32 GMT
       Content-Type:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       Content-Length:
-      - '629'
+      - '733'
       Connection:
       - close
       Server:
       - nginx
-      X-Xss-Protection:
-      - 1; mode=block
-      X-Content-Type-Options:
-      - nosniff
+      Warning:
+      - '199 Miscellaneous warning: Please use API version 0.5, not 0.7'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
       Vary:
       - Accept
       Allow:
       - DELETE, GET, HEAD, OPTIONS
-      Access-Control-Allow-Origin:
-      - https://uploadcare.com
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 38c98fa3-76e0-421c-918a-3492c79eb1ba
       X-Frame-Options:
       - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
     body:
       encoding: ASCII-8BIT
-      string: '{"datetime_removed":null,"datetime_stored":"2020-01-16T15:03:15.315064Z","datetime_uploaded":"2020-01-16T15:03:14.676902Z","image_info":{"color_mode":"RGB","orientation":null,"format":"JPEG","sequence":false,"height":183,"width":190,"geo_location":null,"datetime_original":null,"dpi":null},"is_image":true,"is_ready":true,"mime_type":"image/jpeg","original_file_url":"https://ucarecdn.com/8f64f313-e6b1-4731-96c0-6751f1e7a50a/imagepng.jpeg","original_filename":"image.png.jpeg","size":5345,"url":"https://api.uploadcare.com/files/8f64f313-e6b1-4731-96c0-6751f1e7a50a/","uuid":"8f64f313-e6b1-4731-96c0-6751f1e7a50a","source":null}'
-    http_version: 
-  recorded_at: Mon, 20 Jan 2020 15:53:26 GMT
-recorded_with: VCR 5.0.0
+      string: '{"datetime_removed":null,"datetime_stored":null,"datetime_uploaded":"2022-09-19T12:29:59.461061Z","is_image":true,"is_ready":true,"mime_type":"application/octet-stream","original_file_url":"https://ucarecdn.com/2e17f5d1-d423-4de6-8ee5-6773cc4a7fa6/kitten.jpeg","original_filename":"kitten.jpeg","size":1290,"url":"https://api.uploadcare.com/files/2e17f5d1-d423-4de6-8ee5-6773cc4a7fa6/","uuid":"2e17f5d1-d423-4de6-8ee5-6773cc4a7fa6","variations":null,"content_info":{"mime":{"mime":"image/jpeg","type":"image","subtype":"jpeg"},"image":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null}},"metadata":{"subsystem":"new
+        test value"}}'
+  recorded_at: Mon, 19 Sep 2022 17:27:32 GMT
+recorded_with: VCR 6.1.0
