@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: delete
+    uri: https://api.uploadcare.com/groups/nonexistent/
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      User-Agent:
+      - UploadcareRuby/3.3.2/99d8e355c5811c2c26ae (Ruby/2.6.0)
+      Date:
+      - Wed, 21 Sep 2022 16:01:25 GMT
+      Authorization:
+      - Uploadcare 99d8e355c5811c2c26ae:0c165166270de214288d2cd0f0e1038686ce0f00
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Date:
+      - Wed, 21 Sep 2022 16:01:25 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.7+json
+      Content-Length:
+      - '23'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Warning:
+      - '199 Miscellaneous warning: Please use API version 0.5, not 0.7'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Vary:
+      - Accept
+      Allow:
+      - DELETE, GET, HEAD, OPTIONS
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - a220520f-5af4-4a53-a311-416197a267d6
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: ASCII-8BIT
+      string: '{"detail":"Not found."}'
+  recorded_at: Wed, 21 Sep 2022 16:01:25 GMT
+recorded_with: VCR 6.1.0

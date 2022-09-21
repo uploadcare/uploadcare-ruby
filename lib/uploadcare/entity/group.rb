@@ -10,7 +10,7 @@ module Uploadcare
     #
     # @see https://uploadcare.com/docs/api_reference/upload/groups/
     class Group < Entity
-      client_service RestGroupClient, prefix: 'rest', only: :store
+      client_service RestGroupClient, prefix: 'rest', only: %i[store delete]
       client_service GroupClient
 
       attr_entity :id, :datetime_created, :datetime_stored, :files_count, :cdn_url, :url
@@ -20,6 +20,10 @@ module Uploadcare
       # @see https://github.com/rubygarage/api_struct/pull/15
       def self.store(uuid)
         rest_store(uuid)
+      end
+
+      def self.delete(uuid)
+        '200 OK' if rest_delete(uuid).success?
       end
 
       # gets groups's id - even if it's only initialized with cdn_url

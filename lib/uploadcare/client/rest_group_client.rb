@@ -18,6 +18,12 @@ module Uploadcare
         query = options.empty? ? '' : "?#{URI.encode_www_form(options)}"
         get(uri: "/groups/#{query}")
       end
+
+      # Delete a file group by its ID.
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/deleteGroup
+      def delete(uuid)
+        request(method: 'DELETE', uri: "/groups/#{uuid}/")
+      end
     end
   end
 end
