@@ -7,7 +7,7 @@ module Uploadcare
     RSpec.describe Group do
       subject { Group }
       it 'responds to expected methods' do
-        %i[create info store delete].each do |method|
+        %i[create info delete].each do |method|
           expect(subject).to respond_to(method)
         end
       end
