@@ -15,7 +15,7 @@ module Uploadcare
           uuid = '8f64f313-e6b1-4731-96c0-6751f1e7a50a'
           file = subject.info(uuid)
           expect(file).to be_a_kind_of(subject)
-          expect(file).to respond_to(:image_info, :datetime_uploaded, :uuid, :url, :size, :original_filename)
+          expect(file).to respond_to(*File::RESPONSE_PARAMS)
           expect(file.uuid).to eq(uuid)
         end
       end

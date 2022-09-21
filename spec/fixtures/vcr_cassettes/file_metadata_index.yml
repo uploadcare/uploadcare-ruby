@@ -1,0 +1,61 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.uploadcare.com/files/2e17f5d1-d423-4de6-8ee5-6773cc4a7fa6/metadata/
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      User-Agent:
+      - UploadcareRuby/3.3.2/99d8e355c5811c2c26ae (Ruby/2.6.0)
+      Date:
+      - Wed, 21 Sep 2022 08:06:08 GMT
+      Authorization:
+      - Uploadcare 99d8e355c5811c2c26ae:e5c9d1d868195dede3460284f0e3d9443f176b39
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Wed, 21 Sep 2022 08:06:08 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.7+json
+      Content-Length:
+      - '48'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Warning:
+      - '199 Miscellaneous warning: Please use API version 0.5, not 0.7'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Vary:
+      - Accept
+      Allow:
+      - GET, HEAD, OPTIONS
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - c3888e4e-8bbc-4dac-bf63-c9f71d395242
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
+    body:
+      encoding: ASCII-8BIT
+      string: '{"subsystem":"test"}'
+  recorded_at: Wed, 21 Sep 2022 08:06:08 GMT
+recorded_with: VCR 6.1.0
