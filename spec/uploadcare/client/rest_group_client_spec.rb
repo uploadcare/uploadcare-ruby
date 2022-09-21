@@ -37,6 +37,16 @@ module Uploadcare
           end
         end
       end
+
+      describe 'delete' do
+        it "delete a file's group" do
+          VCR.use_cassette('upload_group_delete') do
+            response = subject.delete('bbc75785-9016-4656-9c6e-64a76b45b0b8~2')
+            expect(response.value!).to be_nil
+            expect(response.success?).to be_truthy
+          end
+        end
+      end
     end
   end
 end

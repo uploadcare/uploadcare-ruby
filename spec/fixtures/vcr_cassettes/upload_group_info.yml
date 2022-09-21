@@ -2,32 +2,28 @@
 http_interactions:
 - request:
     method: get
-    uri: https://upload.uploadcare.com/group/info/?group_id=69bafb24-5bfc-45d8-ba85-b3ea88e8eb17~1&pub_key=demopublickey
+    uri: https://upload.uploadcare.com/group/info/?group_id=bbc75785-9016-4656-9c6e-64a76b45b0b8~2&pub_key=demopublickey
     body:
       encoding: UTF-8
       string: ''
     headers:
-      Accept:
-      - application/json
-      Content-Type:
-      - application/json
+      User-Agent:
+      - UploadcareRuby/3.3.2/99d8e355c5811c2c26ae (Ruby/2.6.0)
       Connection:
       - close
       Host:
       - upload.uploadcare.com
-      User-Agent:
-      - http.rb/4.3.0
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Thu, 27 Feb 2020 10:55:15 GMT
+      - Wed, 21 Sep 2022 12:48:52 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '796'
+      - '1806'
       Connection:
       - close
       Server:
@@ -35,23 +31,26 @@ http_interactions:
       Vary:
       - Accept-Encoding
       - Origin
-      Access-Control-Allow-Headers:
-      - DNT, X-PINGOTHER, X-UC-User-Agent
-      X-Content-Type-Options:
-      - nosniff
-      Access-Control-Max-Age:
-      - '1'
-      X-Xss-Protection:
-      - 1; mode=block
-      Access-Control-Allow-Credentials:
-      - 'true'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Methods:
       - GET, HEAD, OPTIONS
+      Access-Control-Allow-Headers:
+      - X-UC-User-Agent, DNT, X-PINGOTHER
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 4bb71b05-ceb6-40a1-b984-8787fdaf03f8
     body:
-      encoding: ASCII-8BIT
-      string: '{"id":"69bafb24-5bfc-45d8-ba85-b3ea88e8eb17~1","datetime_created":"2020-02-27T10:51:34.474296Z","datetime_stored":null,"files_count":1,"cdn_url":"https://ucarecdn.com/69bafb24-5bfc-45d8-ba85-b3ea88e8eb17~1/","url":"https://api.uploadcare.com/groups/69bafb24-5bfc-45d8-ba85-b3ea88e8eb17~1/","files":[{"default_effects":"","is_stored":false,"done":12585265,"file_id":"b94b57bd-f478-4975-a21a-f0fae1118bb1","total":12585265,"size":12585265,"uuid":"b94b57bd-f478-4975-a21a-f0fae1118bb1","is_image":true,"filename":"big.jpeg","video_info":null,"is_ready":true,"original_filename":"big.jpeg","image_info":{"color_mode":"RGB","orientation":1,"format":"JPEG","sequence":false,"height":1901,"width":5684,"geo_location":null,"datetime_original":null,"dpi":[72,72]},"mime_type":"application/octet-stream"}]}'
-    http_version:
-  recorded_at: Thu, 27 Feb 2020 10:55:15 GMT
-recorded_with: VCR 5.0.0
+      encoding: UTF-8
+      string: '{"id":"bbc75785-9016-4656-9c6e-64a76b45b0b8~2","datetime_created":"2022-09-21T12:48:35.157603Z","datetime_stored":null,"files_count":2,"cdn_url":"https://ucarecdn.com/bbc75785-9016-4656-9c6e-64a76b45b0b8~2/","url":"https://api.uploadcare.com/groups/bbc75785-9016-4656-9c6e-64a76b45b0b8~2/","files":[{"size":1290,"total":1290,"done":1290,"uuid":"8ca6e9fa-c6dd-4027-a0fc-b620611f7023","file_id":"8ca6e9fa-c6dd-4027-a0fc-b620611f7023","original_filename":"kitten.jpeg","is_image":true,"is_stored":true,"image_info":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null},"video_info":null,"content_info":{"mime":{"mime":"image/jpeg","type":"image","subtype":"jpeg"},"image":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null}},"is_ready":true,"filename":"kitten.jpeg","mime_type":"application/octet-stream","metadata":{},"default_effects":""},{"size":2375,"total":2375,"done":2375,"uuid":"b8a11440-6fcc-4285-a24d-cc8c60259fec","file_id":"b8a11440-6fcc-4285-a24d-cc8c60259fec","original_filename":"another_kitten.jpeg","is_image":true,"is_stored":true,"image_info":{"dpi":[96,96],"width":100,"format":"JPEG","height":100,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null},"video_info":null,"content_info":{"mime":{"mime":"image/jpeg","type":"image","subtype":"jpeg"},"image":{"dpi":[96,96],"width":100,"format":"JPEG","height":100,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null}},"is_ready":true,"filename":"another_kitten.jpeg","mime_type":"application/octet-stream","metadata":{},"default_effects":""}]}'
+  recorded_at: Wed, 21 Sep 2022 12:48:52 GMT
+recorded_with: VCR 6.1.0
