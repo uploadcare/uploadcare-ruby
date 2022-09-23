@@ -41,6 +41,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'dry-configurable', '~> 0.9'
   spec.add_dependency 'parallel'
   spec.add_dependency 'retries'
+  spec.add_dependency 'mimemagic'
 
   spec.add_development_dependency 'byebug'
   spec.add_development_dependency 'rake', '~> 13.0'
