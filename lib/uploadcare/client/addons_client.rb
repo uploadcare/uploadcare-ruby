@@ -45,9 +45,9 @@ module Uploadcare
       def remove_bg_status(uuid)
         get(uri: "/addons/remove_bg/execute/status/#{query_params(uuid)}")
       end
-      
+
       private
-      
+
       def query_params(uuid)
         "?#{URI.encode_www_form(request_id: uuid)}"
       end
