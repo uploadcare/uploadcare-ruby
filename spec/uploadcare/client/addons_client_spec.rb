@@ -65,7 +65,7 @@ module Uploadcare
             uuid = 'c3446e41-9eb0-4301-aeb4-356d0fdcf9af'
             response = subject.remove_bg_status(uuid)
             expect(response.success).to(
-              eq({ status: 'done', result: { file_id: 'bc37b996-916d-4ed7-b230-fa71a4290cb3' }})
+              eq({ status: 'done', result: { file_id: 'bc37b996-916d-4ed7-b230-fa71a4290cb3' } })
             )
           end
         end

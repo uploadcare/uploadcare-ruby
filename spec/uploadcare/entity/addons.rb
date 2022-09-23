@@ -2,6 +2,7 @@
 
 require 'spec_helper'
 
+# rubocop:disable Metrics/ModuleLength
 module Uploadcare
   module Entity
     RSpec.describe Addons do
@@ -120,3 +121,4 @@ module Uploadcare
     end
   end
 end
+# rubocop:enable Metrics/ModuleLength
