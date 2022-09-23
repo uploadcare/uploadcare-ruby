@@ -537,6 +537,47 @@ else
 end
 ```
 
+#### Add-Ons
+
+An `Add-On` is an application implemented by Uploadcare that accepts uploaded files as an input and can produce other files and/or appdata as an output.
+
+##### AWS Rekognition
+
+```ruby
+# Execute AWS Rekognition Add-On for a given target to detect labels in an image. Note: Detected labels are stored in the file's appdata.
+Uploadcare::Addons.ws_rekognition_detect_labels('FILE_ID_IN_YOUR_PROJECT')
+
+# Check the status of AWS Rekognition.
+Uploadcare::Addons.ws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_LABELS')
+```
+
+##### ClamAV
+
+```ruby
+# ClamAV virus checking Add-On for a given target.
+Uploadcare::Addons.uc_clamav_virus_scan('FILE_ID_IN_YOUR_PROJECT')
+
+# Checking and purge infected file.
+Uploadcare::Addons.uc_clamav_virus_scan('FILE_ID_IN_YOUR_PROJECT', purge_infected: true )
+
+# Check the status ClamAV virus scan.
+Uploadcare::Addons.uc_clamav_virus_scan_status('RETURNED_ID_FROM_UC_CLAMAV_VIRUS_SCAN')
+```
+
+##### Remove.bg
+
+```ruby
+# Remove background image removal Add-On for a given target.
+Uploadcare::Addons.remove_bg('FILE_ID_IN_YOUR_PROJECT')
+
+# You can pass optional parameters.
+# See the full list of parameters here: https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/removeBgExecute
+Uploadcare::Addons.remove_bg('FILE_ID_IN_YOUR_PROJECT', crop: true, type_level: '2')
+
+# Check the status background image removal.
+Uploadcare::Addons.remove_bg('RETURNED_ID_FROM_REMOVE_BG')
+```
+
 #### Project
 
 `Project` provides basic info about the connected Uploadcare project. That
