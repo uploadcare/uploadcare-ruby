@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.uploadcare.com/addons/uc_clamav_virus_scan/execute/
+    body:
+      encoding: UTF-8
+      string: '{"target":"nonexistent","params":{}}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      User-Agent:
+      - UploadcareRuby/3.3.2/5d5bb5639e3f2df33674 (Ruby/2.6.0)
+      Date:
+      - Fri, 23 Sep 2022 11:57:58 GMT
+      Authorization:
+      - Uploadcare 5d5bb5639e3f2df33674:b926e078c382ad9f39c1f7785a8d99885946da61
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Date:
+      - Fri, 23 Sep 2022 11:57:59 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.7+json
+      Content-Length:
+      - '36'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Warning:
+      - '199 Miscellaneous warning: Please use API version 0.5, not 0.7'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Vary:
+      - Accept
+      Allow:
+      - OPTIONS, POST
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - c2432813-4253-44ce-9e31-0aa280cb578a
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: ASCII-8BIT
+      string: '{"target":["Must be a valid UUID."]}'
+  recorded_at: Fri, 23 Sep 2022 11:57:59 GMT
+recorded_with: VCR 6.1.0
