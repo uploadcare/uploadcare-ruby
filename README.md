@@ -25,6 +25,7 @@ wrapping Upload and REST APIs.
     * [File](#file)
     * [FileList](#filelist)
     * [Pagination](#pagination)
+    * [Custom File Metadata](#custom-file-metadata)
     * [Group](#group)
     * [GroupList](#grouplist)
     * [Webhook](#webhook)
