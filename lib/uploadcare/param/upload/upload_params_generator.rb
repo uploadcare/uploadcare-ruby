@@ -14,7 +14,7 @@ module Uploadcare
               'UPLOADCARE_PUB_KEY' => Uploadcare.config.public_key,
               'UPLOADCARE_STORE' => store(options[:store]),
               'signature' => (Upload::SignatureGenerator.call if Uploadcare.config.sign_uploads)
-            }.merge(metadata(options)).reject { |_k, v| v.nil? }
+            }.merge(metadata(options)).compact
           end
 
           private

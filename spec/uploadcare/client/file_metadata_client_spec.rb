@@ -11,7 +11,7 @@ module Uploadcare
       let(:key) { 'subsystem' }
 
       describe 'index' do
-        it "shows file's metadata keys and values" do
+        it 'shows file metadata keys and values' do
           VCR.use_cassette('file_metadata_index') do
             response = subject.index(uuid)
             expect(response.value![:subsystem]).to eq('test')
@@ -39,7 +39,7 @@ module Uploadcare
       end
 
       describe 'delete' do
-        it "delete a file's metadata key" do
+        it 'delete a file metadata key' do
           VCR.use_cassette('file_metadata_delete') do
             response = subject.delete(uuid, key)
             expect(response.value!).to be_nil
