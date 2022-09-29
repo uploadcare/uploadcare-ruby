@@ -575,7 +575,7 @@ Uploadcare::Addons.remove_bg('FILE_ID_IN_YOUR_PROJECT')
 Uploadcare::Addons.remove_bg('FILE_ID_IN_YOUR_PROJECT', crop: true, type_level: '2')
 
 # Check the status background image removal.
-Uploadcare::Addons.remove_bg('RETURNED_ID_FROM_REMOVE_BG')
+Uploadcare::Addons.remove_bg_status('RETURNED_ID_FROM_REMOVE_BG')
 ```
 
 #### Project
