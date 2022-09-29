@@ -7,7 +7,7 @@ module Uploadcare
     RSpec.describe File do
       subject { File }
       it 'responds to expected methods' do
-        expect(subject).to respond_to(:info, :copy, :store)
+        expect(subject).to respond_to(:info, :copy, :delete, :store)
       end
 
       it 'represents a file as entity' do
@@ -24,6 +24,13 @@ module Uploadcare
         VCR.use_cassette('rest_file_info_fail') do
           uuid = 'nonexistent'
           expect { subject.info(uuid) }.to raise_error(RequestError)
+        end
+      end
+
+      it 'raises error when trying to delete nonexistent file' do
+        VCR.use_cassette('rest_file_delete_nonexistent') do
+          uuid = 'nonexistent'
+          expect { subject.delete(uuid) }.to raise_error(RequestError)
         end
       end
 

@@ -29,7 +29,7 @@ module Uploadcare
       end
 
       describe 'ws_rekognition_detect_labels' do
-        it 'execute aws rekognition' do
+        it 'executes aws rekognition' do
           VCR.use_cassette('ws_rekognition_detect_labels') do
             uuid = 'ff4d3d37-4de0-4f6d-a7db-8cdabe7fc768'
             response = subject.ws_rekognition_detect_labels(uuid)
@@ -49,7 +49,7 @@ module Uploadcare
       end
 
       describe 'remove_bg' do
-        it 'execute background image removal' do
+        it 'executes background image removal' do
           VCR.use_cassette('remove_bg') do
             uuid = 'ff4d3d37-4de0-4f6d-a7db-8cdabe7fc768'
             params = { crop: true, type_level: '2' }

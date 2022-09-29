@@ -8,7 +8,7 @@ module Uploadcare
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Add-Ons
     class AddonsClient < RestClient
       # Execute ClamAV virus checking Add-On for a given target.
-      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/awsRekognitionExecute
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/ucClamavVirusScanExecute
       def uc_clamav_virus_scan(uuid, params = {})
         content = { target: uuid, params: params }.to_json
         post(uri: '/addons/uc_clamav_virus_scan/execute/', content: content)
