@@ -28,7 +28,7 @@ module Uploadcare
         end
       end
 
-      it 'show file_metadata' do
+      it 'shows file_metadata' do
         VCR.use_cassette('file_metadata_show') do
           response = subject.show(uuid, key)
           expect(response).to eq('test')
@@ -42,7 +42,7 @@ module Uploadcare
         end
       end
 
-      it 'update file_metadata' do
+      it 'updates file_metadata' do
         VCR.use_cassette('file_metadata_update') do
           new_value = 'new test value'
           response = subject.update(uuid, key, new_value)
@@ -50,7 +50,7 @@ module Uploadcare
         end
       end
 
-      it 'create file_metadata if it does not exist' do
+      it 'creates file_metadata if it does not exist' do
         VCR.use_cassette('file_metadata_create') do
           key = 'new_key'
           value = 'some value'
@@ -59,7 +59,7 @@ module Uploadcare
         end
       end
 
-      it 'delete file_metadata' do
+      it 'deletes file_metadata' do
         VCR.use_cassette('file_metadata_delete') do
           response = subject.delete(uuid, key)
           expect(response).to eq('200 OK')
