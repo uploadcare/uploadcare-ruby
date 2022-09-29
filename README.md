@@ -574,7 +574,7 @@ Uploadcare::Addons.remove_bg('FILE_ID_IN_YOUR_PROJECT')
 # See the full list of parameters here: https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/removeBgExecute
 Uploadcare::Addons.remove_bg('FILE_ID_IN_YOUR_PROJECT', crop: true, type_level: '2')
 
-# Check the status background image removal.
+# Check the status of background image removal.
 Uploadcare::Addons.remove_bg_status('RETURNED_ID_FROM_REMOVE_BG')
 ```
 
