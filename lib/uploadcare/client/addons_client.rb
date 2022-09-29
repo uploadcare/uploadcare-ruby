@@ -9,7 +9,7 @@ module Uploadcare
     class AddonsClient < RestClient
       # Execute ClamAV virus checking Add-On for a given target.
       # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/awsRekognitionExecute
-      def uc_clamav_virus_scan(uuid, **params)
+      def uc_clamav_virus_scan(uuid, params = {})
         content = { target: uuid, params: params }.to_json
         post(uri: '/addons/uc_clamav_virus_scan/execute/', content: content)
       end
@@ -35,7 +35,7 @@ module Uploadcare
 
       # Execute remove.bg background image removal Add-On for a given target.
       # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/removeBgExecute
-      def remove_bg(uuid, **params)
+      def remove_bg(uuid, params = {})
         content = { target: uuid, params: params }.to_json
         post(uri: '/addons/remove_bg/execute/', content: content)
       end
