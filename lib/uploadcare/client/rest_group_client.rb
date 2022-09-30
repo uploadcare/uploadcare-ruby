@@ -7,9 +7,21 @@ module Uploadcare
     # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#tag/Group/paths/~1groups~1%3Cuuid%3E~1storage~1/put
     class RestGroupClient < RestClient
       # store all files in a group
-      # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#tag/Group/paths/~1groups~1%3Cuuid%3E~1storage~1/put
       def store(uuid)
-        put(uri: "/groups/#{uuid}/storage/")
+        files = info(uuid).success[:files]
+        files.each_slice(100) do |file_chunk|
+          file_chunk.each do |file|
+            ::Uploadcare::Client::FileClient.new.store(file[:uuid])
+          end
+        end
+
+        Dry::Monads::Success(true)
+      end
+
+      # Get a file group by its ID.
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/groupInfo
+      def info(uuid)
+        get(uri: "/groups/#{uuid}/")
       end
 
       # return paginated list of groups
