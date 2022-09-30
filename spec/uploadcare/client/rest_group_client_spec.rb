@@ -18,7 +18,7 @@ module Uploadcare
       end
 
       describe 'info' do
-        it 'get a file group by its ID.' do
+        it 'gets a file group by its ID.' do
           VCR.use_cassette('rest_info_group') do
             group_id = '47e6cf32-e5a8-4ff4-b48f-14d7304b42dd~2'
             response = subject.info(group_id)
