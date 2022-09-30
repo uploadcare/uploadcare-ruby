@@ -10,7 +10,7 @@ module Uploadcare
     #
     # @see https://uploadcare.com/docs/api_reference/upload/groups/
     class Group < Entity
-      client_service RestGroupClient, prefix: 'rest', only: %i[store delete]
+      client_service RestGroupClient, prefix: 'rest', only: %i[store info delete]
       client_service GroupClient
 
       attr_entity :id, :datetime_created, :datetime_stored, :files_count, :cdn_url, :url
@@ -20,6 +20,11 @@ module Uploadcare
       # @see https://github.com/rubygarage/api_struct/pull/15
       def self.store(uuid)
         rest_store(uuid)
+      end
+
+      # Get a file group by its ID.
+      def self.rest_info(uuid)
+        rest_info(uuid)
       end
 
       def self.delete(uuid)
