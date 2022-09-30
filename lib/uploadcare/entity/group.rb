@@ -23,7 +23,7 @@ module Uploadcare
       end
 
       def self.delete(uuid)
-        '200 OK' if rest_delete(uuid).success?
+        rest_delete(uuid).success || '200 OK'
       end
 
       # gets groups's id - even if it's only initialized with cdn_url
