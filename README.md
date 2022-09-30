@@ -457,6 +457,9 @@ That's a requirement of our API.
 # group can be stored by group ID. It means that all files of a group will be stored on Uploadcare servers permanently
 Uploadcare::Group.store(group.id)
 
+# get a file group by its ID.
+Uploadcare::Group.rest_info(group.id)
+
 # group can be deleted by group ID.
 Uploadcare::Group.delete(group.id)
 ```
