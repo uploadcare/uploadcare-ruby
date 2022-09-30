@@ -22,7 +22,7 @@ module Uploadcare
         end
 
         def delete(uuid, key)
-          '200 OK' if ::Uploadcare::Client::FileMetadataClient.new.delete(uuid, key).success?
+          ::Uploadcare::Client::FileMetadataClient.new.delete(uuid, key).success || '200 OK'
         end
       end
     end

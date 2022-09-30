@@ -13,7 +13,7 @@ module Uploadcare
       # removed: [true|false]
       # stored: [true|false]
       # limit: (1..1000)
-      # ordering: ["datetime_uploaded"|"-datetime_uploaded"|"size"|"-size"]
+      # ordering: ["datetime_uploaded"|"-datetime_uploaded"]
       # from: number of files skipped
       def file_list(options = {})
         query = options.empty? ? '' : "?#{URI.encode_www_form(options)}"
