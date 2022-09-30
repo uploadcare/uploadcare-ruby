@@ -29,7 +29,7 @@ module Uploadcare
       end
 
       describe 'update' do
-        it 'update file metadata value by key' do
+        it 'updates file metadata value by key' do
           VCR.use_cassette('file_metadata_update') do
             new_value = 'new test value'
             response = subject.update(uuid, key, new_value)
@@ -39,7 +39,7 @@ module Uploadcare
       end
 
       describe 'delete' do
-        it 'delete a file metadata key' do
+        it 'deletes a file metadata key' do
           VCR.use_cassette('file_metadata_delete') do
             response = subject.delete(uuid, key)
             expect(response.value!).to be_nil
