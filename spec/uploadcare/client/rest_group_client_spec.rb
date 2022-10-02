@@ -12,7 +12,7 @@ module Uploadcare
           VCR.use_cassette('rest_store_group') do
             group_id = '47e6cf32-e5a8-4ff4-b48f-14d7304b42dd~2'
             response = subject.store(group_id)
-            expect(response.success).to be_truthy
+            expect(response.success).to be_nil
           end
         end
       end
