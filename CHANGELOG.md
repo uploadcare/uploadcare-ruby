@@ -1,5 +1,27 @@
 # Changelog
 
+## 4.0.0 2022-02-10
+### Changed
+
+- For `Uploadcare::File#info`
+  - File information doesn't return `image_info` and `video_info` fields anymore
+  - Field `content_info` that includes mime-type, image (dimensions, format, etc), video information (duration, format, bitrate, etc), audio information, etc
+  - Field `metadata` that includes arbitrary metadata associated with a file
+  - Field `appdata` that includes dictionary of application names and data associated with these applications
+  - Removed `rekognition_info` in favor of `appdata`
+  - Parameter `add_fields` was renamed to `include`
+- For `Uploadcare::FileList#file_list`
+  - Remove the option of sorting the file list by file size
+- For `Uploadcare::Group#store`
+  - Change response format
+
+### Added
+
+- Add Uploadcare API interface:
+    - Uploadcare::FileMetadata
+    - Uploadcare::Addons
+- Added a possibility to delete a Group
+
 ## 3.3.2 - 2022-07-18
 
 - Fixes dry-configurable deprecation warnings
