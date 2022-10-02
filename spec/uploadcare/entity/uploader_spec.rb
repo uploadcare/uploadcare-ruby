@@ -48,8 +48,8 @@ module Uploadcare
             VCR.use_cassette('upload_multipart_upload') do
               # Minimal size for file to be valid for multipart upload is 10 mb
               Uploadcare.config.multipart_size_threshold = 10 * 1024 * 1024
-              expect(some_var).to receive(:to_s).at_least(:once)
-              file = subject.multipart_upload(big_file) { some_var.to_s }
+              expect(some_var).to receive(:to_s).at_least(:once).and_call_original
+              file = subject.multipart_upload(big_file) { some_var }
               expect(file).to be_kind_of(Uploadcare::Entity::File)
               expect(file.uuid).not_to be_empty
             end
