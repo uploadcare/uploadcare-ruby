@@ -11,13 +11,13 @@ module Uploadcare
       def store(uuid)
         files = info(uuid).success[:files]
         client = ::Uploadcare::Client::FileClient.new
-        files.each_slice(Uploadcare.config.file_chunk_size) do |file_chunk|
-          file_chunk.each do |file|
-            client.store(file[:uuid])
+        Dry::Monads::Success(
+          files.each_slice(Uploadcare.config.file_chunk_size) do |file_chunk|
+            file_chunk.each do |file|
+              client.store(file[:uuid])
+            end
           end
-        end
-
-        Dry::Monads::Success(true)
+        )
       end
 
       # Get a file group by its ID.
