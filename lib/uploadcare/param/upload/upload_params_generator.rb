@@ -9,7 +9,7 @@ module Uploadcare
       class UploadParamsGenerator
         # @see https://uploadcare.com/docs/api_reference/upload/request_based/
         class << self
-          def call(**options)
+          def call(options = {})
             {
               'UPLOADCARE_PUB_KEY' => Uploadcare.config.public_key,
               'UPLOADCARE_STORE' => store(options[:store]),
@@ -26,7 +26,7 @@ module Uploadcare
             store
           end
 
-          def metadata(**options)
+          def metadata(options = {})
             return {} if options[:metadata].nil?
 
             options[:metadata].each_with_object({}) do |(k, v), res|
