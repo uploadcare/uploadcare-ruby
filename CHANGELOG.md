@@ -11,16 +11,16 @@
   - Removed `rekognition_info` in favor of `appdata`
   - Parameter `add_fields` was renamed to `include`
 - For `Uploadcare::FileList#file_list`
-  - Remove the option of sorting the file list by file size
+  - Removed the option of sorting the file list by file size
 - For `Uploadcare::Group#store`
-  - Change response format
+  - Changed response format
 
 ### Added
 
 - Add Uploadcare API interface:
     - Uploadcare::FileMetadata
     - Uploadcare::Addons
-- Added a possibility to delete a Group
+- Added an option to delete a Group
 
 ## 3.3.2 - 2022-07-18
 
