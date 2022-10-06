@@ -8,7 +8,7 @@ module Uploadcare
       subject { AddonsClient.new }
 
       describe 'uc_clamav_virus_scan' do
-        it 'scan the file for viruses' do
+        it 'scans the file for viruses' do
           VCR.use_cassette('uc_clamav_virus_scan') do
             uuid = 'ff4d3d37-4de0-4f6d-a7db-8cdabe7fc768'
             params = { purge_infected: true }
