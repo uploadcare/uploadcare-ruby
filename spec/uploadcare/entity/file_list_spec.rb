@@ -21,7 +21,7 @@ module Uploadcare
 
       it 'accepts arguments' do
         VCR.use_cassette('rest_file_list_params') do
-          fl_with_params = FileList.file_list(limit: 2, ordering: 'size')
+          fl_with_params = FileList.file_list(limit: 2, ordering: '-datetime_uploaded')
           expect(fl_with_params.meta.per_page).to eq 2
         end
       end
