@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: delete
-    uri: https://api.uploadcare.com/files/nonexistent/storage/
+    uri: https://api.uploadcare.com/groups/bbc75785-9016-4656-9c6e-64a76b45b0b8~2/
     body:
       encoding: UTF-8
       string: ''
@@ -12,26 +12,24 @@ http_interactions:
       Accept:
       - application/vnd.uploadcare-v0.7+json
       User-Agent:
-      - UploadcareRuby/3.3.2/5d5bb5639e3f2df33674 (Ruby/2.6.0)
+      - UploadcareRuby/3.3.2/99d8e355c5811c2c26ae (Ruby/2.6.0)
       Date:
-      - Thu, 29 Sep 2022 18:36:27 GMT
+      - Wed, 21 Sep 2022 12:49:54 GMT
       Authorization:
-      - Uploadcare 5d5bb5639e3f2df33674:b66c4857b84326a62c4fd90d7e8a9e018cb13147
+      - Uploadcare 99d8e355c5811c2c26ae:15e6be2e6161f5cd832652c41444813cd02a12e5
       Connection:
       - close
       Host:
       - api.uploadcare.com
   response:
     status:
-      code: 404
-      message: Not Found
+      code: 204
+      message: No Content
     headers:
       Date:
-      - Thu, 29 Sep 2022 18:36:27 GMT
-      Content-Type:
-      - application/vnd.uploadcare-v0.7+json
+      - Wed, 21 Sep 2022 12:49:55 GMT
       Content-Length:
-      - '23'
+      - '0'
       Connection:
       - close
       Server:
@@ -43,17 +41,19 @@ http_interactions:
       Vary:
       - Accept
       Allow:
-      - DELETE, GET, HEAD, OPTIONS, POST, PUT
+      - DELETE, GET, HEAD, OPTIONS
       X-Xss-Protection:
       - 1; mode=block
       X-Content-Type-Options:
       - nosniff
       X-Uploadcare-Request-Id:
-      - acfeca30-bb13-477d-99cd-a8d690bd23a7
+      - ed95dd9b-c623-4623-bf7e-cfdb454a338f
       X-Frame-Options:
       - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
     body:
       encoding: ASCII-8BIT
-      string: '{"detail":"Not found."}'
-  recorded_at: Thu, 29 Sep 2022 18:36:27 GMT
+      string: ''
+  recorded_at: Wed, 21 Sep 2022 12:49:55 GMT
 recorded_with: VCR 6.1.0

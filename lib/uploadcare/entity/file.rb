@@ -100,7 +100,7 @@ module Uploadcare
         File.store(uuid)
       end
 
-      # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/deleteFile
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/deleteFileStorage
       def delete
         File.delete(uuid)
       end
