@@ -1,11 +1,11 @@
 ---
 http_interactions:
 - request:
-    method: delete
-    uri: https://api.uploadcare.com/files/nonexistent/storage/
+    method: post
+    uri: https://api.uploadcare.com/addons/uc_clamav_virus_scan/execute/
     body:
       encoding: UTF-8
-      string: ''
+      string: '{"target":"nonexistent","params":{}}'
     headers:
       Content-Type:
       - application/json
@@ -14,24 +14,24 @@ http_interactions:
       User-Agent:
       - UploadcareRuby/3.3.2/5d5bb5639e3f2df33674 (Ruby/2.6.0)
       Date:
-      - Thu, 29 Sep 2022 18:36:27 GMT
+      - Fri, 23 Sep 2022 11:57:58 GMT
       Authorization:
-      - Uploadcare 5d5bb5639e3f2df33674:b66c4857b84326a62c4fd90d7e8a9e018cb13147
+      - Uploadcare 5d5bb5639e3f2df33674:b926e078c382ad9f39c1f7785a8d99885946da61
       Connection:
       - close
       Host:
       - api.uploadcare.com
   response:
     status:
-      code: 404
-      message: Not Found
+      code: 400
+      message: Bad Request
     headers:
       Date:
-      - Thu, 29 Sep 2022 18:36:27 GMT
+      - Fri, 23 Sep 2022 11:57:59 GMT
       Content-Type:
       - application/vnd.uploadcare-v0.7+json
       Content-Length:
-      - '23'
+      - '36'
       Connection:
       - close
       Server:
@@ -43,17 +43,17 @@ http_interactions:
       Vary:
       - Accept
       Allow:
-      - DELETE, GET, HEAD, OPTIONS, POST, PUT
+      - OPTIONS, POST
       X-Xss-Protection:
       - 1; mode=block
       X-Content-Type-Options:
       - nosniff
       X-Uploadcare-Request-Id:
-      - acfeca30-bb13-477d-99cd-a8d690bd23a7
+      - c2432813-4253-44ce-9e31-0aa280cb578a
       X-Frame-Options:
       - SAMEORIGIN
     body:
       encoding: ASCII-8BIT
-      string: '{"detail":"Not found."}'
-  recorded_at: Thu, 29 Sep 2022 18:36:27 GMT
+      string: '{"target":["Must be a valid UUID."]}'
+  recorded_at: Fri, 23 Sep 2022 11:57:59 GMT
 recorded_with: VCR 6.1.0

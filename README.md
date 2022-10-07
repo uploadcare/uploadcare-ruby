@@ -382,8 +382,8 @@ how they should be fetched:
 - **:limit** — Controls page size. Accepts values from 1 to 1000, defaults to 100.
 - **:stored** — Can be either `true` or `false`. When true, file list will contain only stored files. When false — only not stored.
 - **:removed** — Can be either `true` or `false`. When true, file list will contain only removed files. When false — all except removed. Defaults to false.
-- **:ordering** — Controls the order of returned files. Available values: `datetime_updated`, `-datetime_updated`, `size`, `-size`. Defaults to `datetime_uploaded`. More info can be found [here](https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/filesList).
-- **:from** — Specifies the starting point for a collection. Resulting collection will contain files from the given value and to the end in a direction set by an **ordering** option. When files are ordered by `datetime_updated` in any direction, accepts either a `DateTime` object or an ISO 8601 string. When files are ordered by size, accepts non-negative integers (size in bytes). More info can be found [here](https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/filesList).
+- **:ordering** — Controls the order of returned files. Available values: `datetime_updated`, `-datetime_updated`. Defaults to `datetime_uploaded`. More info can be found [here](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/filesList).
+- **:from** — Specifies the starting point for a collection. Resulting collection will contain files from the given value and to the end in a direction set by an **ordering** option. When files are ordered by `datetime_updated` in any direction, accepts either a `DateTime` object or an ISO 8601 string. When files are ordered by size, accepts non-negative integers (size in bytes). More info can be found [here](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/filesList).
 
 Options used to create a file list can be accessed through `#options` method.
 Note that, once set, they don't affect file fetching process anymore and are
@@ -537,11 +537,52 @@ else
 end
 ```
 
+#### Add-Ons
+
+An `Add-On` is an application implemented by Uploadcare that accepts uploaded files as an input and can produce other files and/or appdata as an output.
+
+##### AWS Rekognition
+
+```ruby
+# Execute AWS Rekognition Add-On for a given target to detect labels in an image. Note: Detected labels are stored in the file's appdata.
+Uploadcare::Addons.ws_rekognition_detect_labels('FILE_ID_IN_YOUR_PROJECT')
+
+# Check the status of AWS Rekognition.
+Uploadcare::Addons.ws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_LABELS')
+```
+
+##### ClamAV
+
+```ruby
+# ClamAV virus checking Add-On for a given target.
+Uploadcare::Addons.uc_clamav_virus_scan('FILE_ID_IN_YOUR_PROJECT')
+
+# Checking and purge infected file.
+Uploadcare::Addons.uc_clamav_virus_scan('FILE_ID_IN_YOUR_PROJECT', purge_infected: true )
+
+# Check the status ClamAV virus scan.
+Uploadcare::Addons.uc_clamav_virus_scan_status('RETURNED_ID_FROM_UC_CLAMAV_VIRUS_SCAN')
+```
+
+##### Remove.bg
+
+```ruby
+# Remove background image removal Add-On for a given target.
+Uploadcare::Addons.remove_bg('FILE_ID_IN_YOUR_PROJECT')
+
+# You can pass optional parameters.
+# See the full list of parameters here: https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/removeBgExecute
+Uploadcare::Addons.remove_bg('FILE_ID_IN_YOUR_PROJECT', crop: true, type_level: '2')
+
+# Check the status of background image removal.
+Uploadcare::Addons.remove_bg_status('RETURNED_ID_FROM_REMOVE_BG')
+```
+
 #### Project
 
 `Project` provides basic info about the connected Uploadcare project. That
 object is also an Hashie::Mash, so every methods out of
-[these](https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/projectInfo) will work.
+[these](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/projectInfo) will work.
 
 ```ruby
 @project = Uploadcare::Project.project
@@ -620,7 +661,7 @@ Params in the response:
   - **original_source** - built path for a particular video with all the conversion operations and parameters.
   - **token** - a processing job token that can be used to get a [job status](https://uploadcare.com/docs/transformations/video-encoding/#status) (see below).
   - **uuid** - UUID of your processed video file.
-  - **thumbnails_group_uuid** - holds :uuid-thumb-group, a UUID of a [file group](https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/groupsList) with thumbnails for an output video, based on the thumbs [operation](https://uploadcare.com/docs/transformations/video-encoding/#operation-thumbs) parameters.
+  - **thumbnails_group_uuid** - holds :uuid-thumb-group, a UUID of a [file group](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/groupsList) with thumbnails for an output video, based on the thumbs [operation](https://uploadcare.com/docs/transformations/video-encoding/#operation-thumbs) parameters.
 - **problems** - problems related to your processing job, if any.
 
 To convert multiple videos just add params as a hash for each video to the first argument of the `Uploadcare::VideoConverter#convert` method:
