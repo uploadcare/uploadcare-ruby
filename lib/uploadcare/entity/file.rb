@@ -6,11 +6,14 @@ module Uploadcare
     #
     # @see https://uploadcare.com/docs/api_reference/rest/handling_projects/
     class File < Entity
+      RESPONSE_PARAMS = %i[
+        datetime_removed datetime_stored datetime_uploaded is_image is_ready mime_type original_file_url
+        original_filename size url uuid variations content_info metadata appdata source
+      ].freeze
+
       client_service FileClient
 
-      attr_entity :datetime_removed, :datetime_stored, :datetime_uploaded, :image_info, :is_image, :is_ready,
-                  :mime_type, :original_file_url, :original_filename, :size, :url, :uuid, :variations, :video_info,
-                  :source, :rekognition_info
+      attr_entity(*RESPONSE_PARAMS)
 
       # gets file's uuid - even if it's only initialized with url
       # @returns [String]
@@ -97,7 +100,7 @@ module Uploadcare
         File.store(uuid)
       end
 
-      # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/deleteFile
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/deleteFileStorage
       def delete
         File.delete(uuid)
       end

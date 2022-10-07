@@ -1,0 +1,61 @@
+---
+http_interactions:
+- request:
+    method: put
+    uri: https://api.uploadcare.com/files/2e17f5d1-d423-4de6-8ee5-6773cc4a7fa6/metadata/new_key/
+    body:
+      encoding: UTF-8
+      string: '"some value"'
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - UploadcareRuby/3.3.2/99d8e355c5811c2c26ae (Ruby/2.6.0)
+      Date:
+      - Tue, 20 Sep 2022 07:34:01 GMT
+      Authorization:
+      - Uploadcare 99d8e355c5811c2c26ae:eeb30505be2fa6333ff5949384e418657712fb87
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 201
+      message: Created
+    headers:
+      Date:
+      - Tue, 20 Sep 2022 07:34:02 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.7+json
+      Content-Length:
+      - '12'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Warning:
+      - '199 Miscellaneous warning: Please use API version 0.5, not 0.7'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Vary:
+      - Accept
+      Allow:
+      - DELETE, GET, HEAD, OPTIONS, PUT
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 58133b5c-fa76-42f6-8f37-1f5aa04b266a
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
+    body:
+      encoding: ASCII-8BIT
+      string: '"some value"'
+  recorded_at: Tue, 20 Sep 2022 07:34:02 GMT
+recorded_with: VCR 6.1.0

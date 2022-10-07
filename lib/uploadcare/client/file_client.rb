@@ -29,9 +29,9 @@ module Uploadcare
         post(uri: '/files/', content: body)
       end
 
-      # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/deleteFile
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/deleteFileStorage
       def delete(uuid)
-        request(method: 'DELETE', uri: "/files/#{uuid}/")
+        request(method: 'DELETE', uri: "/files/#{uuid}/storage/")
       end
 
       # Store a single file, preventing it from being deleted in 2 weeks

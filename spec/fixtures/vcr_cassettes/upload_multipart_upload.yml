@@ -5,34 +5,32 @@ http_interactions:
     uri: https://upload.uploadcare.com/multipart/start/
     body:
       encoding: UTF-8
-      string: "-----------------------f4dfcb3b86e4a9faff02edcd0cbaee22c9a2d3bc93\r\nContent-Disposition:
-        form-data; name=\"UPLOADCARE_PUB_KEY\"\r\n\r\nc8499ee6dc44194c00d2\r\n-----------------------f4dfcb3b86e4a9faff02edcd0cbaee22c9a2d3bc93\r\nContent-Disposition:
-        form-data; name=\"UPLOADCARE_STORE\"\r\n\r\n0\r\n-----------------------f4dfcb3b86e4a9faff02edcd0cbaee22c9a2d3bc93\r\nContent-Disposition:
-        form-data; name=\"filename\"\r\n\r\nbig.jpg\r\n-----------------------f4dfcb3b86e4a9faff02edcd0cbaee22c9a2d3bc93\r\nContent-Disposition:
-        form-data; name=\"size\"\r\n\r\n14679474\r\n-----------------------f4dfcb3b86e4a9faff02edcd0cbaee22c9a2d3bc93\r\nContent-Disposition:
-        form-data; name=\"content_type\"\r\n\r\napplication/octet-stream\r\n-----------------------f4dfcb3b86e4a9faff02edcd0cbaee22c9a2d3bc93--\r\n"
+      string: "-----------------------8a700b659fd459bc0664bfc3913833eb6c138e1d12\r\nContent-Disposition:
+        form-data; name=\"UPLOADCARE_PUB_KEY\"\r\n\r\n99d8e355c5811c2c26ae\r\n-----------------------8a700b659fd459bc0664bfc3913833eb6c138e1d12\r\nContent-Disposition:
+        form-data; name=\"UPLOADCARE_STORE\"\r\n\r\n0\r\n-----------------------8a700b659fd459bc0664bfc3913833eb6c138e1d12\r\nContent-Disposition:
+        form-data; name=\"filename\"\r\n\r\nbig.jpeg\r\n-----------------------8a700b659fd459bc0664bfc3913833eb6c138e1d12\r\nContent-Disposition:
+        form-data; name=\"size\"\r\n\r\n10487050\r\n-----------------------8a700b659fd459bc0664bfc3913833eb6c138e1d12\r\nContent-Disposition:
+        form-data; name=\"content_type\"\r\n\r\napplication/octet-stream\r\n-----------------------8a700b659fd459bc0664bfc3913833eb6c138e1d12--\r\n"
     headers:
-      Accept:
-      - application/json
+      User-Agent:
+      - UploadcareRuby/3.3.2/99d8e355c5811c2c26ae (Ruby/2.6.0)
       Content-Type:
-      - multipart/form-data; boundary=---------------------f4dfcb3b86e4a9faff02edcd0cbaee22c9a2d3bc93
+      - multipart/form-data; boundary=---------------------8a700b659fd459bc0664bfc3913833eb6c138e1d12
       Connection:
       - close
       Host:
       - upload.uploadcare.com
-      User-Agent:
-      - http.rb/4.3.0
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Thu, 23 Jan 2020 13:03:13 GMT
+      - Tue, 20 Sep 2022 20:48:24 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '1596'
+      - '1599'
       Connection:
       - close
       Server:
@@ -40,34 +38,35 @@ http_interactions:
       Vary:
       - Accept-Encoding
       - Origin
-      Access-Control-Allow-Headers:
-      - DNT, X-PINGOTHER, X-UC-User-Agent
-      X-Content-Type-Options:
-      - nosniff
-      Access-Control-Max-Age:
-      - '1'
-      X-Xss-Protection:
-      - 1; mode=block
-      Access-Control-Allow-Credentials:
-      - 'true'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Methods:
       - POST, OPTIONS
-    body:
-      encoding: ASCII-8BIT
-      string: '{"parts":["https://uploadcare.s3-accelerate.amazonaws.com/d8c914e3-3aef-4976-b0b6-855a9638da2d/big.jpg?partNumber=1&uploadId=CS0G.NW9gLI4Sp6rpfvYjezk.kn7hFKjaDRCwHwEh1F7lhSHezIwdQeFf19sg0C2wklpXq3Sa43hKehb6YEyjP6cABRiQ8vNdMbwEuSOUriJPA4F68godAaaP1jHS.Tk&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Expires=86400&X-Amz-Credential=AKIAI24Z75ZC7N6QJQHA%2F20200123%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-SignedHeaders=host&X-Amz-Date=20200123T130313Z&X-Amz-Signature=5c514bdf7d4ab3fc3a3cf45d57dc013870a82472fcae36572cbfb0bdf19f0383","https://uploadcare.s3-accelerate.amazonaws.com/d8c914e3-3aef-4976-b0b6-855a9638da2d/big.jpg?partNumber=2&uploadId=CS0G.NW9gLI4Sp6rpfvYjezk.kn7hFKjaDRCwHwEh1F7lhSHezIwdQeFf19sg0C2wklpXq3Sa43hKehb6YEyjP6cABRiQ8vNdMbwEuSOUriJPA4F68godAaaP1jHS.Tk&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Expires=86400&X-Amz-Credential=AKIAI24Z75ZC7N6QJQHA%2F20200123%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-SignedHeaders=host&X-Amz-Date=20200123T130313Z&X-Amz-Signature=a4d93e4b4ae072b4a5537aa5abf6f34d41df511a71b1eee7fbaf5382d1c850be","https://uploadcare.s3-accelerate.amazonaws.com/d8c914e3-3aef-4976-b0b6-855a9638da2d/big.jpg?partNumber=3&uploadId=CS0G.NW9gLI4Sp6rpfvYjezk.kn7hFKjaDRCwHwEh1F7lhSHezIwdQeFf19sg0C2wklpXq3Sa43hKehb6YEyjP6cABRiQ8vNdMbwEuSOUriJPA4F68godAaaP1jHS.Tk&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Expires=86400&X-Amz-Credential=AKIAI24Z75ZC7N6QJQHA%2F20200123%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-SignedHeaders=host&X-Amz-Date=20200123T130313Z&X-Amz-Signature=a58ad64a1e632cf212637d0a5dab983cafcb36a93fb4daf0db00781095725daf"],"uuid":"d8c914e3-3aef-4976-b0b6-855a9638da2d"}'
-    http_version: 
-  recorded_at: Thu, 23 Jan 2020 13:03:13 GMT
-- request:
-    method: put
-    uri: https://uploadcare.s3-accelerate.amazonaws.com/d8c914e3-3aef-4976-b0b6-855a9638da2d/big.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAI24Z75ZC7N6QJQHA/20200123/us-east-1/s3/aws4_request&X-Amz-Date=20200123T130313Z&X-Amz-Expires=86400&X-Amz-Signature=5c514bdf7d4ab3fc3a3cf45d57dc013870a82472fcae36572cbfb0bdf19f0383&X-Amz-SignedHeaders=host&partNumber=1&uploadId=CS0G.NW9gLI4Sp6rpfvYjezk.kn7hFKjaDRCwHwEh1F7lhSHezIwdQeFf19sg0C2wklpXq3Sa43hKehb6YEyjP6cABRiQ8vNdMbwEuSOUriJPA4F68godAaaP1jHS.Tk
+      Access-Control-Allow-Headers:
+      - X-UC-User-Agent, X-PINGOTHER, DNT
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - cc0e0bbf-df44-4755-8cbf-aaffab314c82
     body:
       encoding: UTF-8
-      string: 5 MB string in binary
+      string: '{"uuid":"940b6a1b-491b-4189-92f0-c8d895f2e5a6","parts":["https://uploadcare.s3-accelerate.amazonaws.com/940b6a1b-491b-4189-92f0-c8d895f2e5a6/big.jpeg?uploadId=Xnk21sw6soElx1ACgGICpuk9fMevNEs8abEQaXtthvOvbOfLsiQKVbihV9voEMYy0T.4iJP6r4X6eOpZDTmcUc51LO7pkQJ7d_2qob4W1VhJpG2vycHF1ifrHkWc8ljQ&partNumber=1&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5C7IQCBHORWBLSGS%2F20220920%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220920T204824Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=d5efa0c2568e1df9e27d267e5af3bf0931f0b4cf06e4168c5f8cee6166e8e655","https://uploadcare.s3-accelerate.amazonaws.com/940b6a1b-491b-4189-92f0-c8d895f2e5a6/big.jpeg?uploadId=Xnk21sw6soElx1ACgGICpuk9fMevNEs8abEQaXtthvOvbOfLsiQKVbihV9voEMYy0T.4iJP6r4X6eOpZDTmcUc51LO7pkQJ7d_2qob4W1VhJpG2vycHF1ifrHkWc8ljQ&partNumber=2&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5C7IQCBHORWBLSGS%2F20220920%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220920T204824Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=4f04e4c69c365dfe771958115cfa312fc04333e9d73906475ac2c5684d19f978","https://uploadcare.s3-accelerate.amazonaws.com/940b6a1b-491b-4189-92f0-c8d895f2e5a6/big.jpeg?uploadId=Xnk21sw6soElx1ACgGICpuk9fMevNEs8abEQaXtthvOvbOfLsiQKVbihV9voEMYy0T.4iJP6r4X6eOpZDTmcUc51LO7pkQJ7d_2qob4W1VhJpG2vycHF1ifrHkWc8ljQ&partNumber=3&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5C7IQCBHORWBLSGS%2F20220920%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20220920T204824Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=4325908bf458ebc4b388fd0c38aafbbe5e4edcb7542a1afbcdda628c235eedb4"]}'
+  recorded_at: Tue, 20 Sep 2022 20:48:24 GMT
+- request:
+    method: put
+    uri: https://uploadcare.s3-accelerate.amazonaws.com/940b6a1b-491b-4189-92f0-c8d895f2e5a6/big.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5C7IQCBHORWBLSGS/20220920/us-east-1/s3/aws4_request&X-Amz-Date=20220920T204824Z&X-Amz-Expires=86400&X-Amz-Signature=4f04e4c69c365dfe771958115cfa312fc04333e9d73906475ac2c5684d19f978&X-Amz-SignedHeaders=host&partNumber=2&uploadId=Xnk21sw6soElx1ACgGICpuk9fMevNEs8abEQaXtthvOvbOfLsiQKVbihV9voEMYy0T.4iJP6r4X6eOpZDTmcUc51LO7pkQJ7d_2qob4W1VhJpG2vycHF1ifrHkWc8ljQ
+    body:
+      encoding: UTF-8
+      string: Big string (5) MB
     headers:
-      Accept:
-      - application/json
       Content-Type:
       - application/octet-stream
       Connection:
@@ -75,7 +74,7 @@ http_interactions:
       Host:
       - uploadcare.s3-accelerate.amazonaws.com
       User-Agent:
-      - http.rb/4.3.0
+      - http.rb/5.1.0
   response:
     status:
       code: 200
@@ -86,13 +85,13 @@ http_interactions:
       Connection:
       - close
       X-Amz-Id-2:
-      - KPImERA3QoNsKJb+wF1kVOYCXxOH3ydfUqKSOpJrhH44mYEIum9xMgbuP067CdvF+W6MQE+si5g=
+      - 2k1mbSGRBijfKBjS2iaqO7cOpyZjJxciljBMgCuoCvLeKwezW0GnyB7pLkIUMsLZUGeGgG/M0Tg=
       X-Amz-Request-Id:
-      - 49423F5B7457ACF4
+      - E2NXBAWWM3GN834T
       Date:
-      - Thu, 23 Jan 2020 13:03:18 GMT
+      - Tue, 20 Sep 2022 20:48:27 GMT
       Etag:
-      - '"be18919d68022a42053129186a3c7da1"'
+      - '"79b281060d337b9b2b84ccf390adcf74"'
       X-Amz-Server-Side-Encryption:
       - AES256
       Server:
@@ -100,25 +99,22 @@ http_interactions:
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 ec9e3bc729d9c6d55ed32446408ad62f.cloudfront.net (CloudFront)
+      - 1.1 5492e1c9a06f2320204e7fcc383cff5c.cloudfront.net (CloudFront)
       X-Amz-Cf-Pop:
-      - FRA2-C2
+      - FRA60-P3
       X-Amz-Cf-Id:
-      - YAapyVivTrdXmYS7voMWf0KeET_L1dbd64nbbhrcf3yFvYqfTjUrNA==
+      - XK9Jca4XeGeHhdzdqseG6SByG0BhiKnmXYFgDO60v4E510RDPH2UyQ==
     body:
       encoding: ASCII-8BIT
       string: ''
-    http_version: 
-  recorded_at: Thu, 23 Jan 2020 13:03:18 GMT
+  recorded_at: Tue, 20 Sep 2022 20:48:26 GMT
 - request:
     method: put
-    uri: https://uploadcare.s3-accelerate.amazonaws.com/d8c914e3-3aef-4976-b0b6-855a9638da2d/big.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAI24Z75ZC7N6QJQHA/20200123/us-east-1/s3/aws4_request&X-Amz-Date=20200123T130313Z&X-Amz-Expires=86400&X-Amz-Signature=a4d93e4b4ae072b4a5537aa5abf6f34d41df511a71b1eee7fbaf5382d1c850be&X-Amz-SignedHeaders=host&partNumber=2&uploadId=CS0G.NW9gLI4Sp6rpfvYjezk.kn7hFKjaDRCwHwEh1F7lhSHezIwdQeFf19sg0C2wklpXq3Sa43hKehb6YEyjP6cABRiQ8vNdMbwEuSOUriJPA4F68godAaaP1jHS.Tk
+    uri: https://uploadcare.s3-accelerate.amazonaws.com/940b6a1b-491b-4189-92f0-c8d895f2e5a6/big.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5C7IQCBHORWBLSGS/20220920/us-east-1/s3/aws4_request&X-Amz-Date=20220920T204824Z&X-Amz-Expires=86400&X-Amz-Signature=4325908bf458ebc4b388fd0c38aafbbe5e4edcb7542a1afbcdda628c235eedb4&X-Amz-SignedHeaders=host&partNumber=3&uploadId=Xnk21sw6soElx1ACgGICpuk9fMevNEs8abEQaXtthvOvbOfLsiQKVbihV9voEMYy0T.4iJP6r4X6eOpZDTmcUc51LO7pkQJ7d_2qob4W1VhJpG2vycHF1ifrHkWc8ljQ
     body:
       encoding: UTF-8
-      string: 5 MB string in binary
+      string: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
     headers:
-      Accept:
-      - application/json
       Content-Type:
       - application/octet-stream
       Connection:
@@ -126,7 +122,7 @@ http_interactions:
       Host:
       - uploadcare.s3-accelerate.amazonaws.com
       User-Agent:
-      - http.rb/4.3.0
+      - http.rb/5.1.0
   response:
     status:
       code: 200
@@ -137,13 +133,13 @@ http_interactions:
       Connection:
       - close
       X-Amz-Id-2:
-      - 4U/5cvO6NIRd+bgLqhgKlEmhal6e3pabLZEwYhftDB+79VYoa8QYgbj8gjQiR0lrk9NcAC8vV0c=
+      - WWFpk+hfQigcuCw2JR+Wp2z418YGQMEY3h3poqjfjNdKY5lFFAc4Yf3usUBB3Ag88Xrfn7e7dLo=
       X-Amz-Request-Id:
-      - E252405AA1F0E700
+      - F6VJPMK1MJKQN2JX
       Date:
-      - Thu, 23 Jan 2020 13:03:22 GMT
+      - Tue, 20 Sep 2022 20:48:28 GMT
       Etag:
-      - '"f4ff1342ee44e1c27405fb7c88a18140"'
+      - '"47b0e5426050dc6b4c12375159fc528f"'
       X-Amz-Server-Side-Encryption:
       - AES256
       Server:
@@ -151,25 +147,22 @@ http_interactions:
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 216b2e0a8a27f8fca1b540a1c4ea6922.cloudfront.net (CloudFront)
+      - 1.1 f06c87fa57d0c9fd7439d7fdbd148c62.cloudfront.net (CloudFront)
       X-Amz-Cf-Pop:
-      - FRA2-C2
+      - FRA60-P3
       X-Amz-Cf-Id:
-      - ey0AKh_C00bwD1RXPFAUhRGyloWv0mIl-GlYhDAxsLWg8g0VV6JtWQ==
+      - sjuKMROx1eFafDASYeZk1X4q4WdBOxf2Q9rSNN-reTAHqPtmZIoT-Q==
     body:
       encoding: ASCII-8BIT
       string: ''
-    http_version: 
-  recorded_at: Thu, 23 Jan 2020 13:03:22 GMT
+  recorded_at: Tue, 20 Sep 2022 20:48:27 GMT
 - request:
     method: put
-    uri: https://uploadcare.s3-accelerate.amazonaws.com/d8c914e3-3aef-4976-b0b6-855a9638da2d/big.jpg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAI24Z75ZC7N6QJQHA/20200123/us-east-1/s3/aws4_request&X-Amz-Date=20200123T130313Z&X-Amz-Expires=86400&X-Amz-Signature=a58ad64a1e632cf212637d0a5dab983cafcb36a93fb4daf0db00781095725daf&X-Amz-SignedHeaders=host&partNumber=3&uploadId=CS0G.NW9gLI4Sp6rpfvYjezk.kn7hFKjaDRCwHwEh1F7lhSHezIwdQeFf19sg0C2wklpXq3Sa43hKehb6YEyjP6cABRiQ8vNdMbwEuSOUriJPA4F68godAaaP1jHS.Tk
+    uri: https://uploadcare.s3-accelerate.amazonaws.com/940b6a1b-491b-4189-92f0-c8d895f2e5a6/big.jpeg?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIA5C7IQCBHORWBLSGS/20220920/us-east-1/s3/aws4_request&X-Amz-Date=20220920T204824Z&X-Amz-Expires=86400&X-Amz-Signature=d5efa0c2568e1df9e27d267e5af3bf0931f0b4cf06e4168c5f8cee6166e8e655&X-Amz-SignedHeaders=host&partNumber=1&uploadId=Xnk21sw6soElx1ACgGICpuk9fMevNEs8abEQaXtthvOvbOfLsiQKVbihV9voEMYy0T.4iJP6r4X6eOpZDTmcUc51LO7pkQJ7d_2qob4W1VhJpG2vycHF1ifrHkWc8ljQ
     body:
       encoding: UTF-8
-      string: 3 MB string in binary
+      string: Big string (5) MB
     headers:
-      Accept:
-      - application/json
       Content-Type:
       - application/octet-stream
       Connection:
@@ -177,7 +170,7 @@ http_interactions:
       Host:
       - uploadcare.s3-accelerate.amazonaws.com
       User-Agent:
-      - http.rb/4.3.0
+      - http.rb/5.1.0
   response:
     status:
       code: 200
@@ -188,13 +181,13 @@ http_interactions:
       Connection:
       - close
       X-Amz-Id-2:
-      - 7qoevhxZd5lfo4bcCUDrq2Ab/wliYiK2dP00eMO92r1ZdMjuAkV/dhllmKGQzHDbsp0PGZ4x5ow=
+      - aQlyr1z9NoT3IgXO/bynSpHHJWIXER+SjEDsDQ0Vn2GpPaWYO663pJxUeMOMau6z6zEmEjwrZgI=
       X-Amz-Request-Id:
-      - '088A0D5FA1AD3EC9'
+      - F6VZB67XVQPJP0CN
       Date:
-      - Thu, 23 Jan 2020 13:03:26 GMT
+      - Tue, 20 Sep 2022 20:48:28 GMT
       Etag:
-      - '"b37ea7944af3a36e79a9c4e803b0afc0"'
+      - '"6ef57f8210e0e4c5ba8332d00ec08231"'
       X-Amz-Server-Side-Encryption:
       - AES256
       Server:
@@ -202,46 +195,43 @@ http_interactions:
       X-Cache:
       - Miss from cloudfront
       Via:
-      - 1.1 56fad5a50ef67bd961b9722ed0931839.cloudfront.net (CloudFront)
+      - 1.1 231be1c97cc722fa08b64d21072ebfac.cloudfront.net (CloudFront)
       X-Amz-Cf-Pop:
-      - FRA2-C2
+      - FRA60-P3
       X-Amz-Cf-Id:
-      - K2Lq84BVetMN-KWtnCYtmvI2je1yhXs-j4QIiYU9fPz1Md_9nzhRmw==
+      - v2jpqk95LzNzhQLTww_-Kfx2oaGyc92UHBV0KZnjnQfHtG0NEfq0Qw==
     body:
       encoding: ASCII-8BIT
       string: ''
-    http_version: 
-  recorded_at: Thu, 23 Jan 2020 13:03:25 GMT
+  recorded_at: Tue, 20 Sep 2022 20:48:27 GMT
 - request:
     method: post
     uri: https://upload.uploadcare.com/multipart/complete/
     body:
       encoding: UTF-8
-      string: "-----------------------86861ae86ae21f739a9befba64db0b3ed3662d821c\r\nContent-Disposition:
-        form-data; name=\"UPLOADCARE_PUB_KEY\"\r\n\r\nc8499ee6dc44194c00d2\r\n-----------------------86861ae86ae21f739a9befba64db0b3ed3662d821c\r\nContent-Disposition:
-        form-data; name=\"uuid\"\r\n\r\nd8c914e3-3aef-4976-b0b6-855a9638da2d\r\n-----------------------86861ae86ae21f739a9befba64db0b3ed3662d821c--\r\n"
+      string: "-----------------------5f625bb964c26e7c41f0f3fb06d1da87163722737c\r\nContent-Disposition:
+        form-data; name=\"UPLOADCARE_PUB_KEY\"\r\n\r\n99d8e355c5811c2c26ae\r\n-----------------------5f625bb964c26e7c41f0f3fb06d1da87163722737c\r\nContent-Disposition:
+        form-data; name=\"uuid\"\r\n\r\n940b6a1b-491b-4189-92f0-c8d895f2e5a6\r\n-----------------------5f625bb964c26e7c41f0f3fb06d1da87163722737c--\r\n"
     headers:
-      Accept:
-      - application/json
+      User-Agent:
+      - UploadcareRuby/3.3.2/99d8e355c5811c2c26ae (Ruby/2.6.0)
       Content-Type:
-      - multipart/form-data; boundary=---------------------86861ae86ae21f739a9befba64db0b3ed3662d821c
+      - multipart/form-data; boundary=---------------------5f625bb964c26e7c41f0f3fb06d1da87163722737c
       Connection:
       - close
       Host:
       - upload.uploadcare.com
-      User-Agent:
-      - http.rb/4.3.0
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Thu, 23 Jan 2020 13:03:27 GMT
+      - Tue, 20 Sep 2022 20:48:29 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '492'
+      - '728'
       Connection:
       - close
       Server:
@@ -249,23 +239,26 @@ http_interactions:
       Vary:
       - Accept-Encoding
       - Origin
-      Access-Control-Allow-Headers:
-      - DNT, X-PINGOTHER, X-UC-User-Agent
-      X-Content-Type-Options:
-      - nosniff
-      Access-Control-Max-Age:
-      - '1'
-      X-Xss-Protection:
-      - 1; mode=block
-      Access-Control-Allow-Credentials:
-      - 'true'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Methods:
       - POST, OPTIONS
+      Access-Control-Allow-Headers:
+      - X-PINGOTHER, DNT, X-UC-User-Agent
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 3fd1c0e6-e941-497c-a100-d5f748a02cb2
     body:
-      encoding: ASCII-8BIT
-      string: '{"is_stored":false,"done":14679474,"file_id":"d8c914e3-3aef-4976-b0b6-855a9638da2d","total":14679474,"size":14679474,"uuid":"d8c914e3-3aef-4976-b0b6-855a9638da2d","is_image":true,"filename":"big.jpg","video_info":null,"is_ready":true,"original_filename":"big.jpg","image_info":{"color_mode":"RGB","orientation":1,"format":"JPEG","sequence":false,"height":4542,"width":10109,"geo_location":null,"datetime_original":"2010-07-31T15:18:35","dpi":[300,300]},"mime_type":"application/octet-stream"}'
-    http_version: 
-  recorded_at: Thu, 23 Jan 2020 13:03:27 GMT
-recorded_with: VCR 5.0.0
+      encoding: UTF-8
+      string: '{"size":10487050,"total":10487050,"done":10487050,"uuid":"940b6a1b-491b-4189-92f0-c8d895f2e5a6","file_id":"940b6a1b-491b-4189-92f0-c8d895f2e5a6","original_filename":"big.jpeg","is_image":true,"is_stored":false,"image_info":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null},"video_info":null,"content_info":{"mime":{"mime":"image/jpeg","type":"image","subtype":"jpeg"},"image":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null}},"is_ready":true,"filename":"big.jpeg","mime_type":"application/octet-stream","metadata":{}}'
+  recorded_at: Tue, 20 Sep 2022 20:48:29 GMT
+recorded_with: VCR 6.1.0

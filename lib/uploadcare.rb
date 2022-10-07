@@ -59,4 +59,5 @@ module Uploadcare
   setting :max_throttle_attempts,     default: 5
   setting :upload_threads,            default: 2 # used for multiupload only ATM
   setting :framework_data,            default: ''
+  setting :file_chunk_size,           default: 100
 end

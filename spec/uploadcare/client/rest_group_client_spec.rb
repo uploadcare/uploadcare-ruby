@@ -10,11 +10,21 @@ module Uploadcare
       describe 'store' do
         it 'stores all files in a group' do
           VCR.use_cassette('rest_store_group') do
-            group_id = 'fc194fec-5793-4403-a593-686af4be412e~2'
+            group_id = '47e6cf32-e5a8-4ff4-b48f-14d7304b42dd~2'
             response = subject.store(group_id)
-            response_value = response.value!
-            expect(response_value[:datetime_stored]).not_to be_empty
-            expect(response_value[:id]).to eq(group_id)
+            expect(response.success).to be_nil
+          end
+        end
+      end
+
+      describe 'info' do
+        it 'gets a file group by its ID.' do
+          VCR.use_cassette('rest_info_group') do
+            group_id = '47e6cf32-e5a8-4ff4-b48f-14d7304b42dd~2'
+            response = subject.info(group_id)
+            response_body = response.success
+            expect(response_body[:files_count]).to eq(2)
+            %i[id datetime_created files_count cdn_url url files].each { |key| expect(response_body).to have_key(key) }
           end
         end
       end
@@ -34,6 +44,16 @@ module Uploadcare
             response = subject.list(limit: 2)
             response_value = response.value!
             expect(response_value[:per_page]).to eq 2
+          end
+        end
+      end
+
+      describe 'delete' do
+        it 'deletes a file group' do
+          VCR.use_cassette('upload_group_delete') do
+            response = subject.delete('bbc75785-9016-4656-9c6e-64a76b45b0b8~2')
+            expect(response.value!).to be_nil
+            expect(response.success?).to be_truthy
           end
         end
       end

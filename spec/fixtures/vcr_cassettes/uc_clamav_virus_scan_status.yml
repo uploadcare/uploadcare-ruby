@@ -1,0 +1,61 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.uploadcare.com/addons/uc_clamav_virus_scan/execute/status/?request_id=34abf037-5384-4e38-bad4-97dd48e79acd
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      User-Agent:
+      - UploadcareRuby/3.3.2/5d5bb5639e3f2df33674 (Ruby/2.6.0)
+      Date:
+      - Fri, 23 Sep 2022 11:14:02 GMT
+      Authorization:
+      - Uploadcare 5d5bb5639e3f2df33674:a994c37e4a5f112379648467641d3d226de7357d
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 23 Sep 2022 11:14:03 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '18'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Warning:
+      - '199 Miscellaneous warning: Please use API version 0.5, not 0.7'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Vary:
+      - Accept
+      Allow:
+      - GET, HEAD, OPTIONS
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 12d3be24-840f-4885-a4e9-d654b7cbe88a
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
+    body:
+      encoding: UTF-8
+      string: '{"status": "done"}'
+  recorded_at: Fri, 23 Sep 2022 11:14:03 GMT
+recorded_with: VCR 6.1.0

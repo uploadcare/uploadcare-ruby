@@ -33,6 +33,7 @@ module Uploadcare
       # - filename
       # - save_URL_duplicates
       # - async - returns upload token instead of upload data
+      # - metadata - file metadata, hash
       def upload_from_url(url, **options)
         body = upload_from_url_body(url, **options)
         token_response = post(path: 'from_url/', headers: { 'Content-Type': body.content_type }, body: body)
@@ -77,7 +78,7 @@ module Uploadcare
            form_data_for(file)]
         end.to_h
         HTTP::FormData::Multipart.new(
-          Param::Upload::UploadParamsGenerator.call(options[:store]).merge(files_formdata)
+          Param::Upload::UploadParamsGenerator.call(options).merge(files_formdata)
         )
       end
 

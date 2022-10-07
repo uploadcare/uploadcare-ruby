@@ -10,7 +10,7 @@ module Uploadcare
       describe 'info' do
         it 'shows insider info about that file' do
           VCR.use_cassette('rest_file_info') do
-            uuid = '8f64f313-e6b1-4731-96c0-6751f1e7a50a'
+            uuid = '2e17f5d1-d423-4de6-8ee5-6773cc4a7fa6'
             file = subject.info(uuid)
             expect(file.value![:uuid]).to eq(uuid)
           end
@@ -48,7 +48,7 @@ module Uploadcare
       describe 'delete' do
         it 'deletes a file' do
           VCR.use_cassette('rest_file_delete') do
-            uuid = 'e9a9f291-cc52-4388-bf65-9feec1c75ff9'
+            uuid = '158e7c82-8246-4017-9f17-0798e18c91b0'
             response = subject.delete(uuid)
             response_value = response.value!
             expect(response_value[:datetime_removed]).not_to be_empty

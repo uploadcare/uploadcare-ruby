@@ -55,7 +55,7 @@ module Uploadcare
       def headers
         {
           'Content-Type': 'application/json',
-          'Accept': 'application/vnd.uploadcare-v0.5+json',
+          'Accept': 'application/vnd.uploadcare-v0.7+json',
           'User-Agent': Uploadcare::Param::UserAgent.call
         }
       end
