@@ -29,6 +29,7 @@ wrapping Upload and REST APIs.
     * [Group](#group)
     * [GroupList](#grouplist)
     * [Webhook](#webhook)
+    * [Add-Ons](#add-ons)
     * [Project](#project)
     * [Conversion](#conversion)
 * [Useful links](#useful-links)
