@@ -55,7 +55,7 @@ module Uploadcare
       # @option args [Boolean] :make_public make files on custom storage available via public links.
       # @option args [String] :pattern define file naming pattern for the custom storage scenario.
       #
-      # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/copyFile
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/copyFile
       def self.copy(source, args = {})
         response = FileClient.new.copy(source: source, **args).success[:result]
         File.new(response)
@@ -95,7 +95,7 @@ module Uploadcare
       end
 
       # Store a single file, preventing it from being deleted in 2 weeks
-      # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/storeFile
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/storeFile
       def store
         File.store(uuid)
       end

@@ -9,7 +9,7 @@ module Uploadcare
     module Conversion
       # This is client for video conversion
       #
-      # @see https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/videoConvert
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/videoConvert
       class VideoConversionClient < BaseConversionClient
         def convert_many(
           params,

@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/json
       Accept:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       User-Agent:
       - UploadcareRuby/3.0.1-dev/ecd779dc169645ce3c91 (Ruby/2.6.3)
       Authorization:
@@ -27,7 +27,7 @@ http_interactions:
       Date:
       - Fri, 13 Mar 2020 15:44:01 GMT
       Content-Type:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       Content-Length:
       - '1396'
       Connection:
@@ -61,7 +61,7 @@ http_interactions:
       Content-Type:
       - application/json
       Accept:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       User-Agent:
       - UploadcareRuby/3.0.1-dev/ecd779dc169645ce3c91 (Ruby/2.6.3)
       Authorization:
@@ -78,7 +78,7 @@ http_interactions:
       Date:
       - Fri, 13 Mar 2020 15:44:02 GMT
       Content-Type:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       Content-Length:
       - '1504'
       Connection:
@@ -112,7 +112,7 @@ http_interactions:
       Content-Type:
       - application/json
       Accept:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       User-Agent:
       - UploadcareRuby/3.0.1-dev/ecd779dc169645ce3c91 (Ruby/2.6.3)
       Authorization:
@@ -129,7 +129,7 @@ http_interactions:
       Date:
       - Fri, 13 Mar 2020 15:44:03 GMT
       Content-Type:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       Content-Length:
       - '1474'
       Connection:
@@ -163,7 +163,7 @@ http_interactions:
       Content-Type:
       - application/json
       Accept:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       User-Agent:
       - UploadcareRuby/3.0.1-dev/ecd779dc169645ce3c91 (Ruby/2.6.3)
       Authorization:
@@ -180,7 +180,7 @@ http_interactions:
       Date:
       - Fri, 13 Mar 2020 15:44:04 GMT
       Content-Type:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       Content-Length:
       - '768'
       Connection:
