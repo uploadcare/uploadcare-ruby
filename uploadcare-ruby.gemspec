@@ -38,11 +38,13 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib', 'lib/uploadcare', 'lib/uploadcare/rest']
 
   spec.add_dependency 'api_struct', '~> 1.0.1'
+  # rubocop:disable RuboCop::Cop::Gemspec::RubyVersionGlobalsUsage
   if RUBY_VERSION.start_with?('3')
     spec.add_dependency 'dry-configurable', '~> 0.13.0'
   else
     spec.add_dependency 'dry-configurable'
   end
+  # rubocop:enable RuboCop::Cop::Gemspec::RubyVersionGlobalsUsage
 
   spec.add_dependency 'mimemagic'
   spec.add_dependency 'parallel'
