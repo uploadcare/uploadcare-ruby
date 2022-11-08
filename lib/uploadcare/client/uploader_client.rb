@@ -12,8 +12,8 @@ module Uploadcare
     class UploaderClient < UploadClient
       # @see https://uploadcare.com/api-refs/upload-api/#operation/baseUpload
 
-      def upload_many(arr, **options)
-        body = upload_many_body(arr, **options)
+      def upload_many(arr, options = {})
+        body = upload_many_body(arr, options)
         post(path: 'base/',
              headers: { 'Content-Type': body.content_type },
              body: body)
@@ -22,8 +22,8 @@ module Uploadcare
       # syntactic sugar for upload_many
       # There is actual upload method for one file, but it is redundant
 
-      def upload(file, **options)
-        upload_many([file], **options)
+      def upload(file, options = {})
+        upload_many([file], options)
       end
 
       # Upload files from url
@@ -34,8 +34,8 @@ module Uploadcare
       # - save_URL_duplicates
       # - async - returns upload token instead of upload data
       # - metadata - file metadata, hash
-      def upload_from_url(url, **options)
-        body = upload_from_url_body(url, **options)
+      def upload_from_url(url, options = {})
+        body = upload_from_url_body(url, options)
         token_response = post(path: 'from_url/', headers: { 'Content-Type': body.content_type }, body: body)
         return token_response if options[:async]
 
@@ -72,7 +72,7 @@ module Uploadcare
       end
 
       # Prepares body for upload_many method
-      def upload_many_body(arr, **options)
+      def upload_many_body(arr, options = {})
         files_formdata = arr.map do |file|
           [HTTP::FormData::File.new(file).filename,
            form_data_for(file)]
@@ -88,7 +88,7 @@ module Uploadcare
       }.freeze
 
       # Prepare upload_from_url initial request body
-      def upload_from_url_body(url, **options)
+      def upload_from_url_body(url, options = {})
         HTTP::FormData::Multipart.new(
           options.merge(
             'pub_key' => Uploadcare.config.public_key,

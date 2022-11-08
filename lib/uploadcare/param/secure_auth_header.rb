@@ -8,7 +8,7 @@ module Uploadcare
     # This authentication method is more secure, but more tedious
     class SecureAuthHeader
       # @see https://uploadcare.com/docs/api_reference/rest/requests_auth/#auth-uploadcare
-      def self.call(**options)
+      def self.call(options = {})
         @method = options[:method]
         @body = options[:content] || ''
         @content_type = options[:content_type]

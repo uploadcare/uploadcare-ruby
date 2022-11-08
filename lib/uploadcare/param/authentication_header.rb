@@ -10,10 +10,10 @@ module Uploadcare
     # This authentication method is more secure, but more tedious
     class AuthenticationHeader
       # @see https://uploadcare.com/docs/api_reference/rest/requests_auth/#auth-uploadcare
-      def self.call(**options)
+      def self.call(options = {})
         case Uploadcare.config.auth_type
         when 'Uploadcare'
-          SecureAuthHeader.call(**options)
+          SecureAuthHeader.call(options)
         when 'Uploadcare.Simple'
           SimpleAuthHeader.call
         else

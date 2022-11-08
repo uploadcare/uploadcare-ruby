@@ -13,7 +13,7 @@ module Uploadcare
 
       # Upload a big file by splitting it into parts and sending those parts into assigned buckets
       # object should be File
-      def upload(object, **options, &block)
+      def upload(object, options = {}, &block)
         response = upload_start(object, options)
         return response unless response.success[:parts] && response.success[:uuid]
 
@@ -24,7 +24,7 @@ module Uploadcare
       end
 
       # Asks Uploadcare server to create a number of storage bin for uploads
-      def upload_start(object, **options)
+      def upload_start(object, options = {})
         options.merge!(store: options[:store] || false)
         body = HTTP::FormData::Multipart.new(
           Param::Upload::UploadParamsGenerator.call(options).merge(form_data_for(object))
@@ -57,8 +57,8 @@ module Uploadcare
       end
 
       alias api_struct_post post
-      def post(**args)
-        handle_throttling { api_struct_post(**args) }
+      def post(args = {})
+        handle_throttling { api_struct_post(args) }
       end
     end
   end

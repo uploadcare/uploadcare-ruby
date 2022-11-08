@@ -24,7 +24,7 @@ module Uploadcare
       # 'copy' method is used to copy original files or their modified versions to default storage.
       # Source files MAY either be stored or just uploaded and MUST NOT be deleted.
       # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/copyFile
-      def copy(**options)
+      def copy(options = {})
         body = options.compact.to_json
         post(uri: '/files/', content: body)
       end

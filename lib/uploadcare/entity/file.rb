@@ -56,7 +56,7 @@ module Uploadcare
       # @option args [String] :pattern define file naming pattern for the custom storage scenario.
       #
       # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/copyFile
-      def self.copy(source, **args)
+      def self.copy(source, args = {})
         response = FileClient.new.copy(source: source, **args).success[:result]
         File.new(response)
       end
@@ -66,7 +66,7 @@ module Uploadcare
       # source can be UID or full CDN link
       #
       # @see .copy
-      def self.local_copy(source, **args)
+      def self.local_copy(source, args = {})
         File.copy(source, **args)
       end
 
@@ -75,22 +75,22 @@ module Uploadcare
       # source can be UID or full CDN link
       #
       # @see .copy
-      def self.remote_copy(source, target, **args)
+      def self.remote_copy(source, target, args = {})
         File.copy(source: source, target: target, **args)
       end
 
       # Instance version of #{copy}. Copies current file.
-      def copy(**args)
+      def copy(args = {})
         File.copy(uuid, **args)
       end
 
       # Instance version of {internal_copy}
-      def local_copy(**args)
+      def local_copy(args = {})
         File.local_copy(uuid, **args)
       end
 
       # Instance version of {external_copy}
-      def remote_copy(target, **args)
+      def remote_copy(target, args = {})
         File.copy(uuid, target: target, **args)
       end
 

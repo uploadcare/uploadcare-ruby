@@ -15,7 +15,6 @@ Gem::Specification.new do |spec|
   spec.homepage      = 'https://github.com/uploadcare/uploadcare-ruby'
   spec.license       = 'MIT'
 
-
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if spec.respond_to?(:metadata)
@@ -39,6 +38,12 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib', 'lib/uploadcare', 'lib/uploadcare/rest']
 
   spec.add_dependency 'api_struct', '~> 1.0.1'
+  # if RUBY_VERSION.start_with?('3')
+  #   spec.add_dependency 'dry-configurable', '~> 0.13.0'
+  # else
+  #   spec.add_dependency 'dry-configurable', '~> 0.9'
+  # end
+
   spec.add_dependency 'dry-configurable', '~> 0.9'
   spec.add_dependency 'mimemagic'
   spec.add_dependency 'parallel'
