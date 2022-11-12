@@ -4,7 +4,7 @@ module Uploadcare
   module Entity
     module Conversion
       # This serializer lets a user convert uploaded documents
-      # @see https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/documentConvert
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/documentConvert
       class BaseConverter < Entity
         class << self
           # Converts files

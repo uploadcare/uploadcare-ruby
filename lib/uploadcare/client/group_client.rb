@@ -10,8 +10,8 @@ module Uploadcare
     class GroupClient < UploadClient
       # Create files group from a set of files by using their UUIDs.
       # @see https://uploadcare.com/api-refs/upload-api/#operation/createFilesGroup
-      def create(file_list, **options)
-        body_hash = group_body_hash(file_list, **options)
+      def create(file_list, options = {})
+        body_hash = group_body_hash(file_list, options)
         body = HTTP::FormData::Multipart.new(body_hash)
         post(path: 'group/',
              headers: { 'Content-Type': body.content_type },
@@ -31,8 +31,8 @@ module Uploadcare
         ids.zip(file_ids).to_h
       end
 
-      def group_body_hash(file_list, **options)
-        { pub_key: Uploadcare.config.public_key }.merge(file_params(parse_file_list(file_list))).merge(**options)
+      def group_body_hash(file_list, options = {})
+        { pub_key: Uploadcare.config.public_key }.merge(file_params(parse_file_list(file_list))).merge(options)
       end
 
       # API accepts only list of ids, but some users may want to upload list of files

@@ -12,7 +12,7 @@ module Uploadcare
       describe 'upload' do
         it 'uploads a file' do
           VCR.use_cassette('upload_upload') do
-            response = subject.upload(file)
+            response = subject.upload(file, metadata: { subsystem: 'test' })
             expect(response.success?).to be true
           end
         end

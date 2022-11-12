@@ -8,7 +8,7 @@ module Uploadcare
     module Conversion
       # This is client for document conversion
       #
-      # @see https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/documentConvert
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/documentConvert
       class DocumentConversionClient < BaseConversionClient
         def convert_many(
           arr,

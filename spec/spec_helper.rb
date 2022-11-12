@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
+require 'dry/monads'
 require 'api_struct'
 require 'byebug'
 require 'webmock/rspec'

@@ -9,7 +9,7 @@ module Uploadcare
         describe 'meta' do
           it 'accepts arguments' do
             VCR.use_cassette('rest_file_list_params') do
-              fl_with_params = FileList.file_list(limit: 2, ordering: 'size')
+              fl_with_params = FileList.file_list(limit: 2, ordering: '-datetime_uploaded')
               expect(fl_with_params.meta.per_page).to eq 2
             end
           end
@@ -18,7 +18,7 @@ module Uploadcare
         describe 'next_page' do
           it 'loads a next page as separate object' do
             VCR.use_cassette('rest_file_list_pages') do
-              fl_with_params = FileList.file_list(limit: 2, ordering: 'size')
+              fl_with_params = FileList.file_list(limit: 2, ordering: '-datetime_uploaded')
               next_page = fl_with_params.next_page
               expect(next_page.previous).not_to be_nil
               expect(fl_with_params).not_to eq(next_page)
@@ -29,11 +29,14 @@ module Uploadcare
         describe 'previous_page' do
           it 'loads a previous page as separate object' do
             VCR.use_cassette('rest_file_list_previous_page') do
-              fl_with_params = FileList.file_list(limit: 2, ordering: 'size')
+              fl_with_params = FileList.file_list(limit: 2, ordering: '-datetime_uploaded')
               next_page = fl_with_params.next_page
               previous_page = next_page.previous_page
               expect(previous_page.next).not_to be_nil
+              fl_path = fl_with_params.delete(:next)
+              previous_page_path = previous_page.delete(:next)
               expect(fl_with_params).to eq(previous_page)
+              expect(CGI.parse(URI.parse(fl_path).query)).to eq(CGI.parse(URI.parse(previous_page_path).query))
             end
           end
         end
@@ -41,7 +44,7 @@ module Uploadcare
         describe 'load' do
           it 'loads all objects' do
             VCR.use_cassette('rest_file_list_load') do
-              fl_with_params = FileList.file_list(limit: 2, ordering: 'size')
+              fl_with_params = FileList.file_list(limit: 2, ordering: '-datetime_uploaded')
               fl_with_params.load
               expect(fl_with_params.results.length).to eq fl_with_params.total
             end

@@ -2,6 +2,7 @@
 
 require 'uploadcare/entity/file'
 require 'uploadcare/entity/decorator/paginator'
+require 'dry/monads'
 require 'api_struct'
 
 module Uploadcare

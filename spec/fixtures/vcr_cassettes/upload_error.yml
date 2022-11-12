@@ -66,7 +66,7 @@ http_interactions:
       Content-Type:
       - application/json
       Accept:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       Authorization:
       - "<AUTHORIZATION HEADER>"
       Connection:

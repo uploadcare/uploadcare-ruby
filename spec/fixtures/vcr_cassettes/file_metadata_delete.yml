@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: delete
+    uri: https://api.uploadcare.com/files/2e17f5d1-d423-4de6-8ee5-6773cc4a7fa6/metadata/subsystem/
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      User-Agent:
+      - UploadcareRuby/3.3.2/99d8e355c5811c2c26ae (Ruby/2.6.0)
+      Date:
+      - Mon, 19 Sep 2022 15:15:17 GMT
+      Authorization:
+      - Uploadcare 99d8e355c5811c2c26ae:52579bb5464e74d605e97676f1d202aeef92d68c
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 204
+      message: No Content
+    headers:
+      Date:
+      - Mon, 19 Sep 2022 15:15:18 GMT
+      Content-Length:
+      - '0'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Warning:
+      - '199 Miscellaneous warning: Please use API version 0.5, not 0.7'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Vary:
+      - Accept
+      Allow:
+      - DELETE, GET, HEAD, OPTIONS, PUT
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 94485c3a-0f3b-413f-b25f-40e58db30507
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+  recorded_at: Mon, 19 Sep 2022 15:15:18 GMT
+recorded_with: VCR 6.1.0

@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/json
       Accept:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       Date:
       - Thu, 30 Jan 2020 12:35:45 GMT
       Authorization:
@@ -29,7 +29,7 @@ http_interactions:
       Date:
       - Thu, 30 Jan 2020 12:35:46 GMT
       Content-Type:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       Content-Length:
       - '1401'
       Connection:
@@ -63,7 +63,7 @@ http_interactions:
       Content-Type:
       - application/json
       Accept:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       Date:
       - Thu, 30 Jan 2020 12:35:46 GMT
       Authorization:
@@ -82,7 +82,7 @@ http_interactions:
       Date:
       - Thu, 30 Jan 2020 12:35:47 GMT
       Content-Type:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       Content-Length:
       - '1401'
       Connection:
