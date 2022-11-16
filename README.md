@@ -55,12 +55,12 @@ And then execute:
     $ bundle
 
 If already not, create your project in [Uploadcare dashboard](https://app.uploadcare.com/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby) and copy
-its API keys from there.
+its [API keys](https://app.uploadcare.com/projects/-/api-keys/) from there.
 
 Set your Uploadcare keys in config file or through environment variables:
 ```bash
-export UPLOADCARE_PUBLIC_KEY=demopublickey
-export UPLOADCARE_SECRET_KEY=demoprivatekey
+export UPLOADCARE_PUBLIC_KEY=your_public_key
+export UPLOADCARE_SECRET_KEY=your_private_key
 ```
 
 Or configure your app yourself if you are using different way of storing keys.
@@ -69,8 +69,8 @@ settings can be seen in [`lib/uploadcare.rb`](lib/uploadcare.rb)
 
 ```ruby
 # your_config_initializer_file.rb
-Uploadcare.config.public_key = "demopublickey"
-Uploadcare.config.secret_key = "demoprivatekey"
+Uploadcare.config.public_key = "your_public_key"
+Uploadcare.config.secret_key = "your_private_key"
 ```
 
 ## Usage
@@ -587,7 +587,7 @@ object is also an Hashie::Mash, so every methods out of
 
 ```ruby
 @project = Uploadcare::Project.project
-# => #<Uploadcare::Api::Project collaborators=[], name="demo", pub_key="demopublickey", autostore_enabled=true>
+# => #<Uploadcare::Api::Project collaborators=[], name="demo", pub_key="your_public_key", autostore_enabled=true>
 
 @project.name
 # => "demo"
