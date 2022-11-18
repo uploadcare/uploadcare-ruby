@@ -383,7 +383,7 @@ how they should be fetched:
 - **:limit** — Controls page size. Accepts values from 1 to 1000, defaults to 100.
 - **:stored** — Can be either `true` or `false`. When true, file list will contain only stored files. When false — only not stored.
 - **:removed** — Can be either `true` or `false`. When true, file list will contain only removed files. When false — all except removed. Defaults to false.
-- **:ordering** — Controls the order of returned files. Available values: `datetime_updated`, `-datetime_updated`. Defaults to `datetime_uploaded`. More info can be found [here](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/filesList).
+- **:ordering** — Controls the order of returned files. Available values: `datetime_uploaded`, `-datetime_uploaded`. Defaults to `datetime_uploaded`. More info can be found [here](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/filesList).
 - **:from** — Specifies the starting point for a collection. Resulting collection will contain files from the given value and to the end in a direction set by an **ordering** option. When files are ordered by `datetime_updated` in any direction, accepts either a `DateTime` object or an ISO 8601 string. When files are ordered by size, accepts non-negative integers (size in bytes). More info can be found [here](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/filesList).
 
 Options used to create a file list can be accessed through `#options` method.
