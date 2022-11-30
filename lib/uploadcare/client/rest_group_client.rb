@@ -9,7 +9,7 @@ module Uploadcare
       # store all files in a group
       # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/storeFile
       def store(uuid)
-        files = info(uuid).success[:files]
+        files = info(uuid).success[:files].compact
         client = ::Uploadcare::Client::FileClient.new
         files.each_slice(Uploadcare.config.file_chunk_size) do |file_chunk|
           file_chunk.each do |file|

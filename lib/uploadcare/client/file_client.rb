@@ -21,12 +21,16 @@ module Uploadcare
       end
       alias file info
 
-      # 'copy' method is used to copy original files or their modified versions to default storage.
-      # Source files MAY either be stored or just uploaded and MUST NOT be deleted.
-      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/copyFile
-      def copy(options = {})
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/createLocalCopy
+      def local_copy(options = {})
         body = options.compact.to_json
-        post(uri: '/files/', content: body)
+        post(uri: '/files/local_copy/', content: body)
+      end
+
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/createRemoteCopy
+      def remote_copy(options = {})
+        body = options.compact.to_json
+        post(uri: '/files/remote_copy/', content: body)
       end
 
       # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/deleteFileStorage

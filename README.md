@@ -305,7 +305,9 @@ File entity contains its metadata.
   }
 }
 
-@file.copy # copies file, returns a new (copied) file metadata
+@file.local_copy # copy file to local storage
+
+@file.remote_copy # copy file to remote storage
 
 @file.store # stores file, returns updated metadata
 

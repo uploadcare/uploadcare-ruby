@@ -32,7 +32,8 @@ module Uploadcare
 
       def form_data_for(file)
         filename = file.original_filename if file.respond_to?(:original_filename)
-        mime_type = MimeMagic.by_magic(file).type
+        mime_type = MimeMagic.by_magic(file)&.type
+        mime_type = file.content_type if mime_type.nil? && file.respond_to?(:content_type)
         options = { filename: filename, content_type: mime_type }.compact
         HTTP::FormData::File.new(file, options)
       end

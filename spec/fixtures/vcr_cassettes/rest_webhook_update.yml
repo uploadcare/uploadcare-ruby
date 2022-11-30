@@ -1,7 +1,7 @@
 ---
 http_interactions:
 - request:
-    method: post
+    method: put
     uri: https://api.uploadcare.com/webhooks/887447/
     body:
       encoding: UTF-8
@@ -43,7 +43,7 @@ http_interactions:
       Vary:
       - Accept
       Allow:
-      - OPTIONS, POST
+      - OPTIONS, PUT
       X-Xss-Protection:
       - 1; mode=block
       X-Content-Type-Options:

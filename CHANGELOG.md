@@ -12,6 +12,8 @@
   - Removed the option of sorting the file list by file size
 - For `Uploadcare::Group#store`
   - Changed response format
+- For `Uploadcare::File`
+  - Removed method `copy` in favor of `local_copy` and `remote_copy` methods
 
 ### Changed
 
@@ -23,9 +25,10 @@
 ### Added
 
 - Add Uploadcare API interface:
-    - 'Uploadcare::FileMetadata'
-    - 'Uploadcare::Addons'
+    - `Uploadcare::FileMetadata`
+    - `Uploadcare::Addons`
 - Added an option to delete a Group
+- For `Uploadcare::File` add `local_copy` and `remote_copy` methods
 
 ## 3.3.2 - 2022-07-18
 
