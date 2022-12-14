@@ -6,11 +6,14 @@ module Uploadcare
     #
     # @see https://uploadcare.com/docs/api_reference/rest/handling_projects/
     class File < Entity
+      RESPONSE_PARAMS = %i[
+        datetime_removed datetime_stored datetime_uploaded is_image is_ready mime_type original_file_url
+        original_filename size url uuid variations content_info metadata appdata source
+      ].freeze
+
       client_service FileClient
 
-      attr_entity :datetime_removed, :datetime_stored, :datetime_uploaded, :image_info, :is_image, :is_ready,
-                  :mime_type, :original_file_url, :original_filename, :size, :url, :uuid, :variations, :video_info,
-                  :source, :rekognition_info
+      attr_entity(*RESPONSE_PARAMS)
 
       # gets file's uuid - even if it's only initialized with url
       # @returns [String]
@@ -40,64 +43,43 @@ module Uploadcare
         convert_file(params, converter, options)
       end
 
-      # 'copy' method is used to copy original files or their modified versions to default storage.
-      #
-      # Source files MAY either be stored or just uploaded and MUST NOT be deleted.
-      #
-      # @param [String] source uuid or uploadcare link to file.
-      # @param [Hash] args
-      # @option args [Boolean] :store Whether to store the file
-      # @option args [Boolean] :strip_operations Copies file without transformations (if source has them)
-      # @option args [String] :target points to a target custom storage.
-      # @option args [Boolean] :make_public make files on custom storage available via public links.
-      # @option args [String] :pattern define file naming pattern for the custom storage scenario.
-      #
-      # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/copyFile
-      def self.copy(source, **args)
-        response = FileClient.new.copy(source: source, **args).success[:result]
-        File.new(response)
-      end
-
       # Copies file to current project
       #
       # source can be UID or full CDN link
       #
-      # @see .copy
-      def self.local_copy(source, **args)
-        File.copy(source, **args)
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/createLocalCopy
+      def self.local_copy(source, args = {})
+        response = FileClient.new.local_copy(source: source, **args).success[:result]
+        File.new(response)
       end
 
       # copy file to different project
       #
       # source can be UID or full CDN link
       #
-      # @see .copy
-      def self.remote_copy(source, target, **args)
-        File.copy(source: source, target: target, **args)
-      end
-
-      # Instance version of #{copy}. Copies current file.
-      def copy(**args)
-        File.copy(uuid, **args)
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/createRemoteCopy
+      def self.remote_copy(source, target, args = {})
+        response = FileClient.new.remote_copy(source: source, target: target, **args).success[:result]
+        File.new(response)
       end
 
       # Instance version of {internal_copy}
-      def local_copy(**args)
+      def local_copy(args = {})
         File.local_copy(uuid, **args)
       end
 
       # Instance version of {external_copy}
-      def remote_copy(target, **args)
-        File.copy(uuid, target: target, **args)
+      def remote_copy(target, args = {})
+        File.remote_copy(uuid, target, **args)
       end
 
       # Store a single file, preventing it from being deleted in 2 weeks
-      # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/storeFile
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/storeFile
       def store
         File.store(uuid)
       end
 
-      # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#operation/deleteFile
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/deleteFileStorage
       def delete
         File.delete(uuid)
       end

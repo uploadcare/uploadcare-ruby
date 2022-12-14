@@ -1,0 +1,62 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.uploadcare.com/addons/remove_bg/execute/
+    body:
+      encoding: UTF-8
+      string: '{"target":"ff4d3d37-4de0-4f6d-a7db-8cdabe7fc768","params":{"crop":true,"type_level":"2"}}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      User-Agent:
+      - UploadcareRuby/3.3.2/5d5bb5639e3f2df33674 (Ruby/2.6.0)
+      Date:
+      - Fri, 23 Sep 2022 11:29:23 GMT
+      Authorization:
+      - Uploadcare 5d5bb5639e3f2df33674:1e8f4ed9741bff27646ee6d4e056ba22c7e8fc67
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 23 Sep 2022 11:29:24 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '54'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept
+      - Accept-Encoding
+      Warning:
+      - '199 Miscellaneous warning: Please use API version 0.5, not 0.7'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Allow:
+      - OPTIONS, POST
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - c3446e41-9eb0-4301-aeb4-356d0fdcf9af
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
+    body:
+      encoding: UTF-8
+      string: '{"request_id": "c3446e41-9eb0-4301-aeb4-356d0fdcf9af"}'
+  recorded_at: Fri, 23 Sep 2022 11:29:24 GMT
+recorded_with: VCR 6.1.0

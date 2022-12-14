@@ -5,7 +5,7 @@ require_relative 'rest_client'
 module Uploadcare
   module Client
     # client for webhook management
-    # @see https://uploadcare.com/api-refs/rest-api/v0.5.0/#tag/Webhook
+    # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Webhook
     class WebhookClient < RestClient
       # Create webhook
       # @see https://uploadcare.com/docs/api_reference/rest/webhooks/#subscribe
@@ -37,7 +37,7 @@ module Uploadcare
       # @see https://uploadcare.com/docs/api_reference/rest/webhooks/#subscribe-update
       def update(id, options = {})
         body = options.to_json
-        post(uri: "/webhooks/#{id}/", content: body)
+        put(uri: "/webhooks/#{id}/", content: body)
       end
 
       alias create_webhook create

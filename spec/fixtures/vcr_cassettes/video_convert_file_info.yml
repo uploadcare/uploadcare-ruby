@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/json
       Accept:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       User-Agent:
       - UploadcareRuby/3.1.0/5d5bb5639e3f2df33674 (Ruby/3.0.2)
       Date:
@@ -29,7 +29,7 @@ http_interactions:
       Date:
       - Mon, 06 Sep 2021 05:08:29 GMT
       Content-Type:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       Content-Length:
       - '408'
       Connection:

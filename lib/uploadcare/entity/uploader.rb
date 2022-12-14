@@ -16,42 +16,42 @@ module Uploadcare
       # @param object [Array], [String] or [File]
       # @param [Hash] options options for upload
       # @option options [Boolean] :store (false) whether to store file on servers.
-      def self.upload(object, **options)
+      def self.upload(object, options = {})
         if big_file?(object)
-          multipart_upload(object, **options)
+          multipart_upload(object, options)
         elsif file?(object)
-          upload_file(object, **options)
+          upload_file(object, options)
         elsif object.is_a?(Array)
-          upload_files(object, **options)
+          upload_files(object, options)
         elsif object.is_a?(String)
-          upload_from_url(object, **options)
+          upload_from_url(object, options)
         else
           raise ArgumentError, "Expected input to be a file/Array/URL, given: `#{object}`"
         end
       end
 
       # upload single file
-      def self.upload_file(file, **options)
-        response = UploaderClient.new.upload_many([file], **options)
+      def self.upload_file(file, options = {})
+        response = UploaderClient.new.upload_many([file], options)
         Uploadcare::Entity::File.info(response.success.to_a.flatten[-1])
       end
 
       # upload multiple files
-      def self.upload_files(arr, **options)
-        response = UploaderClient.new.upload_many(arr, **options)
+      def self.upload_files(arr, options = {})
+        response = UploaderClient.new.upload_many(arr, options)
         response.success.map { |pair| Uploadcare::Entity::File.new(uuid: pair[1], original_filename: pair[0]) }
       end
 
       # upload file of size above 10mb (involves multipart upload)
-      def self.multipart_upload(file, **options, &block)
-        response = MultipartUploaderClient.new.upload(file, **options, &block)
+      def self.multipart_upload(file, options = {}, &block)
+        response = MultipartUploaderClient.new.upload(file, options, &block)
         Uploadcare::Entity::File.new(response.success)
       end
 
       # upload files from url
       # @param url [String]
-      def self.upload_from_url(url, **options)
-        response = UploaderClient.new.upload_from_url(url, **options)
+      def self.upload_from_url(url, options = {})
+        response = UploaderClient.new.upload_from_url(url, options)
         return response.success[:token] unless response.success[:files]
 
         response.success[:files].map { |file_data| Uploadcare::Entity::File.new(file_data) }

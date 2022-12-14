@@ -25,9 +25,11 @@ wrapping Upload and REST APIs.
     * [File](#file)
     * [FileList](#filelist)
     * [Pagination](#pagination)
+    * [Custom File Metadata](#custom-file-metadata)
     * [Group](#group)
     * [GroupList](#grouplist)
     * [Webhook](#webhook)
+    * [Add-Ons](#add-ons)
     * [Project](#project)
     * [Conversion](#conversion)
 * [Useful links](#useful-links)
@@ -53,12 +55,12 @@ And then execute:
     $ bundle
 
 If already not, create your project in [Uploadcare dashboard](https://app.uploadcare.com/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby) and copy
-its API keys from there.
+its [API keys](https://app.uploadcare.com/projects/-/api-keys/) from there.
 
 Set your Uploadcare keys in config file or through environment variables:
 ```bash
-export UPLOADCARE_PUBLIC_KEY=demopublickey
-export UPLOADCARE_SECRET_KEY=demoprivatekey
+export UPLOADCARE_PUBLIC_KEY=your_public_key
+export UPLOADCARE_SECRET_KEY=your_private_key
 ```
 
 Or configure your app yourself if you are using different way of storing keys.
@@ -67,8 +69,8 @@ settings can be seen in [`lib/uploadcare.rb`](lib/uploadcare.rb)
 
 ```ruby
 # your_config_initializer_file.rb
-Uploadcare.config.public_key = "demopublickey"
-Uploadcare.config.secret_key = "demoprivatekey"
+Uploadcare.config.public_key = "your_public_key"
+Uploadcare.config.secret_key = "your_private_key"
 ```
 
 ## Usage
@@ -143,7 +145,7 @@ After the request for uploading-from-URL is sent, you can check the progress of 
 
 ```ruby
 Uploadcare::Uploader.get_upload_from_url_status("1251ee66-3631-4416-a2fb-96ba59f5a515")
-# => Success({:size=>28511, :total=>28511, :done=>28511, :uuid=>"b829753b-6b64-4989-a167-ef15e4f3d190", :file_id=>"b859753b-zb64-4989-a167-ef15e4f3a190", :original_filename=>"video.ogg", :is_image=>false, :is_stored=>false, :image_info=>nil, :video_info=>nil, :is_ready=>true, :filename=>"video.ogg", :mime_type=>"audio/ogg", :status=>"success"})
+# => Success({:size=>453543, :total=>453543, :done=>453543, :uuid=>"5c51a7fe-e45d-42a2-ba5e-79957ff4bdab", :file_id=>"5c51a7fe-e45d-42a2-ba5e-79957ff4bdab", :original_filename=>"2250", :is_image=>true, :is_stored=>false, :image_info=>{:dpi=>[96, 96], :width=>2250, :format=>"JPEG", :height=>2250, :sequence=>false, :color_mode=>"RGB", :orientation=>nil, :geo_location=>nil, :datetime_original=>nil}, :video_info=>nil, :content_info=>{:mime=>{:mime=>"image/jpeg", :type=>"image", :subtype=>"jpeg"}, :image=>{:dpi=>[96, 96], :width=>2250, :format=>"JPEG", :height=>2250, :sequence=>false, :color_mode=>"RGB", :orientation=>nil, :geo_location=>nil, :datetime_original=>nil}}, :is_ready=>true, :filename=>"2250", :mime_type=>"image/jpeg", :metadata=>{}, :status=>"success"})
 ```
 
 In case of the `async` option is disabled, uploadcare-ruby tries to request the upload status several times (depending on the `max_request_tries` config param) and then returns uploaded file attributes.
@@ -188,6 +190,13 @@ You can override global [`:autostore`](#initialization) option for each upload r
 @api.upload_from_url(url, store: :auto)
 ```
 
+You can upload file with custom metadata, for example `subsystem` and `pet`:
+
+```ruby
+@api.upload(files, metadata: { subsystem: 'my_subsystem', pet: 'cat' } )
+@api.upload_from_url(url, metadata: { subsystem: 'my_subsystem', pet: 'cat' })
+```
+
 ### File management
 
 Entities are representations of objects in Uploadcare cloud.
@@ -198,31 +207,107 @@ File entity contains its metadata.
 
 ```ruby
 @file = Uploadcare::File.file("FILE_ID_IN_YOUR_PROJECT")
-{"datetime_removed"=>nil,
- "datetime_stored"=>"2020-01-16T15:03:15.315064Z",
- "datetime_uploaded"=>"2020-01-16T15:03:14.676902Z",
- "image_info"=>
-  {"color_mode"=>"RGB",
-   "orientation"=>nil,
-   "format"=>"JPEG",
-   "sequence"=>false,
-   "height"=>183,
-   "width"=>190,
-   "geo_location"=>nil,
-   "datetime_original"=>nil,
-   "dpi"=>nil},
- "is_image"=>true,
- "is_ready"=>true,
- "mime_type"=>"image/jpeg",
- "original_file_url"=>
-  "https://ucarecdn.com/FILE_ID_IN_YOUR_PROJECT/imagepng.jpeg",
- "original_filename"=>"image.png.jpeg",
- "size"=>5345,
- "url"=>
-  "https://api.uploadcare.com/files/FILE_ID_IN_YOUR_PROJECT/",
- "uuid"=>"8f64f313-e6b1-4731-96c0-6751f1e7a50a"}
+{
+  "datetime_removed"=>nil,
+  "datetime_stored"=>"2018-11-26T12:49:10.477888Z",
+  "datetime_uploaded"=>"2018-11-26T12:49:09.945335Z",
+  "is_image"=>true,
+  "is_ready"=>true,
+  "mime_type"=>"image/jpeg",
+  "original_file_url"=>"https://ucarecdn.com/FILE_ID_IN_YOUR_PROJECT/pineapple.jpg",
+  "original_filename"=>"pineapple.jpg",
+  "size"=>642,
+  "url"=>"https://api.uploadcare.com/files/FILE_ID_IN_YOUR_PROJECT/",
+  "uuid"=>"FILE_ID_IN_YOUR_PROJECT",
+  "variations"=>nil,
+  "content_info"=>{
+    "mime"=>{
+      "mime"=>"image/jpeg",
+      "type"=>"image",
+      "subtype"=>"jpeg"
+    },
+    "image"=>{
+      "format"=>"JPEG",
+      "width"=>500,
+      "height"=>500,
+      "sequence"=>false,
+      "orientation"=>6,
+      "geo_location"=>{
+        "latitude"=>55.62013611111111,
+        "longitude"=>37.66299166666666
+      },
+      "datetime_original"=>"2018-08-20T08:59:50",
+      "dpi"=>[72, 72]
+    }
+  },
+  "metadata"=>{
+    "subsystem"=>"uploader",
+    "pet"=>"cat"
+  },
+  "appdata"=>{
+    "uc_clamav_virus_scan"=>{
+      "data"=>{
+        "infected"=>true,
+        "infected_with"=>"Win.Test.EICAR_HDB-1"
+      },
+      "version"=>"0.104.2",
+      "datetime_created"=>"2021-09-21T11:24:33.159663Z",
+      "datetime_updated"=>"2021-09-21T11:24:33.159663Z"
+    },
+    "remove_bg"=>{
+      "data"=>{
+        "foreground_type"=>"person"
+      },
+      "version"=>"1.0",
+      "datetime_created"=>"2021-07-25T12:24:33.159663Z",
+      "datetime_updated"=>"2021-07-25T12:24:33.159663Z"
+    },
+    "aws_rekognition_detect_labels"=>{
+      "data"=>{
+        "LabelModelVersion"=>"2.0",
+        "Labels"=>[
+          {
+            "Confidence"=>93.41645812988281,
+            "Instances"=>[],
+            "Name"=>"Home Decor",
+            "Parents"=>[]
+          },
+          {
+            "Confidence"=>70.75951385498047,
+            "Instances"=>[],
+            "Name"=>"Linen",
+            "Parents"=>[{ "Name"=>"Home Decor" }]
+          },
+          {
+            "Confidence"=>64.7123794555664,
+            "Instances"=>[],
+            "Name"=>"Sunlight",
+            "Parents"=>[]
+          },
+          {
+            "Confidence"=>56.264793395996094,
+            "Instances"=>[],
+            "Name"=>"Flare",
+            "Parents"=>[{ "Name"=>"Light" }]
+          },
+          {
+            "Confidence"=>50.47153854370117,
+            "Instances"=>[],
+            "Name"=>"Tree",
+            "Parents"=>[{ "Name"=>"Plant" }]
+          }
+        ]
+      },
+      "version"=>"2016-06-27",
+      "datetime_created"=>"2021-09-21T11:25:31.259763Z",
+      "datetime_updated"=>"2021-09-21T11:27:33.359763Z"
+    }
+  }
+}
 
-@file.copy # copies file, returns a new (copied) file metadata
+@file.local_copy # copy file to local storage
+
+@file.remote_copy # copy file to remote storage
 
 @file.store # stores file, returns updated metadata
 
@@ -300,8 +385,8 @@ how they should be fetched:
 - **:limit** — Controls page size. Accepts values from 1 to 1000, defaults to 100.
 - **:stored** — Can be either `true` or `false`. When true, file list will contain only stored files. When false — only not stored.
 - **:removed** — Can be either `true` or `false`. When true, file list will contain only removed files. When false — all except removed. Defaults to false.
-- **:ordering** — Controls the order of returned files. Available values: `datetime_updated`, `-datetime_updated`, `size`, `-size`. Defaults to `datetime_uploaded`. More info can be found [here](https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/filesList).
-- **:from** — Specifies the starting point for a collection. Resulting collection will contain files from the given value and to the end in a direction set by an **ordering** option. When files are ordered by `datetime_updated` in any direction, accepts either a `DateTime` object or an ISO 8601 string. When files are ordered by size, accepts non-negative integers (size in bytes). More info can be found [here](https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/filesList).
+- **:ordering** — Controls the order of returned files. Available values: `datetime_uploaded`, `-datetime_uploaded`. Defaults to `datetime_uploaded`. More info can be found [here](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/filesList).
+- **:from** — Specifies the starting point for a collection. Resulting collection will contain files from the given value and to the end in a direction set by an **ordering** option. When files are ordered by `datetime_updated` in any direction, accepts either a `DateTime` object or an ISO 8601 string. When files are ordered by size, accepts non-negative integers (size in bytes). More info can be found [here](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/filesList).
 
 Options used to create a file list can be accessed through `#options` method.
 Note that, once set, they don't affect file fetching process anymore and are
@@ -340,6 +425,25 @@ Alternatively, it's possible to iterate through full list of groups or files wit
 end
 ```
 
+#### Custom File Metadata
+
+File metadata is additional, arbitrary data, associated with uploaded file.
+As an example, you could store unique file identifier from your system.
+
+```ruby
+# Get file's metadata keys and values.
+Uploadcare::FileMetadata.index('FILE_ID_IN_YOUR_PROJECT')
+
+# Get the value of a single metadata key.
+Uploadcare::FileMetadata.show('FILE_ID_IN_YOUR_PROJECT', 'KEY')
+
+# Update the value of a single metadata key. If the key does not exist, it will be created.
+Uploadcare::FileMetadata.update('FILE_ID_IN_YOUR_PROJECT', 'KEY', 'VALUE')
+
+# Delete a file's metadata key.
+Uploadcare::FileMetadata.delete('FILE_ID_IN_YOUR_PROJECT', 'KEY')
+```
+
 #### Group
 
 Groups are structures intended to organize sets of separate files. Each group is
@@ -355,6 +459,12 @@ That's a requirement of our API.
 
 # group can be stored by group ID. It means that all files of a group will be stored on Uploadcare servers permanently
 Uploadcare::Group.store(group.id)
+
+# get a file group by its ID.
+Uploadcare::Group.rest_info(group.id)
+
+# group can be deleted by group ID.
+Uploadcare::Group.delete(group.id)
 ```
 
 #### GroupList
@@ -430,15 +540,56 @@ else
 end
 ```
 
+#### Add-Ons
+
+An `Add-On` is an application implemented by Uploadcare that accepts uploaded files as an input and can produce other files and/or appdata as an output.
+
+##### AWS Rekognition
+
+```ruby
+# Execute AWS Rekognition Add-On for a given target to detect labels in an image. Note: Detected labels are stored in the file's appdata.
+Uploadcare::Addons.ws_rekognition_detect_labels('FILE_ID_IN_YOUR_PROJECT')
+
+# Check the status of AWS Rekognition.
+Uploadcare::Addons.ws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_LABELS')
+```
+
+##### ClamAV
+
+```ruby
+# ClamAV virus checking Add-On for a given target.
+Uploadcare::Addons.uc_clamav_virus_scan('FILE_ID_IN_YOUR_PROJECT')
+
+# Checking and purge infected file.
+Uploadcare::Addons.uc_clamav_virus_scan('FILE_ID_IN_YOUR_PROJECT', purge_infected: true )
+
+# Check the status ClamAV virus scan.
+Uploadcare::Addons.uc_clamav_virus_scan_status('RETURNED_ID_FROM_UC_CLAMAV_VIRUS_SCAN')
+```
+
+##### Remove.bg
+
+```ruby
+# Remove background image removal Add-On for a given target.
+Uploadcare::Addons.remove_bg('FILE_ID_IN_YOUR_PROJECT')
+
+# You can pass optional parameters.
+# See the full list of parameters here: https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/removeBgExecute
+Uploadcare::Addons.remove_bg('FILE_ID_IN_YOUR_PROJECT', crop: true, type_level: '2')
+
+# Check the status of background image removal.
+Uploadcare::Addons.remove_bg_status('RETURNED_ID_FROM_REMOVE_BG')
+```
+
 #### Project
 
 `Project` provides basic info about the connected Uploadcare project. That
 object is also an Hashie::Mash, so every methods out of
-[these](https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/projectInfo) will work.
+[these](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/projectInfo) will work.
 
 ```ruby
 @project = Uploadcare::Project.project
-# => #<Uploadcare::Api::Project collaborators=[], name="demo", pub_key="demopublickey", autostore_enabled=true>
+# => #<Uploadcare::Api::Project collaborators=[], name="demo", pub_key="your_public_key", autostore_enabled=true>
 
 @project.name
 # => "demo"
@@ -513,7 +664,7 @@ Params in the response:
   - **original_source** - built path for a particular video with all the conversion operations and parameters.
   - **token** - a processing job token that can be used to get a [job status](https://uploadcare.com/docs/transformations/video-encoding/#status) (see below).
   - **uuid** - UUID of your processed video file.
-  - **thumbnails_group_uuid** - holds :uuid-thumb-group, a UUID of a [file group](https://uploadcare.com/api-refs/rest-api/v0.6.0/#operation/groupsList) with thumbnails for an output video, based on the thumbs [operation](https://uploadcare.com/docs/transformations/video-encoding/#operation-thumbs) parameters.
+  - **thumbnails_group_uuid** - holds :uuid-thumb-group, a UUID of a [file group](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/groupsList) with thumbnails for an output video, based on the thumbs [operation](https://uploadcare.com/docs/transformations/video-encoding/#operation-thumbs) parameters.
 - **problems** - problems related to your processing job, if any.
 
 To convert multiple videos just add params as a hash for each video to the first argument of the `Uploadcare::VideoConverter#convert` method:

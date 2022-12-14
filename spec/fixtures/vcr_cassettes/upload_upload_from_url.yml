@@ -5,28 +5,25 @@ http_interactions:
     uri: https://upload.uploadcare.com/from_url/
     body:
       encoding: UTF-8
-      string: "-----------------------e029b7c6e0faac0049814312b3ced77dd7d29a8c7f\r\nContent-Disposition:
-        form-data; name=\"pub_key\"\r\n\r\nc8499ee6dc44194c00d2\r\n-----------------------e029b7c6e0faac0049814312b3ced77dd7d29a8c7f\r\nContent-Disposition:
-        form-data; name=\"source_url\"\r\n\r\nhttps://placekitten.com/2250/2250\r\n-----------------------e029b7c6e0faac0049814312b3ced77dd7d29a8c7f\r\nContent-Disposition:
-        form-data; name=\"store\"\r\n\r\nfalse\r\n-----------------------e029b7c6e0faac0049814312b3ced77dd7d29a8c7f--\r\n"
+      string: "-----------------------b83dc4435efe4fccbee41c6fd1c1f9bee8117f698c\r\nContent-Disposition:
+        form-data; name=\"pub_key\"\r\n\r\n99d8e355c5811c2c26ae\r\n-----------------------b83dc4435efe4fccbee41c6fd1c1f9bee8117f698c\r\nContent-Disposition:
+        form-data; name=\"source_url\"\r\n\r\nhttps://placekitten.com/2250/2250\r\n-----------------------b83dc4435efe4fccbee41c6fd1c1f9bee8117f698c--\r\n"
     headers:
-      Accept:
-      - application/json
+      User-Agent:
+      - UploadcareRuby/3.3.2/99d8e355c5811c2c26ae (Ruby/2.6.0)
       Content-Type:
-      - multipart/form-data; boundary=---------------------e029b7c6e0faac0049814312b3ced77dd7d29a8c7f
+      - multipart/form-data; boundary=---------------------b83dc4435efe4fccbee41c6fd1c1f9bee8117f698c
       Connection:
       - close
       Host:
       - upload.uploadcare.com
-      User-Agent:
-      - http.rb/4.3.0
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 27 Jan 2020 14:04:24 GMT
+      - Tue, 20 Sep 2022 13:24:00 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -38,53 +35,52 @@ http_interactions:
       Vary:
       - Accept-Encoding
       - Origin
-      Access-Control-Allow-Headers:
-      - DNT, X-PINGOTHER, X-UC-User-Agent
-      X-Content-Type-Options:
-      - nosniff
-      Access-Control-Max-Age:
-      - '1'
-      X-Xss-Protection:
-      - 1; mode=block
-      Access-Control-Allow-Credentials:
-      - 'true'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Methods:
       - OPTIONS, GET, POST
+      Access-Control-Allow-Headers:
+      - X-UC-User-Agent, DNT, X-PINGOTHER
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 4fceec68-f74a-4f2a-ba03-0e392a2327e7
     body:
-      encoding: ASCII-8BIT
-      string: '{"token":"79e29fa1-a6c2-4908-88ce-511e72501159","type":"token"}'
-    http_version: 
-  recorded_at: Mon, 27 Jan 2020 14:04:25 GMT
+      encoding: UTF-8
+      string: '{"type":"token","token":"0313e4e2-f2ca-4564-833b-4f71bc8cba27"}'
+  recorded_at: Tue, 20 Sep 2022 13:24:01 GMT
 - request:
     method: get
-    uri: https://upload.uploadcare.com/from_url/status/?token=79e29fa1-a6c2-4908-88ce-511e72501159
+    uri: https://upload.uploadcare.com/from_url/status/?token=0313e4e2-f2ca-4564-833b-4f71bc8cba27
     body:
       encoding: UTF-8
       string: ''
     headers:
-      Accept:
-      - application/json
-      Content-Type:
-      - application/json
+      User-Agent:
+      - UploadcareRuby/3.3.2/99d8e355c5811c2c26ae (Ruby/2.6.0)
       Connection:
       - close
       Host:
       - upload.uploadcare.com
-      User-Agent:
-      - http.rb/4.3.0
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Mon, 27 Jan 2020 14:04:25 GMT
+      - Tue, 20 Sep 2022 13:24:02 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '467'
+      - '20'
       Connection:
       - close
       Server:
@@ -92,23 +88,79 @@ http_interactions:
       Vary:
       - Accept-Encoding
       - Origin
-      Access-Control-Allow-Headers:
-      - DNT, X-PINGOTHER, X-UC-User-Agent
-      X-Content-Type-Options:
-      - nosniff
-      Access-Control-Max-Age:
-      - '1'
-      X-Xss-Protection:
-      - 1; mode=block
-      Access-Control-Allow-Credentials:
-      - 'true'
       Access-Control-Allow-Origin:
       - "*"
       Access-Control-Allow-Methods:
       - GET, POST, HEAD, OPTIONS
+      Access-Control-Allow-Headers:
+      - X-PINGOTHER, DNT, X-UC-User-Agent
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - c6db0d92-8ea9-4236-8e52-08979a068399
     body:
-      encoding: ASCII-8BIT
-      string: '{"status":"success","uuid":"a0662de1-a624-461a-816f-7f02e740703b","is_image":true,"filename":"2250","video_info":null,"is_stored":true,"done":453543,"file_id":"a0662de1-a624-461a-816f-7f02e740703b","original_filename":"2250","image_info":{"color_mode":"RGB","orientation":null,"format":"JPEG","sequence":false,"height":2250,"width":2250,"geo_location":null,"datetime_original":null,"dpi":[96,96]},"is_ready":true,"total":453543,"mime_type":"image/jpeg","size":453543}'
-    http_version: 
-  recorded_at: Mon, 27 Jan 2020 14:04:25 GMT
-recorded_with: VCR 5.0.0
+      encoding: UTF-8
+      string: '{"status":"waiting"}'
+  recorded_at: Tue, 20 Sep 2022 13:24:02 GMT
+- request:
+    method: get
+    uri: https://upload.uploadcare.com/from_url/status/?token=0313e4e2-f2ca-4564-833b-4f71bc8cba27
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      User-Agent:
+      - UploadcareRuby/3.3.2/99d8e355c5811c2c26ae (Ruby/2.6.0)
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 20 Sep 2022 13:24:03 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '727'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS
+      Access-Control-Allow-Headers:
+      - X-PINGOTHER, DNT, X-UC-User-Agent
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 2c745a16-e6ff-4baa-a628-e56a5be627dd
+    body:
+      encoding: UTF-8
+      string: '{"size":453543,"total":453543,"done":453543,"uuid":"5c51a7fe-e45d-42a2-ba5e-79957ff4bdab","file_id":"5c51a7fe-e45d-42a2-ba5e-79957ff4bdab","original_filename":"2250","is_image":true,"is_stored":false,"image_info":{"dpi":[96,96],"width":2250,"format":"JPEG","height":2250,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null},"video_info":null,"content_info":{"mime":{"mime":"image/jpeg","type":"image","subtype":"jpeg"},"image":{"dpi":[96,96],"width":2250,"format":"JPEG","height":2250,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null}},"is_ready":true,"filename":"2250","mime_type":"image/jpeg","metadata":{},"status":"success"}'
+  recorded_at: Tue, 20 Sep 2022 13:24:03 GMT
+recorded_with: VCR 6.1.0

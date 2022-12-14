@@ -1,8 +1,8 @@
 ---
 http_interactions:
 - request:
-    method: put
-    uri: https://api.uploadcare.com/groups/fc194fec-5793-4403-a593-686af4be412e~2/storage/
+    method: get
+    uri: https://api.uploadcare.com/groups/47e6cf32-e5a8-4ff4-b48f-14d7304b42dd~2/
     body:
       encoding: UTF-8
       string: ''
@@ -10,45 +10,168 @@ http_interactions:
       Content-Type:
       - application/json
       Accept:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
+      User-Agent:
+      - UploadcareRuby/3.3.2/5d5bb5639e3f2df33674 (Ruby/2.6.0)
+      Date:
+      - Fri, 30 Sep 2022 09:53:43 GMT
       Authorization:
-      - Uploadcare.Simple c8499ee6dc44194c00d2:81d1ab1b5e9cb74d1ab1
+      - Uploadcare 5d5bb5639e3f2df33674:a60670945ab4e1e26dc2fcbd7cc023999082136a
       Connection:
       - close
       Host:
       - api.uploadcare.com
-      User-Agent:
-      - http.rb/4.3.0
   response:
     status:
       code: 200
       message: OK
     headers:
       Date:
-      - Tue, 04 Feb 2020 11:52:09 GMT
+      - Fri, 30 Sep 2022 09:53:44 GMT
       Content-Type:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       Content-Length:
-      - '1618'
+      - '1627'
       Connection:
       - close
       Server:
       - nginx
+      Warning:
+      - '199 Miscellaneous warning: Please use API version 0.5, not 0.7'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Vary:
+      - Accept
+      Allow:
+      - DELETE, GET, HEAD, OPTIONS
       X-Xss-Protection:
       - 1; mode=block
       X-Content-Type-Options:
       - nosniff
+      X-Uploadcare-Request-Id:
+      - 51a5fa7f-dddc-4880-960b-17379d567b21
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
+    body:
+      encoding: ASCII-8BIT
+      string: '{"id":"47e6cf32-e5a8-4ff4-b48f-14d7304b42dd~2","datetime_created":"2022-09-30T08:38:33.039356Z","files_count":2,"cdn_url":"https://ucarecdn.com/47e6cf32-e5a8-4ff4-b48f-14d7304b42dd~2/","url":"https://api.uploadcare.com/groups/47e6cf32-e5a8-4ff4-b48f-14d7304b42dd~2/","files":[{"datetime_removed":null,"datetime_stored":"2021-10-21T12:01:19.185151Z","datetime_uploaded":"2021-10-21T12:01:19.129147Z","is_image":true,"is_ready":true,"mime_type":"image/jpeg","original_file_url":"https://ucarecdn.com/32b70177-26f9-4281-bfe4-8ba284130c77/demo8.jpeg","original_filename":"demo8.jpeg","size":16120,"url":"https://api.uploadcare.com/files/32b70177-26f9-4281-bfe4-8ba284130c77/","uuid":"32b70177-26f9-4281-bfe4-8ba284130c77","variations":null,"content_info":{"image":{"dpi":[72,72],"width":536,"format":"JPEG","height":354,"sequence":false,"color_mode":"RGB","orientation":1,"geo_location":null,"datetime_original":null}},"metadata":{},"default_effects":""},{"datetime_removed":null,"datetime_stored":"2021-10-21T11:59:58.520801Z","datetime_uploaded":"2021-10-21T11:59:58.459076Z","is_image":true,"is_ready":true,"mime_type":"image/jpeg","original_file_url":"https://ucarecdn.com/63947f94-568c-4719-ae9b-1a555240c925/demo6.jpeg","original_filename":"demo6.jpeg","size":24301,"url":"https://api.uploadcare.com/files/63947f94-568c-4719-ae9b-1a555240c925/","uuid":"63947f94-568c-4719-ae9b-1a555240c925","variations":null,"content_info":{"image":{"dpi":[25,25],"width":536,"format":"JPEG","height":354,"sequence":false,"color_mode":"RGB","orientation":1,"geo_location":null,"datetime_original":null}},"metadata":{},"default_effects":""}]}'
+  recorded_at: Fri, 30 Sep 2022 09:53:44 GMT
+- request:
+    method: put
+    uri: https://api.uploadcare.com/files/32b70177-26f9-4281-bfe4-8ba284130c77/storage/
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      User-Agent:
+      - UploadcareRuby/3.3.2/5d5bb5639e3f2df33674 (Ruby/2.6.0)
+      Date:
+      - Fri, 30 Sep 2022 09:53:44 GMT
+      Authorization:
+      - Uploadcare 5d5bb5639e3f2df33674:0922c764505fc59b547adc597ff44acafe1951be
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 30 Sep 2022 09:53:44 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.7+json
+      Content-Length:
+      - '653'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Warning:
+      - '199 Miscellaneous warning: Please use API version 0.5, not 0.7'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
       Vary:
       - Accept
       Allow:
-      - OPTIONS, POST, PUT
-      Access-Control-Allow-Origin:
-      - https://uploadcare.com
+      - DELETE, GET, HEAD, OPTIONS, POST, PUT
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 34c8540d-d0b7-44a5-85c4-0e3ae3ef489c
       X-Frame-Options:
       - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
     body:
       encoding: ASCII-8BIT
-      string: '{"id":"fc194fec-5793-4403-a593-686af4be412e~2","datetime_created":"2020-01-27T10:45:12.498576Z","datetime_stored":"2020-02-04T11:52:09.964351Z","files_count":2,"cdn_url":"https://ucarecdn.com/fc194fec-5793-4403-a593-686af4be412e~2/","url":"https://api.uploadcare.com/groups/fc194fec-5793-4403-a593-686af4be412e~2/","files":[{"datetime_removed":null,"datetime_stored":"2020-01-20T15:53:29.507216Z","datetime_uploaded":"2020-01-17T14:46:41.919939Z","image_info":{"color_mode":"RGB","orientation":null,"format":"JPEG","sequence":false,"height":183,"width":190,"geo_location":null,"datetime_original":null,"dpi":null},"is_image":true,"is_ready":true,"mime_type":"image/jpeg","original_file_url":"https://ucarecdn.com/e9a9f291-cc52-4388-bf65-9feec1c75ff9/imagepng.jpeg","original_filename":"image.png.jpeg","size":5345,"url":"https://api.uploadcare.com/files/e9a9f291-cc52-4388-bf65-9feec1c75ff9/","uuid":"e9a9f291-cc52-4388-bf65-9feec1c75ff9","source":null,"default_effects":""},{"datetime_removed":null,"datetime_stored":"2020-01-16T15:02:30.430281Z","datetime_uploaded":"2020-01-16T15:02:30.308894Z","image_info":{"color_mode":"RGBA","orientation":null,"format":"PNG","sequence":false,"height":300,"width":300,"geo_location":null,"datetime_original":null,"dpi":[72,72]},"is_image":true,"is_ready":true,"mime_type":"image/png","original_file_url":"https://ucarecdn.com/c724feac-86f7-447c-b2d6-b0ced220173d/Test.png","original_filename":"Test.png","size":3118,"url":"https://api.uploadcare.com/files/c724feac-86f7-447c-b2d6-b0ced220173d/","uuid":"c724feac-86f7-447c-b2d6-b0ced220173d","source":null,"default_effects":""}]}'
-    http_version: 
-  recorded_at: Tue, 04 Feb 2020 11:52:10 GMT
-recorded_with: VCR 5.0.0
+      string: '{"datetime_removed":null,"datetime_stored":"2021-10-21T12:01:19.185151Z","datetime_uploaded":"2021-10-21T12:01:19.129147Z","is_image":true,"is_ready":true,"mime_type":"image/jpeg","original_file_url":"https://ucarecdn.com/32b70177-26f9-4281-bfe4-8ba284130c77/demo8.jpeg","original_filename":"demo8.jpeg","size":16120,"url":"https://api.uploadcare.com/files/32b70177-26f9-4281-bfe4-8ba284130c77/","uuid":"32b70177-26f9-4281-bfe4-8ba284130c77","variations":null,"content_info":{"image":{"dpi":[72,72],"width":536,"format":"JPEG","height":354,"sequence":false,"color_mode":"RGB","orientation":1,"geo_location":null,"datetime_original":null}},"metadata":{}}'
+  recorded_at: Fri, 30 Sep 2022 09:53:44 GMT
+- request:
+    method: put
+    uri: https://api.uploadcare.com/files/63947f94-568c-4719-ae9b-1a555240c925/storage/
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      User-Agent:
+      - UploadcareRuby/3.3.2/5d5bb5639e3f2df33674 (Ruby/2.6.0)
+      Date:
+      - Fri, 30 Sep 2022 09:53:44 GMT
+      Authorization:
+      - Uploadcare 5d5bb5639e3f2df33674:d6e24b595c59c8b4c2c65c2316ac953cc98dc10d
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 30 Sep 2022 09:53:45 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.7+json
+      Content-Length:
+      - '653'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Warning:
+      - '199 Miscellaneous warning: Please use API version 0.5, not 0.7'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Vary:
+      - Accept
+      Allow:
+      - DELETE, GET, HEAD, OPTIONS, POST, PUT
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - f082ea38-237d-4492-b936-a531a9118007
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
+    body:
+      encoding: ASCII-8BIT
+      string: '{"datetime_removed":null,"datetime_stored":"2021-10-21T11:59:58.520801Z","datetime_uploaded":"2021-10-21T11:59:58.459076Z","is_image":true,"is_ready":true,"mime_type":"image/jpeg","original_file_url":"https://ucarecdn.com/63947f94-568c-4719-ae9b-1a555240c925/demo6.jpeg","original_filename":"demo6.jpeg","size":24301,"url":"https://api.uploadcare.com/files/63947f94-568c-4719-ae9b-1a555240c925/","uuid":"63947f94-568c-4719-ae9b-1a555240c925","variations":null,"content_info":{"image":{"dpi":[25,25],"width":536,"format":"JPEG","height":354,"sequence":false,"color_mode":"RGB","orientation":1,"geo_location":null,"datetime_original":null}},"metadata":{}}'
+  recorded_at: Fri, 30 Sep 2022 09:53:45 GMT
+recorded_with: VCR 6.1.0

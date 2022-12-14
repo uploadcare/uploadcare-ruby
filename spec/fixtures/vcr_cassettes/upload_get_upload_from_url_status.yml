@@ -2,13 +2,13 @@
 http_interactions:
 - request:
     method: get
-    uri: https://upload.uploadcare.com/from_url/status/?token=c6e31082-6bdc-4cb1-bef5-14dd10574d73
+    uri: https://upload.uploadcare.com/from_url/status/?token=0313e4e2-f2ca-4564-833b-4f71bc8cba27
     body:
       encoding: UTF-8
       string: ''
     headers:
       User-Agent:
-      - UploadcareRuby/3.1.0/demopublickey (Ruby/3.0.2)
+      - UploadcareRuby/3.3.2/99d8e355c5811c2c26ae (Ruby/2.6.0)
       Connection:
       - close
       Host:
@@ -19,11 +19,11 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 02 Sep 2021 04:50:21 GMT
+      - Tue, 20 Sep 2022 13:34:20 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '321'
+      - '727'
       Connection:
       - close
       Server:
@@ -36,17 +36,21 @@ http_interactions:
       Access-Control-Allow-Methods:
       - GET, POST, HEAD, OPTIONS
       Access-Control-Allow-Headers:
-      - DNT, X-PINGOTHER, X-UC-User-Agent
+      - X-UC-User-Agent, X-PINGOTHER, DNT
       Access-Control-Max-Age:
       - '1'
       Access-Control-Allow-Credentials:
       - 'true'
+      Access-Control-Expose-Headers:
+      - Warning
       X-Xss-Protection:
       - 1; mode=block
       X-Content-Type-Options:
       - nosniff
+      X-Uploadcare-Request-Id:
+      - 98845e62-5cd9-4426-840c-004d6dde63e0
     body:
-      encoding: ASCII-8BIT
-      string: '{"size":28511,"total":28511,"done":28511,"uuid":"dd378130-28e5-41b3-8c56-f1bbf2840d57","file_id":"dd378130-28e5-41b3-8c56-f1bbf2840d57","original_filename":"video.ogg","is_image":false,"is_stored":false,"image_info":null,"video_info":null,"is_ready":true,"filename":"video.ogg","mime_type":"audio/ogg","status":"success"}'
-  recorded_at: Thu, 02 Sep 2021 04:50:21 GMT
-recorded_with: VCR 6.0.0
+      encoding: UTF-8
+      string: '{"size":453543,"total":453543,"done":453543,"uuid":"5c51a7fe-e45d-42a2-ba5e-79957ff4bdab","file_id":"5c51a7fe-e45d-42a2-ba5e-79957ff4bdab","original_filename":"2250","is_image":true,"is_stored":false,"image_info":{"dpi":[96,96],"width":2250,"format":"JPEG","height":2250,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null},"video_info":null,"content_info":{"mime":{"mime":"image/jpeg","type":"image","subtype":"jpeg"},"image":{"dpi":[96,96],"width":2250,"format":"JPEG","height":2250,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null}},"is_ready":true,"filename":"2250","mime_type":"image/jpeg","metadata":{},"status":"success"}'
+  recorded_at: Tue, 20 Sep 2022 13:34:20 GMT
+recorded_with: VCR 6.1.0

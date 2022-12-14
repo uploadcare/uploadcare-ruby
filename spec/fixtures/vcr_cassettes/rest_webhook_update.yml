@@ -1,7 +1,7 @@
 ---
 http_interactions:
 - request:
-    method: post
+    method: put
     uri: https://api.uploadcare.com/webhooks/887447/
     body:
       encoding: UTF-8
@@ -10,7 +10,7 @@ http_interactions:
       Content-Type:
       - application/json
       Accept:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       User-Agent:
       - UploadcareRuby/3.1.1/demopublickey (Ruby/3.0.2)
       Date:
@@ -29,7 +29,7 @@ http_interactions:
       Date:
       - Tue, 16 Nov 2021 05:45:14 GMT
       Content-Type:
-      - application/vnd.uploadcare-v0.5+json
+      - application/vnd.uploadcare-v0.7+json
       Content-Length:
       - '213'
       Connection:
@@ -43,7 +43,7 @@ http_interactions:
       Vary:
       - Accept
       Allow:
-      - OPTIONS, POST
+      - OPTIONS, PUT
       X-Xss-Protection:
       - 1; mode=block
       X-Content-Type-Options:

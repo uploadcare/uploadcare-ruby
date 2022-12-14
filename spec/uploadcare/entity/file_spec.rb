@@ -7,7 +7,7 @@ module Uploadcare
     RSpec.describe File do
       subject { File }
       it 'responds to expected methods' do
-        expect(subject).to respond_to(:info, :copy, :delete, :store)
+        expect(subject).to respond_to(:info, :delete, :store, :local_copy, :remote_copy)
       end
 
       it 'represents a file as entity' do
@@ -15,7 +15,7 @@ module Uploadcare
           uuid = '8f64f313-e6b1-4731-96c0-6751f1e7a50a'
           file = subject.info(uuid)
           expect(file).to be_a_kind_of(subject)
-          expect(file).to respond_to(:image_info, :datetime_uploaded, :uuid, :url, :size, :original_filename)
+          expect(file).to respond_to(*File::RESPONSE_PARAMS)
           expect(file.uuid).to eq(uuid)
         end
       end
@@ -37,7 +37,7 @@ module Uploadcare
       describe 'internal_copy' do
         it 'copies file to same project' do
           VCR.use_cassette('rest_file_internal_copy') do
-            file = subject.file('35b7fcd7-9bca-40e1-99b1-2adcc21c405d')
+            file = subject.file('5632fc94-9dff-499f-a373-f69ea6f67ff8')
             file.local_copy
           end
         end
@@ -46,7 +46,7 @@ module Uploadcare
       describe 'external_copy' do
         it 'copies file to different project' do
           VCR.use_cassette('rest_file_external_copy') do
-            file = subject.file('35b7fcd7-9bca-40e1-99b1-2adcc21c405d')
+            file = subject.file('5632fc94-9dff-499f-a373-f69ea6f67ff8')
             # I don't have custom storage, but this error recognises what this method tries to do
             msg = 'Project has no storage with provided name.'
             expect { file.remote_copy('16d8625b4c5c4a372a8f') }.to raise_error(RequestError, msg)

@@ -10,7 +10,7 @@ module Uploadcare
       describe 'info' do
         it 'shows insider info about that file' do
           VCR.use_cassette('rest_file_info') do
-            uuid = '8f64f313-e6b1-4731-96c0-6751f1e7a50a'
+            uuid = '2e17f5d1-d423-4de6-8ee5-6773cc4a7fa6'
             file = subject.info(uuid)
             expect(file.value![:uuid]).to eq(uuid)
           end
@@ -24,31 +24,10 @@ module Uploadcare
         end
       end
 
-      describe 'copy' do
-        it 'makes a copy of a file' do
-          VCR.use_cassette('rest_file_copy') do
-            uuid = '8f64f313-e6b1-4731-96c0-6751f1e7a50a'
-            response = subject.copy(source: uuid)
-            new_uuid = response.value!.dig(:result, :uuid)
-            expect(new_uuid).to be_a_kind_of(String)
-            expect(new_uuid).not_to eq(uuid)
-          end
-        end
-
-        it 'accepts other arguments' do
-          VCR.use_cassette('rest_file_copy_arg') do
-            uuid = '8f64f313-e6b1-4731-96c0-6751f1e7a50a'
-            expect do
-              subject.copy(source: uuid, target: 'nowhere')
-            end.to raise_error(RequestError, 'Project has no storage with provided name.')
-          end
-        end
-      end
-
       describe 'delete' do
         it 'deletes a file' do
           VCR.use_cassette('rest_file_delete') do
-            uuid = 'e9a9f291-cc52-4388-bf65-9feec1c75ff9'
+            uuid = '158e7c82-8246-4017-9f17-0798e18c91b0'
             response = subject.delete(uuid)
             response_value = response.value!
             expect(response_value[:datetime_removed]).not_to be_empty

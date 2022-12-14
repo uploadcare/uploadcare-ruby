@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'parallel'
+require 'dry/monads'
 require 'api_struct'
 
 module Uploadcare
