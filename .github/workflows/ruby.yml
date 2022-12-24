@@ -22,15 +22,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Setup bundler
+      run: gem install bundler -v 1.17.3
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
     - name: Run tests
-      run: |
-        gem install bundler -v 1.17.3
-        bundle exec rake
+      run: bundle exec rake
       env:
         UPLOADCARE_PUBLIC_KEY: demopublickey
         UPLOADCARE_SECRET_KEY: demoprivatekey
