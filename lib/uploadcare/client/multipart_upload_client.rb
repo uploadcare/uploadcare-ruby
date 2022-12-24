@@ -12,7 +12,7 @@ module Uploadcare
       include MultipartUpload
 
       # Upload a big file by splitting it into parts and sending those parts into assigned buckets
-      # object should be File
+      # object should be file
       def upload(object, options = {}, &block)
         response = upload_start(object, options)
         return response unless response.success[:parts] && response.success[:uuid]
