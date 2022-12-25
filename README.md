@@ -54,6 +54,17 @@ And then execute:
 
     $ bundle
 
+If you have Ruby version >= 3, then you probably will get error:
+```
+ArgumentError: wrong number of arguments (given 2, expected 1)
+```
+
+To fix this errors, add this line to your application's Gemfile:
+```ruby
+gem 'dry-configurable', '0.13.0'
+```
+and run `bundle install`
+
 If already not, create your project in [Uploadcare dashboard](https://app.uploadcare.com/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby) and copy
 its [API keys](https://app.uploadcare.com/projects/-/api-keys/) from there.
 
