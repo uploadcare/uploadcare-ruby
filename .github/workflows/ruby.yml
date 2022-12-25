@@ -12,7 +12,7 @@ on: [push, pull_request]
 jobs:
   test:
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         ruby-version: [
@@ -25,6 +25,7 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
+        bundler: 1.17.3
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
     - name: Run tests

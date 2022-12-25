@@ -7,8 +7,7 @@ require 'uploadcare/ruby/version'
 Gem::Specification.new do |spec|
   spec.name          = 'uploadcare-ruby'
   spec.version       = Uploadcare::VERSION
-  spec.authors       = ['Stepan Redka']
-  spec.email         = ['stepan.redka@railsmuffin.com']
+  spec.authors       = ['@dmitrijivanchenko (Dmitrij Ivanchenko), @T0mbery (Andrey Aksenov)']
 
   spec.summary       = 'Ruby wrapper for uploadcare API'
   spec.description   = spec.summary
@@ -40,7 +39,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'api_struct', '~> 1.0.1'
   # rubocop:disable Gemspec/RubyVersionGlobalsUsage
   if RUBY_VERSION.start_with?('3')
-    spec.add_dependency 'dry-configurable', '~> 0.13.0'
+    spec.add_dependency 'dry-configurable', '0.13.0'
   else
     spec.add_dependency 'dry-configurable'
   end

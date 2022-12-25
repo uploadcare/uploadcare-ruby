@@ -33,19 +33,19 @@ module Uploadcare
         end
       end
 
-      def get(**options)
+      def get(options = {})
         request(method: 'GET', **options)
       end
 
-      def post(**options)
+      def post(options = {})
         request(method: 'POST', **options)
       end
 
-      def put(**options)
+      def put(options = {})
         request(method: 'PUT', **options)
       end
 
-      def delete(**options)
+      def delete(options = {})
         request(method: 'DELETE', **options)
       end
 

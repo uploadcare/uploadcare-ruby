@@ -1,54 +1,59 @@
 ---
 http_interactions:
 - request:
-    method: post
+    method: delete
     uri: https://api.uploadcare.com/webhooks/unsubscribe/
     body:
       encoding: UTF-8
-      string: '{"target_url":"http://example.com "}'
+      string: '{"target_url":"http://example.com"}'
     headers:
       Content-Type:
       - application/json
       Accept:
       - application/vnd.uploadcare-v0.7+json
+      User-Agent:
+      - UploadcareRuby/4.0.2/demopublickey (Ruby/2.7.6)
       Date:
-      - Wed, 05 Feb 2020 14:24:23 GMT
+      - Sun, 25 Dec 2022 11:52:02 GMT
       Authorization:
-      - Uploadcare ecd779dc169645ce3c91:dfec407713e70bf9c79c93680429dfb2ef0ea38a
+      - Uploadcare demopublickey:002e6b7d40e088be059581433c1a298bd2b48b88
       Connection:
       - close
       Host:
       - api.uploadcare.com
-      User-Agent:
-      - http.rb/4.3.0
   response:
     status:
       code: 204
       message: No Content
     headers:
       Date:
-      - Wed, 05 Feb 2020 14:24:23 GMT
+      - Sun, 25 Dec 2022 11:52:03 GMT
       Content-Length:
       - '0'
       Connection:
       - close
       Server:
       - nginx
+      Warning:
+      - '199 Miscellaneous warning: You are using the demo project'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Vary:
+      - Accept
+      Allow:
+      - DELETE, OPTIONS
       X-Xss-Protection:
       - 1; mode=block
       X-Content-Type-Options:
       - nosniff
-      Vary:
-      - Accept
-      Allow:
-      - OPTIONS, POST
-      Access-Control-Allow-Origin:
-      - https://uploadcare.com
+      X-Uploadcare-Request-Id:
+      - e20e5691-2c74-4680-9a3f-1b3f92561fa3
       X-Frame-Options:
       - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
     body:
       encoding: ASCII-8BIT
       string: ''
-    http_version: 
-  recorded_at: Wed, 05 Feb 2020 14:24:23 GMT
-recorded_with: VCR 5.0.0
+  recorded_at: Sun, 25 Dec 2022 11:52:03 GMT
+recorded_with: VCR 6.1.0

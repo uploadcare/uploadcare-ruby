@@ -56,7 +56,7 @@ module Uploadcare
       private
 
       alias api_struct_post post
-      def post(**args)
+      def post(args = {})
         handle_throttling { api_struct_post(**args) }
       end
 

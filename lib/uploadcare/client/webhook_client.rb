@@ -30,7 +30,7 @@ module Uploadcare
       # @see https://uploadcare.com/docs/api_reference/rest/webhooks/#unsubscribe
       def delete(target_url)
         body = { 'target_url': target_url }.to_json
-        post(uri: '/webhooks/unsubscribe/', content: body)
+        request(method: 'DELETE', uri: '/webhooks/unsubscribe/', content: body)
       end
 
       # Updates webhook
