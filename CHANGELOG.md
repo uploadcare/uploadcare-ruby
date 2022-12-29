@@ -1,6 +1,13 @@
 # Changelog
 
-## 4.0.0
+## 4.0.0 — 2022-12-29
+
+This version supports latest Uploadcare REST API — [v0.7](https://uploadcare.com/api-refs/rest-api/v0.7.0/), which introduces new file management features:
+* [File metadata](https://uploadcare.com/docs/file-metadata/)
+* New [add-ons API](https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Add-Ons):
+  * [Background removal](https://uploadcare.com/docs/remove-bg/)
+  * [Virus checking](https://uploadcare.com/docs/security/malware-protection/)
+  * [Object recognition](https://uploadcare.com/docs/intelligence/object-recognition/)
 
 ### Breaking Сhanges
 
