@@ -37,9 +37,9 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib', 'lib/uploadcare', 'lib/uploadcare/rest']
 
   spec.add_dependency 'api_struct', '1.1'
-  spec.add_dependency 'mimemagic'
-  spec.add_dependency 'parallel'
-  spec.add_dependency 'retries'
+  spec.add_dependency 'mimemagic', '~> 0.4'
+  spec.add_dependency 'parallel', '~> 1.22'
+  spec.add_dependency 'retries', '~> 0.0'
 
   spec.add_development_dependency 'byebug', '~> 11.1'
   spec.add_development_dependency 'rake', '~> 13.0'
