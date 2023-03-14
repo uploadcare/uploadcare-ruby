@@ -20,7 +20,7 @@ module Uploadcare
         def self.upload_chunks(object, links)
           Parallel.each(0...links.count, in_threads: Uploadcare.config.upload_threads) do |link_id|
             offset = link_id * CHUNK_SIZE
-            chunk = IO.read(object, CHUNK_SIZE, offset)
+            chunk = File.read(object, CHUNK_SIZE, offset)
             new.upload_chunk(chunk, links[link_id])
             next unless block_given?
 

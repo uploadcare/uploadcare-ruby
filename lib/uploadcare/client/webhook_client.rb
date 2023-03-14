@@ -11,11 +11,11 @@ module Uploadcare
       # @see https://uploadcare.com/docs/api_reference/rest/webhooks/#subscribe
       def create(options = {})
         body = {
-          'target_url': options[:target_url],
-          'event': options[:event] || 'file.uploaded',
-          'is_active': options[:is_active].nil? ? true : options[:is_active]
+          target_url: options[:target_url],
+          event: options[:event] || 'file.uploaded',
+          is_active: options[:is_active].nil? ? true : options[:is_active]
         }.merge(
-          { 'signing_secret': options[:signing_secret] }.compact
+          { signing_secret: options[:signing_secret] }.compact
         ).to_json
         post(uri: '/webhooks/', content: body)
       end
@@ -29,7 +29,7 @@ module Uploadcare
       # Permanently deletes subscription
       # @see https://uploadcare.com/docs/api_reference/rest/webhooks/#unsubscribe
       def delete(target_url)
-        body = { 'target_url': target_url }.to_json
+        body = { target_url: target_url }.to_json
         request(method: 'DELETE', uri: '/webhooks/unsubscribe/', content: body)
       end
 

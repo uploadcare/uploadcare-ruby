@@ -24,7 +24,7 @@ Gem::Specification.new do |spec|
     spec.metadata['changelog_uri'] = 'https://github.com/uploadcare/uploadcare-ruby/CHANGELOG.md'
   else
     raise 'RubyGems 2.0 or newer is required to protect against ' \
-      'public gem pushes.'
+          'public gem pushes.'
   end
 
   # Specify which files should be added to the gem when it is released.
@@ -41,10 +41,11 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'parallel'
   spec.add_dependency 'retries'
 
-  spec.add_development_dependency 'byebug'
+  spec.add_development_dependency 'byebug', '~> 11.1'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop'
-  spec.add_development_dependency 'vcr'
-  spec.add_development_dependency 'webmock'
+  spec.add_development_dependency 'rubocop', '~> 1.48'
+  spec.add_development_dependency 'vcr', '~> 6.1'
+  spec.add_development_dependency 'webmock', '~> 3.18'
+  spec.metadata['rubygems_mfa_required'] = 'true'
 end

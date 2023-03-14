@@ -13,7 +13,7 @@ module Uploadcare
         let!(:expected_result) { { signature: '46f70d2b4fb6196daeb2c16bf44a7f1e', expire: expires_at } }
 
         before do
-          allow(Time).to receive(:now).and_return(expires_at - 60 * 30)
+          allow(Time).to receive(:now).and_return(expires_at - (60 * 30))
           Uploadcare.config.secret_key = 'project_secret_key'
         end
 

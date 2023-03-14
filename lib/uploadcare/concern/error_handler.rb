@@ -36,7 +36,7 @@ module Uploadcare
 
       # Raise ThrottleError. Also, tells in error when server will be ready for next request
       def raise_throttling_error(response)
-        retry_after = response.headers['Retry-After'].to_i + 1 || 11
+        retry_after = (response.headers['Retry-After'].to_i + 1) || 11
         raise ThrottleError.new(retry_after), "Response throttled, retry #{retry_after} seconds later"
       end
 

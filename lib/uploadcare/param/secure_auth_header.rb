@@ -15,8 +15,8 @@ module Uploadcare
         @uri = options[:uri]
         @date_for_header = timestamp
         {
-          'Date': @date_for_header,
-          'Authorization': "Uploadcare #{Uploadcare.config.public_key}:#{signature}"
+          Date: @date_for_header,
+          Authorization: "Uploadcare #{Uploadcare.config.public_key}:#{signature}"
         }
       end
 

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'rest_client'
 require 'dry/monads'
 require 'api_struct'
 require 'uploadcare/concern/error_handler'
@@ -56,7 +55,7 @@ module Uploadcare
       def headers
         {
           'Content-Type': 'application/json',
-          'Accept': 'application/vnd.uploadcare-v0.7+json',
+          Accept: 'application/vnd.uploadcare-v0.7+json',
           'User-Agent': Uploadcare::Param::UserAgent.call
         }
       end
