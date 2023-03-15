@@ -89,7 +89,7 @@ module Uploadcare
       def convert_file(params, converter, options = {})
         raise Uploadcare::Exception::ConversionError, 'The first argument must be a Hash' unless params.is_a?(Hash)
 
-        params_with_symbolized_keys = params.map { |k, v| [k.to_sym, v] }.to_h
+        params_with_symbolized_keys = params.to_h { |k, v| [k.to_sym, v] }
         params_with_symbolized_keys[:uuid] = uuid
         result = converter.convert(params_with_symbolized_keys, options)
         result.success? ? File.info(result.value![:result].first[:uuid]) : result

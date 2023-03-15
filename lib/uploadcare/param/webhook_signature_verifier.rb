@@ -9,7 +9,7 @@ module Uploadcare
       # @see https://uploadcare.com/docs/security/secure-webhooks/
       def self.valid?(options = {})
         webhook_body_json = options[:webhook_body]
-        signing_secret = options[:signing_secret] || ENV['UC_SIGNING_SECRET']
+        signing_secret = options[:signing_secret] || ENV.fetch('UC_SIGNING_SECRET', nil)
         x_uc_signature_header = options[:x_uc_signature_header]
 
         digest = OpenSSL::Digest.new('sha256')

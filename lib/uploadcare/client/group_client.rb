@@ -21,7 +21,7 @@ module Uploadcare
       # Get group info
       # @see https://uploadcare.com/api-refs/upload-api/#operation/filesGroupInfo
       def info(group_id)
-        get(path: 'group/info/', params: { 'pub_key': Uploadcare.config.public_key, 'group_id': group_id })
+        get(path: 'group/info/', params: { pub_key: Uploadcare.config.public_key, group_id: group_id })
       end
 
       private

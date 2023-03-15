@@ -73,10 +73,10 @@ module Uploadcare
 
       # Prepares body for upload_many method
       def upload_many_body(arr, options = {})
-        files_formdata = arr.map do |file|
+        files_formdata = arr.to_h do |file|
           [HTTP::FormData::File.new(file).filename,
            form_data_for(file)]
-        end.to_h
+        end
         HTTP::FormData::Multipart.new(
           Param::Upload::UploadParamsGenerator.call(options).merge(files_formdata)
         )

@@ -15,7 +15,7 @@ module Uploadcare
         def headers
           {
             'Content-Type': 'application/json',
-            'Accept': API_VERSION_HEADER_VALUE,
+            Accept: API_VERSION_HEADER_VALUE,
             'User-Agent': Uploadcare::Param::UserAgent.call
           }
         end

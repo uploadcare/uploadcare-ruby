@@ -22,9 +22,10 @@ Gem::Specification.new do |spec|
     spec.metadata['homepage_uri'] = spec.homepage
     spec.metadata['source_code_uri'] = 'https://github.com/uploadcare/uploadcare-ruby'
     spec.metadata['changelog_uri'] = 'https://github.com/uploadcare/uploadcare-ruby/CHANGELOG.md'
+    spec.metadata['rubygems_mfa_required'] = 'true'
   else
     raise 'RubyGems 2.0 or newer is required to protect against ' \
-      'public gem pushes.'
+          'public gem pushes.'
   end
 
   # Specify which files should be added to the gem when it is released.
@@ -36,23 +37,15 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib', 'lib/uploadcare', 'lib/uploadcare/rest']
 
-  spec.add_dependency 'api_struct', '~> 1.0.1'
-  spec.add_dependency 'mimemagic'
-  spec.add_dependency 'parallel'
-  spec.add_dependency 'retries'
+  spec.add_dependency 'mimemagic', '~> 0.4'
+  spec.add_dependency 'parallel', '~> 1.22'
+  spec.add_dependency 'retries', '~> 0.0'
+  spec.add_dependency 'uploadcare-api_struct', '>= 1.1', '< 2'
 
-  # rubocop:disable Gemspec/RubyVersionGlobalsUsage
-  if RUBY_VERSION.start_with?('3')
-    spec.add_development_dependency 'dry-configurable', '0.13.0'
-  else
-    spec.add_development_dependency 'dry-configurable'
-  end
-  # rubocop:enable Gemspec/RubyVersionGlobalsUsage
-
-  spec.add_development_dependency 'byebug'
+  spec.add_development_dependency 'byebug', '~> 11.1'
   spec.add_development_dependency 'rake', '~> 13.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop'
-  spec.add_development_dependency 'vcr'
-  spec.add_development_dependency 'webmock'
+  spec.add_development_dependency 'rubocop', '~> 1.48'
+  spec.add_development_dependency 'vcr', '~> 6.1'
+  spec.add_development_dependency 'webmock', '~> 3.18'
 end

@@ -14,8 +14,8 @@ module Uploadcare
           to_sign = Uploadcare.config.secret_key + expires_at.to_s
           signature = Digest::MD5.hexdigest(to_sign)
           {
-            'signature': signature,
-            'expire': expires_at
+            signature: signature,
+            expire: expires_at
           }
         end
       end

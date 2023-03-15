@@ -32,11 +32,11 @@ module Uploadcare
             context 'and when all operations are present' do
               let(:expected_url) do
                 "#{uuid}/video/-" \
-                "/size/#{arguments[:size][:width]}x#{arguments[:size][:height]}/#{arguments[:size][:resize_mode]}/-" \
-                "/quality/#{arguments[:quality]}/-" \
-                "/format/#{arguments[:format]}/-" \
-                "/cut/#{arguments[:cut][:start_time]}/#{arguments[:cut][:length]}/-" \
-                "/thumbs~#{arguments[:thumbs][:N]}/#{arguments[:thumbs][:number]}/"
+                  "/size/#{arguments[:size][:width]}x#{arguments[:size][:height]}/#{arguments[:size][:resize_mode]}/-" \
+                  "/quality/#{arguments[:quality]}/-" \
+                  "/format/#{arguments[:format]}/-" \
+                  "/cut/#{arguments[:cut][:start_time]}/#{arguments[:cut][:length]}/-" \
+                  "/thumbs~#{arguments[:thumbs][:N]}/#{arguments[:thumbs][:number]}/"
               end
 
               it_behaves_like 'URL building'
@@ -46,7 +46,7 @@ module Uploadcare
               let(:arguments) { super().select { |k, _v| %i[uuid size].include?(k) } }
               let(:expected_url) do
                 "#{uuid}/video/-" \
-                "/size/#{arguments[:size][:width]}x#{arguments[:size][:height]}/#{arguments[:size][:resize_mode]}/"
+                  "/size/#{arguments[:size][:width]}x#{arguments[:size][:height]}/#{arguments[:size][:resize_mode]}/"
               end
 
               it_behaves_like 'URL building'

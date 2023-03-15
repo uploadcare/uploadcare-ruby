@@ -14,7 +14,7 @@ module Uploadcare
       end
 
       it 'returns correct headers for simple authentication' do
-        expect(subject.call).to eq('Authorization': 'Uploadcare.Simple foo:bar')
+        expect(subject.call).to eq(Authorization: 'Uploadcare.Simple foo:bar')
       end
     end
   end
