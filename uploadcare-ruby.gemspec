@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib', 'lib/uploadcare', 'lib/uploadcare/rest']
 
-  spec.add_dependency 'api_struct', '1.1'
+  spec.add_dependency 'uploadcare-api_struct', '>= 1.1', '< 2'
   spec.add_dependency 'mimemagic', '~> 0.4'
   spec.add_dependency 'parallel', '~> 1.22'
   spec.add_dependency 'retries', '~> 0.0'
