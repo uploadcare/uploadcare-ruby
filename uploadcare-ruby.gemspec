@@ -22,6 +22,7 @@ Gem::Specification.new do |spec|
     spec.metadata['homepage_uri'] = spec.homepage
     spec.metadata['source_code_uri'] = 'https://github.com/uploadcare/uploadcare-ruby'
     spec.metadata['changelog_uri'] = 'https://github.com/uploadcare/uploadcare-ruby/CHANGELOG.md'
+    spec.metadata['rubygems_mfa_required'] = 'true'
   else
     raise 'RubyGems 2.0 or newer is required to protect against ' \
           'public gem pushes.'
@@ -47,5 +48,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop', '~> 1.48'
   spec.add_development_dependency 'vcr', '~> 6.1'
   spec.add_development_dependency 'webmock', '~> 3.18'
-  spec.metadata['rubygems_mfa_required'] = 'true'
 end
