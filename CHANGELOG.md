@@ -1,5 +1,17 @@
 # Changelog
 
+## 4.3.0 — 2023-03-15
+
+Add support of new ruby versions
+
+### Breaking Сhanges
+
+Drop support of unmaintainable Ruby versions (2.4, 2.5, 2.6).
+
+### Added
+
+Add support for Ruby 3+ (3.0, 3.1, 3.2).
+
 ## 4.0.0 — 2022-12-29
 
 This version supports latest Uploadcare REST API — [v0.7](https://uploadcare.com/api-refs/rest-api/v0.7.0/), which introduces new file management features:
