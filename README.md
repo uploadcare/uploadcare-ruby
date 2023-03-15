@@ -35,7 +35,7 @@ wrapping Upload and REST APIs.
 * [Useful links](#useful-links)
 
 ## Requirements
-* ruby 2.4+
+* ruby 2.7+
 
 ## Compatibility
 
@@ -54,14 +54,9 @@ And then execute:
 
     $ bundle
 
-If you have Ruby version >= 3, then you probably will get error:
-```
-ArgumentError: wrong number of arguments (given 2, expected 1)
-```
-
-To fix this errors, add this line to your application's Gemfile:
+If you use `api_struct` gem in your project, replace it with `uploadcare-api_struct`:
 ```ruby
-gem 'dry-configurable', '0.13.0'
+gem 'uploadcare-api_struct'
 ```
 and run `bundle install`
 
