@@ -1,8 +1,11 @@
 # Changelog
 
-## 4.3.1 — 2023-03-16
+## 4.3.1 — 2023-03-17
 
-Update the gem description
+### Changed
+
+- Update the gem description
+- Allow ENV keys to be configured after the gem load
 
 ## 4.3.0 — 2023-03-15
 
