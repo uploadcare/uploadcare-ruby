@@ -45,8 +45,8 @@ module Uploadcare
     end
   end
 
-  setting :public_key,                default: ENV.fetch('UPLOADCARE_PUBLIC_KEY')
-  setting :secret_key,                default: ENV.fetch('UPLOADCARE_SECRET_KEY')
+  setting :public_key,                default: ENV.fetch('UPLOADCARE_PUBLIC_KEY', '')
+  setting :secret_key,                default: ENV.fetch('UPLOADCARE_SECRET_KEY', '')
   setting :auth_type,                 default: 'Uploadcare'
   setting :multipart_size_threshold,  default: 100 * 1024 * 1024
   setting :rest_api_root,             default: 'https://api.uploadcare.com'
