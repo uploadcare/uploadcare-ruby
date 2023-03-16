@@ -7,10 +7,12 @@ require 'uploadcare/ruby/version'
 Gem::Specification.new do |spec|
   spec.name          = 'uploadcare-ruby'
   spec.version       = Uploadcare::VERSION
-  spec.authors       = ['@dmitrijivanchenko (Dmitrij Ivanchenko), @T0mbery (Andrey Aksenov)', 'kraft001 (Konstantin Rafalskii)']
+  spec.authors       = ['@dmitrijivanchenko (Dmitrij Ivanchenko), @T0mbery (Andrey Aksenov)',
+                        'kraft001 (Konstantin Rafalskii)']
 
   spec.summary       = 'Ruby wrapper for uploadcare API'
-  spec.description   = 'Ruby API client that handles uploads and further operations with files by wrapping Uploadcare Upload and REST APIs.'
+  spec.description   = 'Ruby API client that handles uploads and further operations with files ' \
+                       'by wrapping Uploadcare Upload and REST APIs.'
   spec.homepage      = 'https://github.com/uploadcare/uploadcare-ruby'
   spec.license       = 'MIT'
 
