@@ -1,16 +1,24 @@
 # Changelog
 
+## 4.3.1 — 2023-03-17
+
+### Changed
+
+- Update the gem description
+- Allow ENV keys to be configured after the gem load
+
 ## 4.3.0 — 2023-03-15
 
 Add support of new ruby versions
 
 ### Breaking Сhanges
 
-Drop support of unmaintainable Ruby versions (2.4, 2.5, 2.6).
+- Drop support of unmaintainable Ruby versions (2.4, 2.5, 2.6).
+- Replace unmaintainable `api_struct` with `uploadcare-api_struct` 
 
 ### Added
 
-Add support for Ruby 3+ (3.0, 3.1, 3.2).
+- Add support for Ruby 3+ (3.0, 3.1, 3.2).
 
 ## 4.0.0 — 2022-12-29
 
