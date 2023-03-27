@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.3.2 — 2023-03-28
+
+### Changed
+
+* Improved readme to look better at ruby-doc
+
 ## 4.3.1 — 2023-03-17
 
 ### Changed
