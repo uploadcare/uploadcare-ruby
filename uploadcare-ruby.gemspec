@@ -13,18 +13,22 @@ Gem::Specification.new do |spec|
   spec.summary       = 'Ruby wrapper for uploadcare API'
   spec.description   = 'Ruby API client that handles uploads and further operations with files ' \
                        'by wrapping Uploadcare Upload and REST APIs.'
-  spec.homepage      = 'https://github.com/uploadcare/uploadcare-ruby'
+  spec.homepage      = 'https://uploadcare.com/'
   spec.license       = 'MIT'
+  spec.email         = ['hello@uploadcare.com']
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
   # to allow pushing to a single host or delete this section to allow pushing to any host.
   if spec.respond_to?(:metadata)
-    spec.metadata['allowed_push_host'] = 'https://rubygems.org'
-
-    spec.metadata['homepage_uri'] = spec.homepage
-    spec.metadata['source_code_uri'] = 'https://github.com/uploadcare/uploadcare-ruby'
-    spec.metadata['changelog_uri'] = 'https://github.com/uploadcare/uploadcare-ruby/CHANGELOG.md'
-    spec.metadata['rubygems_mfa_required'] = 'true'
+    spec.metadata = {
+      'allowed_push_host' => 'https://rubygems.org',
+      'homepage_uri' => spec.homepage,
+      'source_code_uri' => 'https://github.com/uploadcare/uploadcare-ruby',
+      'changelog_uri' => 'https://github.com/uploadcare/uploadcare-ruby/CHANGELOG.md',
+      'bug_tracker_uri' => 'https://github.com/uploadcare/uploadcare-ruby/issues',
+      'documentation_uri' => 'https://www.rubydoc.info/gems/uploadcare-ruby/',
+      'rubygems_mfa_required' => 'true'
+    }
   else
     raise 'RubyGems 2.0 or newer is required to protect against ' \
           'public gem pushes.'

@@ -3,7 +3,6 @@
 ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)
 [![Build Status][actions-img]][actions-badge]
 [![Uploadcare stack on StackShare][stack-img]][stack]
-<!--[![Coverage Status][coverals-img]][coverals]-->
 
 [actions-badge]: https://github.com/uploadcare/uploadcare-ruby/actions/workflows/ruby.yml
 [actions-img]: https://github.com/uploadcare/uploadcare-ruby/actions/workflows/ruby.yml/badge.svg

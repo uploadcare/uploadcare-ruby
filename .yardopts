@@ -1,4 +1,8 @@
+--readme README.md
+--title 'Uploadcare Ruby API Documentation'
+--charset utf-8
+--markup markdown
 -
-DEVELOPMENT.md
 CHANGELOG.md
 LICENSE
+DEVELOPMENT.md
