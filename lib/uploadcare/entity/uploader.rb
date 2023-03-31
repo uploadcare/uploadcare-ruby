@@ -33,7 +33,8 @@ module Uploadcare
       # upload single file
       def self.upload_file(file, options = {})
         response = UploaderClient.new.upload_many([file], options)
-        Uploadcare::Entity::File.info(response.success.to_a.flatten[-1])
+        filename, uuid = response.success.flatten
+        Uploadcare::Entity::File.new(uuid: uuid, original_filename: filename)
       end
 
       # upload multiple files
