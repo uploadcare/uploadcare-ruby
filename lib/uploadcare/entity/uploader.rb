@@ -34,7 +34,12 @@ module Uploadcare
       def self.upload_file(file, options = {})
         response = UploaderClient.new.upload_many([file], options)
         filename, uuid = response.success.flatten
-        Uploadcare::Entity::File.new(uuid: uuid, original_filename: filename)
+        if Uploadcare.config.secret_key.nil?
+          Uploadcare::Entity::File.new(uuid: uuid, original_filename: filename)
+        else
+          # we can get more info about the uploaded file
+          Uploadcare::Entity::File.info(uuid)
+        end
       end
 
       # upload multiple files
