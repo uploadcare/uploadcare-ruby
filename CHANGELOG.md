@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.3.3 — 2023-04-01
+
+### Changed
+
+* Removed `info` request after a file upload
+
 ## 4.3.2 — 2023-03-28
 
 ### Changed

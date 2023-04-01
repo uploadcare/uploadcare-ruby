@@ -26,7 +26,7 @@ module Uploadcare
             VCR.use_cassette('upload_upload_one') do
               upload = subject.upload(file)
               expect(upload).to be_kind_of(Uploadcare::Entity::File)
-              expect(upload.size).to eq(file.size)
+              expect(file.path).to end_with(upload.original_filename.to_s)
             end
           end
         end
