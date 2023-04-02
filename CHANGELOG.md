@@ -4,7 +4,7 @@
 
 ### Changed
 
-* Skipped `info` request after a file upload if the secret kay is missing
+* Skip `info` request after a file upload if the secret key is missing
 
 ## 4.3.2 — 2023-03-28
 
