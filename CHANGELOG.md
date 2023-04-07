@@ -1,10 +1,10 @@
 # Changelog
 
-## 4.3.3 — 2023-04-01
+## 4.3.3 — 2023-04-07
 
 ### Changed
 
-* Skip `info` request after a file upload if the secret key is missing
+* Use `info` request after a file upload without the secret key
 
 ## 4.3.2 — 2023-03-28
 
