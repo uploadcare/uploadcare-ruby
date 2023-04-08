@@ -23,14 +23,24 @@ module Uploadcare
 
         describe 'upload_one' do
           it 'returns a file', :aggregate_failures do
-            # make sure we don't require a secret key for upload
-            Uploadcare.config.secret_key = nil
-
             VCR.use_cassette('upload_upload_one') do
               upload = subject.upload(file)
               expect(upload).to be_kind_of(Uploadcare::Entity::File)
               expect(file.path).to end_with(upload.original_filename.to_s)
               expect(file.size).to eq(upload.size)
+            end
+          end
+
+          context 'when the secret key is missing' do
+            it 'returns a file without details', :aggregate_failures do
+              Uploadcare.config.secret_key = nil
+
+              VCR.use_cassette('upload_upload_one_without_secret_key') do
+                upload = subject.upload(file)
+                expect(upload).to be_kind_of(Uploadcare::Entity::File)
+                expect(file.path).to end_with(upload.original_filename.to_s)
+                expect(file.size).to eq(upload.size)
+              end
             end
           end
         end

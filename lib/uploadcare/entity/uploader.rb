@@ -34,7 +34,12 @@ module Uploadcare
       def self.upload_file(file, options = {})
         response = UploaderClient.new.upload_many([file], options)
         uuid = response.success.values.first
-        Uploadcare::Entity::File.new(file_info(uuid).success)
+        if Uploadcare.config.secret_key.nil?
+          Uploadcare::Entity::File.new(file_info(uuid).success)
+        else
+          # we can get more info about the uploaded file
+          Uploadcare::Entity::File.info(uuid)
+        end
       end
 
       # upload multiple files
@@ -65,9 +70,9 @@ module Uploadcare
       end
 
       # Get information about an uploaded file (without secret key)
-      # @param file_id [String]
-      def self.file_info(file_id)
-        UploaderClient.new.file_info(file_id)
+      # @param uuid [String]
+      def self.file_info(uuid)
+        UploaderClient.new.file_info(uuid)
       end
 
       class << self
