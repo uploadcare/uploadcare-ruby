@@ -112,17 +112,23 @@ http_interactions:
   recorded_at: Tue, 18 Feb 2020 10:13:44 GMT
 - request:
     method: get
-    uri: https://upload.uploadcare.com/info/?file_id=f82c554c-5e74-4f1d-8fe2-380816b880c6&pub_key=demopublickey
+    uri: https://api.uploadcare.com/files/f82c554c-5e74-4f1d-8fe2-380816b880c6/
     body:
       encoding: UTF-8
       string: ''
     headers:
-      User-Agent:
-      - UploadcareRuby/4.3.3/5d5bb5639e3f2df33674 (Ruby/3.2.1)
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      Authorization:
+      - "<AUTHORIZATION HEADER>"
       Connection:
       - close
       Host:
-      - upload.uploadcare.com
+      - api.uploadcare.com
+      User-Agent:
+      - http.rb/4.3.0
   response:
     status:
       code: 200
@@ -151,8 +157,8 @@ http_interactions:
       X-Frame-Options:
       - SAMEORIGIN
     body:
-      encoding: UTF-8
-      string: '{"size":1290,"total":1290,"done":1290,"uuid":"a7f9751a-432b-4b05-936c-2f62d51d255d","file_id":"a7f9751a-432b-4b05-936c-2f62d51d255d","original_filename":"kitten.jpeg","is_image":true,"is_stored":true,"image_info":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null},"video_info":null,"content_info":{"mime":{"mime":"image/jpeg","type":"image","subtype":"jpeg"},"image":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null}},"is_ready":true,"filename":"kitten.jpeg","mime_type":"image/jpeg","metadata":{}}'
+      encoding: ASCII-8BIT
+      string: '{"datetime_removed":null,"datetime_stored":null,"datetime_uploaded":"2020-02-18T10:13:44.010674Z","image_info":{"color_mode":"RGB","orientation":null,"format":"JPEG","sequence":false,"height":50,"width":50,"geo_location":null,"datetime_original":null,"dpi":[96,96]},"is_image":true,"is_ready":true,"mime_type":"application/octet-stream","original_file_url":"https://ucarecdn.com/f82c554c-5e74-4f1d-8fe2-380816b880c6/kitten.jpeg","original_filename":"kitten.jpeg","size":1290,"url":"https://api.uploadcare.com/files/f82c554c-5e74-4f1d-8fe2-380816b880c6/","uuid":"f82c554c-5e74-4f1d-8fe2-380816b880c6","source":null}'
     http_version:
   recorded_at: Tue, 18 Feb 2020 10:13:44 GMT
 recorded_with: VCR 5.0.0
