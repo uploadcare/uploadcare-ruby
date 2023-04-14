@@ -69,7 +69,7 @@ module Uploadcare
         UploaderClient.new.get_upload_from_url_status(token)
       end
 
-      # Get information about an uploaded file (without secret key)
+      # Get information about an uploaded file (without the secret key)
       # @param uuid [String]
       def self.file_info(uuid)
         UploaderClient.new.file_info(uuid)
