@@ -1,0 +1,56 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://upload.uploadcare.com/info/?file_id=a7f9751a-432b-4b05-936c-2f62d51d255d&pub_key=demopublickey
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      User-Agent:
+      - UploadcareRuby/4.3.3/5d5bb5639e3f2df33674 (Ruby/3.2.1)
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 07 Apr 2023 12:32:21 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '707'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, HEAD, OPTIONS
+      Access-Control-Allow-Headers:
+      - X-UC-User-Agent, X-PINGOTHER, DNT
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning, Retry-After
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 439981d3-901d-42e8-888e-d79f731236b1
+    body:
+      encoding: UTF-8
+      string: '{"size":1290,"total":1290,"done":1290,"uuid":"a7f9751a-432b-4b05-936c-2f62d51d255d","file_id":"a7f9751a-432b-4b05-936c-2f62d51d255d","original_filename":"kitten.jpeg","is_image":true,"is_stored":true,"image_info":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null},"video_info":null,"content_info":{"mime":{"mime":"image/jpeg","type":"image","subtype":"jpeg"},"image":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null}},"is_ready":true,"filename":"kitten.jpeg","mime_type":"image/jpeg","metadata":{}}'
+  recorded_at: Fri, 07 Apr 2023 12:32:22 GMT
+recorded_with: VCR 6.1.0

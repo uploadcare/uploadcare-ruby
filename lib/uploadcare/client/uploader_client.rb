@@ -53,6 +53,18 @@ module Uploadcare
         get(path: 'from_url/status/', params: query_params)
       end
 
+      # Get information about an uploaded file
+      # Secret key not needed
+      #
+      # https://uploadcare.com/api-refs/upload-api/#tag/Upload/operation/fileUploadInfo
+      def file_info(uuid)
+        query_params = {
+          file_id: uuid,
+          pub_key: Uploadcare.config.public_key
+        }
+        get(path: 'info/', params: query_params)
+      end
+
       private
 
       alias api_struct_post post

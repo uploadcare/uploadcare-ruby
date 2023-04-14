@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.3.3 — 2023-04-14
+
+### Changed
+
+* Use `file_info` request after a file upload if the secret key is not provided.
+
+### Added
+
+* Add a new `file_info` method to retreive file information without the secret key.
+
 ## 4.3.2 — 2023-03-28
 
 ### Changed
