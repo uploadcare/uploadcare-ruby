@@ -10,7 +10,7 @@ module Uploadcare
           # Converts files
           #
           # @param doc_params [Array] of hashes with params or [Hash]
-          # @option options [Boolean] :store (false) whether to store file on servers.
+          # @option options [Boolean] :store whether to store file on servers.
           def convert(params, options = {})
             files_params = params.is_a?(Hash) ? [params] : params
             conversion_client.new.convert_many(files_params, options)

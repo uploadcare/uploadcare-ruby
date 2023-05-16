@@ -2,10 +2,10 @@ AllCops:
   NewCops: enable
   TargetRubyVersion: 2.7
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
 
-IneffectiveAccessModifier:
+Lint/IneffectiveAccessModifier:
   Enabled: false
 
 Style/HashTransformKeys:

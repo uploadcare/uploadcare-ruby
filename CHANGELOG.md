@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.3.4 — 2023-05-16
+
+### Changed
+
+* Use `auto` as the default value for the `store` param.
+
+
 ## 4.3.3 — 2023-04-14
 
 ### Changed
