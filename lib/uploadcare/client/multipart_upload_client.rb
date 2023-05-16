@@ -25,7 +25,6 @@ module Uploadcare
 
       # Asks Uploadcare server to create a number of storage bin for uploads
       def upload_start(object, options = {})
-        options.merge!(store: options[:store] || false)
         body = HTTP::FormData::Multipart.new(
           Param::Upload::UploadParamsGenerator.call(options).merge(form_data_for(object))
         )

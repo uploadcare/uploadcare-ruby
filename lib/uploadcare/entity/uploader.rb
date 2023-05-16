@@ -15,7 +15,7 @@ module Uploadcare
       #
       # @param object [Array], [String] or [File]
       # @param [Hash] options options for upload
-      # @option options [Boolean] :store (false) whether to store file on servers.
+      # @option options [Boolean] :store whether to store file on servers.
       def self.upload(object, options = {})
         if big_file?(object)
           multipart_upload(object, options)
