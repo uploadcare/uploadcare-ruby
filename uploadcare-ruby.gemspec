@@ -47,11 +47,4 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'parallel', '~> 1.22'
   spec.add_dependency 'retries', '~> 0.0'
   spec.add_dependency 'uploadcare-api_struct', '>= 1.1', '< 2'
-
-  spec.add_development_dependency 'byebug', '~> 11.1'
-  spec.add_development_dependency 'rake', '~> 13.0'
-  spec.add_development_dependency 'rspec', '~> 3.0'
-  spec.add_development_dependency 'rubocop', '~> 1.48'
-  spec.add_development_dependency 'vcr', '~> 6.1'
-  spec.add_development_dependency 'webmock', '~> 3.18'
 end
