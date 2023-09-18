@@ -4,7 +4,7 @@
 
 ### Changed
 
-* Don't send blank values in the `store` param.
+* Updated behavior to exclude sending blank values in the `store` param.
 
 
 ## 4.3.4 — 2023-05-16
