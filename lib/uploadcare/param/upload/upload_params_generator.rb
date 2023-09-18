@@ -20,10 +20,11 @@ module Uploadcare
           private
 
           def store(store)
-            store = 'auto' if store.nil?
-            store = '0'    if store == false
-            store = '1'    if store == true
-            store
+            case store
+            when true then '1'
+            when false then '0'
+            else 'auto'
+            end
           end
 
           def metadata(options = {})

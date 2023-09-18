@@ -94,20 +94,23 @@ module Uploadcare
         )
       end
 
-      STORE_VALUES_MAP = {
-        true => '1',
-        false => '0'
-      }.freeze
-
       # Prepare upload_from_url initial request body
       def upload_from_url_body(url, options = {})
         HTTP::FormData::Multipart.new(
           options.merge(
             'pub_key' => Uploadcare.config.public_key,
             'source_url' => url,
-            'store' => STORE_VALUES_MAP[options[:store]]
+            'store' => store_value(options[:store])
           )
         )
+      end
+
+      def store_value(store)
+        case store
+        when true then '1'
+        when false then '0'
+        else 'auto'
+        end
       end
     end
   end
