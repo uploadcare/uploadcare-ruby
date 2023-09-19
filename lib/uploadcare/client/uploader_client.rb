@@ -107,8 +107,8 @@ module Uploadcare
 
       def store_value(store)
         case store
-        when true then '1'
-        when false then '0'
+        when true, '1', 1 then '1'
+        when false, '0', 0 then '0'
         else 'auto'
         end
       end
