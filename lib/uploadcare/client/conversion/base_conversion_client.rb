@@ -10,7 +10,7 @@ module Uploadcare
       #
       # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Conversion
       class BaseConversionClient < RestClient
-        API_VERSION_HEADER_VALUE = 'application/vnd.uploadcare-v0.5+json'
+        API_VERSION_HEADER_VALUE = 'application/vnd.uploadcare-v0.7+json'
 
         def headers
           {

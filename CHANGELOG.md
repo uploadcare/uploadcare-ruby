@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.3.6 — 2023-11-18
+
+### Fixed
+
+* Updated the version of the REST Api for conversion clients (closes #135).
+
 ## 4.3.5 — 2023-09-19
 
 ### Changed
