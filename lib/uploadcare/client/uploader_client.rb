@@ -42,7 +42,7 @@ module Uploadcare
         uploaded_response = poll_upload_response(token_response.success[:token])
         return uploaded_response if uploaded_response.success[:status] == 'error'
 
-        Dry::Monads::Success(files: [uploaded_response.success])
+        Dry::Monads::Result::Success.call(files: [uploaded_response.success])
       end
 
       # Check upload status

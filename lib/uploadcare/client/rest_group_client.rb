@@ -17,7 +17,7 @@ module Uploadcare
           end
         end
 
-        Dry::Monads::Success(nil)
+        Dry::Monads::Result::Success.call(nil)
       end
 
       # Get a file group by its ID.

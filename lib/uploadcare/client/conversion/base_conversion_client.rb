@@ -37,9 +37,9 @@ module Uploadcare
 
           parsed_body = JSON.parse(response_body, symbolize_names: true)
           errors = parsed_body[:error] || parsed_body[:problems]
-          return Dry::Monads::Failure(errors) unless errors.nil? || errors.empty?
+          return Dry::Monads::Result::Failure.call(errors) unless errors.nil? || errors.empty?
 
-          Dry::Monads::Success(parsed_body)
+          Dry::Monads::Result::Success.call(parsed_body)
         end
 
         # Prepares body for convert_many method
