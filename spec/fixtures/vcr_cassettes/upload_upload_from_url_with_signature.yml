@@ -1,0 +1,116 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/from_url/
+    body:
+      encoding: ASCII-8BIT
+      string: "-----------------------c5f0754b5a5d1bfb797b6944cc4c653cdf2b5c20ab\r\nContent-Disposition:
+        form-data; name=\"pub_key\"\r\n\r\ndemopublickey\r\n-----------------------c5f0754b5a5d1bfb797b6944cc4c653cdf2b5c20ab\r\nContent-Disposition:
+        form-data; name=\"source_url\"\r\n\r\nhttps://placekitten.com/2250/2250\r\n-----------------------c5f0754b5a5d1bfb797b6944cc4c653cdf2b5c20ab\r\nContent-Disposition:
+        form-data; name=\"store\"\r\n\r\nauto\r\n-----------------------c5f0754b5a5d1bfb797b6944cc4c653cdf2b5c20ab\r\nContent-Disposition:
+        form-data; name=\"signature\"\r\n\r\nf6b1a41383cb2179c57cd1baf967ace8\r\n-----------------------c5f0754b5a5d1bfb797b6944cc4c653cdf2b5c20ab\r\nContent-Disposition:
+        form-data; name=\"expire\"\r\n\r\n1701130306\r\n-----------------------c5f0754b5a5d1bfb797b6944cc4c653cdf2b5c20ab--\r\n"
+    headers:
+      User-Agent:
+      - UploadcareRuby/4.3.6/demopublickey (Ruby/3.0.5)
+      Content-Type:
+      - multipart/form-data; boundary=---------------------c5f0754b5a5d1bfb797b6944cc4c653cdf2b5c20ab
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 27 Nov 2023 23:41:47 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '63'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - OPTIONS, GET, POST
+      Access-Control-Allow-Headers:
+      - DNT, X-UC-User-Agent, X-PINGOTHER
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning, Retry-After
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - ffc67f72-2b8f-46c9-8239-1da1de4c869a
+    body:
+      encoding: UTF-8
+      string: '{"type":"token","token":"ff450eec-48ad-491c-bfb7-804698c78951"}'
+  recorded_at: Mon, 27 Nov 2023 23:41:47 GMT
+- request:
+    method: get
+    uri: https://upload.uploadcare.com/from_url/status/?token=ff450eec-48ad-491c-bfb7-804698c78951
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    headers:
+      User-Agent:
+      - UploadcareRuby/4.3.6/demopublickey (Ruby/3.0.5)
+      Connection:
+      - close
+      Host:
+      - upload.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 27 Nov 2023 23:41:48 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '726'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning, Retry-After
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 176cc03a-0df5-4a45-8ff1-b5a394af8b7d
+    body:
+      encoding: UTF-8
+      string: '{"size":297261,"total":297261,"done":297261,"uuid":"1a4844c6-2463-440a-80a8-219e3d00e22a","file_id":"1a4844c6-2463-440a-80a8-219e3d00e22a","original_filename":"2250","is_image":true,"is_stored":true,"image_info":{"dpi":[96,96],"width":2250,"format":"JPEG","height":2250,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null},"video_info":null,"content_info":{"mime":{"mime":"image/jpeg","type":"image","subtype":"jpeg"},"image":{"dpi":[96,96],"width":2250,"format":"JPEG","height":2250,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null}},"is_ready":true,"filename":"2250","mime_type":"image/jpeg","metadata":{},"status":"success"}'
+  recorded_at: Mon, 27 Nov 2023 23:41:48 GMT
+recorded_with: VCR 6.2.0

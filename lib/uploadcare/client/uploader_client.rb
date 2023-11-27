@@ -3,6 +3,7 @@
 require_relative 'upload_client'
 require 'retries'
 require 'param/upload/upload_params_generator'
+require 'param/upload/signature_generator'
 
 module Uploadcare
   module Client
@@ -96,13 +97,13 @@ module Uploadcare
 
       # Prepare upload_from_url initial request body
       def upload_from_url_body(url, options = {})
-        HTTP::FormData::Multipart.new(
-          options.merge(
-            'pub_key' => Uploadcare.config.public_key,
-            'source_url' => url,
-            'store' => store_value(options[:store])
-          )
-        )
+        opts = {
+          'pub_key' => Uploadcare.config.public_key,
+          'source_url' => url,
+          'store' => store_value(options[:store])
+        }
+        opts.merge!(Param::Upload::SignatureGenerator.call) if Uploadcare.config.sign_uploads
+        HTTP::FormData::Multipart.new(options.merge(opts))
       end
 
       def store_value(store)
