@@ -46,11 +46,40 @@ module Uploadcare
         end
 
         describe 'upload_from_url' do
+          let(:url) { 'https://placekitten.com/2250/2250' }
+
+          before do
+            allow(HTTP::FormData::Multipart).to receive(:new).and_call_original
+          end
+
           it 'polls server and returns array of files' do
             VCR.use_cassette('upload_upload_from_url') do
-              url = 'https://placekitten.com/2250/2250'
               upload = subject.upload(url)
               expect(upload[0]).to be_kind_of(Uploadcare::Entity::File)
+              expect(HTTP::FormData::Multipart).to have_received(:new).with(
+                a_hash_including(
+                  'source_url' => url
+                )
+              )
+            end
+          end
+
+          context 'when signed uploads are enabled' do
+            before do
+              allow(Uploadcare.config).to receive(:sign_uploads).and_return(true)
+            end
+
+            it 'includes signature' do
+              VCR.use_cassette('upload_upload_from_url_with_signature') do
+                upload = subject.upload(url)
+                expect(upload[0]).to be_kind_of(Uploadcare::Entity::File)
+                expect(HTTP::FormData::Multipart).to have_received(:new).with(
+                  a_hash_including(
+                    signature: instance_of(String),
+                    expire: instance_of(Integer)
+                  )
+                )
+              end
             end
           end
         end
