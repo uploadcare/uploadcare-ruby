@@ -134,7 +134,7 @@ Uploadcare::Uploader.upload("https://placekitten.com/96/139")
 There are explicit ways to select upload type:
 
 ```ruby
-files = [File.open("1.jpg"), File.open("1.jpg"]
+files = [File.open("1.jpg"), File.open("1.jpg")]
 Uploadcare::Uploader.upload_files(files)
 
 Uploadcare::Uploader.upload_from_url("https://placekitten.com/96/139")
