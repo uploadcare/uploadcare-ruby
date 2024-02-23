@@ -101,8 +101,8 @@ Using Uploadcare is simple, and here are the basics of handling files.
 # => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
 
 # URL for the file, can be used with your website or app right away
-@uc_file.url
-# => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
+@uc_file.original_file_url
+# => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/your-file.png"
 ```
 
 Your might then want to store or delete the uploaded file. Storing files could
@@ -134,7 +134,7 @@ Uploadcare::Uploader.upload("https://placekitten.com/96/139")
 There are explicit ways to select upload type:
 
 ```ruby
-files = [File.open("1.jpg"), File.open("1.jpg"]
+files = [File.open("1.jpg"), File.open("1.jpg")]
 Uploadcare::Uploader.upload_files(files)
 
 Uploadcare::Uploader.upload_from_url("https://placekitten.com/96/139")
