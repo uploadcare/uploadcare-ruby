@@ -59,4 +59,60 @@ http_interactions:
       string: '{"datetime_removed":null,"datetime_stored":null,"datetime_uploaded":"2022-09-19T12:29:59.461061Z","is_image":true,"is_ready":true,"mime_type":"application/octet-stream","original_file_url":"https://ucarecdn.com/2e17f5d1-d423-4de6-8ee5-6773cc4a7fa6/kitten.jpeg","original_filename":"kitten.jpeg","size":1290,"url":"https://api.uploadcare.com/files/2e17f5d1-d423-4de6-8ee5-6773cc4a7fa6/","uuid":"2e17f5d1-d423-4de6-8ee5-6773cc4a7fa6","variations":null,"content_info":{"mime":{"mime":"image/jpeg","type":"image","subtype":"jpeg"},"image":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null}},"metadata":{"subsystem":"new
         test value"}}'
   recorded_at: Mon, 19 Sep 2022 17:27:32 GMT
-recorded_with: VCR 6.1.0
+- request:
+    method: get
+    uri: https://api.uploadcare.com/files/640fe4b7-7352-42ca-8d87-0e4387957157/?include=appdata
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      User-Agent:
+      - UploadcareRuby/4.3.6/5d5bb5639e3f2df33674 (Ruby/3.3.0)
+      Date:
+      - Sat, 24 Feb 2024 18:59:02 GMT
+      Authorization:
+      - Uploadcare 5d5bb5639e3f2df33674:0cd5a6181fa53bc946d83db616e619fa75672634
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sat, 24 Feb 2024 18:59:03 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.7+json
+      Content-Length:
+      - '2292'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Vary:
+      - Accept
+      Allow:
+      - DELETE, GET, HEAD, OPTIONS
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - c9e3fc1d-c435-4212-a3ef-0c142f4d2054
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
+    body:
+      encoding: ASCII-8BIT
+      string: '{"datetime_removed":null,"datetime_stored":"2024-02-16T14:44:29.637342Z","datetime_uploaded":"2024-02-16T14:44:29.395043Z","is_image":true,"is_ready":true,"mime_type":"image/jpeg","original_file_url":"https://ucarecdn.com/640fe4b7-7352-42ca-8d87-0e4387957157/samplefile.jpeg","original_filename":"sample-file.jpeg","size":3518420,"url":"https://api.uploadcare.com/files/640fe4b7-7352-42ca-8d87-0e4387957157/","uuid":"640fe4b7-7352-42ca-8d87-0e4387957157","variations":null,"content_info":{"mime":{"mime":"image/jpeg","type":"image","subtype":"jpeg"},"image":{"dpi":[72,72],"width":3011,"format":"JPEG","height":4516,"sequence":false,"color_mode":"RGB","orientation":1,"geo_location":null,"datetime_original":"2023-03-10T16:23:15"}},"metadata":{},"appdata":{"aws_rekognition_detect_labels":{"data":{"Labels":[{"Name":"Accessories","Parents":[],"Instances":[],"Confidence":99.99993133544922},{"Name":"Strap","Parents":[{"Name":"Accessories"}],"Instances":[],"Confidence":99.99993133544922},{"Name":"Path","Parents":[],"Instances":[],"Confidence":99.9738998413086},{"Name":"Road","Parents":[],"Instances":[],"Confidence":99.55068969726562},{"Name":"Street","Parents":[{"Name":"City"},{"Name":"Road"},{"Name":"Urban"}],"Instances":[],"Confidence":97.583984375},{"Name":"Dog","Parents":[{"Name":"Animal"},{"Name":"Canine"},{"Name":"Mammal"},{"Name":"Pet"}],"Instances":[{"Confidence":97.21764373779297,"BoundingBox":{"Top":0.22813057899475098,"Left":0.20908746123313904,"Width":0.603455662727356,"Height":0.5941042304039001}}],"Confidence":97.41680908203125},{"Name":"Husky","Parents":[{"Name":"Animal"},{"Name":"Canine"},{"Name":"Dog"},{"Name":"Mammal"},{"Name":"Pet"}],"Instances":[],"Confidence":97.41680908203125},{"Name":"Leash","Parents":[],"Instances":[],"Confidence":95.52120971679688},{"Name":"Tarmac","Parents":[{"Name":"Road"}],"Instances":[],"Confidence":93.37832641601562},{"Name":"Walkway","Parents":[{"Name":"Path"}],"Instances":[],"Confidence":90.72362518310547}],"LabelModelVersion":"3.0"},"datetime_created":"2024-02-24T14:00:23.545995Z","datetime_updated":"2024-02-24T14:07:10.598091Z","version":"2016-06-27"},"uc_clamav_virus_scan":{"data":{"infected":false},"datetime_created":"2024-02-16T14:44:29.676188Z","datetime_updated":"2024-02-16T14:44:29.676207Z","version":"1.0.1"}}}'
+  recorded_at: Sat, 24 Feb 2024 18:59:03 GMT
+recorded_with: VCR 6.2.0

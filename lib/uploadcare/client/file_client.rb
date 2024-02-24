@@ -16,8 +16,8 @@ module Uploadcare
 
       # Acquire file info
       # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/fileInfo
-      def info(uuid)
-        get(uri: "/files/#{uuid}/")
+      def info(uuid, params = {})
+        get(uri: "/files/#{uuid}/", params: params)
       end
       alias file info
 
