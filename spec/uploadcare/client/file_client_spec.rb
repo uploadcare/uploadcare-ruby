@@ -16,6 +16,15 @@ module Uploadcare
           end
         end
 
+        it 'supports extra params like include' do
+          VCR.use_cassette('rest_file_info') do
+            uuid = '640fe4b7-7352-42ca-8d87-0e4387957157'
+            file = subject.info(uuid, { include: 'appdata' })
+            expect(file.value![:uuid]).to eq(uuid)
+            expect(file.value![:appdata]).not_to be_empty
+          end
+        end
+
         it 'shows nothing on invalid file' do
           VCR.use_cassette('rest_file_info_fail') do
             uuid = 'nonexistent'

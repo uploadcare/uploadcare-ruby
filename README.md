@@ -208,10 +208,10 @@ Entities are representations of objects in Uploadcare cloud.
 
 #### File
 
-File entity contains its metadata.
+File entity contains its metadata. It also supports `include` param to include additional fields to the file object, such as: "appdata".  
 
 ```ruby
-@file = Uploadcare::File.file("FILE_ID_IN_YOUR_PROJECT")
+@file = Uploadcare::File.file("FILE_ID_IN_YOUR_PROJECT", include: "appdata")
 {
   "datetime_removed"=>nil,
   "datetime_stored"=>"2018-11-26T12:49:10.477888Z",
