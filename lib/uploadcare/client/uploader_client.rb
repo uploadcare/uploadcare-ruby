@@ -77,7 +77,10 @@ module Uploadcare
                      base_sleep_seconds: Uploadcare.config.base_request_sleep,
                      max_sleep_seconds: Uploadcare.config.max_request_sleep) do
           response = get_upload_from_url_status(token)
-          raise RequestError if %w[progress waiting unknown].include?(response.success[:status])
+
+          if %w[progress waiting unknown].include?(response.success[:status])
+            raise RequestError, 'Upload is taking longer than expected. Try increasing the max_request_tries config if you know your file uploads will take more time.' # rubocop:disable Layout/LineLength
+          end
 
           response
         end

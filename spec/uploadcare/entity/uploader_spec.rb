@@ -53,6 +53,15 @@ module Uploadcare
               expect(upload[0]).to be_kind_of(Uploadcare::Entity::File)
             end
           end
+
+          it 'raises error with information if file upload takes time' do
+            Uploadcare.config.max_request_tries = 1
+            VCR.use_cassette('upload_upload_from_url') do
+              url = 'https://placekitten.com/2250/2250'
+              error_str = 'Upload is taking longer than expected. Try increasing the max_request_tries config if you know your file uploads will take more time.' # rubocop:disable Layout/LineLength
+              expect { subject.upload(url) }.to raise_error(RequestError, error_str)
+            end
+          end
         end
 
         describe 'multipart_upload' do
