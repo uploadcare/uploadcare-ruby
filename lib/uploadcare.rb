@@ -33,18 +33,6 @@ require 'signed_url_generators/base_generator'
 module Uploadcare
   extend Dry::Configurable
 
-  # NOTE: The dry-configurable gem has introduced the `default` keyword argument
-  # and deprecated the positional default argument in v0.13.0, which requires
-  # Ruby >= 2.6.0. In order to provide backwards compatibility and not disable
-  # deprecation warnings, we override the dry-configurable's `setting` DSL method.
-  def self.setting(name, default:, **options, &block)
-    if RUBY_VERSION < '2.6'
-      super(name, default, &block)
-    else
-      super
-    end
-  end
-
   setting :public_key,                default: ENV.fetch('UPLOADCARE_PUBLIC_KEY', '')
   setting :secret_key,                default: ENV.fetch('UPLOADCARE_SECRET_KEY', '')
   setting :auth_type,                 default: 'Uploadcare'
