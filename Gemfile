@@ -6,7 +6,6 @@ gem 'byebug'
 gem 'rake'
 gem 'rspec'
 gem 'rubocop'
-gem 'rubocop-rspec'
 gem 'vcr'
 gem 'webmock'
 
