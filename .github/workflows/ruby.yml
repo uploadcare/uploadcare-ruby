@@ -16,17 +16,17 @@ jobs:
     strategy:
       matrix:
         ruby-version:
-          - 2.7
           - 3.0
           - 3.1
           - 3.2
+          - 3.3
 
     steps:
     - uses: actions/checkout@v3
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        bundler: 2.4
+        bundler: latest
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
     - name: Run tests
@@ -41,8 +41,7 @@ jobs:
     strategy:
       matrix:
         ruby-version:
-          - 2.7
-          - 3.2
+          - 3.3
     steps:
     - uses: actions/checkout@v3
     - name: Set up Ruby

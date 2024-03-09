@@ -34,7 +34,7 @@ wrapping Upload and REST APIs.
 * [Useful links](#useful-links)
 
 ## Requirements
-* ruby 2.7+
+* ruby 3.0+
 
 ## Compatibility
 
