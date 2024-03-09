@@ -27,8 +27,11 @@ module Uploadcare
         request_headers = Param::AuthenticationHeader.call(method: method.upcase, uri: uri,
                                                            content_type: headers[:'Content-Type'], **options)
         handle_throttling do
-          send("api_struct_#{method.downcase}", path: remove_trailing_slash(uri),
-                                                headers: request_headers, body: options[:content])
+          send("api_struct_#{method.downcase}",
+               path: remove_trailing_slash(uri),
+               headers: request_headers,
+               body: options[:content],
+               params: options[:params])
         end
       end
 

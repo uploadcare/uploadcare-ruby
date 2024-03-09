@@ -34,7 +34,7 @@ wrapping Upload and REST APIs.
 * [Useful links](#useful-links)
 
 ## Requirements
-* ruby 2.7+
+* ruby 3.0+
 
 ## Compatibility
 
@@ -101,8 +101,8 @@ Using Uploadcare is simple, and here are the basics of handling files.
 # => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
 
 # URL for the file, can be used with your website or app right away
-@uc_file.url
-# => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
+@uc_file.original_file_url
+# => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/your-file.png"
 ```
 
 Your might then want to store or delete the uploaded file. Storing files could
@@ -134,7 +134,7 @@ Uploadcare::Uploader.upload("https://placekitten.com/96/139")
 There are explicit ways to select upload type:
 
 ```ruby
-files = [File.open("1.jpg"), File.open("1.jpg"]
+files = [File.open("1.jpg"), File.open("1.jpg")]
 Uploadcare::Uploader.upload_files(files)
 
 Uploadcare::Uploader.upload_from_url("https://placekitten.com/96/139")
@@ -208,10 +208,10 @@ Entities are representations of objects in Uploadcare cloud.
 
 #### File
 
-File entity contains its metadata.
+File entity contains its metadata. It also supports `include` param to include additional fields to the file object, such as: "appdata".  
 
 ```ruby
-@file = Uploadcare::File.file("FILE_ID_IN_YOUR_PROJECT")
+@file = Uploadcare::File.file("FILE_ID_IN_YOUR_PROJECT", include: "appdata")
 {
   "datetime_removed"=>nil,
   "datetime_stored"=>"2018-11-26T12:49:10.477888Z",

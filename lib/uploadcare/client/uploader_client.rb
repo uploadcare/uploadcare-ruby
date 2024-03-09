@@ -88,7 +88,7 @@ module Uploadcare
         when 'error'
           raise RequestError, response.success[:error]
         when 'progress', 'waiting', 'unknown'
-          raise RetryError, response.success[:error]
+          raise RetryError, response.success[:error] || 'Upload is taking longer than expected. Try increasing the max_request_tries config if you know your file uploads will take more time.' # rubocop:disable Layout/LineLength
         end
 
         response
