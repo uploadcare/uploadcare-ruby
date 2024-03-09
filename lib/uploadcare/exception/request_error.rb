@@ -3,7 +3,6 @@
 module Uploadcare
   module Exception
     # Standard error for invalid API responses
-    class RequestError < StandardError
-    end
+    class RequestError < StandardError; end
   end
 end

@@ -1,5 +1,23 @@
 # Changelog
 
+## 4.4.0 — 2024-03-09
+
+### Breaking 
+
+* Drop support of unmaintainable Ruby versions < 3.x.
+
+### Fixed
+
+* Update locations where Dry::Monads structure has changed.
+* Sign URL uploads if configured (#139).
+* Start returning proper error message when raising RequestError in poll_upload_response, to hint to users what is going on. Fixes #141.
+* When polling, raise if an error is returned (#142).
+* Fix documentation about original file url on simple file upload.
+
+### Changed
+* Support params in Rest client and in file info method, to allow passing custom params like "include=appdata" in `Uploadcare::File.file` calls. Closes #132.
+
+
 ## 4.3.6 — 2023-11-18
 
 ### Fixed

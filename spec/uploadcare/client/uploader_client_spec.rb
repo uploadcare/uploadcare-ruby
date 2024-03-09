@@ -5,11 +5,12 @@ require 'spec_helper'
 module Uploadcare
   module Client
     RSpec.describe UploaderClient do
-      subject { UploaderClient.new }
-      let!(:file) { ::File.open('spec/fixtures/kitten.jpeg') }
-      let!(:another_file) { ::File.open('spec/fixtures/another_kitten.jpeg') }
+      subject { described_class.new }
 
       describe 'upload' do
+        let(:file) { ::File.open('spec/fixtures/kitten.jpeg') }
+        let(:another_file) { ::File.open('spec/fixtures/another_kitten.jpeg') }
+
         it 'uploads a file' do
           VCR.use_cassette('upload_upload') do
             response = subject.upload(file, metadata: { subsystem: 'test' })

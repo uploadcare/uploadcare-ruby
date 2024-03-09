@@ -3,6 +3,7 @@
 require_relative 'upload_client'
 require 'retries'
 require 'param/upload/upload_params_generator'
+require 'param/upload/signature_generator'
 
 module Uploadcare
   module Client
@@ -75,15 +76,22 @@ module Uploadcare
       def poll_upload_response(token)
         with_retries(max_tries: Uploadcare.config.max_request_tries,
                      base_sleep_seconds: Uploadcare.config.base_request_sleep,
-                     max_sleep_seconds: Uploadcare.config.max_request_sleep) do
+                     max_sleep_seconds: Uploadcare.config.max_request_sleep,
+                     rescue: RetryError) do
           response = get_upload_from_url_status(token)
-
-          if %w[progress waiting unknown].include?(response.success[:status])
-            raise RequestError, 'Upload is taking longer than expected. Try increasing the max_request_tries config if you know your file uploads will take more time.' # rubocop:disable Layout/LineLength
-          end
-
-          response
+          handle_polling_response(response)
         end
+      end
+
+      def handle_polling_response(response)
+        case response.success[:status]
+        when 'error'
+          raise RequestError, response.success[:error]
+        when 'progress', 'waiting', 'unknown'
+          raise RetryError, response.success[:error] || 'Upload is taking longer than expected. Try increasing the max_request_tries config if you know your file uploads will take more time.' # rubocop:disable Layout/LineLength
+        end
+
+        response
       end
 
       # Prepares body for upload_many method
@@ -99,13 +107,13 @@ module Uploadcare
 
       # Prepare upload_from_url initial request body
       def upload_from_url_body(url, options = {})
-        HTTP::FormData::Multipart.new(
-          options.merge(
-            'pub_key' => Uploadcare.config.public_key,
-            'source_url' => url,
-            'store' => store_value(options[:store])
-          )
-        )
+        opts = {
+          'pub_key' => Uploadcare.config.public_key,
+          'source_url' => url,
+          'store' => store_value(options[:store])
+        }
+        opts.merge!(Param::Upload::SignatureGenerator.call) if Uploadcare.config.sign_uploads
+        HTTP::FormData::Multipart.new(options.merge(opts))
       end
 
       def store_value(store)
