@@ -9,7 +9,7 @@ module Uploadcare
         class << self
           # Converts files
           #
-          # @param doc_params [Array] of hashes with params or [Hash]
+          # @param params [Array] of hashes with params or [Hash]
           # @option options [Boolean] :store whether to store file on servers.
           def convert(params, options = {})
             files_params = params.is_a?(Hash) ? [params] : params
