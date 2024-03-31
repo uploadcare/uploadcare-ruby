@@ -95,7 +95,7 @@ Using Uploadcare is simple, and here are the basics of handling files.
 ```ruby
 @file_to_upload = File.open("your-file.png")
 
-@uc_file = Uploadcare::Uploader.upload(@file_to_upload)
+@uc_file = Uploadcare::Uploader.upload(@file_to_upload, store: 'auto')
 
 @uc_file.uuid
 # => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
@@ -105,10 +105,16 @@ Using Uploadcare is simple, and here are the basics of handling files.
 # => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/your-file.png"
 ```
 
-Your might then want to store or delete the uploaded file. Storing files could
-be crucial if you aren't using the “Automatic file storing” option for your
-Uploadcare project. If not stored manually or automatically, files get deleted
-within a 24-hour period.
+Your might then want to store or delete the uploaded file. 
+Storing files could be crucial if you aren't using the [Automatic file storing](https://uploadcare.com/docs/uploads/storage/#file-storing-behavior) option for your
+Uploadcare project. 
+If not stored manually or automatically, 
+files get deleted within a 24-hour period.
+
+If you pass the `store: 'auto`,  
+option as using in the example above,
+which is also the default behavior,
+it defers the choice of storage behavior to [auto-store setting](https://app.uploadcare.com/projects/-/settings/#storage). 
 
 ```ruby
 # that's how you store a file
@@ -128,16 +134,16 @@ Uploadcare supports multiple ways to upload files:
 # Smart upload - detects type of passed object and picks appropriate upload method
 # If you have a large file (more than 100Mb / 10485760 bytes), the uploader will automatically process it with a multipart upload
 
-Uploadcare::Uploader.upload("https://placekitten.com/96/139")
+Uploadcare::Uploader.upload("https://placekitten.com/96/139", store: 'auto')
 ```
 
 There are explicit ways to select upload type:
 
 ```ruby
 files = [File.open("1.jpg"), File.open("1.jpg")]
-Uploadcare::Uploader.upload_files(files)
+Uploadcare::Uploader.upload_files(files, store: 'auto')
 
-Uploadcare::Uploader.upload_from_url("https://placekitten.com/96/139")
+Uploadcare::Uploader.upload_from_url("https://placekitten.com/96/139", store: 'auto')
 ```
 It is possible to track progress of the upload-from-URL process. To do that, you should specify the `async` option and get a token:
 
