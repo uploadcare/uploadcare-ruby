@@ -105,19 +105,15 @@ Using Uploadcare is simple, and here are the basics of handling files.
 # => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/your-file.png"
 ```
 
-Your might then want to store or delete the uploaded file. 
-Storing files could be crucial if you aren't using the [Automatic file storing](https://uploadcare.com/docs/uploads/storage/#file-storing-behavior) option for your
-Uploadcare project. 
-If not stored manually or automatically, 
-files get deleted within a 24-hour period.
+The `store` can have these possible values:
+- true: mark the uploaded file as stored.
+- false: do not mark the uploaded file as stored and remove it after 24 hours.
+- auto: defers the choice of storage behavior to the [auto-store setting](https://app.uploadcare.com/projects/-/settings/#storage) for your Uploadcare project. This is the default behavior.
 
-If you pass the `store: 'auto`,  
-option as using in the example above,
-which is also the default behavior,
-it defers the choice of storage behavior to [auto-store setting](https://app.uploadcare.com/projects/-/settings/#storage). 
+Your might then want to store or delete the uploaded file.
 
 ```ruby
-# that's how you store a file
+# that's how you store a file, if you have uploaded the file using store: false and changed your mind later
 @uc_file.store
 # => #<Uploadcare::Api::File ...
 
