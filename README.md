@@ -105,7 +105,7 @@ Using Uploadcare is simple, and here are the basics of handling files.
 # => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/your-file.png"
 ```
 
-The `store` can have these possible values:
+The `store` option can have these possible values:
 - `true`: mark the uploaded file as stored.
 - `false`: do not mark the uploaded file as stored and remove it after 24 hours.
 - 'auto': defers the choice of storage behavior to the [auto-store setting](https://app.uploadcare.com/projects/-/settings/#storage) for your Uploadcare project. This is the default behavior.
