@@ -106,9 +106,9 @@ Using Uploadcare is simple, and here are the basics of handling files.
 ```
 
 The `store` can have these possible values:
-- true: mark the uploaded file as stored.
-- false: do not mark the uploaded file as stored and remove it after 24 hours.
-- auto: defers the choice of storage behavior to the [auto-store setting](https://app.uploadcare.com/projects/-/settings/#storage) for your Uploadcare project. This is the default behavior.
+- `true`: mark the uploaded file as stored.
+- `false`: do not mark the uploaded file as stored and remove it after 24 hours.
+- 'auto': defers the choice of storage behavior to the [auto-store setting](https://app.uploadcare.com/projects/-/settings/#storage) for your Uploadcare project. This is the default behavior.
 
 Your might then want to store or delete the uploaded file.
 
