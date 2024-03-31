@@ -95,7 +95,7 @@ Using Uploadcare is simple, and here are the basics of handling files.
 ```ruby
 @file_to_upload = File.open("your-file.png")
 
-@uc_file = Uploadcare::Uploader.upload(@file_to_upload)
+@uc_file = Uploadcare::Uploader.upload(@file_to_upload, store: "auto")
 
 @uc_file.uuid
 # => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
@@ -105,13 +105,15 @@ Using Uploadcare is simple, and here are the basics of handling files.
 # => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/your-file.png"
 ```
 
-Your might then want to store or delete the uploaded file. Storing files could
-be crucial if you aren't using the “Automatic file storing” option for your
-Uploadcare project. If not stored manually or automatically, files get deleted
-within a 24-hour period.
+The `store` option can have these possible values:
+- `true`: mark the uploaded file as stored.
+- `false`: do not mark the uploaded file as stored and remove it after 24 hours.
+- `"auto"`: defers the choice of storage behavior to the [auto-store setting](https://app.uploadcare.com/projects/-/settings/#storage) for your Uploadcare project. This is the default behavior.
+
+Your might then want to store or delete the uploaded file.
 
 ```ruby
-# that's how you store a file
+# that's how you store a file, if you have uploaded the file using store: false and changed your mind later
 @uc_file.store
 # => #<Uploadcare::Api::File ...
 
@@ -128,16 +130,16 @@ Uploadcare supports multiple ways to upload files:
 # Smart upload - detects type of passed object and picks appropriate upload method
 # If you have a large file (more than 100Mb / 10485760 bytes), the uploader will automatically process it with a multipart upload
 
-Uploadcare::Uploader.upload("https://placekitten.com/96/139")
+Uploadcare::Uploader.upload("https://placekitten.com/96/139", store: "auto")
 ```
 
 There are explicit ways to select upload type:
 
 ```ruby
 files = [File.open("1.jpg"), File.open("1.jpg")]
-Uploadcare::Uploader.upload_files(files)
+Uploadcare::Uploader.upload_files(files, store: 'auto')
 
-Uploadcare::Uploader.upload_from_url("https://placekitten.com/96/139")
+Uploadcare::Uploader.upload_from_url("https://placekitten.com/96/139", store: "auto")
 ```
 It is possible to track progress of the upload-from-URL process. To do that, you should specify the `async` option and get a token:
 
@@ -188,11 +190,12 @@ Options available in a block:
 
 #### Uploading options
 
-You can override global [`:autostore`](#initialization) option for each upload request:
+You can override [auto-store setting](https://app.uploadcare.com/projects/-/settings/#storage) from your Uploadcare project for each upload request:
 
 ```ruby
-@api.upload(files, store: true)
-@api.upload_from_url(url, store: :auto)
+@api.upload(files, store: true)          # mark the uploaded file as stored.
+@api.upload(files, store: false)         # do not mark the uploaded file as stored and remove it after 24 hours.
+@api.upload_from_url(url, store: "auto") # defers the choice of storage behavior to the auto-store setting.
 ```
 
 You can upload file with custom metadata, for example `subsystem` and `pet`:
