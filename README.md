@@ -211,10 +211,10 @@ Entities are representations of objects in Uploadcare cloud.
 
 #### File
 
-File entity contains its metadata. It also supports `include` param to include additional fields to the file object, such as: "appdata".  
+File entity contains its metadata. It also supports `include` param to include additional fields to the file object, such as: "appdata".
 
 ```ruby
-@file = Uploadcare::File.file("FILE_ID_IN_YOUR_PROJECT", include: "appdata")
+@file = Uploadcare::File.file("FILE_UUID", include: "appdata")
 {
   "datetime_removed"=>nil,
   "datetime_stored"=>"2018-11-26T12:49:10.477888Z",
@@ -222,11 +222,11 @@ File entity contains its metadata. It also supports `include` param to include a
   "is_image"=>true,
   "is_ready"=>true,
   "mime_type"=>"image/jpeg",
-  "original_file_url"=>"https://ucarecdn.com/FILE_ID_IN_YOUR_PROJECT/pineapple.jpg",
+  "original_file_url"=>"https://ucarecdn.com/FILE_UUID/pineapple.jpg",
   "original_filename"=>"pineapple.jpg",
   "size"=>642,
-  "url"=>"https://api.uploadcare.com/files/FILE_ID_IN_YOUR_PROJECT/",
-  "uuid"=>"FILE_ID_IN_YOUR_PROJECT",
+  "url"=>"https://api.uploadcare.com/files/FILE_UUID/",
+  "uuid"=>"FILE_UUID",
   "variations"=>nil,
   "content_info"=>{
     "mime"=>{
@@ -325,7 +325,7 @@ File entity contains its metadata. It also supports `include` param to include a
 The File object is also can be converted if it is a document or a video file. Imagine, you have a document file:
 
 ```ruby
-@file = Uploadcare::File.file("FILE_ID_IN_YOUR_PROJECT")
+@file = Uploadcare::File.file("FILE_UUID")
 ```
 
 To convert it to an another file, just do:
@@ -440,16 +440,16 @@ As an example, you could store unique file identifier from your system.
 
 ```ruby
 # Get file's metadata keys and values.
-Uploadcare::FileMetadata.index('FILE_ID_IN_YOUR_PROJECT')
+Uploadcare::FileMetadata.index('FILE_UUID')
 
 # Get the value of a single metadata key.
-Uploadcare::FileMetadata.show('FILE_ID_IN_YOUR_PROJECT', 'KEY')
+Uploadcare::FileMetadata.show('FILE_UUID', 'KEY')
 
 # Update the value of a single metadata key. If the key does not exist, it will be created.
-Uploadcare::FileMetadata.update('FILE_ID_IN_YOUR_PROJECT', 'KEY', 'VALUE')
+Uploadcare::FileMetadata.update('FILE_UUID', 'KEY', 'VALUE')
 
 # Delete a file's metadata key.
-Uploadcare::FileMetadata.delete('FILE_ID_IN_YOUR_PROJECT', 'KEY')
+Uploadcare::FileMetadata.delete('FILE_UUID', 'KEY')
 ```
 
 #### Group
@@ -556,7 +556,7 @@ An `Add-On` is an application implemented by Uploadcare that accepts uploaded fi
 
 ```ruby
 # Execute AWS Rekognition Add-On for a given target to detect labels in an image. Note: Detected labels are stored in the file's appdata.
-Uploadcare::Addons.ws_rekognition_detect_labels('FILE_ID_IN_YOUR_PROJECT')
+Uploadcare::Addons.ws_rekognition_detect_labels('FILE_UUID')
 
 # Check the status of AWS Rekognition.
 Uploadcare::Addons.ws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_LABELS')
@@ -566,10 +566,10 @@ Uploadcare::Addons.ws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKO
 
 ```ruby
 # ClamAV virus checking Add-On for a given target.
-Uploadcare::Addons.uc_clamav_virus_scan('FILE_ID_IN_YOUR_PROJECT')
+Uploadcare::Addons.uc_clamav_virus_scan('FILE_UUID')
 
 # Checking and purge infected file.
-Uploadcare::Addons.uc_clamav_virus_scan('FILE_ID_IN_YOUR_PROJECT', purge_infected: true )
+Uploadcare::Addons.uc_clamav_virus_scan('FILE_UUID', purge_infected: true )
 
 # Check the status ClamAV virus scan.
 Uploadcare::Addons.uc_clamav_virus_scan_status('RETURNED_ID_FROM_UC_CLAMAV_VIRUS_SCAN')
@@ -579,11 +579,11 @@ Uploadcare::Addons.uc_clamav_virus_scan_status('RETURNED_ID_FROM_UC_CLAMAV_VIRUS
 
 ```ruby
 # Remove background image removal Add-On for a given target.
-Uploadcare::Addons.remove_bg('FILE_ID_IN_YOUR_PROJECT')
+Uploadcare::Addons.remove_bg('FILE_UUID')
 
 # You can pass optional parameters.
 # See the full list of parameters here: https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/removeBgExecute
-Uploadcare::Addons.remove_bg('FILE_ID_IN_YOUR_PROJECT', crop: true, type_level: '2')
+Uploadcare::Addons.remove_bg('FILE_UUID', crop: true, type_level: '2')
 
 # Check the status of background image removal.
 Uploadcare::Addons.remove_bg_status('RETURNED_ID_FROM_REMOVE_BG')
