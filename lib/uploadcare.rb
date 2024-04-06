@@ -7,6 +7,7 @@ require 'ruby/version'
 require 'exception/throttle_error'
 require 'exception/request_error'
 require 'exception/retry_error'
+require 'exception/auth_error'
 
 # Entities
 require 'entity/entity'

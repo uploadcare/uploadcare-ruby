@@ -18,5 +18,15 @@ module Uploadcare
       Uploadcare.config.auth_type = 'Uploadcare'
       expect(subject.call).to eq('SecureAuth called')
     end
+
+    it 'raise argument error if public_key is blank' do
+      Uploadcare.config.public_key = ''
+      expect { subject.call }.to raise_error(AuthError, 'Public Key is blank.')
+    end
+
+    it 'raise argument error if secret_key is blank' do
+      Uploadcare.config.secret_key = ''
+      expect { subject.call }.to raise_error(AuthError, 'Secret Key is blank.')
+    end
   end
 end

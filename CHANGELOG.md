@@ -5,6 +5,12 @@
 ### Changed
 * File attribute `datetime_stored` is deprecated and will warn on usage from `File` object properties.
 
+## Unreleased
+
+### Fixed
+
+* Throw error if current public key or secret key are blank when accessing any 
+
 ## 4.4.0 — 2024-03-09
 
 ### Breaking
