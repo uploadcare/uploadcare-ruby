@@ -4,6 +4,8 @@ AllCops:
 
 Layout/LineLength:
   Max: 120
+  Exclude:
+    - 'spec/**/*'
 
 Lint/IneffectiveAccessModifier:
   Enabled: false
@@ -19,6 +21,11 @@ Metrics/BlockLength:
     - 'bin/'
     - 'spec/**/*'
     - 'uploadcare-ruby.gemspec'
+
+Metrics/ModuleLength:
+  Exclude:
+    - 'spec/**/*'
+
 
 Metrics/MethodLength:
   Max: 20

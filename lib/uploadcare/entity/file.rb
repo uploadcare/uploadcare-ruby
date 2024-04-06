@@ -16,7 +16,7 @@ module Uploadcare
       attr_entity(*RESPONSE_PARAMS)
 
       def datetime_stored
-        Uploadcare.config.logger&.warn "datetime_stored property has be deprecated, and will be removed without a replacement in future."
+        Uploadcare.config.logger&.warn 'datetime_stored property has be deprecated, and will be removed without a replacement in future.' # rubocop:disable Layout/LineLength
         @entity.datetime_stored
       end
 
