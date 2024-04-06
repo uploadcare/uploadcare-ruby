@@ -61,6 +61,21 @@ module Uploadcare
         end
       end
 
+      describe 'datetime_stored' do
+        it 'returns datetime_stored, with deprecated warning' do
+          VCR.use_cassette('file_info') do
+            url = 'https://ucarecdn.com/8f64f313-e6b1-4731-96c0-6751f1e7a50a'
+            file = File.new(url: url)
+            logger = Uploadcare.config.logger
+            file.load
+            allow(logger).to receive(:warn).with('datetime_stored property has be deprecated, and will be removed without a replacement in future.')
+            datetime_stored = file.datetime_stored
+            expect(logger).to have_received(:warn).with('datetime_stored property has be deprecated, and will be removed without a replacement in future.')
+            expect(datetime_stored).not_to be_nil
+          end
+        end
+      end
+
       describe 'load' do
         it 'performs load request' do
           VCR.use_cassette('file_info') do

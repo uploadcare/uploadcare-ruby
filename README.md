@@ -473,6 +473,7 @@ Uploadcare::Group.rest_info(group.id)
 
 # group can be deleted by group ID.
 Uploadcare::Group.delete(group.id)
+# Note: This operation only removes the group object itself. All the files that were part of the group are left as is.
 ```
 
 #### GroupList

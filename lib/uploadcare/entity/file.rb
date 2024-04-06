@@ -15,6 +15,11 @@ module Uploadcare
 
       attr_entity(*RESPONSE_PARAMS)
 
+      def datetime_stored
+        Uploadcare.config.logger&.warn "datetime_stored property has be deprecated, and will be removed without a replacement in future."
+        @entity.datetime_stored
+      end
+
       # gets file's uuid - even if it's only initialized with url
       # @returns [String]
       def uuid
