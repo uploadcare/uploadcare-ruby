@@ -1,8 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Changed
+* File attribute `datetime_stored` is deprecated and will warn on usage from `File` object properties.
+
 ## 4.4.0 — 2024-03-09
 
-### Breaking 
+### Breaking
 
 * Drop support of unmaintainable Ruby versions < 3.x.
 
@@ -68,7 +73,7 @@ Add support of new ruby versions
 ### Breaking Сhanges
 
 - Drop support of unmaintainable Ruby versions (2.4, 2.5, 2.6).
-- Replace unmaintainable `api_struct` with `uploadcare-api_struct` 
+- Replace unmaintainable `api_struct` with `uploadcare-api_struct`
 
 ### Added
 

@@ -49,4 +49,5 @@ module Uploadcare
   setting :upload_threads,            default: 2 # used for multiupload only ATM
   setting :framework_data,            default: ''
   setting :file_chunk_size,           default: 100
+  setting :logger,                    default: Logger.new($stdout)
 end

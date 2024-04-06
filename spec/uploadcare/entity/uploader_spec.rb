@@ -85,7 +85,7 @@ RSpec.describe Uploadcare::Entity::Uploader do
         Uploadcare.config.max_request_tries = 1
         VCR.use_cassette('upload_upload_from_url') do
           url = 'https://placekitten.com/2250/2250'
-          error_str = 'Upload is taking longer than expected. Try increasing the max_request_tries config if you know your file uploads will take more time.' # rubocop:disable Layout/LineLength
+          error_str = 'Upload is taking longer than expected. Try increasing the max_request_tries config if you know your file uploads will take more time.'
           expect { subject.upload(url) }.to raise_error(RetryError, error_str)
         end
       end
