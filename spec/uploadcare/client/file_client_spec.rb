@@ -32,6 +32,14 @@ module Uploadcare
           end
         end
 
+        it 'show raise argument error if secret_key is nil' do
+          Uploadcare.config.secret_key = nil
+          VCR.use_cassette('rest_file_info') do
+            uuid = '2e17f5d1-d423-4de6-8ee5-6773cc4a7fa6'
+            expect { subject.info(uuid) }.to raise_error(AuthError, 'Secret Key is blank.')
+          end
+        end
+
         it 'supports extra params like include' do
           VCR.use_cassette('rest_file_info') do
             uuid = '640fe4b7-7352-42ca-8d87-0e4387957157'

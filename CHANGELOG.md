@@ -9,7 +9,7 @@
 
 ### Fixed
 
-* Throw error if current public key or secret key are blank when accessing any 
+* Throw `AuthError` if current public key or secret key config are empty when accessing any of the APIs. 
 
 ## 4.4.0 — 2024-03-09
 

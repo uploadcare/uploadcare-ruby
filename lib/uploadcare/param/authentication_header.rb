@@ -11,7 +11,7 @@ module Uploadcare
     class AuthenticationHeader
       # @see https://uploadcare.com/docs/api_reference/rest/requests_auth/#auth-uploadcare
       def self.call(options = {})
-        validate_keys
+        validate_auth_config
         case Uploadcare.config.auth_type
         when 'Uploadcare'
           SecureAuthHeader.call(options)
@@ -22,9 +22,13 @@ module Uploadcare
         end
       end
 
-      def self.validate_keys
-        raise AuthError, 'Public Key is blank.' if Uploadcare.config.public_key.empty?
-        raise AuthError, 'Secret Key is blank.' if Uploadcare.config.secret_key.empty?
+      def self.validate_auth_config
+        raise AuthError, 'Public Key is blank.' if is_blank?(Uploadcare.config.public_key)
+        raise AuthError, 'Secret Key is blank.' if is_blank?(Uploadcare.config.secret_key)
+      end
+
+      def self.is_blank?(value)
+        value.nil? || value.empty?
       end
     end
   end
