@@ -27,9 +27,11 @@ module Uploadcare
         raise AuthError, 'Secret Key is blank.' if is_blank?(Uploadcare.config.secret_key)
       end
 
+      # rubocop:disable Naming/PredicateName
       def self.is_blank?(value)
         value.nil? || value.empty?
       end
+      # rubocop:enable Naming/PredicateName
     end
   end
 end
