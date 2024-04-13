@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'signed_url_generators/amakai_generator'
+require 'signed_url_generators/akamai_generator'
 
 module Uploadcare
-  RSpec.describe SignedUrlGenerators::AmakaiGenerator do
+  RSpec.describe SignedUrlGenerators::AkamaiGenerator do
     subject { described_class.new(cdn_host: 'example.com', secret_key: secret_key) }
 
     let(:default_ttl) { 300 }
@@ -45,6 +45,13 @@ module Uploadcare
       context 'when uuid not valid' do
         it 'returns exception' do
           expect { subject.generate_url(SecureRandom.hex) }.to raise_error ArgumentError
+        end
+      end
+
+      context 'when wildcard is true' do
+        it 'returns correct url' do
+          expected_url = 'https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1649343900~acl=/a7d5645e-5cd7-4046-819f-a6a2933bafe3/*~hmac=f0ae3655fb66376a172c29978c0e3db23c1359aec636c7f3395a165520d84d54'
+          expect(subject.generate_url(uuid, nil, wildcard: true)).to eq expected_url
         end
       end
     end

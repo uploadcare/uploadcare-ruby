@@ -26,7 +26,7 @@ require 'param/webhook_signature_verifier'
 require 'api/api'
 
 # SignedUrlGenerators
-require 'signed_url_generators/amakai_generator'
+require 'signed_url_generators/akamai_generator'
 require 'signed_url_generators/base_generator'
 
 # Ruby wrapper for Uploadcare API
