@@ -11,7 +11,7 @@ module Uploadcare
       def generate_url(uuid, acl = uuid, wildcard: false)
         raise ArgumentError, 'Must contain valid UUID' unless valid?(uuid)
 
-        formated_acl = build_acl(uuid, acl, wildcard:)
+        formated_acl = build_acl(uuid, acl, wildcard: wildcard)
         expire = build_expire
         signature = build_signature(expire, formated_acl)
 
