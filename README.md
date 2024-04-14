@@ -828,13 +828,14 @@ You can use custom domain and CDN provider to deliver files with authenticated U
 To generate authenticated URL from the library, you should choose `Uploadcare::SignedUrlGenerators::AmakaiGenerator` (or create your generator implementation):
 
 ```ruby
-generator = Uploadcare::SignedUrlGenerators::AkamaiGenerator.new(cdn_host: 'example.com', secret_key: 'secret_key').Optional parameters: ttl : 300, algorithm : 'sha256'
+generator = Uploadcare::SignedUrlGenerators::AkamaiGenerator.new(cdn_host: 'example.com', secret_key: 'secret_key') 
+#Optional parameters: ttl: 300, algorithm: 'sha256'
 generator.generate_url(uuid, acl = optional)
 
-generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3") ->
-https: //ex ample.com / a7d5645e - 5 cd7 - 4046 - 819 f - a6a2933bafe3 / ? token = exp = 1649405263 ~acl = /a7d5645e-5cd7-4046-819f-a6a2933bafe3/ ~hmac = a989cae5342f17013677f5a0e6577fc5594cc4e238fb4c95eda36634eb47018b
-generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3", '/*/') ->
-https: //ex ample.com / a7d5645e - 5 cd7 - 4046 - 819 f - a6a2933bafe3 / ? token = exp = 1649405263 ~acl = /*/ ~hmac = 3 ce1152c6af8864b36d4dc721f08ca3cf0b3a20278d7f849e82c6c930d48ccc1
+generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3")
+# https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1649405263~acl=/a7d5645e-5cd7-4046-819f-a6a2933bafe3/~hmac=a989cae5342f17013677f5a0e6577fc5594cc4e238fb4c95eda36634eb47018b
+generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3", '/*/') 
+# https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1649405263~acl=/*/~hmac=3ce1152c6af8864b36d4dc721f08ca3cf0b3a20278d7f849e82c6c930d48ccc1
 ```
 ## Useful links
 
