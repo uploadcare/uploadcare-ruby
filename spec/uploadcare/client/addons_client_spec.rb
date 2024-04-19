@@ -70,6 +70,26 @@ module Uploadcare
           end
         end
       end
+
+      describe 'ws_rekognition_detect_moderation_labels' do
+        it 'executes aws rekognition' do
+          VCR.use_cassette('ws_rekognition_detect_moderation_labels') do
+            uuid = 'ff4d3d37-4de0-4f6d-a7db-8cdabe7fc768'
+            response = subject.ws_rekognition_detect_moderation_labels(uuid)
+            expect(response.success).to eq({ request_id: '0f4598dd-d168-4272-b49e-e7f9d2543542' })
+          end
+        end
+      end
+
+      describe 'ws_rekognition_detect_moderation_labels_status' do
+        it 'checking the status of a recognized file' do
+          VCR.use_cassette('ws_rekognition_detect_moderation_labels_status') do
+            uuid = '0f4598dd-d168-4272-b49e-e7f9d2543542'
+            response = subject.ws_rekognition_detect_moderation_labels_status(uuid)
+            expect(response.success).to eq({ status: 'done' })
+          end
+        end
+      end
     end
   end
 end

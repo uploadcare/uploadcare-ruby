@@ -1,0 +1,57 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.uploadcare.com/addons/aws_rekognition_detect_moderation_labels/execute/
+    body:
+      encoding: UTF-8
+      string: '{"target":"ff4d3d37-4de0-4f6d-a7db-8cdabe7fc768"}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      User-Agent:
+      - UploadcareRuby/4.4.0/demopublickey (Ruby/3.1.3)
+      Date:
+      - Wed, 17 Apr 2024 12:15:08 GMT
+      Authorization:
+      - Uploadcare demopublickey:792d1155f4329982a1f672aaa8f5b605a8a9e223
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: Forbidden
+    headers:
+      Date:
+      - Wed, 17 Apr 2024 12:15:09 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.7+json
+      Content-Length:
+      - '61'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Vary:
+      - Accept
+      Allow:
+      - OPTIONS, POST
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - ae97adb2-97a9-49c1-b81e-58a9c226e468
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: ASCII-8BIT
+      string: '{"request_id": "0f4598dd-d168-4272-b49e-e7f9d2543542"}'
+  recorded_at: Wed, 17 Apr 2024 12:15:09 GMT
+recorded_with: VCR 6.2.0

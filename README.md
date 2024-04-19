@@ -590,6 +590,16 @@ Uploadcare::Addons.remove_bg('FILE_UUID', crop: true, type_level: '2')
 Uploadcare::Addons.remove_bg_status('RETURNED_ID_FROM_REMOVE_BG')
 ```
 
+##### AWS Rekognition Moderation
+
+```ruby
+# Execute AWS Rekognition Moderation Add-On for a given target to detect labels in an image.
+Uploadcare::Addons.ws_rekognition_detect_moderation_labels('FILE_UUID')
+
+# Check the status of AWS Rekognition Moderation.
+Uploadcare::Addons.ws_rekognition_detect_moderation_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_MODERATION_LABELS')
+```
+
 #### Project
 
 `Project` provides basic info about the connected Uploadcare project. That

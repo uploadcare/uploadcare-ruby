@@ -46,6 +46,19 @@ module Uploadcare
         get(uri: "/addons/remove_bg/execute/status/#{query_params(uuid)}")
       end
 
+      # Execute AWS Rekognition Moderation Add-On for a given target to detect labels in an image.
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Add-Ons/operation/awsRekognitionDetectModerationLabelsExecute
+      def ws_rekognition_detect_moderation_labels(uuid)
+        content = { target: uuid }.to_json
+        post(uri: '/addons/aws_rekognition_detect_moderation_labels/execute/', content: content)
+      end
+
+      # Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
+      # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Add-Ons/operation/awsRekognitionDetectModerationLabelsExecutionStatus
+      def ws_rekognition_detect_moderation_labels_status(uuid)
+        get(uri: "/addons/aws_rekognition_detect_moderation_labels/execute/status/#{query_params(uuid)}")
+      end
+
       private
 
       def query_params(uuid)
