@@ -55,10 +55,12 @@ module Uploadcare
           it 'iterates each file in list' do
             VCR.use_cassette('rest_file_list_each') do
               fl_with_params = FileList.file_list(limit: 2)
+              # rubocop:disable Style/MapIntoArray
               entities = []
               fl_with_params.each do |file|
                 entities << file
               end
+              # rubocop:enable Style/MapIntoArray
               expect(entities.length).to eq fl_with_params.total
             end
           end
