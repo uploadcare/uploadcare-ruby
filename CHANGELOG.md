@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+### Added
+* Added `AWS Rekognition Moderation` Add-On.
+
 ### Changed
 * File attribute `datetime_stored` is deprecated and will warn on usage from `File` object properties.
 

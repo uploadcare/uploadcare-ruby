@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://api.uploadcare.com/addons/aws_rekognition_detect_moderation_labels/execute/status/?request_id=nonexistent
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      User-Agent:
+      - UploadcareRuby/4.4.0/demopublickey (Ruby/3.1.3)
+      Date:
+      - Wed, 17 Apr 2024 12:20:47 GMT
+      Authorization:
+      - Uploadcare demopublickey:f958c811e1eacfb1654de2aa3e3a0048e04bb1a2
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Date:
+      - Wed, 17 Apr 2024 12:20:48 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.7+json
+      Content-Length:
+      - '40'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Warning:
+      - '199 Miscellaneous warning: You are using the demo project'
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Vary:
+      - Accept
+      Allow:
+      - GET, HEAD, OPTIONS
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - e36a1b0b-99aa-4923-9fde-8b645fc61f97
+      X-Frame-Options:
+      - SAMEORIGIN
+    body:
+      encoding: ASCII-8BIT
+      string: '{"request_id":["Must be a valid UUID."]}'
+  recorded_at: Wed, 17 Apr 2024 12:20:49 GMT
+recorded_with: VCR 6.2.0
