@@ -9,7 +9,8 @@ module Uploadcare
 
       it 'responds to expected methods' do
         methods = %i[uc_clamav_virus_scan uc_clamav_virus_scan_status ws_rekognition_detect_labels
-                     ws_rekognition_detect_labels_status remove_bg remove_bg_status]
+                     ws_rekognition_detect_labels_status remove_bg remove_bg_status
+                     ws_rekognition_detect_moderation_labels ws_rekognition_detect_moderation_labels_status]
         expect(subject).to respond_to(*methods)
       end
 
@@ -114,6 +115,40 @@ module Uploadcare
           VCR.use_cassette('remove_bg_status_nonexistent_uuid') do
             uuid = 'nonexistent'
             expect { subject.uc_clamav_virus_scan_status(uuid) }.to raise_error(RequestError)
+          end
+        end
+      end
+
+      describe 'ws_rekognition_detect_moderation_labels' do
+        it 'executes aws rekognition detect moderation' do
+          VCR.use_cassette('ws_rekognition_detect_moderation_labels') do
+            uuid = 'ff4d3d37-4de0-4f6d-a7db-8cdabe7fc768'
+            response = subject.ws_rekognition_detect_moderation_labels(uuid)
+            expect(response.request_id).to eq('0f4598dd-d168-4272-b49e-e7f9d2543542')
+          end
+        end
+
+        it 'raises error for nonexistent file uuid' do
+          VCR.use_cassette('ws_rekognition_detect_moderation_labels_nonexistent_uuid') do
+            uuid = 'nonexistent'
+            expect { subject.ws_rekognition_detect_moderation_labels(uuid) }.to raise_error(RequestError)
+          end
+        end
+      end
+
+      describe 'ws_rekognition_detect_moderation_labels_status' do
+        it 'checking the status of a recognized file' do
+          VCR.use_cassette('ws_rekognition_detect_moderation_labels_status') do
+            uuid = '0f4598dd-d168-4272-b49e-e7f9d2543542'
+            response = subject.ws_rekognition_detect_moderation_labels_status(uuid)
+            expect(response.status).to eq('done')
+          end
+        end
+
+        it 'raises error for nonexistent file uuid' do
+          VCR.use_cassette('ws_rekognition_detect_moderation_labels_status_nonexistent_uuid') do
+            uuid = 'nonexistent'
+            expect { subject.ws_rekognition_detect_moderation_labels_status(uuid) }.to raise_error(RequestError)
           end
         end
       end
