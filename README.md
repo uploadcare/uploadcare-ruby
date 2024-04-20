@@ -556,11 +556,24 @@ An `Add-On` is an application implemented by Uploadcare that accepts uploaded fi
 ##### AWS Rekognition
 
 ```ruby
-# Execute AWS Rekognition Add-On for a given target to detect labels in an image. Note: Detected labels are stored in the file's appdata.
+# Execute AWS Rekognition Add-On for a given target to detect labels in an image. 
+# Note: Detected labels are stored in the file's appdata.
 Uploadcare::Addons.ws_rekognition_detect_labels('FILE_UUID')
 
 # Check the status of AWS Rekognition.
 Uploadcare::Addons.ws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_LABELS')
+```
+
+##### AWS Rekognition Moderation
+
+```ruby
+# Execute AWS Rekognition Moderation Add-On for a given target to detect moderation labels in an image. 
+# Note: Detected moderation labels are stored in the file's appdata.
+
+Uploadcare::Addons.ws_rekognition_detect_moderation_labels('FILE_UUID')
+
+# Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
+Uploadcare::Addons.ws_rekognition_detect_moderation_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_MODERATION_LABELS')
 ```
 
 ##### ClamAV
@@ -569,35 +582,25 @@ Uploadcare::Addons.ws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKO
 # ClamAV virus checking Add-On for a given target.
 Uploadcare::Addons.uc_clamav_virus_scan('FILE_UUID')
 
-# Checking and purge infected file.
+# Check and purge infected file.
 Uploadcare::Addons.uc_clamav_virus_scan('FILE_UUID', purge_infected: true )
 
-# Check the status ClamAV virus scan.
+# Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
 Uploadcare::Addons.uc_clamav_virus_scan_status('RETURNED_ID_FROM_UC_CLAMAV_VIRUS_SCAN')
 ```
 
 ##### Remove.bg
 
 ```ruby
-# Remove background image removal Add-On for a given target.
+# Execute remove.bg background image removal Add-On for a given target.
 Uploadcare::Addons.remove_bg('FILE_UUID')
 
 # You can pass optional parameters.
 # See the full list of parameters here: https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/removeBgExecute
 Uploadcare::Addons.remove_bg('FILE_UUID', crop: true, type_level: '2')
 
-# Check the status of background image removal.
+# Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
 Uploadcare::Addons.remove_bg_status('RETURNED_ID_FROM_REMOVE_BG')
-```
-
-##### AWS Rekognition Moderation
-
-```ruby
-# Execute AWS Rekognition Moderation Add-On for a given target to detect labels in an image.
-Uploadcare::Addons.ws_rekognition_detect_moderation_labels('FILE_UUID')
-
-# Check the status of AWS Rekognition Moderation.
-Uploadcare::Addons.ws_rekognition_detect_moderation_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_MODERATION_LABELS')
 ```
 
 #### Project
