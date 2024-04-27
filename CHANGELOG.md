@@ -12,7 +12,7 @@
 ### Fixed
 
 * Throw `AuthError` if current public key or secret key config are empty when accessing any of the APIs.
-* Fixed typo in `AkamaiGenerator` class name from `AmakaiGenerator`.
+* `AmakaiGenerator` has been renamed to `AkamaiGenerator` to fix typo in class name.
 
 ## 4.4.0 — 2024-03-09
 
