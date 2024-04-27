@@ -68,9 +68,9 @@ module Uploadcare
             file = File.new(url: url)
             logger = Uploadcare.config.logger
             file.load
-            allow(logger).to receive(:warn).with('datetime_stored property has be deprecated, and will be removed without a replacement in future.')
+            allow(logger).to receive(:warn).with('datetime_stored property has been deprecated, and will be removed without a replacement in future.')
             datetime_stored = file.datetime_stored
-            expect(logger).to have_received(:warn).with('datetime_stored property has be deprecated, and will be removed without a replacement in future.')
+            expect(logger).to have_received(:warn).with('datetime_stored property has been deprecated, and will be removed without a replacement in future.')
             expect(datetime_stored).not_to be_nil
           end
         end

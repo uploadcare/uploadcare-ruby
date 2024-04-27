@@ -838,15 +838,29 @@ More examples and options can be found [here](https://uploadcare.com/docs/transf
 
 You can use custom domain and CDN provider to deliver files with authenticated URLs (see [original documentation](https://uploadcare.com/docs/security/secure_delivery/)).
 
-To generate authenticated URL from the library, you should choose `Uploadcare::SignedUrlGenerators::AmakaiGenerator` (or create your generator implementation):
+To generate authenticated URL from the library, you should choose `Uploadcare::SignedUrlGenerators::AkamaiGenerator` (or create your own generator implementation):
+
 ```ruby
-generator = Uploadcare::SignedUrlGenerators::AmakaiGenerator.new(cdn_host: 'example.com', secret_key: 'secret_key'). Optional parameters: ttl: 300, algorithm: 'sha256'
+generator = Uploadcare::SignedUrlGenerators::AkamaiGenerator.new(cdn_host: 'example.com', secret_key: 'secret_key') 
+# Optional parameters: ttl: 300, algorithm: 'sha256'
 generator.generate_url(uuid, acl = optional)
 
-generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3") ->
-https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1649405263~acl=/a7d5645e-5cd7-4046-819f-a6a2933bafe3/~hmac=a989cae5342f17013677f5a0e6577fc5594cc4e238fb4c95eda36634eb47018b
-generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3", '/*/') ->
-https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1649405263~acl=/*/~hmac=3ce1152c6af8864b36d4dc721f08ca3cf0b3a20278d7f849e82c6c930d48ccc1
+generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3")
+# https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1649405263~acl=/a7d5645e-5cd7-4046-819f-a6a2933bafe3/~hmac=a989cae5342f17013677f5a0e6577fc5594cc4e238fb4c95eda36634eb47018b
+
+# You can pass in ACL as a second parameter to generate_url. See https://uploadcare.com/docs/security/secure-delivery/#authenticated-urls for supported acl formats
+generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3", '/*/') 
+# https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1649405263~acl=/*/~hmac=3ce1152c6af8864b36d4dc721f08ca3cf0b3a20278d7f849e82c6c930d48ccc1
+
+# Optionally you can use wildcard: true to generate a wildcard acl token
+generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3", wildcard: true)
+# https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1714233449~acl=/a7d5645e-5cd7-4046-819f-a6a2933bafe3/*~hmac=a568ee2a85dd90a8a8a1ef35ea0cc0ef0acb84fe81990edd3a06eacf10a52b4e
+ 
+# You can also pass in a custom ttl and algorithm to AkamaiGenerator
+generator = Uploadcare::SignedUrlGenerators::AkamaiGenerator.new(cdn_host: 'example.com', secret_key: 'secret_key', ttl: 10)
+generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3")
+# This generates a URL that expires in 10 seconds
+# https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1714233277~acl=/a7d5645e-5cd7-4046-819f-a6a2933bafe3/~hmac=f25343104aeced3004d2cc4d49807d8d7c732300b54b154c319da5283a871a71
 ```
 ## Useful links
 
