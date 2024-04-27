@@ -838,7 +838,7 @@ More examples and options can be found [here](https://uploadcare.com/docs/transf
 
 You can use custom domain and CDN provider to deliver files with authenticated URLs (see [original documentation](https://uploadcare.com/docs/security/secure_delivery/)).
 
-To generate authenticated URL from the library, you should choose `Uploadcare::SignedUrlGenerators::AmakaiGenerator` (or create your generator implementation):
+To generate authenticated URL from the library, you should choose `Uploadcare::SignedUrlGenerators::AkamaiGenerator` (or create your generator implementation):
 
 ```ruby
 generator = Uploadcare::SignedUrlGenerators::AkamaiGenerator.new(cdn_host: 'example.com', secret_key: 'secret_key') 
