@@ -1,14 +1,12 @@
 # Changelog
 
-## Unreleased
+## 4.4.1 — 2024-04-27
 
 ### Added
 * Added `AWS Rekognition Moderation` Add-On.
 
 ### Changed
 * File attribute `datetime_stored` is deprecated and will warn on usage from `File` object properties.
-
-## Unreleased
 
 ### Fixed
 
