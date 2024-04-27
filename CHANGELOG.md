@@ -15,7 +15,7 @@
 * Throw `AuthError` if current public key or secret key config are empty when accessing any of the APIs. 
 
 ### Added
-* Added an optional `wildcard` boolean parameter to the `generate_url` method of `AmakaiGenerator`.
+* Added an optional `wildcard` boolean parameter to the `generate_url` method of `AkamaiGenerator`.
 
 ## 4.4.0 — 2024-03-09
 

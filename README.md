@@ -842,7 +842,7 @@ To generate authenticated URL from the library, you should choose `Uploadcare::S
 
 ```ruby
 generator = Uploadcare::SignedUrlGenerators::AkamaiGenerator.new(cdn_host: 'example.com', secret_key: 'secret_key') 
-#Optional parameters: ttl: 300, algorithm: 'sha256'
+# Optional parameters: ttl: 300, algorithm: 'sha256'
 generator.generate_url(uuid, acl = optional)
 
 generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3")
