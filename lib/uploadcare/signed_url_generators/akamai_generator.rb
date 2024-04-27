@@ -11,14 +11,14 @@ module Uploadcare
       def generate_url(uuid, acl = uuid, wildcard: false)
         raise ArgumentError, 'Must contain valid UUID' unless valid?(uuid)
 
-        formated_acl = build_acl(uuid, acl, wildcard: wildcard)
+        formatted_acl = build_acl(uuid, acl, wildcard: wildcard)
         expire = build_expire
-        signature = build_signature(expire, formated_acl)
+        signature = build_signature(expire, formatted_acl)
 
         TEMPLATE.gsub('{delimiter}', delimiter)
                 .sub('{cdn_host}', sanitized_string(cdn_host))
                 .sub('{uuid}', sanitized_string(uuid))
-                .sub('{acl}', formated_acl)
+                .sub('{acl}', formatted_acl)
                 .sub('{expiration}', expire)
                 .sub('{token}', signature)
       end
@@ -46,8 +46,9 @@ module Uploadcare
       end
 
       def build_signature(expire, acl)
-        signature = %W[exp=#{expire} acl=#{acl}].join(delimiter)
-        OpenSSL::HMAC.hexdigest(algorithm, secret_key, signature)
+        signature = ["exp=#{expire}", "acl=#{acl}"].join(delimiter)
+        secret_key_bin = Array(secret_key.gsub(/\s/,'')).pack("H*")
+        OpenSSL::HMAC.hexdigest(algorithm, secret_key_bin, signature)
       end
 
       # rubocop:disable Style/SlicingWithRange
