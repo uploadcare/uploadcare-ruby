@@ -9,6 +9,7 @@ module Uploadcare
     # This object returns headers needed for authentication
     # This authentication method is more secure, but more tedious
     class AuthenticationHeader
+      include Exception
       # @see https://uploadcare.com/docs/api_reference/rest/requests_auth/#auth-uploadcare
       def self.call(options = {})
         validate_auth_config
