@@ -9,7 +9,6 @@ module Uploadcare
     # This object returns headers needed for authentication
     # This authentication method is more secure, but more tedious
     class AuthenticationHeader
-      include Exception
       # @see https://uploadcare.com/docs/api_reference/rest/requests_auth/#auth-uploadcare
       def self.call(options = {})
         validate_auth_config
@@ -24,8 +23,8 @@ module Uploadcare
       end
 
       def self.validate_auth_config
-        raise AuthError, 'Public Key is blank.' if is_blank?(Uploadcare.config.public_key)
-        raise AuthError, 'Secret Key is blank.' if is_blank?(Uploadcare.config.secret_key)
+        raise Uploadcare::Exception::AuthError, 'Public Key is blank.' if is_blank?(Uploadcare.config.public_key)
+        raise Uploadcare::Exception::AuthError, 'Secret Key is blank.' if is_blank?(Uploadcare.config.secret_key)
       end
 
       # rubocop:disable Naming/PredicateName
