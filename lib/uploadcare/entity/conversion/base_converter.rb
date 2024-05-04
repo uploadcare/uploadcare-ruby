@@ -23,6 +23,10 @@ module Uploadcare
             conversion_client.new.get_conversion_status(token)
           end
 
+          def info(uuid)
+            conversion_client.new.document_info(uuid)
+          end
+
           private
 
           def conversion_client
