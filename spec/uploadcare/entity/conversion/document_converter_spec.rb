@@ -66,9 +66,9 @@ module Uploadcare
             VCR.use_cassette('document_convert_info') do
               uuid = 'cd7a51d4-9776-4749-b749-c9fc691891f1'
               response = subject.info(uuid)
-              expect(response.value!.has_key?(:format)).to be_truthy
+              expect(response.value!.key?(:format)).to be_truthy
               document_formats = response.value![:format]
-              expect(document_formats.has_key?(:conversion_formats)).to be_truthy
+              expect(document_formats.key?(:conversion_formats)).to be_truthy
             end
           end
         end
