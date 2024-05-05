@@ -22,6 +22,10 @@ module Uploadcare
           get(uri: "/convert/document/status/#{token}/")
         end
 
+        def document_info(uuid)
+          get(uri: "/convert/document/#{uuid}/")
+        end
+
         private
 
         def convert_uri
