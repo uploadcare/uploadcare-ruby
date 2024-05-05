@@ -23,6 +23,9 @@ module Uploadcare
             conversion_client.new.get_conversion_status(token)
           end
 
+          # Returns the document format and possible conversion formats.
+          #
+          # @param uuid [String] UUID of the document
           def info(uuid)
             conversion_client.new.document_info(uuid)
           end
