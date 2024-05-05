@@ -34,3 +34,7 @@ Style/Documentation:
 
 Style/OptionalBooleanParameter:
   AllowedMethods: ['create']
+
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - 'api_examples/**/*'
