@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+### Added
+* `Document Info` API added in `DocumentConverter`.
 ## 4.4.1 — 2024-04-27
 
 ### Added

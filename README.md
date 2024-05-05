@@ -556,7 +556,7 @@ An `Add-On` is an application implemented by Uploadcare that accepts uploaded fi
 ##### AWS Rekognition
 
 ```ruby
-# Execute AWS Rekognition Add-On for a given target to detect labels in an image. 
+# Execute AWS Rekognition Add-On for a given target to detect labels in an image.
 # Note: Detected labels are stored in the file's appdata.
 Uploadcare::Addons.ws_rekognition_detect_labels('FILE_UUID')
 
@@ -567,7 +567,7 @@ Uploadcare::Addons.ws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKO
 ##### AWS Rekognition Moderation
 
 ```ruby
-# Execute AWS Rekognition Moderation Add-On for a given target to detect moderation labels in an image. 
+# Execute AWS Rekognition Moderation Add-On for a given target to detect moderation labels in an image.
 # Note: Detected moderation labels are stored in the file's appdata.
 
 Uploadcare::Addons.ws_rekognition_detect_moderation_labels('FILE_UUID')
@@ -738,6 +738,20 @@ More examples and options can be found [here](https://uploadcare.com/docs/transf
 ##### Document
 
 After each document file upload you obtain a file identifier in UUID format.
+
+You can use file identifier to determine the document format and possible conversion formats.
+```ruby
+Uploadcare::DocumentConverter.info("dc99200d-9bd6-4b43-bfa9-aa7bfaefca40")
+
+# Response
+{:error=>nil, :format=>{
+  :name=>"jpg",
+  :conversion_formats=>[
+    {:name=>"avif"}, {:name=>"bmp"}, {:name=>"gif"}, {:name=>"ico"}, {:name=>"pcx"}, {:name=>"pdf"}, {:name=>"png"}, {:name=>"ps"}, {:name=>"svg"}, {:name=>"tga"}, {:name=>"thumbnail"}, {:name=>"tiff"}, {:name=>"wbmp"}, {:name=>"webp"}
+  ]
+}}
+```
+
 Then you can use this file identifier to convert your document to a new format:
 
 ```ruby
@@ -841,7 +855,7 @@ You can use custom domain and CDN provider to deliver files with authenticated U
 To generate authenticated URL from the library, you should choose `Uploadcare::SignedUrlGenerators::AkamaiGenerator` (or create your own generator implementation):
 
 ```ruby
-generator = Uploadcare::SignedUrlGenerators::AkamaiGenerator.new(cdn_host: 'example.com', secret_key: 'secret_key') 
+generator = Uploadcare::SignedUrlGenerators::AkamaiGenerator.new(cdn_host: 'example.com', secret_key: 'secret_key')
 # Optional parameters: ttl: 300, algorithm: 'sha256'
 generator.generate_url(uuid, acl = optional)
 
@@ -849,13 +863,13 @@ generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3")
 # https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1649405263~acl=/a7d5645e-5cd7-4046-819f-a6a2933bafe3/~hmac=a989cae5342f17013677f5a0e6577fc5594cc4e238fb4c95eda36634eb47018b
 
 # You can pass in ACL as a second parameter to generate_url. See https://uploadcare.com/docs/security/secure-delivery/#authenticated-urls for supported acl formats
-generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3", '/*/') 
+generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3", '/*/')
 # https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1649405263~acl=/*/~hmac=3ce1152c6af8864b36d4dc721f08ca3cf0b3a20278d7f849e82c6c930d48ccc1
 
 # Optionally you can use wildcard: true to generate a wildcard acl token
 generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3", wildcard: true)
 # https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1714233449~acl=/a7d5645e-5cd7-4046-819f-a6a2933bafe3/*~hmac=a568ee2a85dd90a8a8a1ef35ea0cc0ef0acb84fe81990edd3a06eacf10a52b4e
- 
+
 # You can also pass in a custom ttl and algorithm to AkamaiGenerator
 generator = Uploadcare::SignedUrlGenerators::AkamaiGenerator.new(cdn_host: 'example.com', secret_key: 'secret_key', ttl: 10)
 generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3")
