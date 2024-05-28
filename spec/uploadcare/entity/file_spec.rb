@@ -44,7 +44,16 @@ module Uploadcare
       end
 
       describe 'external_copy' do
-        it 'copies file to different project' do
+        it 'copies file to remote storage' do
+          VCR.use_cassette('rest_file_remote_copy') do
+            target = 'uploadcare-test'
+            uuid = '1b959c59-9605-4879-946f-08fdb5ea3e9d'
+            file = subject.file(uuid)
+            expect(file.remote_copy(target)).to match(%r{#{target}/#{uuid}/})
+          end
+        end
+
+        it 'raises an error when project does not have given storage' do
           VCR.use_cassette('rest_file_external_copy') do
             file = subject.file('5632fc94-9dff-499f-a373-f69ea6f67ff8')
             # I don't have custom storage, but this error recognises what this method tries to do

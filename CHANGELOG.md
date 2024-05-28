@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+### Fixed
+* Fixed the `Uploadcare::File.remote_copy` method which raised an `ApiStruct::EntityError: {url} must be Hash`. Now returns a string instead of a `File` entity instance.
 ### Added
 * `Document Info` API added in `DocumentConverter`.
 ## 4.4.1 — 2024-04-27
