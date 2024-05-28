@@ -64,8 +64,7 @@ module Uploadcare
       #
       # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/createRemoteCopy
       def self.remote_copy(source, target, args = {})
-        response = FileClient.new.remote_copy(source: source, target: target, **args).success[:result]
-        File.new(response)
+        FileClient.new.remote_copy(source: source, target: target, **args).success[:result]
       end
 
       # Instance version of {internal_copy}
