@@ -47,7 +47,7 @@ module Uploadcare
       private
 
       def form_data_for(file)
-        form_data_file = super(file)
+        form_data_file = super
         {
           filename: form_data_file.filename,
           size: form_data_file.size,
