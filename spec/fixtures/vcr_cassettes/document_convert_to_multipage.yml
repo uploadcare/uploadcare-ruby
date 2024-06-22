@@ -1,0 +1,62 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.uploadcare.com/convert/document/
+    body:
+      encoding: UTF-8
+      string: '{"paths":["23d29586-713e-4152-b400-05fb54730453/document/-/format/png/"],"store":"0","save_in_group":"1"}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      User-Agent:
+      - UploadcareRuby/4.4.2/<uploadcare_public_key> (Ruby/3.3.0)
+      Date:
+      - Thu, 20 Jun 2024 11:27:39 GMT
+      Authorization:
+      - Uploadcare <uploadcare_public_key>:<uploadcare_auth>
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 20 Jun 2024 11:27:41 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '179'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept
+      - Accept-Encoding
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Allow:
+      - OPTIONS, POST
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 3bfdd243-a700-4a53-93c5-f3bbbbdf6efa
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
+    body:
+      encoding: UTF-8
+      string: '{"result": [{"original_source": "23d29586-713e-4152-b400-05fb54730453/document/-/format/png/",
+        "token": 44427572, "uuid": "44c011c3-de82-4c65-81ac-2738c741bec5"}], "problems":
+        {}}'
+  recorded_at: Thu, 20 Jun 2024 11:27:41 GMT
+recorded_with: VCR 6.2.0

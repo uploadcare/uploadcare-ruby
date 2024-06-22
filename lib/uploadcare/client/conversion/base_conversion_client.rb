@@ -50,7 +50,8 @@ module Uploadcare
                 **build_paths_body(params)
               )
             end,
-            store: options[:store]
+            store: options[:store],
+            save_in_group: options[:save_in_group]
           }.compact.to_json
         end
       end
