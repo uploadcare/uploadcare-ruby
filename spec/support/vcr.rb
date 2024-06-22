@@ -13,4 +13,5 @@ VCR.configure do |config|
       i.request.body = "Big string (#{i.request.body.size / (1024 * 1024)}) MB"
     end
   end
+  config.configure_rspec_metadata!
 end

@@ -1,0 +1,118 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://api.uploadcare.com/convert/document/
+    body:
+      encoding: UTF-8
+      string: '{"paths":["d95309eb-50bd-4594-bd7a-950011578480/document/-/format/jpg/"],"store":"1","save_in_group":"0"}'
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      User-Agent:
+      - UploadcareRuby/4.4.2/<uploadcare_public_key> (Ruby/3.3.0)
+      Date:
+      - Thu, 20 Jun 2024 12:01:04 GMT
+      Authorization:
+      - Uploadcare <uploadcare_public_key>:<uploadcare_auth>
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 20 Jun 2024 12:01:06 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '179'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Vary:
+      - Accept
+      - Accept-Encoding
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Allow:
+      - OPTIONS, POST
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - dcc60a86-38cb-4836-a037-8279b60e97ab
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
+    body:
+      encoding: UTF-8
+      string: '{"result": [{"original_source": "d95309eb-50bd-4594-bd7a-950011578480/document/-/format/jpg/",
+        "token": 44428259, "uuid": "ddf298c3-6113-465b-8677-1f566cced4f1"}], "problems":
+        {}}'
+  recorded_at: Thu, 20 Jun 2024 12:01:06 GMT
+- request:
+    method: get
+    uri: https://api.uploadcare.com/convert/document/d95309eb-50bd-4594-bd7a-950011578480/
+    body:
+      encoding: ASCII-8BIT
+      string: ''
+    headers:
+      Content-Type:
+      - application/json
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      User-Agent:
+      - UploadcareRuby/4.4.2/<uploadcare_public_key> (Ruby/3.3.0)
+      Date:
+      - Thu, 20 Jun 2024 12:01:06 GMT
+      Authorization:
+      - Uploadcare <uploadcare_public_key>:<uploadcare_auth>
+      Connection:
+      - close
+      Host:
+      - api.uploadcare.com
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Thu, 20 Jun 2024 12:01:07 GMT
+      Content-Type:
+      - application/vnd.uploadcare-v0.7+json
+      Content-Length:
+      - '663'
+      Connection:
+      - close
+      Server:
+      - nginx
+      Access-Control-Allow-Origin:
+      - https://uploadcare.com
+      Vary:
+      - Accept
+      Allow:
+      - GET, HEAD, OPTIONS
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 6caab90a-9fc0-4194-a092-480e8ce65ff9
+      X-Frame-Options:
+      - SAMEORIGIN
+      X-Robots-Tag:
+      - noindex, nofollow, nosnippet, noarchive
+    body:
+      encoding: ASCII-8BIT
+      string: '{"error":null,"format":{"name":"pdf","conversion_formats":[{"name":"bmp"},{"name":"csv"},{"name":"doc"},{"name":"docx"},{"name":"dwg"},{"name":"dxf"},{"name":"enhanced.jpg"},{"name":"epub"},{"name":"fb2"},{"name":"gif"},{"name":"html"},{"name":"html5"},{"name":"html5-1page"},{"name":"htmlz"},{"name":"jpg"},{"name":"lit"},{"name":"lrf"},{"name":"md"},{"name":"mobi"},{"name":"mp3"},{"name":"pcx"},{"name":"pdb"},{"name":"png"},{"name":"ppt"},{"name":"pptx"},{"name":"prc"},{"name":"ps"},{"name":"rb"},{"name":"rtf"},{"name":"snb"},{"name":"svg"},{"name":"tcr"},{"name":"thumbnail"},{"name":"tiff"},{"name":"txt"},{"name":"txtz"},{"name":"xls"},{"name":"xlsx"}]}}'
+  recorded_at: Thu, 20 Jun 2024 12:01:07 GMT
+recorded_with: VCR 6.2.0

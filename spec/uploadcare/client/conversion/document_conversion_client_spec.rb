@@ -12,9 +12,7 @@ module Uploadcare
 
             shared_examples 'succeeds documents conversion' do
               it 'returns a convert documents response' do
-                VCR.use_cassette('document_convert_convert_many') do
-                  expect(subject).to be_success
-                end
+                expect(subject).to be_success
               end
             end
 
@@ -29,7 +27,21 @@ module Uploadcare
             end
             let(:options) { { store: false } }
 
-            context 'when all params are present' do
+            context 'when all params are present', vcr: 'document_convert_convert_many' do
+              it_behaves_like 'succeeds documents conversion'
+            end
+
+            context 'multipage conversion', vcr: 'document_convert_to_multipage' do
+              let(:array_of_params) do
+                [
+                  {
+                    uuid: '23d29586-713e-4152-b400-05fb54730453',
+                    format: 'png'
+                  }
+                ]
+              end
+              let(:options) { { store: '0', save_in_group: '1' } }
+
               it_behaves_like 'succeeds documents conversion'
             end
           end
