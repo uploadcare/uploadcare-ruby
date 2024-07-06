@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 4.4.3 — 2024-07-06
 
 ### Added
 * Multi page conversion parameter (`save_in_group`) added to `DocumentConverter#convert` options.
