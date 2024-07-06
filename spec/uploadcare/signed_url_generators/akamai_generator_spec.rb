@@ -54,6 +54,24 @@ module Uploadcare
           expect(subject.generate_url(uuid, nil, wildcard: true)).to eq expected_url
         end
       end
+
+      context 'works with group' do
+        let(:uuid) { '83a8994a-e0b4-4091-9a10-5a847298e493~4' }
+
+        it 'returns correct url' do
+          expected_url = 'https://example.com/83a8994a-e0b4-4091-9a10-5a847298e493~4/?token=exp=1649343900~acl=/83a8994a-e0b4-4091-9a10-5a847298e493%7e4/*~hmac=f4d4c5da93324dffa2b5bb42d8a6cc693789077212cbdf599fe3220b9d37749d'
+          expect(subject.generate_url(uuid, nil, wildcard: true)).to eq expected_url
+        end
+      end
+
+      context 'works with nth file type notation for files within a group' do
+        let(:uuid) { '83a8994a-e0b4-4091-9a10-5a847298e493~4/nth/0/-/crop/250x250/1000,1000' }
+
+        it 'returns correct url' do
+          expected_url = 'https://example.com/83a8994a-e0b4-4091-9a10-5a847298e493~4/nth/0/-/crop/250x250/1000,1000/?token=exp=1649343900~acl=/83a8994a-e0b4-4091-9a10-5a847298e493%7e4/nth/0/-/crop/250x250/1000,1000/*~hmac=d483cfa64cffe617c1cc72d6f1d3287a74d27cb608bbf08dc07d3d61e29cd4be'
+          expect(subject.generate_url(uuid, nil, wildcard: true)).to eq expected_url
+        end
+      end
     end
   end
 end
