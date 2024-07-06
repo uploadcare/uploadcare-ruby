@@ -35,10 +35,15 @@ module Uploadcare
 
       def build_acl(uuid, acl, wildcard: false)
         if wildcard
-          "/#{sanitized_string(uuid)}/*"
+          "/#{sanitized_delimiter_path(uuid)}/*"
         else
-          "/#{sanitized_string(acl)}/"
+          "/#{sanitized_delimiter_path(acl)}/"
         end
+      end
+
+      # Delimiter sanitization referenced from: https://github.com/uploadcare/pyuploadcare/blob/main/pyuploadcare/secure_url.py#L74
+      def sanitized_delimiter_path(path)
+        sanitized_string(path).gsub('~') { |escape_char| "%#{escape_char.ord.to_s(16).downcase}" }
       end
 
       def build_expire
