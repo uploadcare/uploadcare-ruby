@@ -53,12 +53,6 @@ And then execute:
 
     $ bundle
 
-If you use `api_struct` gem in your project, replace it with `uploadcare-api_struct`:
-```ruby
-gem 'uploadcare-api_struct'
-```
-and run `bundle install`
-
 If already not, create your project in [Uploadcare dashboard](https://app.uploadcare.com/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby) and copy
 its [API keys](https://app.uploadcare.com/projects/-/api-keys/) from there.
 
@@ -115,11 +109,11 @@ Your might then want to store or delete the uploaded file.
 ```ruby
 # that's how you store a file, if you have uploaded the file using store: false and changed your mind later
 @uc_file.store
-# => #<Uploadcare::Api::File ...
+# => #<Uploadcare::File ...
 
 # and that works for deleting it
 @uc_file.delete
-# => #<Uploadcare::Api::File ...
+# => #<Uploadcare::File ...
 ```
 
 #### Multiple ways to upload files
@@ -207,14 +201,14 @@ You can upload file with custom metadata, for example `subsystem` and `pet`:
 
 ### File management
 
-Entities are representations of objects in Uploadcare cloud.
+The File resource allows you to manage uploaded files, including storing, deleting, copying, and fetching file information.
 
-#### File
-
-File entity contains its metadata. It also supports `include` param to include additional fields to the file object, such as: "appdata".
+#### Fetching File Information
 
 ```ruby
-@file = Uploadcare::File.file("FILE_UUID", include: "appdata")
+# Fetch file information with optional inclusion of additional fields (e.g., appdata)
+@file = Uploadcare::File.new(uuid: "FILE_UUID")
+file_info = @file.info(include: "metadata")
 {
   "datetime_removed"=>nil,
   "datetime_stored"=>"2018-11-26T12:49:10.477888Z",
@@ -313,19 +307,86 @@ File entity contains its metadata. It also supports `include` param to include a
   }
 }
 
-@file.local_copy # copy file to local storage
+```
+#### Storing Files
 
-@file.remote_copy # copy file to remote storage
+# Store a single file
+``` ruby
+file = Uploadcare::File.new(uuid: "FILE_UUID")
+stored_file = file.store
 
-@file.store # stores file, returns updated metadata
-
-@file.delete #deletes file. Returns updated metadata
+puts stored_file.datetime_stored
+# => "2024-11-05T09:13:40.543471Z"
 ```
 
-The File object is also can be converted if it is a document or a video file. Imagine, you have a document file:
+# Batch store files using their UUIDs
+``` ruby
+uuids = ['uuid1', 'uuid2', 'uuid3']
+batch_result = Uploadcare::File.batch_store(uuids)
+```
+
+# Check the status of the operation
+``` ruby
+puts batch_result.status # => "success"
+```
+
+# Access successfully stored files
+``` ruby
+batch_result.result.each do |file|
+  puts file.uuid
+end
+```
+
+# Handle files that encountered issues
+``` ruby
+unless batch_result.problems.empty?
+  batch_result.problems.each do |uuid, error|
+    puts "Failed to store file #{uuid}: #{error}"
+  end
+end
+```
+
+#### Deleting Files
+
+# Delete a single file
+```ruby
+file = Uploadcare::File.new(uuid: "FILE_UUID")
+deleted_file = file.delete
+puts deleted_file.datetime_removed
+# => "2024-11-05T09:13:40.543471Z"
+```
+
+# Batch delete multiple files
+```ruby
+uuids = ['FILE_UUID_1', 'FILE_UUID_2']
+result = Uploadcare::File.batch_delete(uuids)
+puts result.result
+```
+
+#### Copying Files
+
+# Copy a file to local storage
+```ruby
+source = '1bac376c-aa7e-4356-861b-dd2657b5bfd2'
+file = Uploadcare::File.local_copy(source, store: true)
+
+puts file.uuid
+# => "new-uuid-of-the-copied-file"
+```
+
+# Copy a file to remote storage
+```ruby
+source_object = '1bac376c-aa7e-4356-861b-dd2657b5bfd2'
+target = 'custom_storage_connected_to_the_project'
+file = Uploadcare::File.remote_copy(source_object, target, make_public: true)
+
+puts file
+# => "https://my-storage.example.com/path/to/copied-file"
+```
+The File object also can be converted if it is a document or a video file. Imagine, you have a document file:
 
 ```ruby
-@file = Uploadcare::File.file("FILE_UUID")
+@file = Uploadcare::File.new(uuid: "FILE_UUID")
 ```
 
 To convert it to an another file, just do:
@@ -366,25 +427,20 @@ Metadata of deleted files is stored permanently.
 
 #### FileList
 
-`Uploadcare::FileList` represents the whole collection of files (or it's
-subset) and provides a way to iterate through it, making pagination transparent.
-FileList objects can be created using `Uploadcare::FileList.file_list` method.
+`Uploadcare::File.list` retrieves a collection of files from Uploadcare, supporting optional filtering and pagination. It provides methods to iterate through the collection and access associated file objects seamlessly.
 
 ```ruby
-@list = Uploadcare::FileList.file_list
-# Returns instance of Uploadcare::Entity::FileList
-<Hashie::Mash
-  next=nil
-  per_page=100
-  previous=nil
-  results=[
-    # Array of Entity::File
-  ]
-  total=8>
-# load last page of files
-@files = @list.files
-# load all files
-@all_files = @list.load
+# Retrieve a list of files
+options = {
+  limit: 10,                    # Controls the number of files returned (default: 100)
+  stored: true,                 # Only include stored files (optional)
+  removed: false,               # Exclude removed files (optional)
+  ordering: '-datetime_uploaded', # Order by latest uploaded files first
+  from: '2022-01-01T00:00:00'   # Start from this point in the collection
+}
+
+@file_list = Uploadcare::File.list(options)
+# => Returns an instance of PaginatedCollection containing Uploadcare::File objects
 ```
 
 This method accepts some options to control which files should be fetched and
@@ -407,7 +463,7 @@ options = {
   ordering: "-datetime_uploaded",
   from: "2017-01-01T00:00:00",
 }
-@list = @api.file_list(options)
+@list = Uploadcare::File.list(options)
 ```
 
 To simply get all associated objects:
@@ -417,9 +473,9 @@ To simply get all associated objects:
 
 #### Pagination
 
-Initially, `FileList` is a paginated collection. It can be navigated using following methods:
+Initially, `File.list` returns a paginated collection. It can be navigated using following methods:
 ```ruby
-  @file_list = Uploadcare::FileList.file_list
+  @file_list = Uploadcare::File.list
   # Let's assume there are 250 files in cloud. By default, UC loads 100 files. To get next 100 files, do:
   @next_page = @file_list.next_page
   # To get previous page:
@@ -469,18 +525,20 @@ That's a requirement of our API.
 Uploadcare::Group.store(group.id)
 
 # get a file group by its ID.
-Uploadcare::Group.rest_info(group.id)
+@group = Uploadcare::Group.new(uuid: "Group UUID")
+@group.info("Group UUID")
 
 # group can be deleted by group ID.
-Uploadcare::Group.delete(group.id)
+@group = Uploadcare::Group.new(uuid: "Group UUID")
+@group.delete("Group UUID")
 # Note: This operation only removes the group object itself. All the files that were part of the group are left as is.
 ```
 
 #### GroupList
-`GroupList` is a list of `Group`
+`Group.list` returns a list of `Group`
 
 ```ruby
-@group_list = Uploadcare::GroupList.list
+@group_list = Uploadcare::Group.list
 # To get an array of groups:
 @groups = @group_list.all
 ```
@@ -558,10 +616,10 @@ An `Add-On` is an application implemented by Uploadcare that accepts uploaded fi
 ```ruby
 # Execute AWS Rekognition Add-On for a given target to detect labels in an image.
 # Note: Detected labels are stored in the file's appdata.
-Uploadcare::Addons.ws_rekognition_detect_labels('FILE_UUID')
+Uploadcare::AddOns.aws_rekognition_detect_labels('FILE_UUID')
 
 # Check the status of AWS Rekognition.
-Uploadcare::Addons.ws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_LABELS')
+Uploadcare::AddOns.aws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_LABELS')
 ```
 
 ##### AWS Rekognition Moderation
@@ -570,48 +628,48 @@ Uploadcare::Addons.ws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKO
 # Execute AWS Rekognition Moderation Add-On for a given target to detect moderation labels in an image.
 # Note: Detected moderation labels are stored in the file's appdata.
 
-Uploadcare::Addons.ws_rekognition_detect_moderation_labels('FILE_UUID')
+Uploadcare::AddOns.aws_rekognition_detect_moderation_labels('FILE_UUID')
 
 # Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
-Uploadcare::Addons.ws_rekognition_detect_moderation_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_MODERATION_LABELS')
+Uploadcare::AddOns.aws_rekognition_detect_moderation_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_MODERATION_LABELS')
 ```
 
 ##### ClamAV
 
 ```ruby
 # ClamAV virus checking Add-On for a given target.
-Uploadcare::Addons.uc_clamav_virus_scan('FILE_UUID')
+Uploadcare::AddOns.uc_clamav_virus_scan('FILE_UUID')
 
 # Check and purge infected file.
-Uploadcare::Addons.uc_clamav_virus_scan('FILE_UUID', purge_infected: true )
+Uploadcare::AddOns.uc_clamav_virus_scan('FILE_UUID', purge_infected: true )
 
 # Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
-Uploadcare::Addons.uc_clamav_virus_scan_status('RETURNED_ID_FROM_UC_CLAMAV_VIRUS_SCAN')
+Uploadcare::AddOns.uc_clamav_virus_scan_status('RETURNED_ID_FROM_UC_CLAMAV_VIRUS_SCAN')
 ```
 
 ##### Remove.bg
 
 ```ruby
 # Execute remove.bg background image removal Add-On for a given target.
-Uploadcare::Addons.remove_bg('FILE_UUID')
+Uploadcare::AddOns.remove_bg('FILE_UUID')
 
 # You can pass optional parameters.
 # See the full list of parameters here: https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/removeBgExecute
-Uploadcare::Addons.remove_bg('FILE_UUID', crop: true, type_level: '2')
+Uploadcare::AddOns.remove_bg('FILE_UUID', crop: true, type_level: '2')
 
 # Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
-Uploadcare::Addons.remove_bg_status('RETURNED_ID_FROM_REMOVE_BG')
+Uploadcare::AddOns.remove_bg_status('RETURNED_ID_FROM_REMOVE_BG')
 ```
 
 #### Project
 
-`Project` provides basic info about the connected Uploadcare project. That
+`show` provides basic info about the connected Uploadcare project. That
 object is also an Hashie::Mash, so every methods out of
 [these](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/projectInfo) will work.
 
 ```ruby
-@project = Uploadcare::Project.project
-# => #<Uploadcare::Api::Project collaborators=[], name="demo", pub_key="your_public_key", autostore_enabled=true>
+@project = Uploadcare::Project.show
+# => #<Uploadcare::Project collaborators=[], name="demo", pub_key="your_public_key", autostore_enabled=true>
 
 @project.name
 # => "demo"
