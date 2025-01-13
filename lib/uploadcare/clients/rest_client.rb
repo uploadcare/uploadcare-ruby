@@ -49,11 +49,23 @@ module Uploadcare
 
     def prepare_request(req, method, path, params, headers)
       upcase_method_name = method.to_s.upcase
-      uri = params.is_a?(Hash) ? build_uri(path, params) : path
-      req.headers.merge!(authenticator.headers(upcase_method_name, uri))
-      req.headers.merge!(headers)
+      uri = build_request_uri(path, params)
 
-      if upcase_method_name == 'GET'
+      prepare_headers(req, upcase_method_name, uri, headers)
+      prepare_body_or_params(req, upcase_method_name, params)
+    end
+
+    def build_request_uri(path, params)
+      params.is_a?(Hash) ? build_uri(path, params) : path
+    end
+
+    def prepare_headers(req, method, uri, headers)
+      req.headers.merge!(authenticator.headers(method, uri))
+      req.headers.merge!(headers)
+    end
+
+    def prepare_body_or_params(req, method, params)
+      if method == 'GET'
         req.params.update(params) unless params.empty?
       else
         req.body = params.to_json unless params.empty?

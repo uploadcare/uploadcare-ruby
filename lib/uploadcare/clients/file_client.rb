@@ -28,7 +28,7 @@ module Uploadcare
     # @param uuid [String] The UUID of the file
     # @return [Hash] The response body containing the file details
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/fileInfo
-    def info(uuid, params= {})
+    def info(uuid, params = {})
       get("/files/#{uuid}/", params)
     end
 

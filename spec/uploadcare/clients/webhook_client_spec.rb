@@ -145,7 +145,7 @@ RSpec.describe Uploadcare::WebhookClient do
     it 'deletes the webhook successfully' do
       VCR.use_cassette('rest_webhook_destroy') do
         expect { subject.delete_webhook(target_url) }.not_to raise_error
-      end 
+      end
     end
   end
 end

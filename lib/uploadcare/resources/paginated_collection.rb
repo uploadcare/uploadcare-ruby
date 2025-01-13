@@ -5,17 +5,16 @@ require 'uri'
 module Uploadcare
   class PaginatedCollection
     include Enumerable
-
     attr_reader :resources, :next_page_url, :previous_page_url, :per_page, :total, :client, :resource_class
 
-    def initialize(resources:, next_page:, previous_page:, per_page:, total:, client:, resource_class:)
-      @resources = resources
-      @next_page_url = next_page
-      @previous_page_url = previous_page
-      @per_page = per_page
-      @total = total
-      @client = client
-      @resource_class = resource_class
+    def initialize(params = {})
+      @resources = params[:resources]
+      @next_page_url = params[:next_page]
+      @previous_page_url = params[:previous_page]
+      @per_page = params[:per_page]
+      @total = params[:total]
+      @client = params[:client]
+      @resource_class = params[:resource_class]
     end
 
     def each(&block)
@@ -43,10 +42,22 @@ module Uploadcare
     def fetch_page(page_url)
       return nil unless page_url
 
+      params = extract_params_from_url(page_url)
+      response = fetch_response(params)
+      build_paginated_collection(response)
+    end
+
+    def extract_params_from_url(page_url)
       uri = URI.parse(page_url)
-      params = URI.decode_www_form(uri.query.to_s).to_h
-      response = client.list(params)
-      new_resources = response['results'].map { |resource_data| resource_class.new(resource_data, client.config) }
+      URI.decode_www_form(uri.query.to_s).to_h
+    end
+
+    def fetch_response(params)
+      client.list(params)
+    end
+
+    def build_paginated_collection(response)
+      new_resources = build_resources(response['results'])
 
       self.class.new(
         resources: new_resources,
@@ -57,6 +68,10 @@ module Uploadcare
         client: client,
         resource_class: resource_class
       )
+    end
+
+    def build_resources(results)
+      results.map { |resource_data| resource_class.new(resource_data, client.config) }
     end
   end
 end

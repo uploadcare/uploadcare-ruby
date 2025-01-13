@@ -96,7 +96,7 @@ RSpec.describe Uploadcare::File do
   describe '#info' do
     subject { file.info }
     before do
-      allow_any_instance_of(Uploadcare::FileClient).to receive(:get).with("/files/#{uuid}/").and_return(response_body)
+      allow_any_instance_of(Uploadcare::FileClient).to receive(:get).with("/files/#{uuid}/", {}).and_return(response_body)
     end
 
     it { is_expected.to be_a(Uploadcare::File) }
