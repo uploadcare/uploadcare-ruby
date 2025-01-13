@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'uploadcare/concern/throttle_handler'
 
 module Uploadcare
-  RSpec.describe Concerns::ThrottleHandler do
-    include Concerns::ThrottleHandler
+  RSpec.describe ThrottleHandler do
+    include ThrottleHandler
     def sleep(_time); end
 
     before { @called = 0 }
@@ -13,7 +12,7 @@ module Uploadcare
     let(:throttler) do
       lambda do
         @called += 1
-        raise ThrottleError if @called < 3
+        raise Uploadcare::Exception::ThrottleError if @called < 3
 
         "Throttler has been called #{@called} times"
       end
