@@ -43,7 +43,7 @@ module Uploadcare
             end
 
             context 'and when only the :size operation is present' do
-              let(:arguments) { super().select { |k, _v| %i[uuid size].include?(k) } }
+              let(:arguments) { super().slice(:uuid, :size) }
               let(:expected_url) do
                 "#{uuid}/video/-" \
                   "/size/#{arguments[:size][:width]}x#{arguments[:size][:height]}/#{arguments[:size][:resize_mode]}/"
@@ -54,7 +54,7 @@ module Uploadcare
 
             %i[quality format].each do |param|
               context "and when only the :#{param} operation is present" do
-                let(:arguments) { super().select { |k, _v| [:uuid, param].include?(k) } }
+                let(:arguments) { super().slice(:uuid, param) }
                 let(:expected_url) { "#{uuid}/video/-/#{param}/#{arguments[param]}/" }
 
                 it_behaves_like 'URL building'
@@ -62,7 +62,7 @@ module Uploadcare
             end
 
             context 'and when only the :cut operation is present' do
-              let(:arguments) { super().select { |k, _v| %i[uuid cut].include?(k) } }
+              let(:arguments) { super().slice(:uuid, :cut) }
               let(:expected_url) do
                 "#{uuid}/video/-/cut/#{arguments[:cut][:start_time]}/#{arguments[:cut][:length]}/"
               end
@@ -71,7 +71,7 @@ module Uploadcare
             end
 
             context 'and when only the :thumbs operation is present' do
-              let(:arguments) { super().select { |k, _v| %i[uuid thumbs].include?(k) } }
+              let(:arguments) { super().slice(:uuid, :thumbs) }
               let(:expected_url) do
                 "#{uuid}/video/-/thumbs~#{arguments[:thumbs][:N]}/#{arguments[:thumbs][:number]}/"
               end

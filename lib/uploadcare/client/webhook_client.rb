@@ -13,7 +13,7 @@ module Uploadcare
         body = {
           target_url: options[:target_url],
           event: options[:event] || 'file.uploaded',
-          is_active: options[:is_active].nil? ? true : options[:is_active]
+          is_active: options[:is_active].nil? || options[:is_active]
         }.merge(
           { signing_secret: options[:signing_secret] }.compact
         ).to_json
