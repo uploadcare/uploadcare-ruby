@@ -53,6 +53,25 @@ And then execute:
 
     $ bundle
 
+You can also use it outside of Rails or other Apps.
+
+Install the gem directly:
+
+    $ gem install uploadcare-ruby
+
+Then in your Ruby code:
+
+```ruby
+require "uploadcare"
+
+Uploadcare.config.public_key = "your_public_key"
+Uploadcare.config.secret_key = "your_secret_key"
+
+# Example usage
+uuid = "file_uuid"
+puts Uploadcare::File.info(uuid).inspect
+```
+
 If you use `api_struct` gem in your project, replace it with `uploadcare-api_struct`:
 ```ruby
 gem 'uploadcare-api_struct'
