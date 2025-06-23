@@ -23,11 +23,11 @@ module Uploadcare
       end
 
       def self.validate_auth_config
-        raise Uploadcare::Exception::AuthError, 'Public Key is blank.' if is_(Uploadcare.config.public_key)
-        raise Uploadcare::Exception::AuthError, 'Secret Key is blank.' if is_(Uploadcare.config.secret_key)
+        raise Uploadcare::Exception::AuthError, 'Public Key is blank.' if blank?(Uploadcare.config.public_key)
+        raise Uploadcare::Exception::AuthError, 'Secret Key is blank.' if blank?(Uploadcare.config.secret_key)
       end
 
-      def self.is_(value)
+      def self.blank?(value)
         value.nil? || value.empty?
       end
     end
