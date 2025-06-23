@@ -29,6 +29,9 @@ require 'api/api'
 require 'signed_url_generators/akamai_generator'
 require 'signed_url_generators/base_generator'
 
+# CNAME generator
+require 'cname_generator'
+
 # Ruby wrapper for Uploadcare API
 #
 # @see https://uploadcare.com/docs/api_reference
@@ -51,4 +54,16 @@ module Uploadcare
   setting :framework_data,            default: ''
   setting :file_chunk_size,           default: 100
   setting :logger,                    default: Logger.new($stdout)
+  setting :cdn_base,                  default: ENV.fetch('UPLOADCARE_CDN_BASE', 'https://ucarecdn.com/')
+  setting :custom_cdn_base,           default: ENV.fetch('UPLOADCARE_CUSTOM_CDN_BASE', 'https://ucarecd.net/')
+  # Enable automatic *.ucarecdn.net subdomains and CNAME generation
+  setting :use_subdomains,            default: false
+  setting :custom_cname,              default: -> { CnameGenerator.generate_cname } # CNAME domain
+  setting :effective_cdn_base,        default: lambda {
+    if config.use_subdomains && config.public_key
+      CnameGenerator.custom_cdn_base
+    else
+      config.cdn_base
+    end
+  }
 end

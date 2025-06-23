@@ -23,15 +23,13 @@ module Uploadcare
       end
 
       def self.validate_auth_config
-        raise Uploadcare::Exception::AuthError, 'Public Key is blank.' if is_blank?(Uploadcare.config.public_key)
-        raise Uploadcare::Exception::AuthError, 'Secret Key is blank.' if is_blank?(Uploadcare.config.secret_key)
+        raise Uploadcare::Exception::AuthError, 'Public Key is blank.' if blank?(Uploadcare.config.public_key)
+        raise Uploadcare::Exception::AuthError, 'Secret Key is blank.' if blank?(Uploadcare.config.secret_key)
       end
 
-      # rubocop:disable Naming/PredicateName
-      def self.is_blank?(value)
+      def self.blank?(value)
         value.nil? || value.empty?
       end
-      # rubocop:enable Naming/PredicateName
     end
   end
 end
