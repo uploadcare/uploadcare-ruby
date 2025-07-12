@@ -14,27 +14,28 @@
 Uploadcare Ruby integration handles uploads and further operations with files by
 wrapping Upload and REST APIs.
 
-* [Installation](#installation)
-* [Usage](#usage)
-  * [Uploading files](#uploading-files)
-    * [Uploading and storing a single file](#uploading-and-storing-a-single-file)
-    * [Multiple ways to upload files](#multiple-ways-to-upload-files)
-    * [Uploading options](#uploading-options)
-  * [File management](#file-management)
-    * [File](#file)
-    * [FileList](#filelist)
-    * [Pagination](#pagination)
-    * [Custom File Metadata](#custom-file-metadata)
-    * [Group](#group)
-    * [GroupList](#grouplist)
-    * [Webhook](#webhook)
-    * [Add-Ons](#add-ons)
-    * [Project](#project)
-    * [Conversion](#conversion)
-* [Useful links](#useful-links)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [Uploading files](#uploading-files)
+    - [Uploading and storing a single file](#uploading-and-storing-a-single-file)
+    - [Multiple ways to upload files](#multiple-ways-to-upload-files)
+    - [Uploading options](#uploading-options)
+  - [File management](#file-management)
+    - [File](#file)
+    - [FileList](#filelist)
+    - [Pagination](#pagination)
+    - [Custom File Metadata](#custom-file-metadata)
+    - [Group](#group)
+    - [GroupList](#grouplist)
+    - [Webhook](#webhook)
+    - [Add-Ons](#add-ons)
+    - [Project](#project)
+    - [Conversion](#conversion)
+- [Useful links](#useful-links)
 
 ## Requirements
-* ruby 3.0+
+
+- ruby 3.0+
 
 ## Compatibility
 
@@ -73,15 +74,18 @@ puts Uploadcare::File.info(uuid).inspect
 ```
 
 If you use `api_struct` gem in your project, replace it with `uploadcare-api_struct`:
+
 ```ruby
 gem 'uploadcare-api_struct'
 ```
+
 and run `bundle install`
 
 If already not, create your project in [Uploadcare dashboard](https://app.uploadcare.com/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby) and copy
 its [API keys](https://app.uploadcare.com/projects/-/api-keys/) from there.
 
 Set your Uploadcare keys in config file or through environment variables:
+
 ```bash
 export UPLOADCARE_PUBLIC_KEY=your_public_key
 export UPLOADCARE_SECRET_KEY=your_private_key
@@ -107,6 +111,7 @@ and [Upload](https://uploadcare.com/api-refs/upload-api/) and [REST](https://upl
 You can also find an example project [here](https://github.com/uploadcare/uploadcare-rails-example).
 
 ### Uploading files
+
 #### Uploading and storing a single file
 
 Using Uploadcare is simple, and here are the basics of handling files.
@@ -122,9 +127,17 @@ Using Uploadcare is simple, and here are the basics of handling files.
 # URL for the file, can be used with your website or app right away
 @uc_file.original_file_url
 # => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/your-file.png"
+
+# CDN URL for the file
+@uc_file.cdn_url
+# => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/your-file.png"
+# With subdomains enabled:
+# Uploadcare.config.use_subdomains = true
+# => "https://a1b2c3d4e5.ucarecdn.net/a771f854-c2cb-408a-8c36-71af77811f3b/"
 ```
 
 The `store` option can have these possible values:
+
 - `true`: mark the uploaded file as stored.
 - `false`: do not mark the uploaded file as stored and remove it after 24 hours.
 - `"auto"`: defers the choice of storage behavior to the [auto-store setting](https://app.uploadcare.com/projects/-/settings/#storage) for your Uploadcare project. This is the default behavior.
@@ -160,6 +173,7 @@ Uploadcare::Uploader.upload_files(files, store: 'auto')
 
 Uploadcare::Uploader.upload_from_url("https://placekitten.com/96/139", store: "auto")
 ```
+
 It is possible to track progress of the upload-from-URL process. To do that, you should specify the `async` option and get a token:
 
 ```ruby
@@ -192,14 +206,18 @@ Uploadcare::Uploader.multipart_upload(file, store: true) do |options|
   puts "PROGRESS = #{progress}"
 end
 ```
+
 Output of the code above looks like:
+
 ```console
 PROGRESS = 4.545454545454546
 PROGRESS = 9.090909090909092
 PROGRESS = 13.636363636363637
 ...
 ```
+
 Options available in a block:
+
 - **:chunk_size** - size of each chunk in bytes;
 - **:object** - file object which is going to be uploaded;
 - **:offset** - offset from the beginning of a File object in bytes;
@@ -430,6 +448,7 @@ options = {
 ```
 
 To simply get all associated objects:
+
 ```ruby
 @list.all # => returns Array of Files
 ```
@@ -437,6 +456,7 @@ To simply get all associated objects:
 #### Pagination
 
 Initially, `FileList` is a paginated collection. It can be navigated using following methods:
+
 ```ruby
   @file_list = Uploadcare::FileList.file_list
   # Let's assume there are 250 files in cloud. By default, UC loads 100 files. To get next 100 files, do:
@@ -446,6 +466,7 @@ Initially, `FileList` is a paginated collection. It can be navigated using follo
 ```
 
 Alternatively, it's possible to iterate through full list of groups or files with `each`:
+
 ```ruby
 @list.each do |file|
   p file.url
@@ -493,9 +514,20 @@ Uploadcare::Group.rest_info(group.id)
 # group can be deleted by group ID.
 Uploadcare::Group.delete(group.id)
 # Note: This operation only removes the group object itself. All the files that were part of the group are left as is.
+
+# Returns group's CDN URL
+@group.cdn_url
+# => "https://ucarecdn.com/group-id~2/"
+# With subdomains: "https://a1b2c3d4e5.ucarecdn.net/group-id~2/"
+
+# Returns CDN URLs of all files from group without API requesting
+@group.file_cdn_urls
+# => 'https://ucarecdn.com/0513dda0-582f-447d-846f-096e5df9e2bb~2/nth/0/'
+# # With subdomains: 'https://a1b2c3d4e5.ucarecdn.net/0513dda0-582f-447d-846f-096e5df9e2bb~2/nth/0/'
 ```
 
 #### GroupList
+
 `GroupList` is a list of `Group`
 
 ```ruby
@@ -507,6 +539,7 @@ Uploadcare::Group.delete(group.id)
 This is a paginated list, so [pagination](#Pagination) methods apply
 
 #### Webhook
+
 https://uploadcare.com/docs/api_reference/rest/webhooks/
 
 You can use webhooks to provide notifications about your uploads to target urls.
@@ -663,6 +696,7 @@ Uploadcare::VideoConverter.convert(
   store: false
 )
 ```
+
 This method accepts options to set properties of an output file:
 
 - **uuid** — the file UUID-identifier.
@@ -700,7 +734,9 @@ This method accepts options to set properties of an output file:
   :problems=>{}
 }
 ```
+
 Params in the response:
+
 - **result** - info related to your transformed output(-s):
   - **original_source** - built path for a particular video with all the conversion operations and parameters.
   - **token** - a processing job token that can be used to get a [job status](https://uploadcare.com/docs/transformations/video-encoding/#status) (see below).
@@ -719,13 +755,13 @@ Uploadcare::VideoConverter.convert(
 )
 ```
 
-
 To check a status of a video processing job you can simply use appropriate method of `Uploadcare::VideoConverter`:
 
 ```ruby
 token = 911933811
 Uploadcare::VideoConverter.status(token)
 ```
+
 `token` here is a processing job token, obtained in a response of a convert video request.
 
 ```ruby
@@ -741,12 +777,13 @@ Uploadcare::VideoConverter.status(token)
 ```
 
 Params in the response:
+
 - **status** - processing job status, can have one of the following values:
-  - *pending* — video file is being prepared for conversion.
-  - *processing* — video file processing is in progress.
-  - *finished* — the processing is finished.
-  - *failed* — we failed to process the video, see error for details.
-  - *canceled* — video processing was canceled.
+  - _pending_ — video file is being prepared for conversion.
+  - _processing_ — video file processing is in progress.
+  - _finished_ — the processing is finished.
+  - _failed_ — we failed to process the video, see error for details.
+  - _canceled_ — video processing was canceled.
 - **error** - holds a processing error if we failed to handle your video.
 - **result** - repeats the contents of your processing output.
 - **thumbnails_group_uuid** - holds :uuid-thumb-group, a UUID of a file group with thumbnails for an output video, based on the thumbs operation parameters.
@@ -759,6 +796,7 @@ More examples and options can be found [here](https://uploadcare.com/docs/transf
 After each document file upload you obtain a file identifier in UUID format.
 
 You can use file identifier to determine the document format and possible conversion formats.
+
 ```ruby
 Uploadcare::DocumentConverter.info("dc99200d-9bd6-4b43-bfa9-aa7bfaefca40")
 
@@ -784,7 +822,9 @@ Uploadcare::DocumentConverter.convert(
   store: false
 )
 ```
+
 or create an image of a particular page (if using image format):
+
 ```ruby
 Uploadcare::DocumentConverter.convert(
   [
@@ -817,7 +857,9 @@ This method accepts options to set properties of an output file:
   :problems=>{}
 }
 ```
+
 Params in the response:
+
 - **result** - info related to your transformed output(-s):
   - **original_source** - source file identifier including a target format, if present.
   - **token** - a processing job token that can be used to get a [job status](https://uploadcare.com/docs/transformations/document-conversion/#status) (see below).
@@ -841,6 +883,7 @@ To check a status of a document processing job you can simply use appropriate me
 token = 21120220
 Uploadcare::DocumentConverter.status(token)
 ```
+
 `token` here is a processing job token, obtained in a response of a convert document request.
 
 ```ruby
@@ -855,12 +898,13 @@ Uploadcare::DocumentConverter.status(token)
 ```
 
 Params in the response:
+
 - **status** - processing job status, can have one of the following values:
-  - *pending* — document file is being prepared for conversion.
-  - *processing* — document file processing is in progress.
-  - *finished* — the processing is finished.
-  - *failed* — we failed to process the document, see error for details.
-  - *canceled* — document processing was canceled.
+  - _pending_ — document file is being prepared for conversion.
+  - _processing_ — document file processing is in progress.
+  - _finished_ — the processing is finished.
+  - _failed_ — we failed to process the document, see error for details.
+  - _canceled_ — document processing was canceled.
 - **error** - holds a processing error if we failed to handle your document.
 - **result** - repeats the contents of your processing output.
 - **uuid** - a UUID of your processed document file.
@@ -895,13 +939,14 @@ generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3")
 # This generates a URL that expires in 10 seconds
 # https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1714233277~acl=/a7d5645e-5cd7-4046-819f-a6a2933bafe3/~hmac=f25343104aeced3004d2cc4d49807d8d7c732300b54b154c319da5283a871a71
 ```
+
 ## Useful links
 
-* [Development](https://github.com/uploadcare/uploadcare-ruby/blob/main/DEVELOPMENT.md)
-* [Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
-* [Upload API reference](https://uploadcare.com/api-refs/upload-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
-* [REST API reference](https://uploadcare.com/api-refs/rest-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
-* [Changelog](./CHANGELOG.md)
-* [Contributing guide](https://github.com/uploadcare/.github/blob/master/CONTRIBUTING.md)
-* [Security policy](https://github.com/uploadcare/uploadcare-ruby/security/policy)
-* [Support](https://github.com/uploadcare/.github/blob/master/SUPPORT.md)
+- [Development](https://github.com/uploadcare/uploadcare-ruby/blob/main/DEVELOPMENT.md)
+- [Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
+- [Upload API reference](https://uploadcare.com/api-refs/upload-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
+- [REST API reference](https://uploadcare.com/api-refs/rest-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
+- [Changelog](./CHANGELOG.md)
+- [Contributing guide](https://github.com/uploadcare/.github/blob/master/CONTRIBUTING.md)
+- [Security policy](https://github.com/uploadcare/uploadcare-ruby/security/policy)
+- [Support](https://github.com/uploadcare/.github/blob/master/SUPPORT.md)
