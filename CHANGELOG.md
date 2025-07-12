@@ -6,7 +6,7 @@
     - New `CnameGenerator` class for generating CNAME prefixes based on public key using SHA256 hashing
     - Configuration options:
         - `use_subdomains` - Enable automatic subdomain generation (default: `false`)
-        - `cdn_base_postfix` - Base domain for subdomain generation (default: `https://ucarecd.net/`)
+        - `cdn_base_postfix` - Base domain for subdomain generation (default: `https://ucarecdn.net/`)
         - `default_cdn_base` - Original CDN base URL (default: `https://ucarecdn.com/`)
         - `cdn_base` - Dynamic CDN base selection based on subdomain configuration
     - New `cdn_url` method for `File` and `Group` entities to get CDN URLs using configured base
