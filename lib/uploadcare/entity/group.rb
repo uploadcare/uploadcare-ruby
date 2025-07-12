@@ -13,7 +13,7 @@ module Uploadcare
       client_service RestGroupClient, prefix: 'rest', only: %i[store info delete]
       client_service GroupClient
 
-      attr_entity :id, :datetime_created, :datetime_stored, :files_count, :cdn_url, :url
+      attr_entity :id, :datetime_created, :datetime_stored, :files_count, :cdn_url, :url, :file_cdn_urls
       has_entities :files, as: Uploadcare::Entity::File
 
       # Remove these lines and bump api_struct version when this PR is accepted:
@@ -43,6 +43,21 @@ module Uploadcare
       # loads group metadata, if it's initialized with url or id
       def load
         initialize(Group.info(id).entity)
+      end
+
+      # Returns group's CDN URL
+      def cdn_url
+        "#{Uploadcare.config.cdn_base.call}#{id}/"
+      end
+
+      # Returns CDN URLs of all files from group without API requesting
+      def file_cdn_urls
+        file_cdn_urls = []
+        (0...files.count).each do |file_index|
+          file_cdn_url = "#{cdn_url}nth/#{file_index}/"
+          file_cdn_urls << file_cdn_url
+        end
+        file_cdn_urls
       end
     end
   end

@@ -7,7 +7,7 @@ module Uploadcare
     # @see https://uploadcare.com/docs/api_reference/rest/handling_projects/
     class File < Entity
       RESPONSE_PARAMS = %i[
-        datetime_removed datetime_stored datetime_uploaded is_image is_ready mime_type original_file_url
+        datetime_removed datetime_stored datetime_uploaded is_image is_ready mime_type original_file_url cdn_url
         original_filename size url uuid variations content_info metadata appdata source
       ].freeze
 
@@ -86,6 +86,11 @@ module Uploadcare
       # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/deleteFileStorage
       def delete
         File.delete(uuid)
+      end
+
+      # Returns file's CDN URL
+      def cdn_url
+        "#{Uploadcare.config.cdn_base.call}#{uuid}/"
       end
 
       private

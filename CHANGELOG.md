@@ -1,12 +1,22 @@
 # Changelog
 
+## 4.4.4 — 2025-06-24
+### Added
+* **CDN Subdomain Support**: Added support for automatic subdomain generation to improve CDN performance and caching.
+    - New `CnameGenerator` class for generating CNAME prefixes based on public key using SHA256 hashing
+    - Configuration options:
+        - `use_subdomains` - Enable automatic subdomain generation (default: `false`)
+        - `cdn_base_postfix` - Base domain for subdomain generation (default: `https://ucarecd.net/`)
+        - `default_cdn_base` - Original CDN base URL (default: `https://ucarecdn.com/`)
+        - `cdn_base` - Dynamic CDN base selection based on subdomain configuration
+    - New `cdn_url` method for `File` and `Group` entities to get CDN URLs using configured base
+    - New `file_cdn_urls` method for `Group` entities to get CDN URLs of all files in a group without API requests
+* New `Uploadcare::Exception::ConfigurationError` for configuration-related errors
+
 ## 4.4.3 — 2024-07-06
 
 ### Added
 * Multi page conversion parameter (`save_in_group`) added to `DocumentConverter#convert` options.
-
-### Fixed
-* Fixed that signed URLs now work with ~ in the path. This also fixes signed URLs with grouped file URLs. 
 
 ## 4.4.2 — 2024-05-29
 
