@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # lib/uploadcare/client/cname_generator.rb
 require 'digest'
 
