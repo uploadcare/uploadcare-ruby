@@ -18,6 +18,9 @@
 ### Added
 * Multi page conversion parameter (`save_in_group`) added to `DocumentConverter#convert` options.
 
+### Fixed
+* Fixed that signed URLs now work with ~ in the path. This also fixes signed URLs with grouped file URLs.
+
 ## 4.4.2 — 2024-05-29
 
 ### Fixed
