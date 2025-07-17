@@ -106,6 +106,8 @@ and [Upload](https://uploadcare.com/api-refs/upload-api/) and [REST](https://upl
 
 You can also find an example project [here](https://github.com/uploadcare/uploadcare-rails-example).
 
+In examples we’re going to use `ucarecdn.com` domain. Check your project's subdomain in the [Dashboard](https://app.uploadcare.com/projects/-/settings/#delivery).
+
 ### Uploading files
 #### Uploading and storing a single file
 
