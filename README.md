@@ -130,10 +130,11 @@ Using Uploadcare is simple, and here are the basics of handling files.
 
 # CDN URL for the file
 @uc_file.cdn_url
-# => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/your-file.png"
+# => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
+#
 # With subdomains enabled:
 # Uploadcare.config.use_subdomains = true
-# => "https://a1b2c3d4e5.ucarecdn.net/a771f854-c2cb-408a-8c36-71af77811f3b/"
+# => "https://a1b2c3d4e5.ucarecdn.net/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
 ```
 
 The `store` option can have these possible values:
