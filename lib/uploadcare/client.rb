@@ -54,12 +54,12 @@ module Uploadcare
     # Execute request with middleware stack
     def request(method, url, options = {})
       env = build_env(method, url, options)
-      
+
       # Build middleware stack
       stack = @middleware.reverse.reduce(base_app) do |app, middleware|
         middleware[:klass].new(app, middleware[:options])
       end
-      
+
       stack.call(env)
     end
 

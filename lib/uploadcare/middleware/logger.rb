@@ -13,12 +13,12 @@ module Uploadcare
       def call(env)
         started_at = Time.now
         log_request(env)
-        
+
         response = @app.call(env)
-        
+
         duration = Time.now - started_at
         log_response(env, response, duration)
-        
+
         response
       rescue => e
         duration = Time.now - started_at
@@ -54,7 +54,7 @@ module Uploadcare
 
       def filter_body(body)
         return body unless body.is_a?(Hash)
-        
+
         body.dup.tap do |b|
           b['secret_key'] = '[FILTERED]' if b['secret_key']
           b['pub_key'] = '[FILTERED]' if b['pub_key']

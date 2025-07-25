@@ -68,7 +68,8 @@ module Uploadcare
       if method == 'GET'
         req.params.update(params) unless params.empty?
       else
-        req.body = params.to_json unless params.empty?
+        # Some APIs expect an empty JSON object {} instead of no body
+        req.body = params.empty? ? '{}' : params.to_json
       end
     end
 

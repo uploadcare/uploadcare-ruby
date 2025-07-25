@@ -7,15 +7,15 @@ module Uploadcare
     def initialize(attributes = {}, config = Uploadcare.configuration)
       super
       assign_attributes(attributes)
-      @document_client = Uploadcare::DocumentConverterClient.new(config)
+      @config = config
     end
 
-    # Fetches information about a document’s format and possible conversion formats
+    # Fetches information about a document's format and possible conversion formats
     # @param uuid [String] The UUID of the document
     # @return [Uploadcare::Document] An instance of Document with API response data
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Conversion/operation/documentConvertInfo
     def info(uuid)
-      response = @document_client.info(uuid)
+      response = document_client.info(uuid)
       assign_attributes(response)
       self
     end
@@ -41,9 +41,15 @@ module Uploadcare
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Conversion/operation/documentConvertStatus
 
     def fetch_status(token)
-      response = @document_client.status(token)
+      response = document_client.status(token)
       assign_attributes(response)
       self
+    end
+
+    private
+
+    def document_client
+      @document_client ||= Uploadcare::DocumentConverterClient.new(@config)
     end
   end
 end

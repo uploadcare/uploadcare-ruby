@@ -25,7 +25,7 @@ module Uploadcare
       upload_threads: 2, # used for multiupload only ATM
       framework_data: '',
       file_chunk_size: 100,
-      logger: Logger.new($stdout),
+      logger: ENV['UPLOADCARE_DISABLE_LOGGING'] ? nil : Logger.new($stdout),
       cdn_base: ENV.fetch('UPLOADCARE_CDN_BASE', 'https://ucarecdn.com/'),
       use_subdomains: false,
       cdn_base_postfix: ENV.fetch('UPLOADCARE_CDN_BASE_POSTFIX', 'https://ucarecd.net/')

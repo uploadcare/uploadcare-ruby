@@ -172,11 +172,11 @@ module Uploadcare
     # Build the final URL
     def url
       return @base_url if @operations.empty?
-      
+
       url_parts = [@base_url]
       url_parts << @operations.map { |op| "-/#{op}/" }.join
       url_parts << @filename if @filename
-      
+
       url_parts.join
     end
 

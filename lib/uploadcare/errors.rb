@@ -108,7 +108,7 @@ module Uploadcare
     def self.from_response(response, request = nil)
       status = response[:status]
       message = extract_message(response)
-      
+
       error_class = case status
                     when 400 then BadRequestError
                     when 401 then AuthenticationError
@@ -130,7 +130,7 @@ module Uploadcare
                     when 500..599 then ServerError
                     else Error
                     end
-      
+
       error_class.new(message, response, request)
     end
 
@@ -138,9 +138,9 @@ module Uploadcare
 
     def self.extract_message(response)
       body = response[:body]
-      
+
       return "HTTP #{response[:status]}" unless body
-      
+
       case body
       when Hash
         body['error'] || body['detail'] || body['message'] || "HTTP #{response[:status]}"

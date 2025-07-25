@@ -48,7 +48,31 @@ module Uploadcare
       # @param options [Hash] Upload options
       # @return [Array<Uploadcare::File>] Array of uploaded files
       def upload_files(files, options = {}, config = Uploadcare.configuration)
-        files.map { |file| upload_file(file, options, config) }
+        # Use threads for parallel uploads, limited by upload_threads config
+        threads = []
+        results = []
+        mutex = Mutex.new
+        
+        files.each_slice(config.upload_threads || 2) do |file_batch|
+          file_batch.each do |file|
+            threads << Thread.new do
+              result = upload_file(file, options, config)
+              mutex.synchronize { results << result }
+            rescue => e
+              mutex.synchronize { results << e }
+            end
+          end
+          
+          # Wait for current batch to complete before starting next
+          threads.each(&:join)
+          threads.clear
+        end
+        
+        # Check for errors and raise if any occurred
+        errors = results.select { |r| r.is_a?(Exception) }
+        raise errors.first if errors.any?
+        
+        results
       end
 
       # Upload a file from URL
