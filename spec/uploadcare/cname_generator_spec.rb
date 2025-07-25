@@ -22,7 +22,7 @@ RSpec.describe Uploadcare::CnameGenerator do
   describe '.cdn_base_postfix' do
     before do
       allow(Uploadcare.config).to receive(:cdn_base_postfix).and_return('https://ucarecd.net/')
-      allow(described_class).to receive(:generate_cname).and_return('abc123def')
+      allow(described_class).to receive(:custom_cname).and_return('abc123def')
     end
 
     it 'generates subdomain CDN base with subdomain prefix' do
@@ -33,7 +33,7 @@ RSpec.describe Uploadcare::CnameGenerator do
     it 'handles different CDN bases' do
       described_class.instance_variable_set(:@cdn_base_postfix, nil)
       allow(Uploadcare.config).to receive(:cdn_base_postfix).and_return('https://example.com')
-      allow(described_class).to receive(:generate_cname).and_return('xyz789')
+      allow(described_class).to receive(:custom_cname).and_return('xyz789')
 
       result = described_class.cdn_base_postfix
       expect(result).to eq('https://xyz789.example.com')
@@ -44,13 +44,13 @@ RSpec.describe Uploadcare::CnameGenerator do
       second_call = described_class.cdn_base_postfix
 
       expect(first_call).to eq(second_call)
-      expect(described_class).to have_received(:generate_cname).once
+      expect(described_class).to have_received(:custom_cname).once
     end
 
     it 'handles CDN base with path' do
       described_class.instance_variable_set(:@cdn_base_postfix, nil)
       allow(Uploadcare.config).to receive(:cdn_base_postfix).and_return('https://cdn.example.com/path/')
-      allow(described_class).to receive(:generate_cname).and_return('prefix123')
+      allow(described_class).to receive(:custom_cname).and_return('prefix123')
 
       result = described_class.cdn_base_postfix
       expect(result).to eq('https://prefix123.cdn.example.com/path/')
@@ -213,7 +213,7 @@ RSpec.describe Uploadcare::CnameGenerator do
         test_cases.each do |cdn_base|
           described_class.instance_variable_set(:@cdn_base_postfix, nil)
           allow(Uploadcare.config).to receive(:cdn_base_postfix).and_return(cdn_base)
-          allow(described_class).to receive(:generate_cname).and_return('test123')
+          allow(described_class).to receive(:custom_cname).and_return('test123')
 
           result = described_class.cdn_base_postfix
           expect(result).to include('test123.')
