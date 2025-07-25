@@ -43,7 +43,7 @@ RSpec.describe Uploadcare::Exception::ThrottleError do
     end
 
     it 'can be raised with a timeout' do
-      expect { raise described_class.new(60.0) }
+      expect { raise described_class, 60.0 }
         .to raise_error(described_class) do |error|
           expect(error.timeout).to eq(60.0)
         end
@@ -53,7 +53,7 @@ RSpec.describe Uploadcare::Exception::ThrottleError do
   describe 'rescue behavior' do
     it 'can be rescued as ThrottleError' do
       result = begin
-        raise described_class.new(45.0)
+        raise described_class, 45.0
       rescue described_class => e
         e.timeout
       end
@@ -62,7 +62,7 @@ RSpec.describe Uploadcare::Exception::ThrottleError do
 
     it 'can be rescued as StandardError' do
       result = begin
-        raise described_class.new(15.0)
+        raise described_class, 15.0
       rescue StandardError => e
         e.is_a?(described_class)
       end
@@ -88,20 +88,18 @@ RSpec.describe Uploadcare::Exception::ThrottleError do
 
     context 'in throttle handling logic' do
       it 'can be used to implement backoff' do
-        begin
-          raise described_class.new(2.0)
-        rescue described_class => e
-          sleep_time = e.timeout
-          expect(sleep_time).to eq(2.0)
-        end
+        raise described_class, 2.0
+      rescue described_class => e
+        sleep_time = e.timeout
+        expect(sleep_time).to eq(2.0)
       end
 
       it 'preserves timeout through exception chain' do
         original_timeout = 25.5
-        
+
         begin
           begin
-            raise described_class.new(original_timeout)
+            raise described_class, original_timeout
           rescue described_class
             raise # re-raise
           end
@@ -116,7 +114,7 @@ RSpec.describe Uploadcare::Exception::ThrottleError do
         # Simulating a 429 response with Retry-After header
         retry_after_seconds = 45.0
         error = described_class.new(retry_after_seconds)
-        
+
         expect(error.timeout).to eq(retry_after_seconds)
       end
     end

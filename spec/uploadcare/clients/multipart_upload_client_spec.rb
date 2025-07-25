@@ -9,7 +9,7 @@ RSpec.describe Uploadcare::MultipartUploadClient do
       secret_key: 'test_secret_key'
     )
   end
-  
+
   subject(:client) { described_class.new(config) }
 
   describe '#start' do
@@ -22,12 +22,12 @@ RSpec.describe Uploadcare::MultipartUploadClient do
           {
             'url' => 'https://s3.amazonaws.com/bucket/part1',
             'start_offset' => 0,
-            'end_offset' => 5242880
+            'end_offset' => 5_242_880
           },
           {
             'url' => 'https://s3.amazonaws.com/bucket/part2',
-            'start_offset' => 5242880,
-            'end_offset' => 10485760
+            'start_offset' => 5_242_880,
+            'end_offset' => 10_485_760
           }
         ]
       }

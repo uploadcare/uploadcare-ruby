@@ -28,17 +28,17 @@ module Uploadcare
       # @return [Uploadcare::File] Uploaded file
       def upload_file(file, options = {}, config = Uploadcare.configuration)
         uploader_client = UploaderClient.new(config)
-        
+
         file_path = file.is_a?(String) ? file : file.path
         file_size = File.size(file_path)
-        
+
         response = if file_size > 10 * 1024 * 1024 # 10MB threshold for multipart
                      multipart_client = MultipartUploadClient.new(config)
                      multipart_client.upload_file(file_path, options)
                    else
                      uploader_client.upload_file(file_path, options)
                    end
-        
+
         file_data = response['file'] || response
         File.new(file_data, config)
       end
@@ -52,26 +52,26 @@ module Uploadcare
         threads = []
         results = []
         mutex = Mutex.new
-        
+
         files.each_slice(config.upload_threads || 2) do |file_batch|
           file_batch.each do |file|
             threads << Thread.new do
               result = upload_file(file, options, config)
               mutex.synchronize { results << result }
-            rescue => e
+            rescue StandardError => e
               mutex.synchronize { results << e }
             end
           end
-          
+
           # Wait for current batch to complete before starting next
           threads.each(&:join)
           threads.clear
         end
-        
+
         # Check for errors and raise if any occurred
         errors = results.select { |r| r.is_a?(Exception) }
         raise errors.first if errors.any?
-        
+
         results
       end
 
@@ -82,10 +82,10 @@ module Uploadcare
       def upload_from_url(url, options = {}, config = Uploadcare.configuration)
         uploader_client = UploaderClient.new(config)
         response = uploader_client.upload_from_url(url, options)
-        
+
         if response['token']
           # Async upload, return token info
-          { 
+          {
             token: response['token'],
             status: 'pending',
             check_status: -> { check_upload_status(response['token'], config) }
@@ -103,7 +103,7 @@ module Uploadcare
       def check_upload_status(token, config = Uploadcare.configuration)
         uploader_client = UploaderClient.new(config)
         response = uploader_client.check_upload_status(token)
-        
+
         case response['status']
         when 'success'
           file_data = response['file'] || response['result']

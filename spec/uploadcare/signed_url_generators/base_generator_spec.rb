@@ -26,7 +26,7 @@ RSpec.describe Uploadcare::SignedUrlGenerators::BaseGenerator do
     end
 
     it 'raises NotImplementedError with expiration parameter' do
-      expect { generator.generate_url('uuid', 1234567890) }.to raise_error(
+      expect { generator.generate_url('uuid', 1_234_567_890) }.to raise_error(
         NotImplementedError,
         'Subclasses must implement generate_url method'
       )
@@ -41,17 +41,17 @@ RSpec.describe Uploadcare::SignedUrlGenerators::BaseGenerator do
 
     it 'builds URL with query parameters' do
       url = generator.send(:build_url, '/path', { token: 'abc123', exp: '1234567890' })
-      
+
       uri = URI.parse(url)
       expect(uri.scheme).to eq('https')
       expect(uri.host).to eq('cdn.example.com')
       expect(uri.path).to eq('/path')
-      
+
       params = URI.decode_www_form(uri.query).to_h
       expect(params).to eq({
-        'token' => 'abc123',
-        'exp' => '1234567890'
-      })
+                             'token' => 'abc123',
+                             'exp' => '1234567890'
+                           })
     end
 
     it 'handles empty query parameters' do
@@ -61,14 +61,14 @@ RSpec.describe Uploadcare::SignedUrlGenerators::BaseGenerator do
     end
 
     it 'properly encodes query parameters' do
-      url = generator.send(:build_url, '/path', { 
-        'special chars' => 'value with spaces',
-        'symbols' => '!@#$%'
-      })
-      
+      url = generator.send(:build_url, '/path', {
+                             'special chars' => 'value with spaces',
+                             'symbols' => '!@#$%'
+                           })
+
       uri = URI.parse(url)
       params = URI.decode_www_form(uri.query).to_h
-      
+
       expect(params['special chars']).to eq('value with spaces')
       expect(params['symbols']).to eq('!@#$%')
     end
@@ -98,7 +98,7 @@ RSpec.describe Uploadcare::SignedUrlGenerators::BaseGenerator do
 
     it 'allows subclasses to implement generate_url' do
       url = custom_generator.generate_url('test-uuid')
-      
+
       expect(url).to start_with('https://cdn.example.com/test-uuid/')
       expect(url).to include('token=test-')
     end
@@ -109,9 +109,9 @@ RSpec.describe Uploadcare::SignedUrlGenerators::BaseGenerator do
     end
 
     it 'can use build_url from parent' do
-      allow(Time).to receive(:now).and_return(Time.at(1609459200))
-      
-      url = custom_generator.generate_url('uuid', 1609459500)
+      allow(Time).to receive(:now).and_return(Time.at(1_609_459_200))
+
+      url = custom_generator.generate_url('uuid', 1_609_459_500)
       expect(url).to eq('https://cdn.example.com/uuid/?token=test-1609459500')
     end
   end
@@ -122,7 +122,7 @@ RSpec.describe Uploadcare::SignedUrlGenerators::BaseGenerator do
         cdn_host: 'static.cdn.example.com',
         secret_key: 'key'
       )
-      
+
       url = generator.send(:build_url, '/path')
       expect(url).to eq('https://static.cdn.example.com/path')
     end
@@ -132,7 +132,7 @@ RSpec.describe Uploadcare::SignedUrlGenerators::BaseGenerator do
         cdn_host: 'cdn.example.com:8443',
         secret_key: 'key'
       )
-      
+
       url = generator.send(:build_url, '/path')
       expect(url).to eq('https://cdn.example.com:8443/path')
     end
@@ -142,7 +142,7 @@ RSpec.describe Uploadcare::SignedUrlGenerators::BaseGenerator do
         cdn_host: '192.168.1.1',
         secret_key: 'key'
       )
-      
+
       url = generator.send(:build_url, '/path')
       expect(url).to eq('https://192.168.1.1/path')
     end

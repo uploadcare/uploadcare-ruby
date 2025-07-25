@@ -9,21 +9,21 @@ SimpleCov::Formatter::LcovFormatter.config do |c|
 end
 
 SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new([
-  SimpleCov::Formatter::HTMLFormatter,
-  SimpleCov::Formatter::LcovFormatter
-])
+                                                                 SimpleCov::Formatter::HTMLFormatter,
+                                                                 SimpleCov::Formatter::LcovFormatter
+                                                               ])
 
 SimpleCov.start do
   add_filter '/spec/'
   add_filter '/vendor/'
-  
+
   add_group 'Clients', 'lib/uploadcare/clients'
   add_group 'Resources', 'lib/uploadcare/resources'
   add_group 'Middleware', 'lib/uploadcare/middleware'
   add_group 'Signed URL Generators', 'lib/uploadcare/signed_url_generators'
-  
+
   track_files 'lib/**/*.rb'
-  
+
   minimum_coverage 80
   minimum_coverage_by_file 50
 end

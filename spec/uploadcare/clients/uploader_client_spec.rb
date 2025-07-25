@@ -9,7 +9,7 @@ RSpec.describe Uploadcare::UploaderClient do
       secret_key: 'test_secret_key'
     )
   end
-  
+
   subject(:client) { described_class.new(config) }
 
   describe '#upload_file' do
@@ -30,12 +30,12 @@ RSpec.describe Uploadcare::UploaderClient do
 
     it 'includes upload options in request' do
       stub_request(:post, 'https://upload.uploadcare.com/base/')
-        .with { |request| 
-          request.body.include?('store') && 
-          request.body.include?('1') &&
-          request.body.include?('filename') &&
-          request.body.include?('test.jpg')
-        }
+        .with do |request|
+          request.body.include?('store') &&
+            request.body.include?('1') &&
+            request.body.include?('filename') &&
+            request.body.include?('test.jpg')
+        end
         .to_return(status: 200, body: mock_response.to_json, headers: { 'Content-Type' => 'application/json' })
 
       client.upload_file(file_path, store: 1, filename: 'test.jpg')
@@ -43,10 +43,10 @@ RSpec.describe Uploadcare::UploaderClient do
 
     it 'includes metadata in request' do
       stub_request(:post, 'https://upload.uploadcare.com/base/')
-        .with { |request| 
-          request.body.include?('metadata[key1]') && 
-          request.body.include?('value1')
-        }
+        .with do |request|
+          request.body.include?('metadata[key1]') &&
+            request.body.include?('value1')
+        end
         .to_return(status: 200, body: mock_response.to_json, headers: { 'Content-Type' => 'application/json' })
 
       client.upload_file(file_path, metadata: { key1: 'value1' })
@@ -126,7 +126,7 @@ RSpec.describe Uploadcare::UploaderClient do
       stub_request(:get, 'https://upload.uploadcare.com/from_url/status/')
         .with(query: hash_including('token' => token))
         .to_return(
-          status: 200, 
+          status: 200,
           body: { 'status' => 'success', 'file' => 'file-uuid-123' }.to_json,
           headers: { 'Content-Type' => 'application/json' }
         )
@@ -145,13 +145,13 @@ RSpec.describe Uploadcare::UploaderClient do
         .with(query: hash_including('file_id' => uuid))
         .to_return(
           status: 200,
-          body: { 'uuid' => uuid, 'size' => 12345 }.to_json,
+          body: { 'uuid' => uuid, 'size' => 12_345 }.to_json,
           headers: { 'Content-Type' => 'application/json' }
         )
 
       result = client.file_info(uuid)
       expect(result['uuid']).to eq(uuid)
-      expect(result['size']).to eq(12345)
+      expect(result['size']).to eq(12_345)
     end
   end
 
@@ -166,7 +166,7 @@ RSpec.describe Uploadcare::UploaderClient do
       }
 
       params = client.send(:build_upload_params, options)
-      
+
       expect(params[:store]).to eq(1)
       expect(params[:filename]).to eq('test.jpg')
       expect(params[:check_URL_duplicates]).to eq(true)

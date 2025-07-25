@@ -44,6 +44,7 @@ RSpec.describe Uploadcare::ThrottleHandler do
           result = handler.handle_throttling do
             attempts += 1
             raise throttle_error if attempts < 3
+
             'success after retries'
           end
 
@@ -58,6 +59,7 @@ RSpec.describe Uploadcare::ThrottleHandler do
           handler.handle_throttling do
             attempts += 1
             raise throttle_error if attempts < 3
+
             'success'
           end
         end
@@ -66,7 +68,7 @@ RSpec.describe Uploadcare::ThrottleHandler do
       context 'and fails all attempts' do
         it 'raises ThrottleError after max attempts' do
           attempts = 0
-          
+
           expect do
             handler.handle_throttling do
               attempts += 1
@@ -95,7 +97,7 @@ RSpec.describe Uploadcare::ThrottleHandler do
 
         it 'respects configured max attempts' do
           attempts = 0
-          
+
           expect do
             handler.handle_throttling do
               attempts += 1
@@ -124,7 +126,7 @@ RSpec.describe Uploadcare::ThrottleHandler do
 
         it 'does not retry' do
           attempts = 0
-          
+
           expect do
             handler.handle_throttling do
               attempts += 1
@@ -148,7 +150,7 @@ RSpec.describe Uploadcare::ThrottleHandler do
     context 'when block raises other errors' do
       it 'does not retry on non-ThrottleError' do
         attempts = 0
-        
+
         expect do
           handler.handle_throttling do
             attempts += 1
@@ -170,11 +172,11 @@ RSpec.describe Uploadcare::ThrottleHandler do
       it 'uses timeout from each error instance' do
         attempts = 0
         timeouts = [0.01, 0.02, 0.03]
-        
+
         timeouts.each_with_index do |timeout, index|
           error = Uploadcare::Exception::ThrottleError.new("Attempt #{index + 1}")
           allow(error).to receive(:timeout).and_return(timeout)
-          
+
           expect(handler).to receive(:sleep).with(timeout).ordered if index < timeouts.length - 1
         end
 
@@ -195,10 +197,11 @@ RSpec.describe Uploadcare::ThrottleHandler do
     context 'with block that modifies state' do
       it 'preserves state changes across retries' do
         counter = 0
-        
+
         result = handler.handle_throttling do
           counter += 1
           raise throttle_error if counter < 3
+
           counter
         end
 

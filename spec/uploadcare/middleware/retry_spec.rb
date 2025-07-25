@@ -39,7 +39,7 @@ RSpec.describe Uploadcare::Middleware::Retry do
 
       it 'logs retry attempts' do
         allow(app).to receive(:call).and_return(failed_response, success_response)
-        expect(logger).to receive(:warn).with(/Retrying GET.*attempt 1\/3.*status code 503/)
+        expect(logger).to receive(:warn).with(%r{Retrying GET.*attempt 1/3.*status code 503})
         middleware.call(env)
       end
 
@@ -47,7 +47,7 @@ RSpec.describe Uploadcare::Middleware::Retry do
         allow(app).to receive(:call).and_return(failed_response)
         middleware = described_class.new(app, max_retries: 2, logger: logger)
         allow(middleware).to receive(:sleep)
-        
+
         expect(app).to receive(:call).exactly(3).times # initial + 2 retries
         middleware.call(env)
       end
@@ -60,7 +60,7 @@ RSpec.describe Uploadcare::Middleware::Retry do
       it 'uses retry-after value for delay' do
         allow(app).to receive(:call).and_return(failed_response, success_response)
         allow(logger).to receive(:warn)
-        
+
         expect(middleware).to receive(:sleep).with(satisfy { |val| val >= 5 })
         middleware.call(env)
       end
@@ -78,14 +78,14 @@ RSpec.describe Uploadcare::Middleware::Retry do
       it 'retries on timeout errors' do
         expect(app).to receive(:call).and_raise(error).ordered
         expect(app).to receive(:call).and_return(success_response).ordered
-        
+
         expect(middleware.call(env)).to eq(success_response)
       end
 
       it 'does not retry non-retryable errors' do
         non_retryable_error = StandardError.new('other error')
         expect(app).to receive(:call).once.and_raise(non_retryable_error)
-        
+
         expect { middleware.call(env) }.to raise_error(StandardError, 'other error')
       end
     end
@@ -101,7 +101,7 @@ RSpec.describe Uploadcare::Middleware::Retry do
     end
 
     context 'with custom retry logic' do
-      let(:custom_retry) { ->(env, response) { response[:status] == 418 } }
+      let(:custom_retry) { ->(_env, response) { response[:status] == 418 } }
       let(:middleware) do
         described_class.new(app, retry_if: custom_retry, logger: logger)
       end
@@ -111,7 +111,7 @@ RSpec.describe Uploadcare::Middleware::Retry do
       it 'uses custom retry logic' do
         allow(middleware).to receive(:sleep)
         allow(logger).to receive(:warn)
-        
+
         expect(app).to receive(:call).and_return(teapot_response, success_response)
         expect(middleware.call(env)).to eq(success_response)
       end
@@ -121,7 +121,7 @@ RSpec.describe Uploadcare::Middleware::Retry do
   describe '#calculate_delay' do
     it 'uses exponential backoff' do
       middleware = described_class.new(app, backoff_factor: 2)
-      
+
       expect(middleware.send(:calculate_delay, 1)).to be_between(1, 1.3)
       expect(middleware.send(:calculate_delay, 2)).to be_between(2, 2.6)
       expect(middleware.send(:calculate_delay, 3)).to be_between(4, 5.2)

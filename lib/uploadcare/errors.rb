@@ -129,7 +129,7 @@ module Uploadcare
       status = response[:status]
       message = extract_message(response)
 
-      error_class = STATUS_ERROR_MAP[status] || 
+      error_class = STATUS_ERROR_MAP[status] ||
                     case status
                     when 400..499 then ClientError
                     when 500..599 then ServerError
@@ -138,8 +138,6 @@ module Uploadcare
 
       error_class.new(message, response, request)
     end
-
-    private
 
     def self.extract_message(response)
       body = response[:body]

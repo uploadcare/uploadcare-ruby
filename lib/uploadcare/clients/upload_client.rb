@@ -26,7 +26,7 @@ module Uploadcare
       headers['User-Agent'] = user_agent
 
       response = connection.send(method, uri, params, headers)
-      
+
       handle_response(response)
     rescue Faraday::Error => e
       handle_faraday_error(e)
@@ -48,11 +48,11 @@ module Uploadcare
     def raise_upload_error(response)
       body = response.body
       error_message = if body.is_a?(Hash)
-                        body['error'] || body['detail'] || "Upload failed"
+                        body['error'] || body['detail'] || 'Upload failed'
                       else
                         "Upload failed with status #{response.status}"
                       end
-      
+
       raise Uploadcare::RequestError.new(error_message, response.status)
     end
 

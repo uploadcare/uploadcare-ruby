@@ -85,7 +85,7 @@ module Uploadcare
       ->(env) { execute_request(env) }
     end
 
-    def execute_request(env)
+    def execute_request(_env)
       # Actual HTTP request execution
       # This would be implemented based on the specific HTTP library used
       # For now, returning a mock response structure

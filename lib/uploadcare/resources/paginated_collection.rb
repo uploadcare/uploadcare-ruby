@@ -40,12 +40,12 @@ module Uploadcare
     def all
       all_resources = @resources.dup
       current_page = self
-      
+
       while current_page.next_page_url
         current_page = current_page.next_page
         all_resources.concat(current_page.resources) if current_page
       end
-      
+
       all_resources
     end
 

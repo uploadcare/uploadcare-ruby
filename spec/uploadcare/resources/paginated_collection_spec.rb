@@ -5,7 +5,7 @@ require 'spec_helper'
 RSpec.describe Uploadcare::PaginatedCollection do
   let(:resource_class) { Uploadcare::File }
   let(:client) { double('client', config: double('config')) }
-  
+
   let(:resources) do
     [
       { uuid: '1', size: 100 },
@@ -41,8 +41,7 @@ RSpec.describe Uploadcare::PaginatedCollection do
 
   describe '#each' do
     it 'yields each resource' do
-      yielded_resources = []
-      collection.each { |resource| yielded_resources << resource }
+      yielded_resources = collection.map { |resource| resource }
       expect(yielded_resources).to eq(resources)
     end
 
@@ -52,7 +51,7 @@ RSpec.describe Uploadcare::PaginatedCollection do
 
     it 'is enumerable' do
       expect(collection).to be_a(Enumerable)
-      expect(collection.map(&:uuid)).to eq(['1', '2'])
+      expect(collection.map(&:uuid)).to eq(%w[1 2])
     end
   end
 
@@ -77,7 +76,7 @@ RSpec.describe Uploadcare::PaginatedCollection do
 
       it 'fetches the next page' do
         next_page = collection.next_page
-        
+
         expect(next_page).to be_a(described_class)
         expect(next_page.resources.size).to eq(2)
         expect(next_page.resources.first.uuid).to eq('3')
@@ -122,7 +121,7 @@ RSpec.describe Uploadcare::PaginatedCollection do
 
       it 'fetches the previous page' do
         previous_page = collection.previous_page
-        
+
         expect(previous_page).to be_a(described_class)
         expect(previous_page.resources.size).to eq(1)
         expect(previous_page.resources.first.uuid).to eq('0')
@@ -172,16 +171,16 @@ RSpec.describe Uploadcare::PaginatedCollection do
 
       it 'fetches all resources from all pages' do
         all_resources = collection.all
-        
+
         expect(all_resources.size).to eq(5)
-        expect(all_resources.map(&:uuid)).to eq(['1', '2', '3', '4', '5'])
+        expect(all_resources.map(&:uuid)).to eq(%w[1 2 3 4 5])
         expect(all_resources.map(&:size)).to eq([100, 200, 300, 400, 500])
       end
 
       it 'returns a new array without modifying original resources' do
         original_resources = collection.resources.dup
         all_resources = collection.all
-        
+
         expect(collection.resources).to eq(original_resources)
         expect(all_resources).not_to be(collection.resources)
       end
@@ -194,9 +193,9 @@ RSpec.describe Uploadcare::PaginatedCollection do
 
       it 'returns only current page resources' do
         all_resources = collection.all
-        
+
         expect(all_resources.size).to eq(2)
-        expect(all_resources.map(&:uuid)).to eq(['1', '2'])
+        expect(all_resources.map(&:uuid)).to eq(%w[1 2])
       end
     end
 
@@ -215,29 +214,29 @@ RSpec.describe Uploadcare::PaginatedCollection do
     it 'extracts query parameters from URL' do
       url = 'https://api.uploadcare.com/files/?limit=10&offset=20&stored=true'
       params = collection.send(:extract_params_from_url, url)
-      
+
       expect(params).to eq({
-        'limit' => '10',
-        'offset' => '20',
-        'stored' => 'true'
-      })
+                             'limit' => '10',
+                             'offset' => '20',
+                             'stored' => 'true'
+                           })
     end
 
     it 'handles URLs without query parameters' do
       url = 'https://api.uploadcare.com/files/'
       params = collection.send(:extract_params_from_url, url)
-      
+
       expect(params).to eq({})
     end
 
     it 'handles complex query parameters' do
       url = 'https://api.uploadcare.com/files/?ordering=-datetime_uploaded&removed=false'
       params = collection.send(:extract_params_from_url, url)
-      
+
       expect(params).to eq({
-        'ordering' => '-datetime_uploaded',
-        'removed' => 'false'
-      })
+                             'ordering' => '-datetime_uploaded',
+                             'removed' => 'false'
+                           })
     end
   end
 

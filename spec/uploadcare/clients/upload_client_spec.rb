@@ -9,7 +9,7 @@ RSpec.describe Uploadcare::UploadClient do
       secret_key: 'test_secret_key'
     )
   end
-  
+
   subject(:client) { described_class.new(config) }
 
   describe '#initialize' do
@@ -84,7 +84,7 @@ RSpec.describe Uploadcare::UploadClient do
     describe '#user_agent' do
       it 'returns proper user agent string' do
         user_agent = client.send(:user_agent)
-        expect(user_agent).to match(/Uploadcare Ruby\/\d+\.\d+\.\d+ \(Ruby\/\d+\.\d+\.\d+\)/)
+        expect(user_agent).to match(%r{Uploadcare Ruby/\d+\.\d+\.\d+ \(Ruby/\d+\.\d+\.\d+\)})
       end
     end
   end

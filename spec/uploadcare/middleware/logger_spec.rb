@@ -5,7 +5,7 @@ require 'logger'
 
 RSpec.describe Uploadcare::Middleware::Logger do
   let(:app) { double('app') }
-  let(:logger) { instance_double(::Logger) }
+  let(:logger) { instance_double(Logger) }
   let(:middleware) { described_class.new(app, logger) }
   let(:env) do
     {
@@ -88,7 +88,7 @@ RSpec.describe Uploadcare::Middleware::Logger do
     it 'truncates long strings' do
       long_string = 'a' * 2000
       result = middleware.send(:truncate, long_string, 100)
-      expect(result).to eq('a' * 100 + '... (truncated)')
+      expect(result).to eq("#{'a' * 100}... (truncated)")
     end
 
     it 'does not truncate short strings' do

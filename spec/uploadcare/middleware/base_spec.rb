@@ -22,14 +22,14 @@ RSpec.describe Uploadcare::Middleware::Base do
     it 'returns app response' do
       response = { status: 200, body: 'OK' }
       allow(app).to receive(:call).and_return(response)
-      
+
       expect(middleware.call(env)).to eq(response)
     end
 
     it 'does not modify the environment' do
       original_env = env.dup
       allow(app).to receive(:call)
-      
+
       middleware.call(env)
       expect(env).to eq(original_env)
     end
@@ -58,7 +58,7 @@ RSpec.describe Uploadcare::Middleware::Base do
 
   describe 'middleware chaining' do
     let(:app) { ->(env) { { status: 200, body: env[:data] } } }
-    
+
     let(:first_middleware_class) do
       Class.new(described_class) do
         def call(env)
@@ -85,7 +85,7 @@ RSpec.describe Uploadcare::Middleware::Base do
       )
 
       result = stack.call({})
-      expect(result[:body]).to eq(['first', 'second'])
+      expect(result[:body]).to eq(%w[first second])
     end
   end
 
@@ -106,7 +106,7 @@ RSpec.describe Uploadcare::Middleware::Base do
       call_count = 0
       mutex = Mutex.new
 
-      allow(app).to receive(:call) do |env|
+      allow(app).to receive(:call) do |_env|
         sleep(0.01) # Simulate some work
         mutex.synchronize { call_count += 1 }
         { status: 200 }

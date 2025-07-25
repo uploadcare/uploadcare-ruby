@@ -12,8 +12,8 @@ module Uploadcare
         auth_token = generate_token(acl, expiration)
 
         build_url("/#{uuid}/", {
-          token: "exp=#{expiration}~acl=#{acl}~hmac=#{auth_token}"
-        })
+                    token: "exp=#{expiration}~acl=#{acl}~hmac=#{auth_token}"
+                  })
       end
 
       private

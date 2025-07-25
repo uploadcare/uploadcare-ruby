@@ -35,58 +35,62 @@ RSpec.describe Uploadcare::Client do
       # Should have added retry and logger middleware
       expect(client.instance_variable_get(:@middleware).size).to eq(2)
       expect(client.instance_variable_get(:@middleware).map { |m| m[:klass] }).to eq([
-        Uploadcare::Middleware::Retry,
-        Uploadcare::Middleware::Logger
-      ])
+                                                                                       Uploadcare::Middleware::Retry,
+                                                                                       Uploadcare::Middleware::Logger
+                                                                                     ])
     end
   end
 
   describe '#use' do
-    class TestMiddleware
-      def initialize(app, options = {})
-        @app = app
-        @options = options
-      end
+    let(:test_middleware) do
+      Class.new do
+        def initialize(app, options = {})
+          @app = app
+          @options = options
+        end
 
-      def call(env)
-        @app.call(env)
+        def call(env)
+          @app.call(env)
+        end
       end
     end
 
     it 'adds middleware to the stack' do
-      client.use(TestMiddleware, { option: 'value' })
+      client.use(test_middleware, { option: 'value' })
       middleware = client.instance_variable_get(:@middleware)
-      
-      expect(middleware.last[:klass]).to eq(TestMiddleware)
+
+      expect(middleware.last[:klass]).to eq(test_middleware)
       expect(middleware.last[:options]).to eq({ option: 'value' })
     end
 
     it 'returns self for chaining' do
-      expect(client.use(TestMiddleware)).to eq(client)
+      expect(client.use(test_middleware)).to eq(client)
     end
   end
 
   describe '#remove' do
-    class RemovableMiddleware
-      def initialize(app, options = {})
-        @app = app
-      end
+    let(:removable_middleware) do
+      Class.new do
+        def initialize(app, _options = {})
+          @app = app
+        end
 
-      def call(env)
-        @app.call(env)
+        def call(env)
+          @app.call(env)
+        end
       end
     end
 
     it 'removes middleware from the stack' do
-      client.use(RemovableMiddleware)
-      expect(client.instance_variable_get(:@middleware).any? { |m| m[:klass] == RemovableMiddleware }).to be true
+      client.use(removable_middleware)
+      expect(client.instance_variable_get(:@middleware).any? { |m| m[:klass] == removable_middleware }).to be true
 
-      client.remove(RemovableMiddleware)
-      expect(client.instance_variable_get(:@middleware).any? { |m| m[:klass] == RemovableMiddleware }).to be false
+      client.remove(removable_middleware)
+      expect(client.instance_variable_get(:@middleware).any? { |m| m[:klass] == removable_middleware }).to be false
     end
 
     it 'returns self for chaining' do
-      expect(client.remove(RemovableMiddleware)).to eq(client)
+      expect(client.remove(removable_middleware)).to eq(client)
     end
   end
 
@@ -103,17 +107,17 @@ RSpec.describe Uploadcare::Client do
       end
 
       client.request(:get, 'https://api.uploadcare.com/test', {
-        headers: { 'X-Test' => 'value' },
-        body: { data: 'test' },
-        params: { query: 'param' }
-      })
+                       headers: { 'X-Test' => 'value' },
+                       body: { data: 'test' },
+                       params: { query: 'param' }
+                     })
     end
 
     it 'executes middleware stack in correct order' do
       call_order = []
 
       first_middleware = Class.new do
-        define_method :initialize do |app, options = {}|
+        define_method :initialize do |app, _options = {}|
           @app = app
         end
 
@@ -124,7 +128,7 @@ RSpec.describe Uploadcare::Client do
       end
 
       second_middleware = Class.new do
-        define_method :initialize do |app, options = {}|
+        define_method :initialize do |app, _options = {}|
           @app = app
         end
 
@@ -137,14 +141,14 @@ RSpec.describe Uploadcare::Client do
       client.use(first_middleware)
       client.use(second_middleware)
 
-      allow(client).to receive(:execute_request) do |env|
+      allow(client).to receive(:execute_request) do |_env|
         call_order << :base
         { status: 200, headers: {}, body: {} }
       end
 
       client.request(:get, 'https://api.uploadcare.com/test')
-      
-      expect(call_order).to eq([:second, :first, :base])
+
+      expect(call_order).to eq(%i[second first base])
     end
   end
 
@@ -225,7 +229,7 @@ RSpec.describe Uploadcare::Client do
         file = instance_double(Uploadcare::File)
         expect(Uploadcare::File).to receive(:new).with({ uuid: 'test-uuid' }, config).and_return(file)
         expect(file).to receive(:info)
-        
+
         file_resource.find('test-uuid')
       end
     end
@@ -235,7 +239,7 @@ RSpec.describe Uploadcare::Client do
         file = instance_double(Uploadcare::File)
         expect(Uploadcare::File).to receive(:new).with({ uuid: 'test-uuid' }, config).and_return(file)
         expect(file).to receive(:store)
-        
+
         file_resource.store('test-uuid')
       end
     end
@@ -245,14 +249,14 @@ RSpec.describe Uploadcare::Client do
         file = instance_double(Uploadcare::File)
         expect(Uploadcare::File).to receive(:new).with({ uuid: 'test-uuid' }, config).and_return(file)
         expect(file).to receive(:delete)
-        
+
         file_resource.delete('test-uuid')
       end
     end
 
     describe '#batch_store' do
       it 'delegates to Uploadcare::File.batch_store' do
-        uuids = ['uuid1', 'uuid2']
+        uuids = %w[uuid1 uuid2]
         expect(Uploadcare::File).to receive(:batch_store).with(uuids, config)
         file_resource.batch_store(uuids)
       end
@@ -260,7 +264,7 @@ RSpec.describe Uploadcare::Client do
 
     describe '#batch_delete' do
       it 'delegates to Uploadcare::File.batch_delete' do
-        uuids = ['uuid1', 'uuid2']
+        uuids = %w[uuid1 uuid2]
         expect(Uploadcare::File).to receive(:batch_delete).with(uuids, config)
         file_resource.batch_delete(uuids)
       end
@@ -337,14 +341,14 @@ RSpec.describe Uploadcare::Client do
         group = instance_double(Uploadcare::Group)
         expect(Uploadcare::Group).to receive(:new).with({ id: 'test-uuid' }, config).and_return(group)
         expect(group).to receive(:info)
-        
+
         group_resource.find('test-uuid')
       end
     end
 
     describe '#create' do
       it 'delegates to Uploadcare::Group.create' do
-        files = ['file1', 'file2']
+        files = %w[file1 file2]
         expect(Uploadcare::Group).to receive(:create).with(files, { callback: 'url' }, config)
         group_resource.create(files, callback: 'url')
       end
@@ -355,7 +359,7 @@ RSpec.describe Uploadcare::Client do
         group = instance_double(Uploadcare::Group)
         expect(Uploadcare::Group).to receive(:new).with({ id: 'test-uuid' }, config).and_return(group)
         expect(group).to receive(:delete).with('test-uuid')
-        
+
         group_resource.delete('test-uuid')
       end
     end
@@ -397,7 +401,7 @@ RSpec.describe Uploadcare::Client do
         webhook = instance_double(Uploadcare::Webhook)
         expect(Uploadcare::Webhook).to receive(:new).with({ id: 123 }, config).and_return(webhook)
         expect(webhook).to receive(:update).with({ is_active: false })
-        
+
         webhook_resource.update(123, is_active: false)
       end
     end

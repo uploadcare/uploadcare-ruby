@@ -347,7 +347,7 @@ RSpec.describe 'Uploadcare Errors' do
         end
 
         context 'with non-string/hash body' do
-          let(:response) { { status: 400, body: ['array', 'body'] } }
+          let(:response) { { status: 400, body: %w[array body] } }
 
           it 'returns HTTP status message' do
             error = described_class.from_response(response)
@@ -360,23 +360,23 @@ RSpec.describe 'Uploadcare Errors' do
     describe 'STATUS_ERROR_MAP' do
       it 'has all expected mappings' do
         expect(described_class::STATUS_ERROR_MAP).to eq({
-          400 => Uploadcare::BadRequestError,
-          401 => Uploadcare::AuthenticationError,
-          403 => Uploadcare::ForbiddenError,
-          404 => Uploadcare::NotFoundError,
-          405 => Uploadcare::MethodNotAllowedError,
-          406 => Uploadcare::NotAcceptableError,
-          408 => Uploadcare::RequestTimeoutError,
-          409 => Uploadcare::ConflictError,
-          410 => Uploadcare::GoneError,
-          422 => Uploadcare::UnprocessableEntityError,
-          429 => Uploadcare::RateLimitError,
-          500 => Uploadcare::InternalServerError,
-          501 => Uploadcare::NotImplementedError,
-          502 => Uploadcare::BadGatewayError,
-          503 => Uploadcare::ServiceUnavailableError,
-          504 => Uploadcare::GatewayTimeoutError
-        })
+                                                          400 => Uploadcare::BadRequestError,
+                                                          401 => Uploadcare::AuthenticationError,
+                                                          403 => Uploadcare::ForbiddenError,
+                                                          404 => Uploadcare::NotFoundError,
+                                                          405 => Uploadcare::MethodNotAllowedError,
+                                                          406 => Uploadcare::NotAcceptableError,
+                                                          408 => Uploadcare::RequestTimeoutError,
+                                                          409 => Uploadcare::ConflictError,
+                                                          410 => Uploadcare::GoneError,
+                                                          422 => Uploadcare::UnprocessableEntityError,
+                                                          429 => Uploadcare::RateLimitError,
+                                                          500 => Uploadcare::InternalServerError,
+                                                          501 => Uploadcare::NotImplementedError,
+                                                          502 => Uploadcare::BadGatewayError,
+                                                          503 => Uploadcare::ServiceUnavailableError,
+                                                          504 => Uploadcare::GatewayTimeoutError
+                                                        })
       end
 
       it 'is frozen' do

@@ -34,10 +34,10 @@ module Uploadcare
           end
 
           response
-        rescue StandardError => error
-          if should_retry?(env, nil, error, retries)
+        rescue StandardError => e
+          if should_retry?(env, nil, e, retries)
             retries += 1
-            log_retry(env, nil, retries, error.class.name)
+            log_retry(env, nil, retries, e.class.name)
             sleep(calculate_delay(retries))
             retry
           end
@@ -75,23 +75,24 @@ module Uploadcare
 
       def custom_retry_logic?(env, response)
         return false unless @options[:retry_if]
+
         @options[:retry_if].call(env, response)
       end
 
       def calculate_delay(retries, response = nil)
-        delay = @options[:backoff_factor] ** (retries - 1)
+        delay = @options[:backoff_factor]**(retries - 1)
 
         # Check for Retry-After header
         if response && response[:headers] && response[:headers]['retry-after']
           retry_after = response[:headers]['retry-after'].to_i
-          delay = retry_after if retry_after > 0
+          delay = retry_after if retry_after.positive?
         end
 
         # Add jitter to prevent thundering herd
         delay + (rand * 0.3 * delay)
       end
 
-      def log_retry(env, status, retries, reason)
+      def log_retry(env, _status, retries, reason)
         return unless @logger
 
         message = "[Uploadcare] Retrying #{env[:method].upcase} #{env[:url]}"

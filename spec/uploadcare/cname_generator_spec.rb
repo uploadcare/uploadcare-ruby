@@ -14,14 +14,14 @@ RSpec.describe Uploadcare::CnameGenerator do
       key = 'test_public_key'
       subdomain1 = described_class.generate(key)
       subdomain2 = described_class.generate(key)
-      
+
       expect(subdomain1).to eq(subdomain2)
     end
 
     it 'returns different subdomains for different keys' do
       subdomain1 = described_class.generate('key1')
       subdomain2 = described_class.generate('key2')
-      
+
       expect(subdomain1).not_to eq(subdomain2)
     end
 

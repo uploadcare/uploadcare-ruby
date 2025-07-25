@@ -83,6 +83,7 @@ RSpec.describe Uploadcare::Exception::RetryError do
         begin
           retries += 1
           raise described_class, 'Temporary failure' if retries < max_retries
+
           'Success'
         rescue described_class
           retry if retries < max_retries

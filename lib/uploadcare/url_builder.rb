@@ -46,13 +46,13 @@ module Uploadcare
     end
 
     def crop_faces(ratio = nil)
-      operation = "crop/faces"
+      operation = 'crop/faces'
       operation += "/#{ratio}" if ratio
       add_operation(operation)
     end
 
     def crop_objects(ratio = nil)
-      operation = "crop/objects"
+      operation = 'crop/objects'
       operation += "/#{ratio}" if ratio
       add_operation(operation)
     end
@@ -72,19 +72,19 @@ module Uploadcare
 
     # Effects and filters
     def grayscale
-      add_operation("grayscale")
+      add_operation('grayscale')
     end
 
     def invert
-      add_operation("invert")
+      add_operation('invert')
     end
 
     def flip
-      add_operation("flip")
+      add_operation('flip')
     end
 
     def mirror
-      add_operation("mirror")
+      add_operation('mirror')
     end
 
     def rotate(angle)
@@ -92,19 +92,19 @@ module Uploadcare
     end
 
     def blur(strength = nil)
-      operation = "blur"
+      operation = 'blur'
       operation += "/#{strength}" if strength
       add_operation(operation)
     end
 
     def sharpen(strength = nil)
-      operation = "sharpen"
+      operation = 'sharpen'
       operation += "/#{strength}" if strength
       add_operation(operation)
     end
 
     def enhance(strength = nil)
-      operation = "enhance"
+      operation = 'enhance'
       operation += "/#{strength}" if strength
       add_operation(operation)
     end
@@ -148,7 +148,7 @@ module Uploadcare
 
     # Face detection
     def detect_faces
-      add_operation("detect_faces")
+      add_operation('detect_faces')
     end
 
     # Video operations
@@ -158,7 +158,7 @@ module Uploadcare
 
     # Preview operation
     def preview(width = nil, height = nil)
-      operation = "preview"
+      operation = 'preview'
       operation += "/#{width}x#{height}" if width || height
       add_operation(operation)
     end
@@ -203,7 +203,7 @@ module Uploadcare
           "#{@config.cdn_url_base}#{source}"
         end
       else
-        raise ArgumentError, "Invalid source type. Expected Uploadcare::File or String (UUID/URL)"
+        raise ArgumentError, 'Invalid source type. Expected Uploadcare::File or String (UUID/URL)'
       end
     end
   end

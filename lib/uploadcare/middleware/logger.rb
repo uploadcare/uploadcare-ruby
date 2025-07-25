@@ -36,13 +36,13 @@ module Uploadcare
         @logger.debug "[Uploadcare] Body: #{filter_body(env[:body])}" if env[:body]
       end
 
-      def log_response(env, response, duration)
+      def log_response(_env, response, duration)
         @logger.info "[Uploadcare] Response: #{response[:status]} (#{format_duration(duration)})"
         @logger.debug "[Uploadcare] Response Headers: #{response[:headers]}" if response[:headers]
         @logger.debug "[Uploadcare] Response Body: #{truncate(response[:body].to_s)}" if response[:body]
       end
 
-      def log_error(env, error, duration)
+      def log_error(_env, error, duration)
         @logger.error "[Uploadcare] Error: #{error.class} - #{error.message} (#{format_duration(duration)})"
         @logger.error "[Uploadcare] Backtrace: #{error.backtrace.first(5).join("\n")}"
       end
@@ -65,6 +65,7 @@ module Uploadcare
 
       def truncate(string, length = 1000)
         return string if string.length <= length
+
         "#{string[0...length]}... (truncated)"
       end
 

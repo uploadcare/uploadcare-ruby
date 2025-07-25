@@ -9,7 +9,7 @@ RSpec.describe Uploadcare::UrlBuilder do
     )
   end
   let(:uuid) { 'dc99200d-9bd6-4b43-bfa9-aa7bfaefca40' }
-  
+
   subject(:builder) { described_class.new(uuid, config) }
 
   describe '#initialize' do
@@ -129,12 +129,12 @@ RSpec.describe Uploadcare::UrlBuilder do
   describe 'chaining operations' do
     it 'chains multiple operations' do
       url = builder
-        .resize(300, 200)
-        .quality('smart')
-        .format('webp')
-        .grayscale
-        .url
-      
+            .resize(300, 200)
+            .quality('smart')
+            .format('webp')
+            .grayscale
+            .url
+
       expect(url).to eq('https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/-/resize/300x200/-/quality/smart/-/format/webp/-/grayscale/')
     end
   end

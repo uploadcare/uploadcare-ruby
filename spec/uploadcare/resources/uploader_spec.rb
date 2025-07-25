@@ -17,7 +17,7 @@ RSpec.describe Uploadcare::Uploader do
 
       it 'uploads a file' do
         allow_any_instance_of(Uploadcare::UploaderClient).to receive(:upload_file).and_return(mock_response)
-        
+
         result = described_class.upload(file_path, {}, config)
         expect(result).to be_a(Uploadcare::File)
         expect(result.uuid).to eq('file-uuid-123')
@@ -30,7 +30,7 @@ RSpec.describe Uploadcare::Uploader do
 
       it 'uploads from URL' do
         allow_any_instance_of(Uploadcare::UploaderClient).to receive(:upload_from_url).and_return(mock_response)
-        
+
         result = described_class.upload(url, {}, config)
         expect(result).to be_a(Uploadcare::File)
         expect(result.uuid).to eq('file-uuid-123')
@@ -43,7 +43,7 @@ RSpec.describe Uploadcare::Uploader do
 
       it 'uploads multiple files' do
         allow_any_instance_of(Uploadcare::UploaderClient).to receive(:upload_file).and_return(mock_response)
-        
+
         results = described_class.upload(files, {}, config)
         expect(results).to be_an(Array)
         expect(results.size).to eq(2)
@@ -60,11 +60,11 @@ RSpec.describe Uploadcare::Uploader do
 
       it 'uses regular upload' do
         allow(File).to receive(:size).with(file_path).and_return(5 * 1024 * 1024) # 5MB
-        
+
         uploader_client = instance_double(Uploadcare::UploaderClient)
         expect(Uploadcare::UploaderClient).to receive(:new).and_return(uploader_client)
         expect(uploader_client).to receive(:upload_file).with(file_path, {}).and_return(mock_response)
-        
+
         result = described_class.upload_file(file_path, {}, config)
         expect(result).to be_a(Uploadcare::File)
         expect(result.uuid).to eq('file-uuid-123')
@@ -76,11 +76,11 @@ RSpec.describe Uploadcare::Uploader do
 
       it 'uses multipart upload' do
         allow(File).to receive(:size).with(file_path).and_return(15 * 1024 * 1024) # 15MB
-        
+
         multipart_client = instance_double(Uploadcare::MultipartUploadClient)
         expect(Uploadcare::MultipartUploadClient).to receive(:new).and_return(multipart_client)
         expect(multipart_client).to receive(:upload_file).with(file_path, {}).and_return(mock_response)
-        
+
         result = described_class.upload_file(file_path, {}, config)
         expect(result).to be_a(Uploadcare::File)
         expect(result.uuid).to eq('file-uuid-456')
@@ -96,7 +96,7 @@ RSpec.describe Uploadcare::Uploader do
       it 'extracts path from File object' do
         allow(File).to receive(:size).with(file_path).and_return(5 * 1024 * 1024)
         allow_any_instance_of(Uploadcare::UploaderClient).to receive(:upload_file).and_return(mock_response)
-        
+
         result = described_class.upload_file(file, {}, config)
         expect(result).to be_a(Uploadcare::File)
       end
@@ -109,7 +109,7 @@ RSpec.describe Uploadcare::Uploader do
 
     it 'uploads multiple files' do
       allow(described_class).to receive(:upload_file).and_return(Uploadcare::File.new({ 'uuid' => 'file-uuid-123' }, config))
-      
+
       results = described_class.upload_files(files, {}, config)
       expect(results).to be_an(Array)
       expect(results.size).to eq(2)
@@ -127,7 +127,7 @@ RSpec.describe Uploadcare::Uploader do
         uploader_client = instance_double(Uploadcare::UploaderClient)
         expect(Uploadcare::UploaderClient).to receive(:new).and_return(uploader_client)
         expect(uploader_client).to receive(:upload_from_url).with(url, {}).and_return(mock_response)
-        
+
         result = described_class.upload_from_url(url, {}, config)
         expect(result).to be_a(Uploadcare::File)
         expect(result.uuid).to eq('file-uuid-123')
@@ -141,7 +141,7 @@ RSpec.describe Uploadcare::Uploader do
         uploader_client = instance_double(Uploadcare::UploaderClient)
         expect(Uploadcare::UploaderClient).to receive(:new).and_return(uploader_client)
         expect(uploader_client).to receive(:upload_from_url).with(url, {}).and_return(mock_response)
-        
+
         result = described_class.upload_from_url(url, {}, config)
         expect(result).to be_a(Hash)
         expect(result[:token]).to eq('upload-token-123')
@@ -166,7 +166,7 @@ RSpec.describe Uploadcare::Uploader do
 
       it 'returns uploaded file' do
         expect(uploader_client).to receive(:check_upload_status).with(token).and_return(mock_response)
-        
+
         result = described_class.check_upload_status(token, config)
         expect(result).to be_a(Uploadcare::File)
         expect(result.uuid).to eq('file-uuid-123')
@@ -180,7 +180,7 @@ RSpec.describe Uploadcare::Uploader do
 
       it 'raises error' do
         expect(uploader_client).to receive(:check_upload_status).with(token).and_return(mock_response)
-        
+
         expect { described_class.check_upload_status(token, config) }
           .to raise_error(Uploadcare::RequestError, 'Upload failed')
       end
@@ -193,7 +193,7 @@ RSpec.describe Uploadcare::Uploader do
 
       it 'returns status info' do
         expect(uploader_client).to receive(:check_upload_status).with(token).and_return(mock_response)
-        
+
         result = described_class.check_upload_status(token, config)
         expect(result).to eq(mock_response)
       end
@@ -202,13 +202,13 @@ RSpec.describe Uploadcare::Uploader do
 
   describe '.file_info' do
     let(:uuid) { 'file-uuid-123' }
-    let(:mock_response) { { 'uuid' => uuid, 'size' => 12345 } }
+    let(:mock_response) { { 'uuid' => uuid, 'size' => 12_345 } }
 
     it 'retrieves file info without storing' do
       uploader_client = instance_double(Uploadcare::UploaderClient)
       expect(Uploadcare::UploaderClient).to receive(:new).and_return(uploader_client)
       expect(uploader_client).to receive(:file_info).with(uuid).and_return(mock_response)
-      
+
       result = described_class.file_info(uuid, config)
       expect(result).to eq(mock_response)
     end

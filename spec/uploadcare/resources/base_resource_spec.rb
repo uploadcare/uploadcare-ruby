@@ -4,7 +4,7 @@ require 'spec_helper'
 
 RSpec.describe Uploadcare::BaseResource do
   let(:config) { Uploadcare::Configuration.new(public_key: 'test_public', secret_key: 'test_secret') }
-  
+
   # Create a test resource class
   let(:test_resource_class) do
     Class.new(described_class) do
@@ -194,6 +194,7 @@ RSpec.describe Uploadcare::BaseResource do
 
           def value=(val)
             raise ArgumentError, 'Invalid value' if val == 'bad'
+
             @value = val
           end
         end
