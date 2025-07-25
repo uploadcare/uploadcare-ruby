@@ -11,7 +11,6 @@ module Uploadcare
   @loader = Zeitwerk::Loader.for_gem
   @loader.collapse("#{__dir__}/uploadcare/resources")
   @loader.collapse("#{__dir__}/uploadcare/clients")
-  @loader.collapse("#{__dir__}/uploadcare/signed_url_generators")
   @loader.setup
 
   class << self
