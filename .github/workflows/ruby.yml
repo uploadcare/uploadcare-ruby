@@ -34,6 +34,14 @@ jobs:
       env:
         UPLOADCARE_PUBLIC_KEY: demopublickey
         UPLOADCARE_SECRET_KEY: demoprivatekey
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      if: matrix.ruby-version == '3.3'
+      with:
+        file: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
 
   style-check:
     runs-on: ubuntu-latest

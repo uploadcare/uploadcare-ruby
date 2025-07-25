@@ -190,8 +190,8 @@ RSpec.describe Uploadcare::Api do
     end
 
     describe '#create_group' do
-      let(:files) = ['uuid1', 'uuid2']
-      let(:options) = {}
+      let(:files) { ['uuid1', 'uuid2'] }
+      let(:options) { {} }
 
       it 'delegates to Group.create' do
         expect(Uploadcare::Group).to receive(:create).with(files, options, config)
