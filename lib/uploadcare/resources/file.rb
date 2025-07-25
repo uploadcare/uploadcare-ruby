@@ -35,7 +35,7 @@ module Uploadcare
         per_page: response['per_page'],
         total: response['total'],
         client: file_client,
-        resource_class: self.class
+        resource_class: self
       )
     end
 

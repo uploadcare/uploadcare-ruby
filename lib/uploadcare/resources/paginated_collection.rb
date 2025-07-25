@@ -35,7 +35,19 @@ module Uploadcare
       fetch_page(@previous_page_url)
     end
 
-    # TODO: Add #all method which return an array of resource
+    # Returns all resources from all pages
+    # @return [Array] Array of all resources across all pages
+    def all
+      all_resources = @resources.dup
+      current_page = self
+      
+      while current_page.next_page_url
+        current_page = current_page.next_page
+        all_resources.concat(current_page.resources) if current_page
+      end
+      
+      all_resources
+    end
 
     private
 

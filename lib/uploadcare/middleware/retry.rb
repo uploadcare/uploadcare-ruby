@@ -32,7 +32,7 @@ module Uploadcare
           end
 
           response
-        rescue => error
+        rescue StandardError => error
           if should_retry?(env, nil, error, retries)
             retries += 1
             log_retry(env, nil, retries, error.class.name)

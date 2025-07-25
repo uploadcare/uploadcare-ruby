@@ -21,7 +21,7 @@ module Uploadcare
       def generate_token(acl, expiration)
         string_to_sign = "exp=#{expiration}~acl=#{acl}"
         hmac = OpenSSL::HMAC.digest('sha256', hex_to_binary(secret_key), string_to_sign)
-        Base64.strict_encode64(hmac).tr('+/', '-_').delete('=')
+        Base64.urlsafe_encode64(hmac, padding: false)
       end
 
       def hex_to_binary(hex_string)

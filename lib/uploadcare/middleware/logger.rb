@@ -20,7 +20,7 @@ module Uploadcare
         log_response(env, response, duration)
 
         response
-      rescue => e
+      rescue StandardError => e
         duration = Time.now - started_at
         log_error(env, e, duration)
         raise

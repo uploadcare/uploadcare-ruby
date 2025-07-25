@@ -105,27 +105,32 @@ module Uploadcare
 
   # Request errors (already exists but enhancing)
   class RequestError < Error
+    # Error mapping for HTTP status codes
+    STATUS_ERROR_MAP = {
+      400 => BadRequestError,
+      401 => AuthenticationError,
+      403 => ForbiddenError,
+      404 => NotFoundError,
+      405 => MethodNotAllowedError,
+      406 => NotAcceptableError,
+      408 => RequestTimeoutError,
+      409 => ConflictError,
+      410 => GoneError,
+      422 => UnprocessableEntityError,
+      429 => RateLimitError,
+      500 => InternalServerError,
+      501 => NotImplementedError,
+      502 => BadGatewayError,
+      503 => ServiceUnavailableError,
+      504 => GatewayTimeoutError
+    }.freeze
+
     def self.from_response(response, request = nil)
       status = response[:status]
       message = extract_message(response)
 
-      error_class = case status
-                    when 400 then BadRequestError
-                    when 401 then AuthenticationError
-                    when 403 then ForbiddenError
-                    when 404 then NotFoundError
-                    when 405 then MethodNotAllowedError
-                    when 406 then NotAcceptableError
-                    when 408 then RequestTimeoutError
-                    when 409 then ConflictError
-                    when 410 then GoneError
-                    when 422 then UnprocessableEntityError
-                    when 429 then RateLimitError
-                    when 500 then InternalServerError
-                    when 501 then NotImplementedError
-                    when 502 then BadGatewayError
-                    when 503 then ServiceUnavailableError
-                    when 504 then GatewayTimeoutError
+      error_class = STATUS_ERROR_MAP[status] || 
+                    case status
                     when 400..499 then ClientError
                     when 500..599 then ServerError
                     else Error
