@@ -2,6 +2,8 @@
 
 require 'logger'
 
+require_relative 'base'
+
 module Uploadcare
   module Middleware
     class Logger < Base

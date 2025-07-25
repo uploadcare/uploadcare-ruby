@@ -2,6 +2,7 @@
 
 require 'zeitwerk'
 require 'faraday'
+require_relative 'uploadcare/errors'
 
 # Ruby wrapper for Uploadcare API
 #

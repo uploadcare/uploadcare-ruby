@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'base'
+
 module Uploadcare
   module Middleware
     class Retry < Base
