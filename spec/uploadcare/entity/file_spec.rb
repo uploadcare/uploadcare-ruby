@@ -96,6 +96,99 @@ module Uploadcare
         end
       end
 
+      describe 'cdn_url' do
+        let(:test_uuid) { '8f64f313-e6b1-4731-96c0-6751f1e7a50a' }
+        let(:file) { File.new(uuid: test_uuid) }
+
+        before do
+          # Reset any memoized config values
+          allow(Uploadcare.config).to receive(:cdn_base).and_call_original
+        end
+
+        it 'generates CDN URL using cdn_base config' do
+          allow(Uploadcare.config).to receive(:cdn_base).and_return(-> { 'https://example.ucarecdn.com' })
+
+          result = file.cdn_url
+          expect(result).to eq("https://example.ucarecdn.com#{test_uuid}/")
+        end
+
+        it 'handles different CDN base configurations' do
+          test_cases = [
+            { base: 'https://custom.cdn.com', expected: "https://custom.cdn.com#{test_uuid}/" },
+            { base: 'https://subdomain.ucarecdn.com', expected: "https://subdomain.ucarecdn.com#{test_uuid}/" },
+            { base: 'https://cdn.example.org', expected: "https://cdn.example.org#{test_uuid}/" }
+          ]
+
+          test_cases.each do |test_case|
+            allow(Uploadcare.config).to receive(:cdn_base).and_return(-> { test_case[:base] })
+            expect(file.cdn_url).to eq(test_case[:expected])
+          end
+        end
+
+        it 'works with file initialized from URL' do
+          url_file = File.new(url: "https://ucarecdn.com/#{test_uuid}/image.jpg")
+          allow(Uploadcare.config).to receive(:cdn_base).and_return(-> { 'https://test.cdn.com' })
+
+          result = url_file.cdn_url
+          expect(result).to eq("https://test.cdn.com#{test_uuid}/")
+        end
+
+        it 'calls cdn_base each time for dynamic config updates' do
+          allow(Uploadcare.config).to receive(:cdn_base).and_return(-> { 'https://first.cdn.com' })
+          first_call = file.cdn_url
+
+          allow(Uploadcare.config).to receive(:cdn_base).and_return(-> { 'https://second.cdn.com' })
+          second_call = file.cdn_url
+
+          expect(first_call).to eq("https://first.cdn.com#{test_uuid}/")
+          expect(second_call).to eq("https://second.cdn.com#{test_uuid}/")
+        end
+
+        it 'handles CDN base with trailing slashes correctly' do
+          test_cases = [
+            { base: 'https://cdn.com/', expected: "https://cdn.com/#{test_uuid}/" },
+            { base: 'https://cdn.com', expected: "https://cdn.com#{test_uuid}/" }
+          ]
+
+          test_cases.each do |test_case|
+            allow(Uploadcare.config).to receive(:cdn_base).and_return(-> { test_case[:base] })
+            expect(file.cdn_url).to eq(test_case[:expected])
+          end
+        end
+
+        it 'includes cdn_url in RESPONSE_PARAMS' do
+          expect(File::RESPONSE_PARAMS).to include(:cdn_url)
+        end
+
+        it 'works with subdomains when enabled' do
+          allow(Uploadcare.config).to receive(:use_subdomains).and_return(true)
+          allow(Uploadcare.config).to receive(:public_key).and_return('test_public_key')
+          allow(Uploadcare.config).to receive(:cdn_base).and_return(-> { 'https://abc123def.ucarecdn.com' })
+
+          result = file.cdn_url
+          expect(result).to eq("https://abc123def.ucarecdn.com#{test_uuid}/")
+        end
+
+        it 'handles custom CNAME domains' do
+          allow(Uploadcare.config).to receive(:cdn_base).and_return(-> { 'https://my-custom-domain.com' })
+
+          result = file.cdn_url
+          expect(result).to eq("https://my-custom-domain.com#{test_uuid}/")
+        end
+
+        context 'integration with real config' do
+          it 'generates valid CDN URL with default config' do
+            # Don't mock cdn_base to test real integration
+            result = file.cdn_url
+
+            expect(result).to be_a(String)
+            expect(result).to include(test_uuid)
+            expect(result).to end_with('/')
+            expect(result).to match(%r{\Ahttps?://})
+          end
+        end
+      end
+
       describe 'file conversion' do
         let(:url) { "https://ucarecdn.com/#{source_file_uuid}" }
         let(:file) { File.new(url: url) }

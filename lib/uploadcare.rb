@@ -8,6 +8,7 @@ require 'exception/throttle_error'
 require 'exception/request_error'
 require 'exception/retry_error'
 require 'exception/auth_error'
+require 'exception/configuration_error'
 
 # Entities
 require 'entity/entity'
@@ -28,6 +29,9 @@ require 'api/api'
 # SignedUrlGenerators
 require 'signed_url_generators/akamai_generator'
 require 'signed_url_generators/base_generator'
+
+# CNAME generator
+require 'cname_generator'
 
 # Ruby wrapper for Uploadcare API
 #
@@ -51,4 +55,16 @@ module Uploadcare
   setting :framework_data,            default: ''
   setting :file_chunk_size,           default: 100
   setting :logger,                    default: Logger.new($stdout)
+  setting :default_cdn_base,          default: ENV.fetch('UPLOADCARE_DEFAULT_CDN_BASE', 'https://ucarecdn.com/')
+  setting :cdn_base_postfix,          default: ENV.fetch('UPLOADCARE_CDN_BASE', 'https://ucarecd.net/')
+  # Enable automatic *.ucarecdn.net subdomains and CNAME generation
+  setting :use_subdomains,            default: false
+  setting :custom_cname,              default: -> { CnameGenerator.generate_cname } # CNAME domain
+  setting :cdn_base, default: lambda {
+    if config.use_subdomains && config.public_key
+      CnameGenerator.cdn_base_postfix
+    else
+      config.default_cdn_base
+    end
+  }
 end

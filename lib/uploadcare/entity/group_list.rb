@@ -13,6 +13,7 @@ module Uploadcare
     # @see Uploadcare::Entity::Decorator::Paginator
     class GroupList < Entity
       include Uploadcare::Entity::Decorator::Paginator
+
       client_service RestGroupClient, only: :list
 
       attr_entity :next, :previous, :total, :per_page, :results

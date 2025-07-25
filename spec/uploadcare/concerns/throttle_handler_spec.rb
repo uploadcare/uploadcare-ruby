@@ -6,6 +6,7 @@ require 'uploadcare/concern/throttle_handler'
 module Uploadcare
   RSpec.describe Concerns::ThrottleHandler do
     include Concerns::ThrottleHandler
+
     def sleep(_time); end
 
     before { @called = 0 }

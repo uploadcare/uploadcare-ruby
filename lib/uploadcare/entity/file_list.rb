@@ -13,6 +13,7 @@ module Uploadcare
     # @see Uploadcare::Entity::Decorator::Paginator
     class FileList < ApiStruct::Entity
       include Uploadcare::Entity::Decorator::Paginator
+
       client_service Client::FileListClient
 
       attr_entity :next, :previous, :total, :per_page
