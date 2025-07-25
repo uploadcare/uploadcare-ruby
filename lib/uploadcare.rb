@@ -24,5 +24,9 @@ module Uploadcare
     def eager_load!
       @loader.eager_load
     end
+
+    def api(config = nil)
+      Api.new(config || configuration)
+    end
   end
 end

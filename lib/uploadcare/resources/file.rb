@@ -144,5 +144,13 @@ module Uploadcare
       response = file_client.remote_copy(source, target, options)
       response['result']
     end
+
+    # Get the CDN URL for this file
+    # @param transformations [String] Optional URL transformations
+    # @return [String] The CDN URL
+    def cdn_url(transformations = nil)
+      base_url = "#{@config.cdn_url_base}#{uuid}/"
+      transformations ? "#{base_url}-/#{transformations}/" : base_url
+    end
   end
 end

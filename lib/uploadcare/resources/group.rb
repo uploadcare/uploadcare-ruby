@@ -56,5 +56,29 @@ module Uploadcare
     def delete(uuid)
       @group_client.delete(uuid)
     end
+
+    # Create a new group from files
+    # @param files [Array<String>] Array of file UUIDs
+    # @param config [Uploadcare::Configuration] Configuration object
+    # @return [Uploadcare::Group] The created group
+    def self.create(files, config = Uploadcare.configuration)
+      group_client = Uploadcare::GroupClient.new(config)
+      response = group_client.create(files)
+      new(response, config)
+    end
+
+    # Get the CDN URL for this group
+    # @return [String] The CDN URL
+    def cdn_url
+      "#{@config.cdn_url_base}#{id}/"
+    end
+
+    # Get CDN URLs for all files in the group
+    # @return [Array<String>] Array of CDN URLs for each file
+    def file_cdn_urls
+      return [] unless files
+
+      files.map { |index| "#{cdn_url}nth/#{index}/" }
+    end
   end
 end

@@ -5,7 +5,7 @@ module Uploadcare
     attr_accessor :public_key, :secret_key, :auth_type, :multipart_size_threshold, :rest_api_root,
                   :upload_api_root, :max_request_tries, :base_request_sleep, :max_request_sleep, :sign_uploads,
                   :upload_signature_lifetime, :max_throttle_attempts, :upload_threads, :framework_data,
-                  :file_chunk_size, :logger
+                  :file_chunk_size, :logger, :cdn_base, :use_subdomains, :cdn_base_postfix
 
     # Adding Default constants instead of initialization to
     # prevent AssignmentBranchSize violation
@@ -25,13 +25,22 @@ module Uploadcare
       upload_threads: 2, # used for multiupload only ATM
       framework_data: '',
       file_chunk_size: 100,
-      logger: Logger.new($stdout)
+      logger: Logger.new($stdout),
+      cdn_base: ENV.fetch('UPLOADCARE_CDN_BASE', 'https://ucarecdn.com/'),
+      use_subdomains: false,
+      cdn_base_postfix: ENV.fetch('UPLOADCARE_CDN_BASE_POSTFIX', 'https://ucarecd.net/')
     }.freeze
 
     def initialize(options = {})
       DEFAULTS.merge(options).each do |attribute, value|
         send("#{attribute}=", value)
       end
+    end
+
+    def cdn_url_base
+      return cdn_base unless use_subdomains && public_key && !public_key.empty?
+
+      CnameGenerator.cdn_base_url(public_key, cdn_base_postfix)
     end
   end
 end
