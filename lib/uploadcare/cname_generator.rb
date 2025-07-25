@@ -13,7 +13,7 @@ module Uploadcare
       def cdn_base_postfix
         @cdn_base_postfix ||= begin
           uri = URI.parse(Uploadcare.config.cdn_base_postfix)
-          uri.host = "#{generate_cname}.#{uri.host}"
+          uri.host = "#{custom_cname}.#{uri.host}"
           uri.to_s
         rescue URI::InvalidURIError => e
           raise Uploadcare::Exception::ConfigurationError, "Invalid cdn_base_postfix URL: #{e.message}"
