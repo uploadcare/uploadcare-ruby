@@ -1,6 +1,6 @@
 # Changelog
 
-## 4.4.4 — 2025-06-24
+## 4.5.0 — 2025-07-25
 ### Added
 * **CDN Subdomain Support**: Added support for automatic subdomain generation to improve CDN performance and caching.
   * New `CnameGenerator` class for generating CNAME prefixes based on public key using SHA256 hashing
