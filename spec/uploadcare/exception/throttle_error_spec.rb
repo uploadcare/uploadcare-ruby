@@ -100,8 +100,8 @@ RSpec.describe Uploadcare::Exception::ThrottleError do
         begin
           begin
             raise described_class, original_timeout
-          rescue described_class
-            raise # re-raise
+          rescue described_class => e
+            raise e # re-raise
           end
         rescue described_class => e
           expect(e.timeout).to eq(original_timeout)

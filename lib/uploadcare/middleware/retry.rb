@@ -24,26 +24,24 @@ module Uploadcare
       def call(env)
         retries = 0
         loop do
-          begin
-            response = @app.call(env)
+          response = @app.call(env)
 
-            if should_retry?(env, response, nil, retries)
-              retries += 1
-              log_retry(env, response[:status], retries, "status code #{response[:status]}")
-              sleep(calculate_delay(retries, response))
-              next
-            end
-
-            return response
-          rescue StandardError => e
-            if should_retry?(env, nil, e, retries)
-              retries += 1
-              log_retry(env, nil, retries, e.class.name)
-              sleep(calculate_delay(retries))
-              next
-            end
-            raise
+          if should_retry?(env, response, nil, retries)
+            retries += 1
+            log_retry(env, response[:status], retries, "status code #{response[:status]}")
+            sleep(calculate_delay(retries, response))
+            next
           end
+
+          return response
+        rescue StandardError => e
+          if should_retry?(env, nil, e, retries)
+            retries += 1
+            log_retry(env, nil, retries, e.class.name)
+            sleep(calculate_delay(retries))
+            next
+          end
+          raise
         end
       end
 

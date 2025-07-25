@@ -47,6 +47,30 @@ module Uploadcare
       new(response)
     end
 
+    # Update this webhook instance
+    # @param options [Hash] Options to update (target_url, event, is_active, signing_secret)
+    # @return [self] Returns self with updated attributes
+    def update(options = {})
+      client = Uploadcare::WebhookClient.new(config)
+      updated_attrs = options.slice(:target_url, :event, :is_active, :signing_secret)
+      
+      # Use current values for any missing required fields
+      updated_attrs[:target_url] ||= target_url
+      updated_attrs[:event] ||= event
+      updated_attrs[:is_active] = is_active if updated_attrs[:is_active].nil?
+      
+      response = client.update_webhook(id, updated_attrs[:target_url], updated_attrs[:event], 
+                                       is_active: updated_attrs[:is_active], 
+                                       signing_secret: updated_attrs[:signing_secret])
+      
+      # Update instance attributes with response
+      response.each do |key, value|
+        send("#{key}=", value) if respond_to?("#{key}=")
+      end
+      
+      self
+    end
+
     # Delete a webhook
     # @param target_url [String] The target URL of the webhook to delete
     # @return nil on successful deletion
