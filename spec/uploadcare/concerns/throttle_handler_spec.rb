@@ -12,7 +12,7 @@ module Uploadcare
     let(:throttler) do
       lambda do
         @called += 1
-        raise Uploadcare::Exception::ThrottleError if @called < 3
+        raise Uploadcare::ThrottleError if @called < 3
 
         "Throttler has been called #{@called} times"
       end

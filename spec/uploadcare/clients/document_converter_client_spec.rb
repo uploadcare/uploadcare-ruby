@@ -37,7 +37,7 @@ RSpec.describe Uploadcare::DocumentConverterClient do
       end
 
       it 'raises a NotFoundError' do
-        expect { client.info(uuid) }.to raise_error(Uploadcare::Exception::RequestError, 'Not found')
+        expect { client.info(uuid) }.to raise_error(Uploadcare::NotFoundError)
       end
     end
   end

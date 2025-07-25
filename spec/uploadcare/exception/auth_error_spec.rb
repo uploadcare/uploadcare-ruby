@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Uploadcare::Exception::AuthError do
+RSpec.describe Uploadcare::AuthError do
   describe '#initialize' do
     it 'inherits from StandardError' do
       expect(described_class.superclass).to eq(StandardError)
@@ -15,7 +15,7 @@ RSpec.describe Uploadcare::Exception::AuthError do
 
     it 'can be instantiated without a message' do
       error = described_class.new
-      expect(error.message).to eq('Uploadcare::Exception::AuthError')
+      expect(error.message).to eq('Uploadcare::AuthError')
     end
   end
 

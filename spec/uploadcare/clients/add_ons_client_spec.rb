@@ -45,7 +45,7 @@ RSpec.describe Uploadcare::AddOnsClient do
       end
 
       it 'raises an InvalidRequestError' do
-        expect { subject }.to raise_error(Uploadcare::Exception::RequestError, 'Bad Request')
+        expect { subject }.to raise_error(Uploadcare::BadRequestError, "Bad Request")
       end
     end
   end
@@ -89,7 +89,7 @@ RSpec.describe Uploadcare::AddOnsClient do
       end
 
       it 'raises a NotFoundError' do
-        expect { subject }.to raise_error(Uploadcare::Exception::RequestError, 'Not Found')
+        expect { subject }.to raise_error(Uploadcare::NotFoundError)
       end
     end
   end

@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Uploadcare::Exception::ThrottleError do
+RSpec.describe Uploadcare::ThrottleError do
   describe '#initialize' do
     it 'inherits from StandardError' do
       expect(described_class.superclass).to eq(StandardError)
@@ -11,7 +11,7 @@ RSpec.describe Uploadcare::Exception::ThrottleError do
     it 'can be instantiated with default timeout' do
       error = described_class.new
       expect(error.timeout).to eq(10.0)
-      expect(error.message).to eq('Uploadcare::Exception::ThrottleError')
+      expect(error.message).to eq('Uploadcare::ThrottleError')
     end
 
     it 'can be instantiated with custom timeout' do

@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Uploadcare::Exception::RequestError do
+RSpec.describe Uploadcare::RequestError do
   describe '#initialize' do
     it 'inherits from StandardError' do
       expect(described_class.superclass).to eq(StandardError)
@@ -15,7 +15,7 @@ RSpec.describe Uploadcare::Exception::RequestError do
 
     it 'can be instantiated without a message' do
       error = described_class.new
-      expect(error.message).to eq('Uploadcare::Exception::RequestError')
+      expect(error.message).to eq('Uploadcare::RequestError')
     end
   end
 

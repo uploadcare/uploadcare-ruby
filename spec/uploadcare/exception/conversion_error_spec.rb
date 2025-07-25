@@ -2,7 +2,7 @@
 
 require 'spec_helper'
 
-RSpec.describe Uploadcare::Exception::ConversionError do
+RSpec.describe Uploadcare::ConversionError do
   describe '#initialize' do
     it 'inherits from StandardError' do
       expect(described_class.superclass).to eq(StandardError)
@@ -15,7 +15,7 @@ RSpec.describe Uploadcare::Exception::ConversionError do
 
     it 'can be instantiated without a message' do
       error = described_class.new
-      expect(error.message).to eq('Uploadcare::Exception::ConversionError')
+      expect(error.message).to eq('Uploadcare::ConversionError')
     end
   end
 

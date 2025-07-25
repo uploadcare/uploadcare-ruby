@@ -33,7 +33,7 @@ RSpec.describe Uploadcare::ThrottleHandler do
 
     context 'when block raises ThrottleError' do
       let(:throttle_error) do
-        error = Uploadcare::Exception::ThrottleError.new('Rate limited')
+        error = Uploadcare::ThrottleError.new('Rate limited')
         allow(error).to receive(:timeout).and_return(0.01) # Short timeout for tests
         error
       end
@@ -74,7 +74,7 @@ RSpec.describe Uploadcare::ThrottleHandler do
               attempts += 1
               raise throttle_error
             end
-          end.to raise_error(Uploadcare::Exception::ThrottleError, 'Rate limited')
+          end.to raise_error(Uploadcare::ThrottleError, 'Rate limited')
 
           expect(attempts).to eq(5) # max_throttle_attempts
         end
@@ -84,7 +84,7 @@ RSpec.describe Uploadcare::ThrottleHandler do
 
           expect do
             handler.handle_throttling { raise throttle_error }
-          end.to raise_error(Uploadcare::Exception::ThrottleError)
+          end.to raise_error(Uploadcare::ThrottleError)
         end
       end
 
@@ -103,7 +103,7 @@ RSpec.describe Uploadcare::ThrottleHandler do
               attempts += 1
               raise throttle_error
             end
-          end.to raise_error(Uploadcare::Exception::ThrottleError)
+          end.to raise_error(Uploadcare::ThrottleError)
 
           expect(attempts).to eq(3)
         end
@@ -113,7 +113,7 @@ RSpec.describe Uploadcare::ThrottleHandler do
 
           expect do
             handler.handle_throttling { raise throttle_error }
-          end.to raise_error(Uploadcare::Exception::ThrottleError)
+          end.to raise_error(Uploadcare::ThrottleError)
         end
       end
 
@@ -132,7 +132,7 @@ RSpec.describe Uploadcare::ThrottleHandler do
               attempts += 1
               raise throttle_error
             end
-          end.to raise_error(Uploadcare::Exception::ThrottleError)
+          end.to raise_error(Uploadcare::ThrottleError)
 
           expect(attempts).to eq(1)
         end
@@ -142,7 +142,7 @@ RSpec.describe Uploadcare::ThrottleHandler do
 
           expect do
             handler.handle_throttling { raise throttle_error }
-          end.to raise_error(Uploadcare::Exception::ThrottleError)
+          end.to raise_error(Uploadcare::ThrottleError)
         end
       end
     end
@@ -174,7 +174,7 @@ RSpec.describe Uploadcare::ThrottleHandler do
         timeouts = [0.01, 0.02, 0.03]
 
         timeouts.each_with_index do |timeout, index|
-          error = Uploadcare::Exception::ThrottleError.new("Attempt #{index + 1}")
+          error = Uploadcare::ThrottleError.new("Attempt #{index + 1}")
           allow(error).to receive(:timeout).and_return(timeout)
 
           expect(handler).to receive(:sleep).with(timeout).ordered if index < timeouts.length - 1
@@ -183,7 +183,7 @@ RSpec.describe Uploadcare::ThrottleHandler do
         result = handler.handle_throttling do
           attempts += 1
           if attempts <= timeouts.length
-            error = Uploadcare::Exception::ThrottleError.new("Attempt #{attempts}")
+            error = Uploadcare::ThrottleError.new("Attempt #{attempts}")
             allow(error).to receive(:timeout).and_return(timeouts[attempts - 1])
             raise error
           end

@@ -70,7 +70,7 @@ RSpec.describe Uploadcare::VideoConverterClient do
       end
 
       it 'raises an InvalidRequestError' do
-        expect { subject }.to raise_error(Uploadcare::Exception::RequestError, 'Invalid request')
+        expect { subject }.to raise_error(Uploadcare::RequestError, 'Invalid request')
       end
     end
   end
@@ -119,7 +119,7 @@ RSpec.describe Uploadcare::VideoConverterClient do
       end
 
       it 'raises a NotFoundError' do
-        expect { subject }.to raise_error(Uploadcare::Exception::RequestError, 'Job not found')
+        expect { subject }.to raise_error(Uploadcare::RequestError, 'Job not found')
       end
     end
   end

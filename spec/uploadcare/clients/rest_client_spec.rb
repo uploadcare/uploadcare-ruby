@@ -42,7 +42,7 @@ RSpec.describe Uploadcare::RestClient do
       end
 
       it 'raises an InvalidRequestError' do
-        expect { subject.get(path, params, headers) }.to raise_error(Uploadcare::Exception::RequestError, 'Bad Request')
+        expect { subject.get(path, params, headers) }.to raise_error(Uploadcare::BadRequestError, 'Bad Request')
       end
     end
 
@@ -57,7 +57,7 @@ RSpec.describe Uploadcare::RestClient do
       end
 
       it 'raises an AuthenticationError' do
-        expect { subject.get(path) }.to raise_error(Uploadcare::Exception::RequestError, 'Unauthorized')
+        expect { subject.get(path) }.to raise_error(Uploadcare::AuthenticationError, 'Unauthorized')
       end
     end
 
@@ -72,7 +72,7 @@ RSpec.describe Uploadcare::RestClient do
       end
 
       it 'raises an AuthorizationError' do
-        expect { subject.get(path) }.to raise_error(Uploadcare::Exception::RequestError, 'Forbidden')
+        expect { subject.get(path) }.to raise_error(Uploadcare::ForbiddenError, 'Forbidden')
       end
     end
 
@@ -87,18 +87,18 @@ RSpec.describe Uploadcare::RestClient do
       end
 
       it 'raises a NotFoundError' do
-        expect { subject.get(path) }.to raise_error(Uploadcare::Exception::RequestError, 'Not Found')
+        expect { subject.get(path) }.to raise_error(Uploadcare::NotFoundError, 'Not Found')
       end
     end
 
     context 'when the request fails with an unexpected error' do
       before do
         stub_request(:get, full_url)
-          .to_raise(Uploadcare::Exception::RequestError)
+          .to_raise(Faraday::Error)
       end
 
       it 'raises an Uploadcare::Error' do
-        expect { subject.get(path) }.to raise_error(Uploadcare::Exception::RequestError)
+        expect { subject.get(path) }.to raise_error(Uploadcare::Error)
       end
     end
   end

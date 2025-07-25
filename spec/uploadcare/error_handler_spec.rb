@@ -24,7 +24,7 @@ RSpec.describe Uploadcare::ErrorHandler do
 
       it 'raises RequestError with detail message' do
         expect { handler.handle_error(error) }.to raise_error(
-          Uploadcare::Exception::RequestError,
+          Uploadcare::BadRequestError,
           'Invalid public key'
         )
       end
@@ -40,7 +40,7 @@ RSpec.describe Uploadcare::ErrorHandler do
 
       it 'raises RequestError with combined message' do
         expect { handler.handle_error(error) }.to raise_error(
-          Uploadcare::Exception::RequestError,
+          Uploadcare::UnprocessableEntityError,
           'field1: error1; field2: error2'
         )
       end
@@ -56,7 +56,7 @@ RSpec.describe Uploadcare::ErrorHandler do
 
       it 'raises RequestError with raw body' do
         expect { handler.handle_error(error) }.to raise_error(
-          Uploadcare::Exception::RequestError,
+          Uploadcare::InternalServerError,
           'Internal Server Error'
         )
       end
@@ -72,7 +72,7 @@ RSpec.describe Uploadcare::ErrorHandler do
 
       it 'catches upload error and raises RequestError' do
         expect { handler.handle_error(error) }.to raise_error(
-          Uploadcare::Exception::RequestError,
+          Uploadcare::RequestError,
           'File size exceeds limit'
         )
       end
@@ -87,8 +87,9 @@ RSpec.describe Uploadcare::ErrorHandler do
       end
 
       it 'raises RequestError with combined message' do
+        # Status 200 with success should use from_response which creates an Error for 200
         expect { handler.handle_error(error) }.to raise_error(
-          Uploadcare::Exception::RequestError,
+          Uploadcare::Error,
           'uuid: 12345; size: 1024'
         )
       end
@@ -104,8 +105,8 @@ RSpec.describe Uploadcare::ErrorHandler do
 
       it 'raises RequestError with empty message' do
         expect { handler.handle_error(error) }.to raise_error(
-          Uploadcare::Exception::RequestError,
-          ''
+          Uploadcare::ForbiddenError,
+          'HTTP 403'
         )
       end
     end
@@ -120,8 +121,8 @@ RSpec.describe Uploadcare::ErrorHandler do
 
       it 'raises RequestError with empty string' do
         expect { handler.handle_error(error) }.to raise_error(
-          Uploadcare::Exception::RequestError,
-          ''
+          Uploadcare::NotFoundError,
+          'HTTP 404'
         )
       end
     end
@@ -136,12 +137,9 @@ RSpec.describe Uploadcare::ErrorHandler do
 
       it 'raises RequestError with array string representation' do
         expect { handler.handle_error(error) }.to raise_error(
-          Uploadcare::Exception::RequestError
+          Uploadcare::BadRequestError
         ) do |error|
-          expect(error.message).to include('0:')
-          expect(error.message).to include('error1')
-          expect(error.message).to include('1:')
-          expect(error.message).to include('error2')
+          expect(error.message).to eq('["error1", "error2"]')
         end
       end
     end
@@ -156,7 +154,7 @@ RSpec.describe Uploadcare::ErrorHandler do
         }
 
         expect { handler.send(:catch_upload_errors, response) }.to raise_error(
-          Uploadcare::Exception::RequestError,
+          Uploadcare::RequestError,
           'Upload failed'
         )
       end
