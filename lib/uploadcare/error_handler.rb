@@ -8,8 +8,18 @@ module Uploadcare
       response = error.response
       catch_upload_errors(response)
       
+      # Parse JSON body if it's a string
+      parsed_response = response.dup
+      if response[:body].is_a?(String) && !response[:body].empty?
+        begin
+          parsed_response[:body] = JSON.parse(response[:body])
+        rescue JSON::ParserError
+          # Keep original body if JSON parsing fails
+        end
+      end
+      
       # Use RequestError.from_response to create the appropriate error type
-      raise Uploadcare::RequestError.from_response(response)
+      raise Uploadcare::RequestError.from_response(parsed_response)
     end
 
     private
