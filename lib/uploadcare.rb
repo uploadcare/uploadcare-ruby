@@ -12,7 +12,6 @@ module Uploadcare
   @loader.collapse("#{__dir__}/uploadcare/resources")
   @loader.collapse("#{__dir__}/uploadcare/clients")
   @loader.collapse("#{__dir__}/uploadcare/signed_url_generators")
-  @loader.collapse("#{__dir__}/uploadcare/middleware")
   @loader.setup
 
   class << self
