@@ -18,3 +18,4 @@ Gemfile.lock
 .ruby-version
 project_files
 *.gem
+.claude/
