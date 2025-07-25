@@ -64,7 +64,7 @@ module Uploadcare
 
     # Group operations
     def group(uuid)
-      Group.new({ id: uuid }, config).info
+      Group.new({ id: uuid }, config).info(uuid)
     end
 
     def group_list(options = {})

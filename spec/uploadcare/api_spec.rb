@@ -173,7 +173,7 @@ RSpec.describe Uploadcare::Api do
     describe '#group' do
       it 'retrieves group info' do
         expect(Uploadcare::Group).to receive(:new).with({ id: uuid }, config).and_return(group_instance)
-        expect(group_instance).to receive(:info).and_return(group_instance)
+        expect(group_instance).to receive(:info).with(uuid).and_return(group_instance)
 
         result = api.group(uuid)
         expect(result).to eq(group_instance)

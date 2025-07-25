@@ -56,7 +56,7 @@ module Uploadcare
       env = build_env(method, url, options)
 
       # Build middleware stack
-      stack = @middleware.reverse.reduce(base_app) do |app, middleware|
+      stack = @middleware.reduce(base_app) do |app, middleware|
         middleware[:klass].new(app, middleware[:options])
       end
 
@@ -171,7 +171,7 @@ module Uploadcare
       end
 
       def find(uuid)
-        Uploadcare::Group.new({ id: uuid }, @client.config).info
+        Uploadcare::Group.new({ id: uuid }, @client.config).info(uuid)
       end
 
       def create(files, options = {})

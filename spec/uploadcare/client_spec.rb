@@ -340,7 +340,7 @@ RSpec.describe Uploadcare::Client do
       it 'creates a Group instance and calls info' do
         group = instance_double(Uploadcare::Group)
         expect(Uploadcare::Group).to receive(:new).with({ id: 'test-uuid' }, config).and_return(group)
-        expect(group).to receive(:info)
+        expect(group).to receive(:info).with('test-uuid')
 
         group_resource.find('test-uuid')
       end
