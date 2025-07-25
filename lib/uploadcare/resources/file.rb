@@ -152,5 +152,11 @@ module Uploadcare
       base_url = "#{@config.cdn_url_base}#{uuid}/"
       transformations ? "#{base_url}-/#{transformations}/" : base_url
     end
+
+    # Create a URL builder for this file
+    # @return [Uploadcare::UrlBuilder] URL builder instance
+    def url_builder
+      UrlBuilder.new(self, @config)
+    end
   end
 end

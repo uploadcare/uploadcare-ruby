@@ -10,6 +10,8 @@ module Uploadcare
   @loader = Zeitwerk::Loader.for_gem
   @loader.collapse("#{__dir__}/uploadcare/resources")
   @loader.collapse("#{__dir__}/uploadcare/clients")
+  @loader.collapse("#{__dir__}/uploadcare/signed_url_generators")
+  @loader.collapse("#{__dir__}/uploadcare/middleware")
   @loader.setup
 
   class << self
@@ -27,6 +29,16 @@ module Uploadcare
 
     def api(config = nil)
       Api.new(config || configuration)
+    end
+
+    # Create a new client instance with optional configuration
+    def client(options = {})
+      Client.new(options)
+    end
+
+    # Convenience method to build URLs
+    def url_builder(source)
+      UrlBuilder.new(source, configuration)
     end
   end
 end
