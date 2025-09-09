@@ -521,12 +521,10 @@ Uploadcare::Group.delete(group.id)
 # Returns group's CDN URL
 @group.cdn_url
 # => "https://demo.ucarecd.net/group-id~2/"
-# With subdomains: "https://a1b2c3d4e5.ucarecdn.net/group-id~2/"
 
 # Returns CDN URLs of all files from group without API requesting
 @group.file_cdn_urls
 # => 'https://demo.ucarecd.net/0513dda0-582f-447d-846f-096e5df9e2bb~2/nth/0/'
-# # With subdomains: 'https://a1b2c3d4e5.ucarecdn.net/0513dda0-582f-447d-846f-096e5df9e2bb~2/nth/0/'
 ```
 
 #### GroupList
