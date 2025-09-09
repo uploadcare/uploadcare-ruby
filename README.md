@@ -110,7 +110,7 @@ and [Upload](https://uploadcare.com/api-refs/upload-api/) and [REST](https://upl
 
 You can also find an example project [here](https://github.com/uploadcare/uploadcare-rails-example).
 
-In examples we’re going to use `ucarecdn.com` domain. Check your project's subdomain in the [Dashboard](https://app.uploadcare.com/projects/-/settings/#delivery).
+In examples we’re going to use `demo.ucarecd.net` domain. Check your project's subdomain in the [Dashboard](https://app.uploadcare.com/projects/-/settings/#delivery).
 
 ### Uploading files
 
@@ -128,11 +128,11 @@ Using Uploadcare is simple, and here are the basics of handling files.
 
 # URL for the file, can be used with your website or app right away
 @uc_file.original_file_url
-# => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/your-file.png"
+# => "https://demo.ucarecd.net/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/your-file.png"
 
 # CDN URL for the file
 @uc_file.cdn_url
-# => "https://ucarecdn.com/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
+# => "https://demo.ucarecd.net/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
 #
 # With subdomains enabled:
 # Uploadcare.config.use_subdomains = true
@@ -262,7 +262,7 @@ File entity contains its metadata. It also supports `include` param to include a
   "is_image"=>true,
   "is_ready"=>true,
   "mime_type"=>"image/jpeg",
-  "original_file_url"=>"https://ucarecdn.com/FILE_UUID/pineapple.jpg",
+  "original_file_url"=>"https://demo.ucarecd.net/FILE_UUID/pineapple.jpg",
   "original_filename"=>"pineapple.jpg",
   "size"=>642,
   "url"=>"https://api.uploadcare.com/files/FILE_UUID/",
@@ -520,12 +520,12 @@ Uploadcare::Group.delete(group.id)
 
 # Returns group's CDN URL
 @group.cdn_url
-# => "https://ucarecdn.com/group-id~2/"
+# => "https://demo.ucarecd.net/group-id~2/"
 # With subdomains: "https://a1b2c3d4e5.ucarecdn.net/group-id~2/"
 
 # Returns CDN URLs of all files from group without API requesting
 @group.file_cdn_urls
-# => 'https://ucarecdn.com/0513dda0-582f-447d-846f-096e5df9e2bb~2/nth/0/'
+# => 'https://demo.ucarecd.net/0513dda0-582f-447d-846f-096e5df9e2bb~2/nth/0/'
 # # With subdomains: 'https://a1b2c3d4e5.ucarecdn.net/0513dda0-582f-447d-846f-096e5df9e2bb~2/nth/0/'
 ```
 
