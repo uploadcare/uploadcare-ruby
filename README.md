@@ -81,6 +81,59 @@ and [Upload](https://uploadcare.com/api-refs/upload-api/) and [REST](https://upl
 
 You can also find an example project [here](https://github.com/uploadcare/uploadcare-rails-example).
 
+### New Architecture (v3.5+)
+
+The gem now provides a cleaner, more intuitive interface for interacting with Uploadcare APIs:
+
+```ruby
+# Using the new Client interface (recommended)
+client = Uploadcare.client(
+  public_key: 'your_public_key',
+  secret_key: 'your_secret_key'
+)
+
+# Upload a file
+file = client.upload_file(File.open("image.jpg"))
+puts file.uuid
+
+# Manage files
+file_info = client.file_info(uuid: "FILE_UUID")
+stored_file = client.store_file(uuid: "FILE_UUID")
+deleted_file = client.delete_file(uuid: "FILE_UUID")
+
+# Batch operations
+result = client.batch_store_files(["uuid1", "uuid2", "uuid3"])
+result = client.batch_delete_files(["uuid1", "uuid2", "uuid3"])
+
+# List files with pagination
+files = client.list_files(limit: 10, stored: true)
+files.each { |f| puts f.original_filename }
+
+# Work with groups
+group = client.create_group(["uuid1", "uuid2"])
+group_info = client.group_info(uuid: "GROUP_UUID")
+
+# Webhooks management
+webhook = client.create_webhook(
+  target_url: "https://example.com/webhook",
+  event: "file.uploaded"
+)
+webhooks = client.list_webhooks
+
+# Add-ons
+client.aws_rekognition_detect_labels("FILE_UUID")
+client.remove_bg("FILE_UUID", crop: true)
+client.uc_clamav_virus_scan("FILE_UUID", purge_infected: true)
+
+# Conversion
+client.convert_document([{ uuid: "FILE_UUID", format: "pdf" }])
+client.convert_video([{ uuid: "FILE_UUID", format: "mp4", quality: "best" }])
+```
+
+### Legacy API Interface (deprecated, but still supported)
+
+The old `Uploadcare::Api` interface is still available for backward compatibility:
+
 ### Uploading files
 #### Uploading and storing a single file
 

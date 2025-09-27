@@ -13,3 +13,4 @@ gem 'webmock'
 
 # Specify your gem's dependencies in uploadcare-ruby.gemspec
 gemspec
+gem 'base64'

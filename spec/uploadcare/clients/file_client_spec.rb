@@ -169,7 +169,7 @@ RSpec.describe Uploadcare::FileClient do
       end
 
       it 'raises an InvalidRequest' do
-        expect { client.delete(uuid) }.to raise_error(Uploadcare::BadRequestError, "Bad Request")
+        expect { client.delete(uuid) }.to raise_error(Uploadcare::NotFoundError, "Bad Request")
       end
     end
   end
@@ -221,7 +221,7 @@ RSpec.describe Uploadcare::FileClient do
       end
 
       it 'raises an InvalidRequest' do
-        expect { client.info(uuid) }.to raise_error(Uploadcare::BadRequestError, "Bad Request")
+        expect { client.info(uuid) }.to raise_error(Uploadcare::NotFoundError, "Bad Request")
       end
     end
   end
@@ -266,7 +266,7 @@ RSpec.describe Uploadcare::FileClient do
       end
 
       it 'raises an InvalidRequest' do
-        expect { client.batch_store(uuids) }.to raise_error(Uploadcare::BadRequestError, "Bad Request")
+        expect { client.batch_store(uuids) }.to raise_error(Uploadcare::NotFoundError, "Bad Request")
       end
     end
   end

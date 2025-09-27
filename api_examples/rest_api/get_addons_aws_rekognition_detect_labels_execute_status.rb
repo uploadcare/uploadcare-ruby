@@ -1,7 +1,22 @@
 require 'uploadcare'
-Uploadcare.config.public_key = 'YOUR_PUBLIC_KEY'
-Uploadcare.config.secret_key = 'YOUR_SECRET_KEY'
 
-request_id = 'd1fb31c6-ed34-4e21-bdc3-4f1485f58e21'
-result = Uploadcare::Addons.ws_rekognition_detect_labels_status(request_id)
-puts result.status
+# Configure API keys
+Uploadcare.configure do |config|
+  config.public_key = 'YOUR_PUBLIC_KEY'
+  config.secret_key = 'YOUR_SECRET_KEY'
+end
+
+# Check AWS Rekognition label detection status
+request_id = 'REQUEST_ID_FROM_EXECUTE'
+
+# Check status
+status = Uploadcare::AddOns.aws_rekognition_detect_labels_status(request_id)
+
+if status[:status] == 'done'
+  puts "Labels detected successfully"
+  # Labels are now available in file's appdata
+elsif status[:status] == 'error'
+  puts "Detection failed: #{status[:error]}"
+else
+  puts "Detection in progress..."
+end
