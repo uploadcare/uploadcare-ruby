@@ -67,5 +67,28 @@ module Uploadcare
 
       upload_params.merge(file_params)
     end
+
+    # Convert store option to API-compatible value
+    def store_value(store)
+      return 'auto' if store.nil?
+
+      case store
+      when true, 1, '1'
+        'true'
+      when false, 0, '0'
+        'false'
+      else
+        store.to_s
+      end
+    end
+
+    # Generate metadata parameters for upload
+    def generate_metadata_params(metadata = nil)
+      return {} if metadata.nil? || !metadata.is_a?(Hash)
+
+      metadata.each_with_object({}) do |(key, value), result|
+        result["metadata[#{key}]"] = value.to_s
+      end
+    end
   end
 end

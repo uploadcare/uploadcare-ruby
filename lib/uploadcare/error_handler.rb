@@ -10,7 +10,12 @@ module Uploadcare
       response = error.response
       catch_upload_errors(response)
       parsed_response = JSON.parse(response[:body].to_s)
-      raise RequestError, parsed_response['detail'] || parsed_response.map { |k, v| "#{k}: #{v}" }.join('; ')
+
+      raise RequestError, parsed_response.to_s unless parsed_response.is_a?(Hash)
+      raise RequestError, parsed_response['detail'] if parsed_response['detail']
+
+      error_messages = parsed_response.map { |k, v| "#{k}: #{v}" }.join('; ')
+      raise RequestError, error_messages
     rescue JSON::ParserError
       raise RequestError, response[:body].to_s
     end
@@ -24,7 +29,7 @@ module Uploadcare
 
       parsed_response = JSON.parse(response[:body].to_s)
       error = parsed_response['error'] if parsed_response.is_a?(Hash)
-      raise RequestError, error if error
+      raise RequestError, error if error && !error.to_s.empty?
     end
   end
 end

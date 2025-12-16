@@ -33,9 +33,9 @@ puts
 
 begin
   # Open and upload the file
-  file = File.open(file_path, 'rb')
-  result = Uploadcare::Uploader.upload(file, store: true)
-  file.close
+  result = File.open(file_path, 'rb') do |file|
+    Uploadcare::Uploader.upload(file, store: true)
+  end
 
   # Display results
   puts '✓ Upload successful!'

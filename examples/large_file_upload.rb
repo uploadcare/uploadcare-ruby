@@ -48,33 +48,32 @@ puts
 
 begin
   upload_client = Uploadcare::UploadClient.new
-  file = File.open(file_path, 'rb')
   start_time = Time.now
 
   # Upload with multipart and parallel threads
-  result = upload_client.multipart_upload(file,
-                                          store: true,
-                                          threads: threads,
-                                          metadata: {
-                                            source: 'large_file_example',
-                                            upload_method: 'multipart'
-                                          }) do |progress|
-    uploaded_mb = (progress[:uploaded] / 1024.0 / 1024.0).round(2)
-    total_mb = (progress[:total] / 1024.0 / 1024.0).round(2)
-    percentage = progress[:percentage].to_i
-    part = progress[:part]
-    total_parts = progress[:total_parts]
+  result = File.open(file_path, 'rb') do |file|
+    upload_client.multipart_upload(file,
+                                   store: true,
+                                   threads: threads,
+                                   metadata: {
+                                     source: 'large_file_example',
+                                     upload_method: 'multipart'
+                                   }) do |progress|
+      uploaded_mb = (progress[:uploaded] / 1024.0 / 1024.0).round(2)
+      total_mb = (progress[:total] / 1024.0 / 1024.0).round(2)
+      percentage = progress[:percentage].to_i
+      part = progress[:part]
+      total_parts = progress[:total_parts]
 
-    # Progress bar
-    bar_length = 30
-    filled = (bar_length * percentage / 100).to_i
-    bar = ('█' * filled) + ('░' * (bar_length - filled))
+      # Progress bar
+      bar_length = 30
+      filled = (bar_length * percentage / 100).to_i
+      bar = ('█' * filled) + ('░' * (bar_length - filled))
 
-    print "\r#{bar} #{percentage}% | Part #{part}/#{total_parts} | #{uploaded_mb}/#{total_mb} MB"
-    $stdout.flush
+      print "\r#{bar} #{percentage}% | Part #{part}/#{total_parts} | #{uploaded_mb}/#{total_mb} MB"
+      $stdout.flush
+    end
   end
-
-  file.close
   elapsed = Time.now - start_time
 
   puts

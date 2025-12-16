@@ -23,7 +23,7 @@ module Uploadcare
     # TODO - Remove uuid if the operation is being performed on same file
     def index(uuid)
       response = @file_metadata_client.index(uuid)
-      assign_attributes(response)
+      @metadata = response || {}
       self
     end
 

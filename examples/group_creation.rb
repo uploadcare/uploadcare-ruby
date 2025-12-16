@@ -46,9 +46,9 @@ begin
   uuids = []
 
   file_paths.each_with_index do |path, index|
-    file = File.open(path, 'rb')
-    response = upload_client.upload_file(file, store: true)
-    file.close
+    response = File.open(path, 'rb') do |file|
+      upload_client.upload_file(file, store: true)
+    end
 
     uuid = response.values.first
     uuids << uuid

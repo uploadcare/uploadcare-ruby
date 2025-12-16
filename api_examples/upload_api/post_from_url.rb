@@ -1,7 +1,12 @@
 # frozen_string_literal: true
 
 require_relative '../../lib/uploadcare'
-require 'dotenv/load'
+# Load environment variables from .env file if dotenv is available
+begin
+  require 'dotenv/load'
+rescue LoadError
+  # dotenv not available, skip loading .env file
+end
 
 # Configure Uploadcare
 Uploadcare.configure do |config|

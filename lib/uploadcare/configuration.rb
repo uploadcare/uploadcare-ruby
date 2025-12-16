@@ -64,8 +64,8 @@ module Uploadcare
     # These defaults are used when initializing a new configuration instance.
     # Values can be overridden via environment variables or direct assignment.
     DEFAULTS = {
-      public_key: ENV.fetch('UPLOADCARE_PUBLIC_KEY', ''),
-      secret_key: ENV.fetch('UPLOADCARE_SECRET_KEY', ''),
+      public_key: '',
+      secret_key: '',
       auth_type: 'Uploadcare',
       multipart_size_threshold: 100 * 1024 * 1024,
       rest_api_root: 'https://api.uploadcare.com',
@@ -93,7 +93,18 @@ module Uploadcare
     # @param options [Hash] configuration options to override defaults
     # @return [Uploadcare::Configuration] new configuration instance
     def initialize(options = {})
-      DEFAULTS.merge(options).each do |attribute, value|
+      # Start with defaults
+      config = DEFAULTS.dup
+      
+      # Override with ENV variables if present (always check ENV, not just if key exists)
+      config[:public_key] = ENV.fetch('UPLOADCARE_PUBLIC_KEY', config[:public_key])
+      config[:secret_key] = ENV.fetch('UPLOADCARE_SECRET_KEY', config[:secret_key])
+      
+      # Override with options passed in
+      config.merge!(options)
+      
+      # Set all attributes
+      config.each do |attribute, value|
         send("#{attribute}=", value)
       end
     end

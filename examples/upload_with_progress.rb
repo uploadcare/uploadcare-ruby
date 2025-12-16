@@ -42,38 +42,37 @@ if file_size < 10_000_000
 end
 
 begin
-  file = File.open(file_path, 'rb')
   start_time = Time.now
 
-  result = Uploadcare::Uploader.upload(file, store: true) do |progress|
-    # Calculate progress metrics
-    uploaded_mb = (progress[:uploaded] / 1024.0 / 1024.0).round(2)
-    total_mb = (progress[:total] / 1024.0 / 1024.0).round(2)
-    percentage = progress[:percentage].to_i
-    part = progress[:part]
-    total_parts = progress[:total_parts]
+  result = File.open(file_path, 'rb') do |file|
+    Uploadcare::Uploader.upload(file, store: true) do |progress|
+      # Calculate progress metrics
+      uploaded_mb = (progress[:uploaded] / 1024.0 / 1024.0).round(2)
+      total_mb = (progress[:total] / 1024.0 / 1024.0).round(2)
+      percentage = progress[:percentage].to_i
+      part = progress[:part]
+      total_parts = progress[:total_parts]
 
-    # Calculate speed and ETA
-    elapsed = Time.now - start_time
-    speed_mbps = elapsed.positive? ? uploaded_mb / elapsed : 0
-    remaining_mb = total_mb - uploaded_mb
-    eta_seconds = speed_mbps.positive? ? remaining_mb / speed_mbps : nil
+      # Calculate speed and ETA
+      elapsed = Time.now - start_time
+      speed_mbps = elapsed.positive? ? uploaded_mb / elapsed : 0
+      remaining_mb = total_mb - uploaded_mb
+      eta_seconds = speed_mbps.positive? ? remaining_mb / speed_mbps : nil
 
-    # Create progress bar
-    bar_length = 40
-    filled = (bar_length * percentage / 100).to_i
-    bar = ('█' * filled) + ('░' * (bar_length - filled))
+      # Create progress bar
+      bar_length = 40
+      filled = (bar_length * percentage / 100).to_i
+      bar = ('█' * filled) + ('░' * (bar_length - filled))
 
-    # Display progress
-    print "\r#{bar} #{percentage}% | "
-    print "#{uploaded_mb}/#{total_mb} MB | "
-    print "Part #{part}/#{total_parts} | "
-    print "Speed: #{speed_mbps.round(2)} MB/s"
-    print " | ETA: #{eta_seconds.to_i}s" if eta_seconds
-    $stdout.flush
+      # Display progress
+      print "\r#{bar} #{percentage}% | "
+      print "#{uploaded_mb}/#{total_mb} MB | "
+      print "Part #{part}/#{total_parts} | "
+      print "Speed: #{speed_mbps.round(2)} MB/s"
+      print " | ETA: #{eta_seconds.to_i}s" if eta_seconds
+      $stdout.flush
+    end
   end
-
-  file.close
   elapsed = Time.now - start_time
 
   puts
