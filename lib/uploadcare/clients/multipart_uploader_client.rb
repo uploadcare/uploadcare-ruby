@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'thread'
 # require 'client/multipart_upload/chunks_client'
 # require_relative 'upload_client'
 module Uploadcare
@@ -10,6 +9,8 @@ module Uploadcare
   # Default chunk size for multipart uploads (5MB)
   class MultipartUploaderClient < UploadClient
     CHUNK_SIZE = 5_242_880
+    # Maximum number of concurrent upload threads to control memory usage
+    MAX_CONCURRENT_UPLOADS = 4
 
     # Upload a big file by splitting it into parts and sending those parts into assigned buckets
     # object should be File
@@ -49,18 +50,27 @@ module Uploadcare
     # @param object [File]
     # @param links [Array] of strings; by default list of Amazon storage urls
     def upload_chunks(object, links, &block)
-      threads = []
       mutex = Mutex.new
+      work_queue = Queue.new
 
-      links.count.times do |link_index|
+      # Add all chunk indices to the work queue
+      links.count.times { |i| work_queue.push(i) }
+
+      # Create worker threads up to the maximum allowed
+      threads = []
+      [MAX_CONCURRENT_UPLOADS, links.count].min.times do
         threads << Thread.new do
-          begin
+          loop do
+            link_index = work_queue.pop(true) # non-blocking pop
             process_chunk(object, links, link_index) do |progress|
-              mutex.synchronize { yield(progress) } if block_given?
+              mutex.synchronize { block.call(progress) } if block
             end
+          rescue ThreadError
+            # Queue is empty, exit thread
+            break
           rescue StandardError => e
             # Log error but continue with other chunks
-            Uploadcare.configuration.logger&.error("Thread #{link_index} failed: #{e.message}")
+            Uploadcare.configuration.logger&.error("Thread failed for chunk #{link_index}: #{e.message}")
             raise
           end
         end

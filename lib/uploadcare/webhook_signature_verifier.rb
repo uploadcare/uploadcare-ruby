@@ -12,12 +12,19 @@ module Uploadcare
       signing_secret = options[:signing_secret] || ENV.fetch('UC_SIGNING_SECRET', nil)
       x_uc_signature_header = options[:x_uc_signature_header]
 
-      digest = OpenSSL::Digest.new('sha256')
+      # Validate required parameters for security
+      return false unless valid_params?(webhook_body_json, signing_secret, x_uc_signature_header)
 
+      digest = OpenSSL::Digest.new('sha256')
       calculated_signature = "v1=#{OpenSSL::HMAC.hexdigest(digest, signing_secret, webhook_body_json)}"
 
       calculated_signature == x_uc_signature_header
     end
+
+    def self.valid_params?(webhook_body, secret, signature)
+      !webhook_body.to_s.empty? && !secret.to_s.empty? && !signature.to_s.empty?
+    end
+    private_class_method :valid_params?
   end
 
   # v4.4.3 compatibility namespace alias

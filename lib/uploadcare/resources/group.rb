@@ -110,6 +110,12 @@ module Uploadcare
       end
     end
 
+    # Gets group's uuid (alias for id for compatibility)
+    # @return [String]
+    def uuid
+      id
+    end
+
     # Loads group metadata, if it's initialized with url or id (v4.4.3 compatibility)
     def load
       group_with_info = self.class.info(id)

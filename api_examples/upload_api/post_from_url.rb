@@ -8,6 +8,13 @@ Uploadcare.configure do |config|
   config.public_key = ENV.fetch('UPLOADCARE_PUBLIC_KEY', nil)
 end
 
+# Validate required configuration
+unless Uploadcare.configuration.public_key
+  puts 'Error: UPLOADCARE_PUBLIC_KEY environment variable is required'
+  puts 'Please set UPLOADCARE_PUBLIC_KEY=your_public_key in your environment or .env file'
+  exit 1
+end
+
 # Example 1: Upload from URL (sync mode - waits for completion)
 puts 'Example 1: Upload from URL (sync mode)'
 puts '=' * 50

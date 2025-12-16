@@ -692,7 +692,7 @@ module Uploadcare
       filename = file.original_filename if file.respond_to?(:original_filename)
       filename ||= ::File.basename(file_path)
       mime_type = MIME::Types.type_for(file.path).first
-      mime_type ? mime_type.content_type : 'application/octet-stream'
+      content_type = mime_type ? mime_type.content_type : 'application/octet-stream'
 
       # if filename already exists, add a random number to the filename
       # to avoid overwriting the file
@@ -700,7 +700,7 @@ module Uploadcare
 
       params[filename] = Faraday::Multipart::FilePart.new(
         file_path,
-        mime_type,
+        content_type,
         filename
       )
 

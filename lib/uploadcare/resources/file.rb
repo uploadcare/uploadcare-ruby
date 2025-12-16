@@ -118,9 +118,9 @@ module Uploadcare
       response = file_client.batch_store(uuids)
 
       BatchFileResult.new(
-        status: response[:status],
-        result: response[:result],
-        problems: response[:problems] || {},
+        status: response['status'],
+        result: response['result'],
+        problems: response['problems'] || {},
         config: config
       )
     end
@@ -135,9 +135,9 @@ module Uploadcare
       response = file_client.batch_delete(uuids)
 
       BatchFileResult.new(
-        status: response[:status],
-        result: response[:result],
-        problems: response[:problems] || {},
+        status: response['status'],
+        result: response['result'],
+        problems: response['problems'] || {},
         config: config
       )
     end
@@ -194,6 +194,12 @@ module Uploadcare
       else
         @uuid
       end
+    end
+
+    # Gets file's id (alias for uuid for compatibility)
+    # @return [String]
+    def id
+      uuid
     end
 
     # Returns file's CDN URL (v4.4.3 compatibility)

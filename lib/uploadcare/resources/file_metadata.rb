@@ -4,14 +4,17 @@ module Uploadcare
   class FileMetadata < BaseResource
     ATTRIBUTES = %i[
       datetime_removed datetime_stored datetime_uploaded is_image is_ready mime_type original_file_url
-      original_filename size url uuid variations content_info metadata appdata source
+      original_filename size url uuid variations content_info appdata source
     ].freeze
 
     attr_accessor(*ATTRIBUTES)
+    # Custom metadata is handled separately to allow for arbitrary key-value pairs
+    attr_accessor :metadata
 
     def initialize(attributes = {}, config = Uploadcare.configuration)
       super
       @file_metadata_client = Uploadcare::FileMetadataClient.new(config)
+      @metadata = {}
     end
 
     # Retrieves metadata for the file

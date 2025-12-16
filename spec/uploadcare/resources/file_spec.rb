@@ -108,9 +108,9 @@ RSpec.describe Uploadcare::File do
     let(:file_data) { { 'uuid' => SecureRandom.uuid, 'original_filename' => 'file.jpg' } }
     let(:response_body) do
       {
-        status: 200,
-        result: [file_data],
-        problems: [{ 'some-uuid': 'Missing in the project' }]
+        'status' => 200,
+        'result' => [file_data],
+        'problems' => { 'some-uuid' => 'Missing in the project' }
       }
     end
 
@@ -118,7 +118,7 @@ RSpec.describe Uploadcare::File do
       subject { described_class.batch_store(uuids) }
 
       before do
-        allow_any_instance_of(Uploadcare::FileClient).to receive(:put).with('/files/storage/', uuids).and_return(response_body)
+        allow_any_instance_of(Uploadcare::FileClient).to receive(:batch_store).with(uuids).and_return(response_body)
       end
 
       it { is_expected.to be_a(Uploadcare::BatchFileResult) }
@@ -131,7 +131,7 @@ RSpec.describe Uploadcare::File do
       subject { described_class.batch_delete(uuids) }
 
       before do
-        allow_any_instance_of(Uploadcare::FileClient).to receive(:del).with('/files/storage/', uuids).and_return(response_body)
+        allow_any_instance_of(Uploadcare::FileClient).to receive(:batch_delete).with(uuids).and_return(response_body)
       end
 
       it { is_expected.to be_a(Uploadcare::BatchFileResult) }
