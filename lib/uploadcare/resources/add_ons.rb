@@ -36,7 +36,7 @@ module Uploadcare
       # @param request_id [String] The Request ID from the Add-On execution
       # @return [Uploadcare::AddOns] An instance of AddOns with the status data
       # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Add-Ons/operation/awsRekognitionDetectModerationLabelsExecutionStatus
-      def check_aws_rekognition_detect_moderation_labels_status(request_id, config = Uploadcare.configuration)
+      def aws_rekognition_detect_moderation_labels_status(request_id, config = Uploadcare.configuration)
         response = add_ons_client(config).aws_rekognition_detect_moderation_labels_status(request_id)
         new(response, config)
       end

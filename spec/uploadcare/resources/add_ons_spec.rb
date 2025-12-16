@@ -53,7 +53,7 @@ RSpec.describe Uploadcare::AddOns do
     end
   end
 
-  describe '.check_aws_rekognition_detect_moderation_labels_status' do
+  describe '.aws_rekognition_detect_moderation_labels_status' do
     let(:response_body) { { 'status' => 'in_progress' } }
 
     before do
@@ -61,7 +61,7 @@ RSpec.describe Uploadcare::AddOns do
     end
 
     it 'returns an instance of AddOns and assigns the status' do
-      result = described_class.check_aws_rekognition_detect_moderation_labels_status(request_id)
+      result = described_class.aws_rekognition_detect_moderation_labels_status(request_id)
       expect(result).to be_a(described_class)
       expect(result.status).to eq('in_progress')
     end
