@@ -55,8 +55,8 @@ RSpec.describe Uploadcare::GroupClient do
           .to_return(status: 400, body: { 'detail' => 'Bad Request' }.to_json, headers: { 'Content-Type' => 'application/json' })
       end
 
-      it 'raises an InvalidRequestError' do
-        expect { client.list(params) }.to raise_error(Uploadcare::InvalidRequestError, 'Bad Request')
+      it 'raises a RequestError' do
+        expect { client.list(params) }.to raise_error(Uploadcare::Exception::RequestError, 'Bad Request')
       end
     end
   end
@@ -103,8 +103,8 @@ RSpec.describe Uploadcare::GroupClient do
           .to_return(status: 404, body: { 'detail' => 'Not Found' }.to_json, headers: { 'Content-Type' => 'application/json' })
       end
 
-      it 'raises a NotFoundError' do
-        expect { client.info(uuid) }.to raise_error(Uploadcare::NotFoundError, 'Not Found')
+      it 'raises a RequestError' do
+        expect { client.info(uuid) }.to raise_error(Uploadcare::Exception::RequestError, 'Not Found')
       end
     end
   end

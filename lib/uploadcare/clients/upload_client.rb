@@ -220,7 +220,7 @@ module Uploadcare
         true
       rescue StandardError => e
         retries += 1
-        raise "Failed to upload part after #{max_retries} retries: #{e.message}" unless retries <= max_retries
+        raise "Failed to upload part after #{max_retries} retries: #{e.message}" unless retries < max_retries
 
         sleep(2**retries) # Exponential backoff
         retry

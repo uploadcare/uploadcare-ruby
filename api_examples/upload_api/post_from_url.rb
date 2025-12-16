@@ -1,17 +1,7 @@
 # frozen_string_literal: true
 
 require_relative '../../lib/uploadcare'
-
-# Load environment variables from .env file
-env_file = File.expand_path('../../.env', __dir__)
-if File.exist?(env_file)
-  File.readlines(env_file).each do |line|
-    next if line.start_with?('#') || line.strip.empty?
-
-    key, value = line.strip.split('=', 2)
-    ENV[key] = value if key && value
-  end
-end
+require 'dotenv/load'
 
 # Configure Uploadcare
 Uploadcare.configure do |config|

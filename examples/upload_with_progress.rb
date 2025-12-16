@@ -50,9 +50,9 @@ begin
 
     # Calculate speed and ETA
     elapsed = Time.now - start_time
-    speed_mbps = uploaded_mb / elapsed
+    speed_mbps = elapsed.positive? ? uploaded_mb / elapsed : 0
     remaining_mb = total_mb - uploaded_mb
-    eta_seconds = remaining_mb / speed_mbps if speed_mbps.positive?
+    eta_seconds = speed_mbps.positive? ? remaining_mb / speed_mbps : nil
 
     # Create progress bar
     bar_length = 40
@@ -78,7 +78,7 @@ begin
   puts "UUID: #{result.uuid}"
   puts "Filename: #{result.original_filename}"
   puts "Total time: #{elapsed.round(2)} seconds"
-  puts "Average speed: #{(file_size_mb / elapsed).round(2)} MB/s"
+  puts "Average speed: #{elapsed.positive? ? (file_size_mb / elapsed).round(2) : 0} MB/s"
   puts
   puts "CDN URL: https://ucarecdn.com/#{result.uuid}/"
 rescue StandardError => e

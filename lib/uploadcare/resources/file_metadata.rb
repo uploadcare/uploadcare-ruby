@@ -17,7 +17,7 @@ module Uploadcare
     # Retrieves metadata for the file
     # @return [Hash] The metadata keys and values for the file
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata/operation/_fileMetadata
-    # TODO - Remove uuid if the opeartion is being perfomed on same file
+    # TODO - Remove uuid if the operation is being performed on same file
     def index(uuid)
       response = @file_metadata_client.index(uuid)
       assign_attributes(response)
@@ -27,7 +27,7 @@ module Uploadcare
     # Updates metadata key's value
     # @return [String] The updated value of the metadata key
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata/operation/updateFileMetadataKey
-    # TODO - Remove uuid if the opeartion is being perfomed on same file
+    # TODO - Remove uuid if the operation is being performed on same file
     def update(uuid, key, value)
       @file_metadata_client.update(uuid, key, value)
     end
@@ -36,7 +36,7 @@ module Uploadcare
     # @param key [String] The metadata key to retrieve
     # @return [String] The value of the metadata key
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata/operation/fileMetadata
-    # TODO - Remove uuid if the opeartion is being perfomed on same file
+    # TODO - Remove uuid if the operation is being performed on same file
     def show(uuid, key)
       @file_metadata_client.show(uuid, key)
     end
@@ -44,7 +44,7 @@ module Uploadcare
     # Deletes a specific metadata key for the file
     # @param key [String] The metadata key to delete
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata/operation/deleteFileMetadata
-    # TODO - Remove uuid if the opeartion is being perfomed on same file
+    # TODO - Remove uuid if the operation is being performed on same file
     def delete(uuid, key)
       @file_metadata_client.delete(uuid, key)
     end
