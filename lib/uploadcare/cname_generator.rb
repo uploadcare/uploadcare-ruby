@@ -12,8 +12,8 @@ module Uploadcare
     class << self
       def cdn_base_postfix
         @cdn_base_postfix ||= begin
-          uri = URI.parse(Uploadcare.config.cdn_base_postfix)
-          uri.host = "#{custom_cname}.#{uri.host}"
+          uri = URI.parse(Uploadcare.configuration.cdn_base_postfix)
+          uri.host = "#{generate_cname}.#{uri.host}"
           uri.to_s
         rescue URI::InvalidURIError => e
           raise Uploadcare::Exception::ConfigurationError, "Invalid cdn_base_postfix URL: #{e.message}"
@@ -29,7 +29,7 @@ module Uploadcare
       # Generate CNAME prefix
       def custom_cname
         @custom_cname ||= begin
-          public_key = Uploadcare.config.public_key
+          public_key = Uploadcare.configuration.public_key
           raise Uploadcare::Exception::ConfigurationError, "Invalid public_key: #{public_key}" if public_key.nil?
 
           sha256_hex = Digest::SHA256.hexdigest(public_key)

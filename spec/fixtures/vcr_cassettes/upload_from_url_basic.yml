@@ -1,0 +1,58 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/from_url/
+    body:
+      encoding: UTF-8
+      string: pub_key=&source_url=https%3A%2F%2Fplacekitten.com%2F200%2F200&store
+    headers:
+      User-Agent:
+      - Faraday v2.13.1
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 403
+      message: Forbidden
+    headers:
+      Date:
+      - Fri, 06 Jun 2025 06:15:49 GMT
+      Content-Type:
+      - text/plain; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - OPTIONS, GET, POST
+      Access-Control-Allow-Headers:
+      - X-PINGOTHER, X-UC-User-Agent, DNT
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning, Retry-After
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - b005d352-00c0-4fe6-b145-70df83f740ad
+    body:
+      encoding: ASCII-8BIT
+      string: pub_key is required.
+  recorded_at: Fri, 06 Jun 2025 06:15:49 GMT
+recorded_with: VCR 6.3.1

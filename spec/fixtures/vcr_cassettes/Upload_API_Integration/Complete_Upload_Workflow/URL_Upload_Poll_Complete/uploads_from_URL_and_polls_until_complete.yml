@@ -1,0 +1,178 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/from_url/
+    body:
+      encoding: UTF-8
+      string: pub_key=<uploadcare_public_key>&source_url=https%3A%2F%2Fraw.githubusercontent.com%2Fuploadcare%2Fuploadcare-ruby%2Fmain%2Fspec%2Ffixtures%2Fkitten.jpeg&store=1
+    headers:
+      User-Agent:
+      - Faraday v2.14.0
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 25 Nov 2025 08:50:25 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - OPTIONS, GET, POST
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning, Retry-After
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Warning:
+      - '199 Miscellaneous warning: You should use secure requests to Uploadcare'
+      X-Uploadcare-Request-Id:
+      - 4b4a4247-6d7c-4533-9716-dae23f8ef5c2
+    body:
+      encoding: ASCII-8BIT
+      string: '{"type":"token","token":"97b15c86-c405-41c0-86a3-f8064ce1a01d"}'
+  recorded_at: Tue, 25 Nov 2025 08:50:25 GMT
+- request:
+    method: get
+    uri: https://upload.uploadcare.com/from_url/status/?token=97b15c86-c405-41c0-86a3-f8064ce1a01d
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v2.14.0
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      Content-Type:
+      - application/json
+      Authorization:
+      - Uploadcare.Simple <uploadcare_public_key>:<uploadcare_secret_key>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 25 Nov 2025 08:50:25 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning, Retry-After
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Warning:
+      - '199 Miscellaneous warning: You should use secure requests to Uploadcare'
+      X-Uploadcare-Request-Id:
+      - db3aca9c-ea01-4b1a-b850-e47b078f2ef5
+    body:
+      encoding: ASCII-8BIT
+      string: '{"size":1290,"total":1290,"done":1290,"uuid":"94601461-1c80-4004-8884-a41530f5df36","file_id":"94601461-1c80-4004-8884-a41530f5df36","original_filename":"kitten.jpeg","is_image":true,"is_stored":true,"image_info":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null},"video_info":null,"content_info":{"mime":{"mime":"image/jpeg","type":"image","subtype":"jpeg"},"image":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null}},"is_ready":true,"filename":"kitten.jpeg","mime_type":"image/jpeg","metadata":{},"status":"success"}'
+  recorded_at: Tue, 25 Nov 2025 08:50:25 GMT
+- request:
+    method: get
+    uri: https://upload.uploadcare.com/info/?file_id=94601461-1c80-4004-8884-a41530f5df36&pub_key=<uploadcare_public_key>
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v2.14.0
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      Content-Type:
+      - application/json
+      Authorization:
+      - Uploadcare.Simple <uploadcare_public_key>:<uploadcare_secret_key>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 25 Nov 2025 08:50:26 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, HEAD, OPTIONS
+      Access-Control-Allow-Headers:
+      - DNT, X-UC-User-Agent, X-PINGOTHER
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning, Retry-After
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Warning:
+      - '199 Miscellaneous warning: You should use secure requests to Uploadcare'
+      X-Uploadcare-Request-Id:
+      - 9af3df2b-e38a-4f57-8e59-6815150ccce2
+    body:
+      encoding: ASCII-8BIT
+      string: '{"size":1290,"total":1290,"done":1290,"uuid":"94601461-1c80-4004-8884-a41530f5df36","file_id":"94601461-1c80-4004-8884-a41530f5df36","original_filename":"kitten.jpeg","is_image":true,"is_stored":true,"image_info":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null},"video_info":null,"content_info":{"mime":{"mime":"image/jpeg","type":"image","subtype":"jpeg"},"image":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null}},"is_ready":true,"filename":"kitten.jpeg","mime_type":"image/jpeg","metadata":{}}'
+  recorded_at: Tue, 25 Nov 2025 08:50:26 GMT
+recorded_with: VCR 6.3.1

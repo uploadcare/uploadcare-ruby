@@ -54,33 +54,6 @@ And then execute:
 
     $ bundle
 
-You can also use it outside of Rails or other Apps.
-
-Install the gem directly:
-
-    $ gem install uploadcare-ruby
-
-Then in your Ruby code:
-
-```ruby
-require "uploadcare"
-
-Uploadcare.config.public_key = "your_public_key"
-Uploadcare.config.secret_key = "your_secret_key"
-
-# Example usage
-uuid = "file_uuid"
-puts Uploadcare::File.info(uuid).inspect
-```
-
-If you use `api_struct` gem in your project, replace it with `uploadcare-api_struct`:
-
-```ruby
-gem 'uploadcare-api_struct'
-```
-
-and run `bundle install`
-
 If already not, create your project in [Uploadcare dashboard](https://app.uploadcare.com/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby) and copy
 its [API keys](https://app.uploadcare.com/projects/-/api-keys/) from there.
 
@@ -93,12 +66,38 @@ export UPLOADCARE_SECRET_KEY=your_private_key
 
 Or configure your app yourself if you are using different way of storing keys.
 Gem configuration is available in `Uploadcare.configuration`. Full list of
-settings can be seen in [`lib/uploadcare.rb`](lib/uploadcare.rb)
+settings can be seen in [`lib/uploadcare/configuration.rb`](lib/uploadcare/configuration.rb)
 
 ```ruby
 # your_config_initializer_file.rb
-Uploadcare.config.public_key = "your_public_key"
-Uploadcare.config.secret_key = "your_private_key"
+Uploadcare.configuration.public_key = "your_public_key"
+Uploadcare.configuration.secret_key = "your_private_key"
+```
+
+### CDN Configuration
+
+Uploadcare supports custom CDN domains and automatic subdomain generation. You can configure these options:
+
+```ruby
+Uploadcare.configure do |config|
+  # Enable automatic subdomain generation (default: false)
+  config.use_subdomains = true
+
+  # Base domain for subdomain generation (default: 'https://ucarecd.net/')
+  config.cdn_base_postfix = 'https://ucarecd.net/'
+
+  # Default CDN base URL (default: 'https://ucarecdn.com/')
+  config.default_cdn_base = 'https://ucarecdn.com/'
+end
+
+# Get the generated CNAME for your account
+Uploadcare.configuration.custom_cname
+# => "a1b2c3d4e5" (10-character hash based on your public key)
+
+# Get the active CDN base (respects use_subdomains setting)
+Uploadcare.configuration.cdn_base.call
+# => "https://a1b2c3d4e5.ucarecd.net/" (if use_subdomains is true)
+# => "https://ucarecdn.com/" (if use_subdomains is false)
 ```
 
 ## Usage
@@ -135,8 +134,8 @@ Using Uploadcare is simple, and here are the basics of handling files.
 # => "https://demo.ucarecd.net/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
 #
 # With subdomains enabled:
-# Uploadcare.config.use_subdomains = true
-# => "https://a1b2c3d4e5.ucarecdn.net/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
+# Uploadcare.configuration.use_subdomains = true
+# => "https://a1b2c3d4e5.ucarecd.net/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
 ```
 
 The `store` option can have these possible values:
@@ -150,11 +149,11 @@ Your might then want to store or delete the uploaded file.
 ```ruby
 # that's how you store a file, if you have uploaded the file using store: false and changed your mind later
 @uc_file.store
-# => #<Uploadcare::Api::File ...
+# => #<Uploadcare::File ...
 
 # and that works for deleting it
 @uc_file.delete
-# => #<Uploadcare::Api::File ...
+# => #<Uploadcare::File ...
 ```
 
 #### Multiple ways to upload files
@@ -192,6 +191,160 @@ Uploadcare::Uploader.get_upload_from_url_status("1251ee66-3631-4416-a2fb-96ba59f
 ```
 
 In case of the `async` option is disabled, uploadcare-ruby tries to request the upload status several times (depending on the `max_request_tries` config param) and then returns uploaded file attributes.
+
+#### Direct Upload API Access
+
+For more control over the upload process, you can use the Upload API client directly:
+
+```ruby
+# Initialize the upload client
+upload_client = Uploadcare::UploadClient.new
+
+# Upload a file directly (supports files up to 100MB)
+file = File.open("image.jpg")
+response = upload_client.upload_file(file, store: 'auto')
+
+# Response contains file UUID and metadata
+puts response['uuid']
+# => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
+
+puts response['original_filename']
+# => "image.jpg"
+```
+
+The `upload_file` method supports the following options:
+- **store** - storage behavior: `true`, `false`, or `'auto'` (default)
+- **metadata** - custom metadata as a hash (e.g., `{ subsystem: 'avatars', user_id: '123' }`)
+- **signature** - upload signature for signed uploads (requires `expire` option)
+- **expire** - signature expiration timestamp (Unix timestamp)
+
+Example with metadata:
+
+```ruby
+upload_client.upload_file(
+  file,
+  store: true,
+  metadata: {
+    subsystem: 'user_uploads',
+    category: 'profile_pictures'
+  }
+)
+```
+
+##### Upload from URL
+
+You can upload files from remote URLs using the Upload API:
+
+```ruby
+upload_client = Uploadcare::UploadClient.new
+
+# Synchronous upload (waits for completion)
+response = upload_client.upload_from_url('https://example.com/image.jpg', store: true)
+puts response['uuid']
+# => "46e9ed64-1e4d-4c65-887f-1b8679a20a1e"
+
+# Asynchronous upload (returns immediately with a token)
+response = upload_client.upload_from_url('https://example.com/image.jpg', async: true)
+token = response['token']
+# => "b1c4e1dc-e63a-42a4-bb4c-7a25eef2ffdf"
+
+# Check upload status
+status = upload_client.upload_from_url_status(token)
+case status['status']
+when 'success'
+  puts "Upload complete: #{status['uuid']}"
+when 'progress'
+  puts "Upload in progress"
+when 'waiting'
+  puts "Upload queued"
+when 'error'
+  puts "Upload failed: #{status['error']}"
+end
+```
+
+The `upload_from_url` method supports the following options:
+- **async** - use async mode (default: `false`)
+- **store** - storage behavior: `true`, `false`, or `'auto'`
+- **check_URL_duplicates** - check for duplicate URLs: `'0'` or `'1'`
+- **save_URL_duplicates** - save URL duplicates: `'0'` or `'1'`
+- **metadata** - custom metadata as a hash
+- **poll_interval** - polling interval in seconds for sync mode (default: `1`)
+- **poll_timeout** - maximum polling time in seconds for sync mode (default: `300`)
+
+##### Multipart Upload
+
+For large files (>10MB), you can use multipart upload which splits the file into chunks and uploads them in parallel:
+
+```ruby
+upload_client = Uploadcare::UploadClient.new
+
+# Step 1: Start multipart upload
+file = File.open('large_video.mp4', 'rb')
+file_size = file.size
+filename = File.basename(file.path)
+content_type = 'video/mp4'
+
+response = upload_client.multipart_start(filename, file_size, content_type, store: true)
+upload_uuid = response['uuid']
+presigned_urls = response['parts']
+
+# Step 2: Upload each part
+presigned_urls.each_with_index do |presigned_url, index|
+  part_size = Uploadcare.configuration.multipart_chunk_size
+  file.seek(index * part_size)
+  part_data = file.read(part_size)
+
+  break if part_data.nil? || part_data.empty?
+
+  upload_client.multipart_upload_part(presigned_url, part_data)
+end
+
+# Step 3: Complete the upload
+response = upload_client.multipart_complete(upload_uuid)
+puts response['uuid']
+
+file.close
+```
+
+**High-Level Multipart Upload (Recommended)**:
+
+For convenience, use the `multipart_upload` method which handles the entire flow automatically:
+
+```ruby
+upload_client = Uploadcare::UploadClient.new
+file = File.open('large_video.mp4', 'rb')
+
+# Simple upload
+response = upload_client.multipart_upload(file, store: true)
+puts response['uuid']
+
+# With progress tracking
+upload_client.multipart_upload(file, store: true) do |progress|
+  percentage = (progress[:uploaded].to_f / progress[:total] * 100).round(2)
+  puts "Progress: #{percentage}% (Part #{progress[:part]}/#{progress[:total_parts]})"
+end
+
+# With parallel uploads (4 threads)
+upload_client.multipart_upload(file, store: true, threads: 4) do |progress|
+  puts "Uploaded #{progress[:uploaded]} / #{progress[:total]} bytes"
+end
+
+file.close
+```
+
+The `multipart_start` method supports the following options:
+- **part_size** - size of each part in bytes (default: 5MB)
+- **store** - storage behavior: `true`, `false`, or `'auto'`
+- **metadata** - custom metadata as a hash
+
+The `multipart_upload_part` method automatically retries failed uploads with exponential backoff:
+- **max_retries** - maximum number of retries (default: 3)
+
+The `multipart_upload` method supports:
+- **store** - storage behavior
+- **metadata** - custom metadata
+- **part_size** - size of each part
+- **threads** - number of parallel upload threads (default: 1)
 
 ```ruby
 # multipart upload - can be useful for files bigger than 10 mb
@@ -245,16 +398,192 @@ You can upload file with custom metadata, for example `subsystem` and `pet`:
 @api.upload_from_url(url, metadata: { subsystem: 'my_subsystem', pet: 'cat' })
 ```
 
-### File management
+#### Smart Upload with Progress Tracking
 
-Entities are representations of objects in Uploadcare cloud.
-
-#### File
-
-File entity contains its metadata. It also supports `include` param to include additional fields to the file object, such as: "appdata".
+The `Uploadcare::Uploader` module provides intelligent upload handling with automatic method selection based on file size and source type:
 
 ```ruby
-@file = Uploadcare::File.file("FILE_UUID", include: "appdata")
+# Upload a small file (< 10MB) - automatically uses base upload
+file = File.open('photo.jpg', 'rb')
+result = Uploadcare::Uploader.upload(file, store: true)
+puts result.uuid
+# => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
+
+# Upload a large file (>= 10MB) - automatically uses multipart upload with progress
+large_file = File.open('video.mp4', 'rb')
+result = Uploadcare::Uploader.upload(large_file, store: true) do |progress|
+  puts "Progress: #{progress[:percentage]}% (Part #{progress[:part]}/#{progress[:total_parts]})"
+end
+puts result.uuid
+
+# Upload from URL - automatically detected
+result = Uploadcare::Uploader.upload('https://example.com/image.jpg', store: true)
+puts result.uuid
+
+# Batch upload multiple files
+files = [
+  File.open('photo1.jpg', 'rb'),
+  File.open('photo2.jpg', 'rb')
+]
+results = Uploadcare::Uploader.upload(files, store: true)
+results.each { |file| puts file.uuid }
+```
+
+The `Uploader.upload` method automatically:
+- Detects URLs and uses `upload_from_url`
+- Chooses base upload for files < 10MB
+- Chooses multipart upload for files >= 10MB
+- Handles arrays for batch uploads
+- Supports progress callbacks for large files
+
+#### Advanced Upload Options
+
+For more control, you can use the `UploadClient` directly:
+
+```ruby
+upload_client = Uploadcare::UploadClient.new
+
+# Upload with custom metadata
+file = File.open('document.pdf', 'rb')
+response = upload_client.upload_file(file,
+  store: true,
+  metadata: {
+    subsystem: 'documents',
+    category: 'invoices',
+    user_id: '12345'
+  }
+)
+
+# Multipart upload with parallel threads and progress
+large_file = File.open('large_video.mp4', 'rb')
+response = upload_client.multipart_upload(large_file,
+  store: true,
+  threads: 4,  # Upload 4 parts in parallel
+  part_size: 10 * 1024 * 1024  # 10MB chunks
+) do |progress|
+  uploaded_mb = (progress[:uploaded] / 1024.0 / 1024.0).round(2)
+  total_mb = (progress[:total] / 1024.0 / 1024.0).round(2)
+  puts "Uploaded #{uploaded_mb}/#{total_mb} MB"
+end
+
+# URL upload with custom polling
+response = upload_client.upload_from_url(
+  'https://example.com/large-file.zip',
+  store: true,
+  poll_interval: 2,    # Check status every 2 seconds
+  poll_timeout: 600    # Wait up to 10 minutes
+)
+
+# Async URL upload (returns immediately with token)
+response = upload_client.upload_from_url(
+  'https://example.com/file.zip',
+  async: true
+)
+token = response['token']
+
+# Check status later
+status = upload_client.upload_from_url_status(token)
+case status['status']
+when 'success'
+  puts "Upload complete: #{status['uuid']}"
+when 'progress'
+  puts "Upload in progress: #{status['done']}/#{status['total']} bytes"
+when 'waiting'
+  puts "Upload queued"
+when 'error'
+  puts "Upload failed: #{status['error']}"
+end
+```
+
+#### Multipart Upload for Large Files
+
+For files >= 10MB, multipart upload is automatically used. You can also use it explicitly:
+
+```ruby
+upload_client = Uploadcare::UploadClient.new
+file = File.open('large_file.bin', 'rb')
+
+# Simple multipart upload
+response = upload_client.multipart_upload(file, store: true)
+
+# With progress tracking
+upload_client.multipart_upload(file, store: true) do |progress|
+  percentage = (progress[:uploaded].to_f / progress[:total] * 100).round(2)
+  puts "Progress: #{percentage}% - Part #{progress[:part]}/#{progress[:total_parts]}"
+end
+
+# With parallel uploads (faster for large files)
+upload_client.multipart_upload(file,
+  store: true,
+  threads: 4,  # Upload 4 parts simultaneously
+  metadata: { source: 'api', type: 'video' }
+) do |progress|
+  puts "Uploaded #{progress[:uploaded]} / #{progress[:total]} bytes"
+end
+
+file.close
+```
+
+**Multipart Upload Options:**
+- **store** - storage behavior: `true`, `false`, or `'auto'` (default)
+- **metadata** - custom metadata hash
+- **part_size** - size of each part in bytes (default: 5MB)
+- **threads** - number of parallel upload threads (default: 1, max: 10)
+
+**Progress Callback:**
+The progress block receives a hash with:
+- **:uploaded** - bytes uploaded so far
+- **:total** - total file size in bytes
+- **:percentage** - upload percentage (0-100)
+- **:part** - current part number
+- **:total_parts** - total number of parts
+
+#### Manual Multipart Upload Control
+
+For advanced use cases, you can control each step of the multipart upload:
+
+```ruby
+upload_client = Uploadcare::UploadClient.new
+file = File.open('large_file.bin', 'rb')
+
+# Step 1: Start multipart upload
+response = upload_client.multipart_start(
+  File.basename(file.path),
+  file.size,
+  'application/octet-stream',
+  store: true
+)
+upload_uuid = response['uuid']
+presigned_urls = response['parts']
+
+# Step 2: Upload each part
+presigned_urls.each_with_index do |url, index|
+  part_size = 5 * 1024 * 1024  # 5MB
+  file.seek(index * part_size)
+  part_data = file.read(part_size)
+  break if part_data.nil? || part_data.empty?
+
+  upload_client.multipart_upload_part(url, part_data)
+  puts "Uploaded part #{index + 1}/#{presigned_urls.length}"
+end
+
+# Step 3: Complete the upload
+response = upload_client.multipart_complete(upload_uuid)
+puts "Upload complete: #{response['uuid']}"
+
+file.close
+```
+
+### File management
+
+The File resource allows you to manage uploaded files, including storing, deleting, copying, and fetching file information.
+
+#### Fetching File Information
+
+```ruby
+# Fetch file information with optional inclusion of additional fields (e.g., appdata)
+@file = Uploadcare::File.new(uuid: "FILE_UUID")
+file_info = @file.info(include: "metadata")
 {
   "datetime_removed"=>nil,
   "datetime_stored"=>"2018-11-26T12:49:10.477888Z",
@@ -353,19 +682,86 @@ File entity contains its metadata. It also supports `include` param to include a
   }
 }
 
-@file.local_copy # copy file to local storage
+```
+#### Storing Files
 
-@file.remote_copy # copy file to remote storage
+# Store a single file
+``` ruby
+file = Uploadcare::File.new(uuid: "FILE_UUID")
+stored_file = file.store
 
-@file.store # stores file, returns updated metadata
-
-@file.delete #deletes file. Returns updated metadata
+puts stored_file.datetime_stored
+# => "2024-11-05T09:13:40.543471Z"
 ```
 
-The File object is also can be converted if it is a document or a video file. Imagine, you have a document file:
+# Batch store files using their UUIDs
+``` ruby
+uuids = ['uuid1', 'uuid2', 'uuid3']
+batch_result = Uploadcare::File.batch_store(uuids)
+```
+
+# Check the status of the operation
+``` ruby
+puts batch_result.status # => "success"
+```
+
+# Access successfully stored files
+``` ruby
+batch_result.result.each do |file|
+  puts file.uuid
+end
+```
+
+# Handle files that encountered issues
+``` ruby
+unless batch_result.problems.empty?
+  batch_result.problems.each do |uuid, error|
+    puts "Failed to store file #{uuid}: #{error}"
+  end
+end
+```
+
+#### Deleting Files
+
+# Delete a single file
+```ruby
+file = Uploadcare::File.new(uuid: "FILE_UUID")
+deleted_file = file.delete
+puts deleted_file.datetime_removed
+# => "2024-11-05T09:13:40.543471Z"
+```
+
+# Batch delete multiple files
+```ruby
+uuids = ['FILE_UUID_1', 'FILE_UUID_2']
+result = Uploadcare::File.batch_delete(uuids)
+puts result.result
+```
+
+#### Copying Files
+
+# Copy a file to local storage
+```ruby
+source = '1bac376c-aa7e-4356-861b-dd2657b5bfd2'
+file = Uploadcare::File.local_copy(source, store: true)
+
+puts file.uuid
+# => "new-uuid-of-the-copied-file"
+```
+
+# Copy a file to remote storage
+```ruby
+source_object = '1bac376c-aa7e-4356-861b-dd2657b5bfd2'
+target = 'custom_storage_connected_to_the_project'
+file = Uploadcare::File.remote_copy(source_object, target, make_public: true)
+
+puts file
+# => "https://my-storage.example.com/path/to/copied-file"
+```
+The File object also can be converted if it is a document or a video file. Imagine, you have a document file:
 
 ```ruby
-@file = Uploadcare::File.file("FILE_UUID")
+@file = Uploadcare::File.new(uuid: "FILE_UUID")
 ```
 
 To convert it to an another file, just do:
@@ -406,25 +802,20 @@ Metadata of deleted files is stored permanently.
 
 #### FileList
 
-`Uploadcare::FileList` represents the whole collection of files (or it's
-subset) and provides a way to iterate through it, making pagination transparent.
-FileList objects can be created using `Uploadcare::FileList.file_list` method.
+`Uploadcare::File.list` retrieves a collection of files from Uploadcare, supporting optional filtering and pagination. It provides methods to iterate through the collection and access associated file objects seamlessly.
 
 ```ruby
-@list = Uploadcare::FileList.file_list
-# Returns instance of Uploadcare::Entity::FileList
-<Hashie::Mash
-  next=nil
-  per_page=100
-  previous=nil
-  results=[
-    # Array of Entity::File
-  ]
-  total=8>
-# load last page of files
-@files = @list.files
-# load all files
-@all_files = @list.load
+# Retrieve a list of files
+options = {
+  limit: 10,                    # Controls the number of files returned (default: 100)
+  stored: true,                 # Only include stored files (optional)
+  removed: false,               # Exclude removed files (optional)
+  ordering: '-datetime_uploaded', # Order by latest uploaded files first
+  from: '2022-01-01T00:00:00'   # Start from this point in the collection
+}
+
+@file_list = Uploadcare::File.list(options)
+# => Returns an instance of PaginatedCollection containing Uploadcare::File objects
 ```
 
 This method accepts some options to control which files should be fetched and
@@ -447,7 +838,7 @@ options = {
   ordering: "-datetime_uploaded",
   from: "2017-01-01T00:00:00",
 }
-@list = @api.file_list(options)
+@list = Uploadcare::File.list(options)
 ```
 
 To simply get all associated objects:
@@ -458,10 +849,9 @@ To simply get all associated objects:
 
 #### Pagination
 
-Initially, `FileList` is a paginated collection. It can be navigated using following methods:
-
+Initially, `File.list` returns a paginated collection. It can be navigated using following methods:
 ```ruby
-  @file_list = Uploadcare::FileList.file_list
+  @file_list = Uploadcare::File.list
   # Let's assume there are 250 files in cloud. By default, UC loads 100 files. To get next 100 files, do:
   @next_page = @file_list.next_page
   # To get previous page:
@@ -512,10 +902,12 @@ That's a requirement of our API.
 Uploadcare::Group.store(group.id)
 
 # get a file group by its ID.
-Uploadcare::Group.rest_info(group.id)
+@group = Uploadcare::Group.new(uuid: "Group UUID")
+@group.info("Group UUID")
 
 # group can be deleted by group ID.
-Uploadcare::Group.delete(group.id)
+@group = Uploadcare::Group.new(uuid: "Group UUID")
+@group.delete("Group UUID")
 # Note: This operation only removes the group object itself. All the files that were part of the group are left as is.
 
 # Returns group's CDN URL
@@ -528,11 +920,10 @@ Uploadcare::Group.delete(group.id)
 ```
 
 #### GroupList
-
-`GroupList` is a list of `Group`
+`Group.list` returns a list of `Group`
 
 ```ruby
-@group_list = Uploadcare::GroupList.list
+@group_list = Uploadcare::Group.list
 # To get an array of groups:
 @groups = @group_list.all
 ```
@@ -580,7 +971,7 @@ Using the `Uploadcare::Param::WebhookSignatureVerifier` class example:
 signing_secret = "12345X"
 x_uc_signature_header = "v1=9b31c7dd83fdbf4a2e12b19d7f2b9d87d547672a325b9492457292db4f513c70"
 
-Uploadcare::Param::WebhookSignatureVerifier.valid?(signing_secret: signing_secret, x_uc_signature_header: x_uc_signature_header, webhook_body: webhook_body)
+Uploadcare::WebhookSignatureVerifier.valid?(signing_secret: signing_secret, x_uc_signature_header: x_uc_signature_header, webhook_body: webhook_body)
 ```
 
 You can write your verifier. Example code:
@@ -611,10 +1002,10 @@ An `Add-On` is an application implemented by Uploadcare that accepts uploaded fi
 ```ruby
 # Execute AWS Rekognition Add-On for a given target to detect labels in an image.
 # Note: Detected labels are stored in the file's appdata.
-Uploadcare::Addons.ws_rekognition_detect_labels('FILE_UUID')
+Uploadcare::AddOns.aws_rekognition_detect_labels('FILE_UUID')
 
 # Check the status of AWS Rekognition.
-Uploadcare::Addons.ws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_LABELS')
+Uploadcare::AddOns.aws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_LABELS')
 ```
 
 ##### AWS Rekognition Moderation
@@ -623,48 +1014,48 @@ Uploadcare::Addons.ws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKO
 # Execute AWS Rekognition Moderation Add-On for a given target to detect moderation labels in an image.
 # Note: Detected moderation labels are stored in the file's appdata.
 
-Uploadcare::Addons.ws_rekognition_detect_moderation_labels('FILE_UUID')
+Uploadcare::AddOns.aws_rekognition_detect_moderation_labels('FILE_UUID')
 
 # Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
-Uploadcare::Addons.ws_rekognition_detect_moderation_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_MODERATION_LABELS')
+Uploadcare::AddOns.aws_rekognition_detect_moderation_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_MODERATION_LABELS')
 ```
 
 ##### ClamAV
 
 ```ruby
 # ClamAV virus checking Add-On for a given target.
-Uploadcare::Addons.uc_clamav_virus_scan('FILE_UUID')
+Uploadcare::AddOns.uc_clamav_virus_scan('FILE_UUID')
 
 # Check and purge infected file.
-Uploadcare::Addons.uc_clamav_virus_scan('FILE_UUID', purge_infected: true )
+Uploadcare::AddOns.uc_clamav_virus_scan('FILE_UUID', purge_infected: true )
 
 # Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
-Uploadcare::Addons.uc_clamav_virus_scan_status('RETURNED_ID_FROM_UC_CLAMAV_VIRUS_SCAN')
+Uploadcare::AddOns.uc_clamav_virus_scan_status('RETURNED_ID_FROM_UC_CLAMAV_VIRUS_SCAN')
 ```
 
 ##### Remove.bg
 
 ```ruby
 # Execute remove.bg background image removal Add-On for a given target.
-Uploadcare::Addons.remove_bg('FILE_UUID')
+Uploadcare::AddOns.remove_bg('FILE_UUID')
 
 # You can pass optional parameters.
 # See the full list of parameters here: https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/removeBgExecute
-Uploadcare::Addons.remove_bg('FILE_UUID', crop: true, type_level: '2')
+Uploadcare::AddOns.remove_bg('FILE_UUID', crop: true, type_level: '2')
 
 # Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
-Uploadcare::Addons.remove_bg_status('RETURNED_ID_FROM_REMOVE_BG')
+Uploadcare::AddOns.remove_bg_status('RETURNED_ID_FROM_REMOVE_BG')
 ```
 
 #### Project
 
-`Project` provides basic info about the connected Uploadcare project. That
+`show` provides basic info about the connected Uploadcare project. That
 object is also an Hashie::Mash, so every methods out of
 [these](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/projectInfo) will work.
 
 ```ruby
-@project = Uploadcare::Project.project
-# => #<Uploadcare::Api::Project collaborators=[], name="demo", pub_key="your_public_key", autostore_enabled=true>
+@project = Uploadcare::Project.show
+# => #<Uploadcare::Project collaborators=[], name="demo", pub_key="your_public_key", autostore_enabled=true>
 
 @project.name
 # => "demo"
