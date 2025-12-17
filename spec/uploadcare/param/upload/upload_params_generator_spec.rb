@@ -16,6 +16,13 @@ module Uploadcare
           expect(params['UPLOADCARE_PUB_KEY']).not_to be_nil
           expect(params['UPLOADCARE_STORE']).not_to be_nil
         end
+
+        it 'generates upload params with signature if sign_uploads is true' do
+          Uploadcare.config.sign_uploads = true
+          params = subject.call
+          expect(params['signature']).not_to be_nil
+          expect(params['expire']).not_to be_nil
+        end
       end
     end
   end
