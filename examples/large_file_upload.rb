@@ -18,6 +18,13 @@ Uploadcare.configure do |config|
   config.secret_key = ENV.fetch('UPLOADCARE_SECRET_KEY', nil)
 end
 
+# Validate required configuration
+unless Uploadcare.configuration.public_key
+  puts 'Error: UPLOADCARE_PUBLIC_KEY environment variable is required'
+  puts 'Please set UPLOADCARE_PUBLIC_KEY=your_public_key in your environment or .env file'
+  exit 1
+end
+
 # Get file path and optional thread count
 file_path = ARGV[0]
 threads = (ARGV[1] || 4).to_i

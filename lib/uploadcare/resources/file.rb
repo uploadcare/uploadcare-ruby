@@ -190,7 +190,8 @@ module Uploadcare
       # If initialized from URL, extract UUID
       if @url
         extracted_uuid = @url.gsub('https://ucarecdn.com/', '')
-        extracted_uuid.gsub(%r{/.*}, '')
+        extracted_uuid.gsub!(%r{/.*}, '')
+        extracted_uuid
       else
         @uuid
       end
