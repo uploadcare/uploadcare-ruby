@@ -658,10 +658,10 @@ module Uploadcare
     def parse_success_response(response)
       # response.body is already parsed by JSON middleware
       return {} if response.body.nil? || (response.body.is_a?(String) && response.body.strip.empty?)
-      
+
       # If it's already a Hash (from JSON middleware), return it directly
       return response.body if response.body.is_a?(Hash)
-      
+
       # Otherwise parse it (for backward compatibility)
       JSON.parse(response.body)
     end

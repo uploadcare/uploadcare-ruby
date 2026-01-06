@@ -2,37 +2,34 @@
 
 module Uploadcare
   module ErrorHandler
-
     # Catches failed API errors
     # Raises errors instead of returning falsey objects
     def handle_error(error)
       response = error.response
       catch_upload_errors(response)
-      parsed_response = JSON.parse(response[:body].to_s)
-      error_message = parsed_response['detail'] || parsed_response.map { |k, v| "#{k}: #{v}" }.join('; ')
-      
-      # Raise specific error types based on HTTP status code
-      case response[:status]
-      when 400
-        raise Exception::InvalidRequestError, error_message
-      when 404
-        raise Exception::NotFoundError, error_message
-      else
-        raise Exception::RequestError, error_message
-      end
-    rescue JSON::ParserError
-      # For non-JSON responses, still check status code
-      case response[:status]
-      when 400
-        raise Exception::InvalidRequestError, response[:body].to_s
-      when 404
-        raise Exception::NotFoundError, response[:body].to_s
-      else
-        raise Exception::RequestError, response[:body].to_s
-      end
+
+      error_message = extract_error_message(response)
+      raise_status_error(response[:status], error_message)
     end
 
     private
+
+    # Extract error message from response body
+    def extract_error_message(response)
+      parsed = JSON.parse(response[:body].to_s)
+      parsed['detail'] || parsed.map { |k, v| "#{k}: #{v}" }.join('; ')
+    rescue JSON::ParserError
+      response[:body].to_s
+    end
+
+    # Raise appropriate error based on HTTP status code
+    def raise_status_error(status, message)
+      case status
+      when 400 then raise Exception::InvalidRequestError, message
+      when 404 then raise Exception::NotFoundError, message
+      else raise Exception::RequestError, message
+      end
+    end
 
     # Upload API returns its errors with code 200, and stores its actual code and details within response message
     # This methods detects that and raises apropriate error

@@ -15,10 +15,6 @@ module Uploadcare
   @loader.collapse("#{__dir__}/uploadcare/clients")
   @loader.setup
   
-  # Trigger loading of exception classes for backward compatibility
-  # This ensures InvalidRequestError and NotFoundError are available at top level
-  Exception::RequestError if true
-
   class << self
     def configure
       yield configuration if block_given?
