@@ -35,7 +35,7 @@ wrapping Upload and REST APIs.
 
 ## Requirements
 
-- ruby 3.0+
+- Ruby 3.3+ (compatible with Rails main)
 
 ## Compatibility
 
