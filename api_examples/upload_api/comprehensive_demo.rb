@@ -134,8 +134,8 @@ begin
   files.each(&:close)
 
   print_success("Batch upload successful (#{results.length} files)")
-  results.each_with_index do |file, i|
-    puts "  File #{i + 1}: #{file.uuid} (#{file.original_filename})"
+  results.each_with_index do |uploaded_file, i|
+    puts "  File #{i + 1}: #{uploaded_file.uuid} (#{uploaded_file.original_filename})"
   end
 rescue StandardError => e
   print_error('Batch upload failed', e)
