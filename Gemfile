@@ -6,6 +6,7 @@ source 'https://rubygems.org'
 gem 'base64'
 gem 'bigdecimal'
 gem 'mutex_m'
+gem 'cgi'  # Required for Ruby 4.0+ compatibility
 
 gem 'byebug'
 gem 'rake'
