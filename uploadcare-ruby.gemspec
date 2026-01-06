@@ -43,7 +43,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 3.0'  # Tested with Ruby 3.0 through 4.0
+  spec.required_ruby_version = '>= 3.0' # Tested with Ruby 3.0 through 4.0
 
   spec.add_dependency 'addressable', '~> 2.8'
   spec.add_dependency 'faraday', '~> 2.12'
