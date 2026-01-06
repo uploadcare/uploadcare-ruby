@@ -14,7 +14,7 @@ module Uploadcare
   @loader.collapse("#{__dir__}/uploadcare/resources")
   @loader.collapse("#{__dir__}/uploadcare/clients")
   @loader.setup
-  
+
   class << self
     def configure
       yield configuration if block_given?
