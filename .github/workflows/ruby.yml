@@ -48,7 +48,5 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
-    - name: Install Rubocop
-      run: gem install rubocop
     - name: Check codestyle
-      run: rubocop
+      run: bundle exec rubocop

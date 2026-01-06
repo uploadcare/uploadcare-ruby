@@ -250,7 +250,8 @@ module Uploadcare
       elsif converter.respond_to?(:convert)
         converter.convert(params, options, @config)
       else
-        raise "Converter #{converter.name} does not respond to convert_document or convert"
+        raise Uploadcare::Exception::ConversionError,
+              "Converter #{converter.name} does not respond to convert_document or convert"
       end
     end
 

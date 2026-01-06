@@ -22,10 +22,13 @@ module Uploadcare
       @connection = Faraday.new(url: config.upload_api_root) do |conn|
         conn.request :multipart
         conn.request :url_encoded
-        conn.adapter Faraday.default_adapter
 
         # Add response middleware
+        conn.response :json, content_type: /\bjson$/
+        conn.response :raise_error
         conn.response :logger if ENV['DEBUG']
+
+        conn.adapter Faraday.default_adapter
       end
     end
 
@@ -220,7 +223,10 @@ module Uploadcare
         true
       rescue StandardError => e
         retries += 1
-        raise "Failed to upload part after #{max_retries} retries: #{e.message}" unless retries <= max_retries
+        unless retries <= max_retries
+          raise Uploadcare::Exception::MultipartUploadError,
+                "Failed to upload part after #{max_retries} retries: #{e.message}"
+        end
 
         sleep(2**retries) # Exponential backoff
         retry
@@ -278,7 +284,7 @@ module Uploadcare
     #   client.multipart_upload(file, store: true) do |progress|
     #     puts "Uploaded #{progress[:uploaded]} / #{progress[:total]} bytes"
     #   end
-    def multipart_upload(file, options = {}, &block)
+    def multipart_upload(file, options = {}, &)
       raise ArgumentError, 'file must be a File or IO object' unless file.respond_to?(:read)
 
       # Get file information
@@ -296,9 +302,9 @@ module Uploadcare
       threads = options.fetch(:threads, 1)
 
       if threads > 1
-        upload_parts_parallel(file, presigned_urls, part_size, threads, &block)
+        upload_parts_parallel(file, presigned_urls, part_size, threads, &)
       else
-        upload_parts_sequential(file, presigned_urls, part_size, &block)
+        upload_parts_sequential(file, presigned_urls, part_size, &)
       end
 
       # Complete the upload
@@ -482,14 +488,17 @@ module Uploadcare
         when 'success'
           return status
         when 'error'
-          raise "Upload from URL failed: #{status['error']}"
+          raise Uploadcare::Exception::UploadError, "Upload from URL failed: #{status['error']}"
         when 'waiting', 'progress'
           elapsed = Time.now - start_time
-          raise "Upload from URL polling timed out after #{poll_timeout} seconds" if elapsed > poll_timeout
+          if elapsed > poll_timeout
+            raise Uploadcare::Exception::UploadTimeoutError,
+                  "Upload from URL polling timed out after #{poll_timeout} seconds"
+          end
 
           sleep(poll_interval)
         else
-          raise "Unknown upload status: #{status['status']}"
+          raise Uploadcare::Exception::UnknownStatusError, "Unknown upload status: #{status['status']}"
         end
       end
     end
@@ -542,7 +551,10 @@ module Uploadcare
         req.body = data
       end
 
-      raise "Failed to upload part: HTTP #{response.status}" unless response.status >= 200 && response.status < 300
+      unless response.status >= 200 && response.status < 300
+        raise Uploadcare::Exception::MultipartUploadError,
+              "Failed to upload part: HTTP #{response.status}"
+      end
 
       response
     end
@@ -597,23 +609,32 @@ module Uploadcare
       # Add parts to queue
       parts.each { |part| queue << part }
 
+      # Track errors from threads
+      errors = []
+
       # Create worker threads
       workers = threads.times.map do
         Thread.new do
           until queue.empty?
             part = begin
               queue.pop(true)
-            rescue StandardError
+            rescue ThreadError
+              # Queue is empty, exit cleanly
               nil
             end
             next unless part
 
-            multipart_upload_part(part[:url], part[:data])
+            begin
+              multipart_upload_part(part[:url], part[:data])
 
-            mutex.synchronize do
-              uploaded += part[:data].bytesize
-              block&.call({ uploaded: uploaded, total: total_size, part: part[:index] + 1,
-                            total_parts: parts.length })
+              mutex.synchronize do
+                uploaded += part[:data].bytesize
+                block&.call({ uploaded: uploaded, total: total_size, part: part[:index] + 1,
+                              total_parts: parts.length })
+              end
+            rescue StandardError => e
+              mutex.synchronize { errors << e }
+              raise # Re-raise to terminate thread
             end
           end
         end
@@ -621,6 +642,9 @@ module Uploadcare
 
       # Wait for all threads to complete
       workers.each(&:join)
+
+      # Check for errors and raise the first one
+      raise errors.first if errors.any?
     end
 
     def success_response?(response)
@@ -628,12 +652,17 @@ module Uploadcare
     end
 
     def handle_error_response(response)
-      raise "Upload API error: #{response.status} #{response.body}"
+      raise Uploadcare::Exception::UploadError, "Upload API error: #{response.status} #{response.body}"
     end
 
     def parse_success_response(response)
-      return {} if response.body.nil? || response.body.strip.empty?
-
+      # response.body is already parsed by JSON middleware
+      return {} if response.body.nil? || (response.body.is_a?(String) && response.body.strip.empty?)
+      
+      # If it's already a Hash (from JSON middleware), return it directly
+      return response.body if response.body.is_a?(Hash)
+      
+      # Otherwise parse it (for backward compatibility)
       JSON.parse(response.body)
     end
 
@@ -682,9 +711,12 @@ module Uploadcare
 
     # Handle Faraday-specific errors
     def handle_faraday_error(error)
-      raise "HTTP #{error.response[:status]}: #{error.response[:body]}" if error.response
+      if error.response
+        raise Uploadcare::Exception::RequestError,
+              "HTTP #{error.response[:status]}: #{error.response[:body]}"
+      end
 
-      raise "Network error: #{error.message}"
+      raise Uploadcare::Exception::RequestError, "Network error: #{error.message}"
     end
 
     def form_data_for(file, params)

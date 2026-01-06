@@ -70,9 +70,9 @@ module Uploadcare
     # @param file [File]
     # @param [Hash] options options for upload
     # @option options [Boolean] :store whether to store file on servers.
-    def self.multipart_upload(file, options = {}, &block)
+    def self.multipart_upload(file, options = {}, &)
       multipart_uploader_client = Uploadcare::MultipartUploaderClient.new(Uploadcare.configuration)
-      response = multipart_uploader_client.upload(file, options, &block)
+      response = multipart_uploader_client.upload(file, options, &)
 
       # Handle both current API response format and v4.4.3 Dry::Monads format
       if response.respond_to?(:success)

@@ -1,5 +1,72 @@
 # Changelog
 
+## 5.0.0 — 2026-01-06
+
+### ⚠️ BREAKING CHANGES
+This is a major rewrite with significant architectural changes. Please review the migration guide below.
+
+### Changed - Architecture Overhaul
+* **Complete rewrite from entity-based to resource-based architecture**
+  * Replaced `entity/` classes with simpler `resources/` pattern
+  * Restructured client layer from `client/` to `clients/` directory
+  * Removed param builders in favor of integrated client logic
+  * Changed module structure and namespacing
+
+### Added - New Features
+* **Zeitwerk autoloading** for modern Ruby module management
+* **Smart upload detection** with automatic method selection based on file size/type
+* **Enhanced multipart upload** with parallel processing support
+* **Progress tracking** for all upload operations with real-time callbacks
+* **Batch upload capabilities** with error handling per file
+* **Thread-safe upload operations** with configurable concurrency
+* **New exception classes** for better error handling:
+  * `UploadError`, `UploadTimeoutError`, `MultipartUploadError`, `UnknownStatusError`
+* **Comprehensive examples** in `/examples` directory
+* **Integration tests** with full end-to-end workflow coverage
+
+### Changed - Ruby Version Support
+* **Minimum Ruby version**: Now requires Ruby 3.3+ (compatible with Rails main)
+* **Supported versions**: Ruby 3.3, 3.4, and 4.0
+* **Removed support**: Ruby 3.0, 3.1, 3.2 (EOL or nearing EOL)
+
+### Fixed
+* JSON response parsing in UploadClient
+* Thread safety in parallel uploads with proper error aggregation
+* Rubocop configuration to match gemspec Ruby version requirement
+* Constant name collision between module and class Uploader
+
+### Removed
+* Old entity system (`entity/` directory)
+* Param builders (`param/` directory)
+* Legacy concern system
+* Support for Ruby < 3.3
+
+### Migration Guide from v4.x to v5.0
+
+#### Module Changes
+```ruby
+# Old (v4.x)
+Uploadcare::Entity::File
+Uploadcare::Client::FileClient
+
+# New (v5.0)
+Uploadcare::File
+Uploadcare::FileClient
+```
+
+#### Upload API Changes
+```ruby
+# Old (v4.x)
+Uploadcare::Uploader.upload_from_url(url)
+
+# New (v5.0) - Smart detection
+Uploadcare::Uploader.upload(url)  # Automatically detects URL
+Uploadcare::Uploader.upload(file) # Automatically uses multipart for large files
+```
+
+#### Configuration Changes
+Configuration remains largely compatible, but now uses a centralized `Configuration` class with better defaults and validation.
+
 ## 4.5.0 — 2025-07-25
 ### Added
 * **CDN Subdomain Support**: Added support for automatic subdomain generation to improve CDN performance and caching.

@@ -51,7 +51,8 @@ module Uploadcare
     def delete_webhook(target_url)
       # v4.4.3 compatible: sends target_url in request body as JSON
       payload = { target_url: target_url }
-      del('/webhooks/unsubscribe/', payload)
+      # Call parent class delete method directly
+      RestClient.instance_method(:delete).bind(self).call('/webhooks/unsubscribe/', payload)
     end
   end
 end

@@ -129,7 +129,7 @@ module Uploadcare
 
           expect do
             described_class.upload('nonexistent.jpg')
-          end.to raise_error(RuntimeError, /Upload API error/)
+          end.to raise_error(Uploadcare::Exception::RequestError, /Invalid URL/)
         end
       end
 

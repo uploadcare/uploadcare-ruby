@@ -18,8 +18,8 @@ module Uploadcare
       @resource_class = params[:resource_class]
     end
 
-    def each(&block)
-      @resources.each(&block)
+    def each(&)
+      @resources.each(&)
     end
 
     # Fetches the next page of resources

@@ -2,7 +2,6 @@
 
 module Uploadcare
   module ErrorHandler
-    include Exception
 
     # Catches failed API errors
     # Raises errors instead of returning falsey objects
@@ -10,9 +9,27 @@ module Uploadcare
       response = error.response
       catch_upload_errors(response)
       parsed_response = JSON.parse(response[:body].to_s)
-      raise RequestError, parsed_response['detail'] || parsed_response.map { |k, v| "#{k}: #{v}" }.join('; ')
+      error_message = parsed_response['detail'] || parsed_response.map { |k, v| "#{k}: #{v}" }.join('; ')
+      
+      # Raise specific error types based on HTTP status code
+      case response[:status]
+      when 400
+        raise Exception::InvalidRequestError, error_message
+      when 404
+        raise Exception::NotFoundError, error_message
+      else
+        raise Exception::RequestError, error_message
+      end
     rescue JSON::ParserError
-      raise RequestError, response[:body].to_s
+      # For non-JSON responses, still check status code
+      case response[:status]
+      when 400
+        raise Exception::InvalidRequestError, response[:body].to_s
+      when 404
+        raise Exception::NotFoundError, response[:body].to_s
+      else
+        raise Exception::RequestError, response[:body].to_s
+      end
     end
 
     private
@@ -24,7 +41,7 @@ module Uploadcare
 
       parsed_response = JSON.parse(response[:body].to_s)
       error = parsed_response['error'] if parsed_response.is_a?(Hash)
-      raise RequestError, error if error
+      raise Exception::RequestError, error if error
     end
   end
 end

@@ -45,7 +45,7 @@ module Uploadcare
       make_request(:put, path, params, headers)
     end
 
-    def del(path, params = {}, headers = {})
+    def delete(path, params = {}, headers = {})
       make_request(:delete, path, params, headers)
     end
 

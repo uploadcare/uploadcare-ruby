@@ -35,7 +35,7 @@ module Uploadcare
     # @return [Nil] Returns nil on successful deletion
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata/operation/deleteFileMetadata
     def delete(uuid, key)
-      del("/files/#{uuid}/metadata/#{key}/")
+      super("/files/#{uuid}/metadata/#{key}/")
     end
   end
 end

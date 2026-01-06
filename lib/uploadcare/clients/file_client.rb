@@ -21,7 +21,7 @@ module Uploadcare
     # @return [Hash] The response body containing the deleted file details
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/deleteFileStorage
     def delete(uuid)
-      del("/files/#{uuid}/storage/")
+      super("/files/#{uuid}/storage/")
     end
 
     # Get file information by its UUID (immutable).
@@ -45,7 +45,8 @@ module Uploadcare
     # @return [Hash] The response body containing 'result' and 'problems'
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/filesDelete
     def batch_delete(uuids)
-      del('/files/storage/', uuids)
+      # Call parent class delete method directly
+      RestClient.instance_method(:delete).bind(self).call('/files/storage/', uuids)
     end
 
     # Copies a file to local storage

@@ -13,13 +13,13 @@ module Uploadcare
 
     # Upload a big file by splitting it into parts and sending those parts into assigned buckets
     # object should be File
-    def upload(object, options = {}, &block)
+    def upload(object, options = {}, &)
       response = upload_start(object, options)
       return response unless response['parts'] && response['uuid']
 
       links = response['parts']
       uuid = response['uuid']
-      upload_chunks(object, links, &block)
+      upload_chunks(object, links, &)
       upload_complete(uuid)
 
       # Return the uuid in a consistent format

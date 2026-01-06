@@ -23,7 +23,7 @@ module Uploadcare
     # @return [NilClass] Returns nil on successful deletion
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Group/operation/deleteGroup
     def delete(uuid)
-      del("/groups/#{uuid}/")
+      super("/groups/#{uuid}/")
     end
   end
 end

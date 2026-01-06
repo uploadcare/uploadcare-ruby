@@ -131,7 +131,7 @@ RSpec.describe Uploadcare::File do
       subject { described_class.batch_delete(uuids) }
 
       before do
-        allow_any_instance_of(Uploadcare::FileClient).to receive(:del).with('/files/storage/', uuids).and_return(response_body)
+        allow_any_instance_of(Uploadcare::FileClient).to receive(:batch_delete).with(uuids).and_return(response_body)
       end
 
       it { is_expected.to be_a(Uploadcare::BatchFileResult) }
