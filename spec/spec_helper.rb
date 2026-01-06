@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
-require 'dry/monads'
-require 'api_struct'
 require 'byebug'
 require 'webmock/rspec'
 require 'uploadcare'
@@ -19,5 +17,14 @@ RSpec.configure do |config|
 
   config.expect_with :rspec do |c|
     c.syntax = :expect
+  end
+
+  config.before(:all) do
+    Uploadcare.configure do |c|
+      c.public_key = ENV.fetch('UPLOADCARE_PUBLIC_KEY', 'demopublickey')
+      c.secret_key = ENV.fetch('UPLOADCARE_SECRET_KEY', 'demosecretkey')
+      c.auth_type = 'Uploadcare.Simple'
+      c.rest_api_root = 'https://api.uploadcare.com'
+    end
   end
 end

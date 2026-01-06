@@ -1,0 +1,62 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://upload.uploadcare.com/info/?file_id=test-uuid-123&pub_key=
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v2.13.1
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      Content-Type:
+      - application/json
+      Authorization:
+      - Uploadcare :70bf9b13037858bde85585a7af916396955ee723
+      Date:
+      - Fri, 06 Jun 2025 06:15:49 GMT
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 403
+      message: Forbidden
+    headers:
+      Date:
+      - Fri, 06 Jun 2025 06:15:50 GMT
+      Content-Type:
+      - text/plain; charset=utf-8
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, HEAD, OPTIONS
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning, Retry-After
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 2b3bb037-a417-4208-b438-38d7325d3a47
+    body:
+      encoding: ASCII-8BIT
+      string: pub_key is required.
+  recorded_at: Fri, 06 Jun 2025 06:15:50 GMT
+recorded_with: VCR 6.3.1

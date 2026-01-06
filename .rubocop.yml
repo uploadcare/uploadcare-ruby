@@ -1,6 +1,7 @@
 AllCops:
   NewCops: enable
   TargetRubyVersion: 3.0
+  SuggestExtensions: false
 
 Layout/LineLength:
   Max: 120
@@ -10,24 +11,47 @@ Layout/LineLength:
 Lint/IneffectiveAccessModifier:
   Enabled: false
 
-Style/HashTransformKeys:
-  Exclude:
-    - 'lib/uploadcare/entity/decorator/paginator.rb'
-    - 'lib/uploadcare/client/conversion/video_conversion_client.rb'
-    - 'lib/uploadcare/entity/file.rb'
-
 Metrics/BlockLength:
   Exclude:
     - 'bin/'
     - 'spec/**/*'
     - 'uploadcare-ruby.gemspec'
 
+Metrics/ClassLength:
+  Max: 100
+  Exclude:
+    - 'lib/uploadcare/clients/upload_client.rb'  # Complex upload logic with 9 endpoints
+    - 'lib/uploadcare/resources/file.rb'  # Pre-existing file resource with many methods
+    - 'lib/uploadcare/uploader.rb'  # Uploader module with multiple upload strategies
+
 Metrics/ModuleLength:
+  Max: 100
   Exclude:
     - 'spec/**/*'
+    - 'lib/uploadcare/uploader.rb'  # Uploader module with multiple upload strategies
 
 Metrics/MethodLength:
   Max: 20
+  Exclude:
+    - 'lib/uploadcare/clients/upload_client.rb'  # Parallel upload requires coordination logic
+    - 'lib/uploadcare/uploader.rb'  # Parallel upload coordination
+
+Metrics/AbcSize:
+  Max: 17
+  Exclude:
+    - 'lib/uploadcare/clients/upload_client.rb'  # Upload methods have multiple parameters and validations
+    - 'lib/uploadcare/uploader.rb'  # Parallel upload coordination
+
+Metrics/CyclomaticComplexity:
+  Max: 7
+  Exclude:
+    - 'lib/uploadcare/clients/upload_client.rb'  # Upload logic has multiple conditional paths
+    - 'lib/uploadcare/uploader.rb'  # Parallel upload coordination
+
+Metrics/PerceivedComplexity:
+  Max: 8
+  Exclude:
+    - 'lib/uploadcare/clients/upload_client.rb'  # Parallel upload coordination is inherently complex
 
 Style/Documentation:
   Enabled: false
