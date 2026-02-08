@@ -33,6 +33,7 @@ module Uploadcare
 
           def metadata(options:)
             return {} if options[:metadata].nil?
+            raise ArgumentError, 'metadata must be a hash' unless options[:metadata].is_a?(Hash)
 
             options[:metadata].each_with_object({}) do |(k, v), res|
               res.merge!("metadata[#{k}]" => v.to_s)

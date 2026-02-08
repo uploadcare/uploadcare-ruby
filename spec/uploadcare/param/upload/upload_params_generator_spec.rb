@@ -53,6 +53,6 @@ RSpec.describe Uploadcare::Param::Upload::UploadParamsGenerator do
 
     expect do
       described_class.call(options: { metadata: 'nope' }, config: config)
-    end.to raise_error(NoMethodError)
+    end.to raise_error(ArgumentError, 'metadata must be a hash')
   end
 end

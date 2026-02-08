@@ -22,6 +22,8 @@ module Uploadcare
     # @raise [Uploadcare::Exception::RequestError] for other error statuses
     def handle_error(error)
       response = error.response
+      return raise Exception::RequestError, error.message if response.nil?
+
       catch_upload_errors(response)
 
       error_message = extract_error_message(response)
