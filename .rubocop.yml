@@ -1,6 +1,10 @@
+plugins:
+  - rubocop-rspec
+
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 3.3
+  SuggestExtensions: false
 
 Layout/LineLength:
   Max: 120
@@ -10,24 +14,61 @@ Layout/LineLength:
 Lint/IneffectiveAccessModifier:
   Enabled: false
 
-Style/HashTransformKeys:
-  Exclude:
-    - 'lib/uploadcare/entity/decorator/paginator.rb'
-    - 'lib/uploadcare/client/conversion/video_conversion_client.rb'
-    - 'lib/uploadcare/entity/file.rb'
-
 Metrics/BlockLength:
   Exclude:
     - 'bin/'
     - 'spec/**/*'
     - 'uploadcare-ruby.gemspec'
 
+Metrics/ClassLength:
+  Max: 100
+  Exclude:
+    - 'lib/uploadcare/clients/upload_client.rb'  # Complex upload logic with 9 endpoints
+    - 'lib/uploadcare/clients/multipart_uploader_client.rb'
+    - 'lib/uploadcare/resources/file.rb'  # Pre-existing file resource with many methods
+    - 'lib/uploadcare/uploader.rb'  # Uploader module with multiple upload strategies
+
 Metrics/ModuleLength:
+  Max: 100
   Exclude:
     - 'spec/**/*'
+    - 'lib/uploadcare/uploader.rb'  # Uploader module with multiple upload strategies
 
 Metrics/MethodLength:
   Max: 20
+  Exclude:
+    - 'lib/uploadcare/clients/upload_client.rb'  # Parallel upload requires coordination logic
+    - 'lib/uploadcare/clients/multipart_uploader_client.rb'
+    - 'lib/uploadcare/clients/uploader_client.rb'
+    - 'lib/uploadcare/uploader.rb'  # Parallel upload coordination
+
+Metrics/AbcSize:
+  Max: 17
+  Exclude:
+    - 'lib/uploadcare/clients/upload_client.rb'  # Upload methods have multiple parameters and validations
+    - 'lib/uploadcare/clients/multipart_uploader_client.rb'
+    - 'lib/uploadcare/clients/uploader_client.rb'
+    - 'lib/uploadcare/uploader.rb'  # Parallel upload coordination
+
+Metrics/CyclomaticComplexity:
+  Max: 7
+  Exclude:
+    - 'lib/uploadcare/clients/upload_client.rb'  # Upload logic has multiple conditional paths
+    - 'lib/uploadcare/clients/multipart_uploader_client.rb'
+    - 'lib/uploadcare/clients/uploader_client.rb'
+    - 'lib/uploadcare/uploader.rb'  # Parallel upload coordination
+
+Metrics/PerceivedComplexity:
+  Max: 8
+  Exclude:
+    - 'lib/uploadcare/clients/upload_client.rb'  # Parallel upload coordination is inherently complex
+    - 'lib/uploadcare/clients/multipart_uploader_client.rb'
+    - 'lib/uploadcare/clients/uploader_client.rb'
+
+Metrics/ParameterLists:
+  Exclude:
+    - 'lib/uploadcare/clients/rest_client.rb'
+    - 'lib/uploadcare/clients/upload_client.rb'
 
 Style/Documentation:
   Enabled: false
@@ -38,3 +79,81 @@ Style/OptionalBooleanParameter:
 Style/FrozenStringLiteralComment:
   Exclude:
     - 'api_examples/**/*'
+
+RSpec/ContextWording:
+  Prefixes:
+    - when
+    - with
+    - without
+    - if
+    - unless
+    - for
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/DescribedClass:
+  Enabled: false
+
+RSpec/DescribeClass:
+  Enabled: false
+
+RSpec/ExpectActual:
+  Enabled: false
+
+RSpec/AnyInstance:
+  Enabled: false
+
+RSpec/SpecFilePathFormat:
+  Enabled: false
+
+RSpec/LeadingSubject:
+  Enabled: false
+
+RSpec/EmptyLineAfterExample:
+  Enabled: false
+
+RSpec/EmptyLineAfterFinalLet:
+  Enabled: false
+
+RSpec/EmptyLineAfterExampleGroup:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/IteratedExpectation:
+  Enabled: false
+
+RSpec/BeEq:
+  Enabled: false
+
+RSpec/StubbedMock:
+  Enabled: false
+
+RSpec/EmptyLineAfterHook:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+RSpec/ReceiveMessages:
+  Enabled: false
+
+RSpec/HookArgument:
+  Enabled: false
+
+RSpec/ClassCheck:
+  Enabled: false

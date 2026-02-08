@@ -1,0 +1,59 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/multipart/start/
+    body:
+      encoding: UTF-8
+      string: UPLOADCARE_PUB_KEY=<uploadcare_public_key>&UPLOADCARE_STORE=1&content_type=image%2Fjpeg&filename=big.jpeg&part_size=5242880&size=10487050
+    headers:
+      User-Agent:
+      - Faraday v2.14.0
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 400
+      message: Bad Request
+    headers:
+      Date:
+      - Tue, 25 Nov 2025 08:44:37 GMT
+      Content-Type:
+      - text/plain; charset=utf-8
+      Content-Length:
+      - '32'
+      Connection:
+      - keep-alive
+      Server:
+      - nginx
+      Vary:
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - POST, OPTIONS
+      Access-Control-Allow-Headers:
+      - X-PINGOTHER, DNT, X-UC-User-Agent
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning, Retry-After
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Warning:
+      - '199 Miscellaneous warning: You should use secure requests to Uploadcare'
+      X-Uploadcare-Request-Id:
+      - 6cd73d4c-cca8-48fb-a306-4adae6d8bf5d
+    body:
+      encoding: UTF-8
+      string: File size exceeds project limit.
+  recorded_at: Tue, 25 Nov 2025 08:44:38 GMT
+recorded_with: VCR 6.3.1

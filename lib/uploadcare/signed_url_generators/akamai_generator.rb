@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'openssl'
 require_relative 'base_generator'
 
 module Uploadcare
@@ -41,7 +42,6 @@ module Uploadcare
         end
       end
 
-      # Delimiter sanitization referenced from: https://github.com/uploadcare/pyuploadcare/blob/main/pyuploadcare/secure_url.py#L74
       def sanitized_delimiter_path(path)
         sanitized_string(path).gsub('~') { |escape_char| "%#{escape_char.ord.to_s(16).downcase}" }
       end
@@ -56,13 +56,11 @@ module Uploadcare
         OpenSSL::HMAC.hexdigest(algorithm, secret_key_bin, signature)
       end
 
-      # rubocop:disable Style/SlicingWithRange
       def sanitized_string(string)
-        string = string[1..-1] if string[0] == '/'
+        string = string[1..] if string[0] == '/'
         string = string[0...-1] if string[-1] == '/'
         string.strip
       end
-      # rubocop:enable Style/SlicingWithRange
     end
   end
 end

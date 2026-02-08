@@ -1,0 +1,183 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/base/
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        LS0tLS0tLS0tLS0tLVJ1YnlNdWx0aXBhcnRQb3N0LTE1NGQxYmUzMWYxNmUwOWQ3NjdmYjliMTgwNWYyMGFmDQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3JtLWRhdGE7IG5hbWU9IlVQTE9BRENBUkVfUFVCX0tFWSINCg0KPHVwbG9hZGNhcmVfcHVibGljX2tleT4NCi0tLS0tLS0tLS0tLS1SdWJ5TXVsdGlwYXJ0UG9zdC0xNTRkMWJlMzFmMTZlMDlkNzY3ZmI5YjE4MDVmMjBhZg0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJVUExPQURDQVJFX1NUT1JFIg0KDQoxDQotLS0tLS0tLS0tLS0tUnVieU11bHRpcGFydFBvc3QtMTU0ZDFiZTMxZjE2ZTA5ZDc2N2ZiOWIxODA1ZjIwYWYNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0ia2l0dGVuLmpwZWciOyBmaWxlbmFtZT0ia2l0dGVuLmpwZWciDQpDb250ZW50LUxlbmd0aDogMTI5MA0KQ29udGVudC1UeXBlOiBpbWFnZS9qcGVnDQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBiaW5hcnkNCg0K/9j/4AAQSkZJRgABAQEAYABgAAD//gA7Q1JFQVRPUjogZ2QtanBlZyB2MS4wICh1c2luZyBJSkcgSlBFRyB2NjIpLCBxdWFsaXR5ID0gNjUK/9sAQwALCAgKCAcLCgkKDQwLDREcEhEPDxEiGRoUHCkkKyooJCcnLTJANy0wPTAnJzhMOT1DRUhJSCs2T1VORlRAR0hF/9sAQwEMDQ0RDxEhEhIhRS4nLkVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVF/8AAEQgAMgAyAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/aAAwDAQACEQMRAD8A0NG0zT9HMxEpuTKQSZ8HbjPTjjrWsNQtYx8ojH0AFeXG6uVJ3XZYEdCaTzpn5e4cAf3WNa+1S2RHIz1Z9USJQWbaGGR71C2vQLjMy/nXOT3MElhbQTI0peFDtGQSMdc9j70ltoOhzhXzdn2aUfl0qVW7o0lSa2Z2VtdpeWizIwZSSMik3Zdcehqlp4htIPslrCI7eMkrhiSSTzVpf9ch/wBk/wBKUpc2qJScdGWB0FFOC8CioGeEAMWOHxkdSakAlxjhvYV1MXh1ncIqFj2461fPhAxANcSRJ6rnLfkBVOFtwTuSlVfSdOvGyN1usRJ/2cj+lVNMaW7uyJLT7PAvCMGzkeua3prmzm01LGJdqQAKg78f1rIuSblIoomKbSMgZGcH2rNpJ6mid9DZ0y4mZ5EuYPJdWIXnO5exrWVvnU+x/pVAbjHbSMMEkqRj2q1v2uh9j/SrS90zbuzSH3R9KKjWQbR9KKQGPdSR6baeZGuJJOAfQVzdzqEr73Ry2MYrV8S3XlyiNSPlG0DsBXNxyAKUBBY9mPalOV3c0hGysSJPvcOpIZjhh/Wr1sWjmUN61mFTCxKBiO49KdFqJjnRJBuPY+1ZX7luPY7V5B5EA7Bs/pTJ7hI0V3YKo7k4qCaQDT7aUHIZ+Pyqhq77rS3HrMv863XwmD3NX+2bUcGbp/sn/CirIlOBRVcpJyniUn7ZJz61hwcu2eeDRRXPI6Yktu7CWMBjgr61Lq4AhiYDBz1ooqeg+pvREnw9Y8n/AFn9DTb/AP497b/rsv8AOiiuiPwGEviNnJ9aKKK0IP/ZDQotLS0tLS0tLS0tLS0tUnVieU11bHRpcGFydFBvc3QtMTU0ZDFiZTMxZjE2ZTA5ZDc2N2ZiOWIxODA1ZjIwYWYtLQ0K
+    headers:
+      User-Agent:
+      - Faraday v2.14.0
+      Content-Type:
+      - multipart/form-data; boundary=-----------RubyMultipartPost-154d1be31f16e09d767fb9b1805f20af
+      Content-Length:
+      - '1853'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 25 Nov 2025 08:44:49 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - POST, OPTIONS
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning, Retry-After
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Warning:
+      - '199 Miscellaneous warning: You should use secure requests to Uploadcare'
+      X-Uploadcare-Request-Id:
+      - cab5be4e-3e64-4b76-af22-8d68c7a0ee19
+    body:
+      encoding: ASCII-8BIT
+      string: '{"kitten.jpeg":"2acb91ea-76a5-45cf-8f2f-3a6ead6ec663"}'
+  recorded_at: Tue, 25 Nov 2025 08:44:49 GMT
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/base/
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        LS0tLS0tLS0tLS0tLVJ1YnlNdWx0aXBhcnRQb3N0LTQwNmJmOTYyNDYwZWFiYjRmNWJmNDI2N2M5YmI5OTQ5DQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3JtLWRhdGE7IG5hbWU9IlVQTE9BRENBUkVfUFVCX0tFWSINCg0KPHVwbG9hZGNhcmVfcHVibGljX2tleT4NCi0tLS0tLS0tLS0tLS1SdWJ5TXVsdGlwYXJ0UG9zdC00MDZiZjk2MjQ2MGVhYmI0ZjViZjQyNjdjOWJiOTk0OQ0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJVUExPQURDQVJFX1NUT1JFIg0KDQoxDQotLS0tLS0tLS0tLS0tUnVieU11bHRpcGFydFBvc3QtNDA2YmY5NjI0NjBlYWJiNGY1YmY0MjY3YzliYjk5NDkNCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0ia2l0dGVuLmpwZWciOyBmaWxlbmFtZT0ia2l0dGVuLmpwZWciDQpDb250ZW50LUxlbmd0aDogMTI5MA0KQ29udGVudC1UeXBlOiBpbWFnZS9qcGVnDQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBiaW5hcnkNCg0K/9j/4AAQSkZJRgABAQEAYABgAAD//gA7Q1JFQVRPUjogZ2QtanBlZyB2MS4wICh1c2luZyBJSkcgSlBFRyB2NjIpLCBxdWFsaXR5ID0gNjUK/9sAQwALCAgKCAcLCgkKDQwLDREcEhEPDxEiGRoUHCkkKyooJCcnLTJANy0wPTAnJzhMOT1DRUhJSCs2T1VORlRAR0hF/9sAQwEMDQ0RDxEhEhIhRS4nLkVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVF/8AAEQgAMgAyAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/aAAwDAQACEQMRAD8A0NG0zT9HMxEpuTKQSZ8HbjPTjjrWsNQtYx8ojH0AFeXG6uVJ3XZYEdCaTzpn5e4cAf3WNa+1S2RHIz1Z9USJQWbaGGR71C2vQLjMy/nXOT3MElhbQTI0peFDtGQSMdc9j70ltoOhzhXzdn2aUfl0qVW7o0lSa2Z2VtdpeWizIwZSSMik3Zdcehqlp4htIPslrCI7eMkrhiSSTzVpf9ch/wBk/wBKUpc2qJScdGWB0FFOC8CioGeEAMWOHxkdSakAlxjhvYV1MXh1ncIqFj2461fPhAxANcSRJ6rnLfkBVOFtwTuSlVfSdOvGyN1usRJ/2cj+lVNMaW7uyJLT7PAvCMGzkeua3prmzm01LGJdqQAKg78f1rIuSblIoomKbSMgZGcH2rNpJ6mid9DZ0y4mZ5EuYPJdWIXnO5exrWVvnU+x/pVAbjHbSMMEkqRj2q1v2uh9j/SrS90zbuzSH3R9KKjWQbR9KKQGPdSR6baeZGuJJOAfQVzdzqEr73Ry2MYrV8S3XlyiNSPlG0DsBXNxyAKUBBY9mPalOV3c0hGysSJPvcOpIZjhh/Wr1sWjmUN61mFTCxKBiO49KdFqJjnRJBuPY+1ZX7luPY7V5B5EA7Bs/pTJ7hI0V3YKo7k4qCaQDT7aUHIZ+Pyqhq77rS3HrMv863XwmD3NX+2bUcGbp/sn/CirIlOBRVcpJyniUn7ZJz61hwcu2eeDRRXPI6Yktu7CWMBjgr61Lq4AhiYDBz1ooqeg+pvREnw9Y8n/AFn9DTb/AP497b/rsv8AOiiuiPwGEviNnJ9aKKK0IP/ZDQotLS0tLS0tLS0tLS0tUnVieU11bHRpcGFydFBvc3QtNDA2YmY5NjI0NjBlYWJiNGY1YmY0MjY3YzliYjk5NDktLQ0K
+    headers:
+      User-Agent:
+      - Faraday v2.14.0
+      Content-Type:
+      - multipart/form-data; boundary=-----------RubyMultipartPost-406bf962460eabb4f5bf4267c9bb9949
+      Content-Length:
+      - '1853'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 25 Nov 2025 08:44:49 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - POST, OPTIONS
+      Access-Control-Allow-Headers:
+      - X-PINGOTHER, DNT, X-UC-User-Agent
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning, Retry-After
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Warning:
+      - '199 Miscellaneous warning: You should use secure requests to Uploadcare'
+      X-Uploadcare-Request-Id:
+      - ea8ae6a1-47d8-4899-b3a7-fae22805522e
+    body:
+      encoding: ASCII-8BIT
+      string: '{"kitten.jpeg":"3779068f-4bff-4a95-b74c-bd7fb1d65efc"}'
+  recorded_at: Tue, 25 Nov 2025 08:44:49 GMT
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/base/
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        LS0tLS0tLS0tLS0tLVJ1YnlNdWx0aXBhcnRQb3N0LTU3NGViZTMwNGIyNDVlNDNmOTI0ZTVkZDMyMmEyZDAxDQpDb250ZW50LURpc3Bvc2l0aW9uOiBmb3JtLWRhdGE7IG5hbWU9IlVQTE9BRENBUkVfUFVCX0tFWSINCg0KPHVwbG9hZGNhcmVfcHVibGljX2tleT4NCi0tLS0tLS0tLS0tLS1SdWJ5TXVsdGlwYXJ0UG9zdC01NzRlYmUzMDRiMjQ1ZTQzZjkyNGU1ZGQzMjJhMmQwMQ0KQ29udGVudC1EaXNwb3NpdGlvbjogZm9ybS1kYXRhOyBuYW1lPSJVUExPQURDQVJFX1NUT1JFIg0KDQoxDQotLS0tLS0tLS0tLS0tUnVieU11bHRpcGFydFBvc3QtNTc0ZWJlMzA0YjI0NWU0M2Y5MjRlNWRkMzIyYTJkMDENCkNvbnRlbnQtRGlzcG9zaXRpb246IGZvcm0tZGF0YTsgbmFtZT0ia2l0dGVuLmpwZWciOyBmaWxlbmFtZT0ia2l0dGVuLmpwZWciDQpDb250ZW50LUxlbmd0aDogMTI5MA0KQ29udGVudC1UeXBlOiBpbWFnZS9qcGVnDQpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBiaW5hcnkNCg0K/9j/4AAQSkZJRgABAQEAYABgAAD//gA7Q1JFQVRPUjogZ2QtanBlZyB2MS4wICh1c2luZyBJSkcgSlBFRyB2NjIpLCBxdWFsaXR5ID0gNjUK/9sAQwALCAgKCAcLCgkKDQwLDREcEhEPDxEiGRoUHCkkKyooJCcnLTJANy0wPTAnJzhMOT1DRUhJSCs2T1VORlRAR0hF/9sAQwEMDQ0RDxEhEhIhRS4nLkVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVFRUVF/8AAEQgAMgAyAwEiAAIRAQMRAf/EAB8AAAEFAQEBAQEBAAAAAAAAAAABAgMEBQYHCAkKC//EALUQAAIBAwMCBAMFBQQEAAABfQECAwAEEQUSITFBBhNRYQcicRQygZGhCCNCscEVUtHwJDNicoIJChYXGBkaJSYnKCkqNDU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6g4SFhoeIiYqSk5SVlpeYmZqio6Slpqeoqaqys7S1tre4ubrCw8TFxsfIycrS09TV1tfY2drh4uPk5ebn6Onq8fLz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAABAgMEBQYHCAkKC//EALURAAIBAgQEAwQHBQQEAAECdwABAgMRBAUhMQYSQVEHYXETIjKBCBRCkaGxwQkjM1LwFWJy0QoWJDThJfEXGBkaJicoKSo1Njc4OTpDREVGR0hJSlNUVVZXWFlaY2RlZmdoaWpzdHV2d3h5eoKDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uLj5OXm5+jp6vLz9PX29/j5+v/aAAwDAQACEQMRAD8A0NG0zT9HMxEpuTKQSZ8HbjPTjjrWsNQtYx8ojH0AFeXG6uVJ3XZYEdCaTzpn5e4cAf3WNa+1S2RHIz1Z9USJQWbaGGR71C2vQLjMy/nXOT3MElhbQTI0peFDtGQSMdc9j70ltoOhzhXzdn2aUfl0qVW7o0lSa2Z2VtdpeWizIwZSSMik3Zdcehqlp4htIPslrCI7eMkrhiSSTzVpf9ch/wBk/wBKUpc2qJScdGWB0FFOC8CioGeEAMWOHxkdSakAlxjhvYV1MXh1ncIqFj2461fPhAxANcSRJ6rnLfkBVOFtwTuSlVfSdOvGyN1usRJ/2cj+lVNMaW7uyJLT7PAvCMGzkeua3prmzm01LGJdqQAKg78f1rIuSblIoomKbSMgZGcH2rNpJ6mid9DZ0y4mZ5EuYPJdWIXnO5exrWVvnU+x/pVAbjHbSMMEkqRj2q1v2uh9j/SrS90zbuzSH3R9KKjWQbR9KKQGPdSR6baeZGuJJOAfQVzdzqEr73Ry2MYrV8S3XlyiNSPlG0DsBXNxyAKUBBY9mPalOV3c0hGysSJPvcOpIZjhh/Wr1sWjmUN61mFTCxKBiO49KdFqJjnRJBuPY+1ZX7luPY7V5B5EA7Bs/pTJ7hI0V3YKo7k4qCaQDT7aUHIZ+Pyqhq77rS3HrMv863XwmD3NX+2bUcGbp/sn/CirIlOBRVcpJyniUn7ZJz61hwcu2eeDRRXPI6Yktu7CWMBjgr61Lq4AhiYDBz1ooqeg+pvREnw9Y8n/AFn9DTb/AP497b/rsv8AOiiuiPwGEviNnJ9aKKK0IP/ZDQotLS0tLS0tLS0tLS0tUnVieU11bHRpcGFydFBvc3QtNTc0ZWJlMzA0YjI0NWU0M2Y5MjRlNWRkMzIyYTJkMDEtLQ0K
+    headers:
+      User-Agent:
+      - Faraday v2.14.0
+      Content-Type:
+      - multipart/form-data; boundary=-----------RubyMultipartPost-574ebe304b245e43f924e5dd322a2d01
+      Content-Length:
+      - '1853'
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Tue, 25 Nov 2025 08:44:49 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - POST, OPTIONS
+      Access-Control-Allow-Headers:
+      - X-PINGOTHER, DNT, X-UC-User-Agent
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning, Retry-After
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      Warning:
+      - '199 Miscellaneous warning: You should use secure requests to Uploadcare'
+      X-Uploadcare-Request-Id:
+      - 69191c27-d10b-4347-b267-d6bfff1017b0
+    body:
+      encoding: ASCII-8BIT
+      string: '{"kitten.jpeg":"dcd5bcba-9db9-4fd0-9188-d1a80a32d5dc"}'
+  recorded_at: Tue, 25 Nov 2025 08:44:49 GMT
+recorded_with: VCR 6.3.1

@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'uploadcare/concern/throttle_handler'
 
 module Uploadcare
-  RSpec.describe Concerns::ThrottleHandler do
-    include Concerns::ThrottleHandler
+  RSpec.describe ThrottleHandler do
+    include ThrottleHandler
 
     def sleep(_time); end
 
@@ -14,7 +13,7 @@ module Uploadcare
     let(:throttler) do
       lambda do
         @called += 1
-        raise ThrottleError if @called < 3
+        raise Uploadcare::Exception::ThrottleError if @called < 3
 
         "Throttler has been called #{@called} times"
       end
@@ -25,6 +24,24 @@ module Uploadcare
         result = handle_throttling { throttler.call }
 
         expect(result).to eq 'Throttler has been called 3 times'
+      end
+
+      context 'when max attempts exceeded' do
+        let(:always_throttle) do
+          lambda do
+            raise Uploadcare::Exception::ThrottleError, 0.01
+          end
+        end
+
+        before do
+          allow(Uploadcare.configuration).to receive(:max_throttle_attempts).and_return(2)
+        end
+
+        it 'raises ThrottleError after max attempts' do
+          expect do
+            handle_throttling { always_throttle.call }
+          end.to raise_error(Uploadcare::Exception::ThrottleError)
+        end
       end
     end
   end

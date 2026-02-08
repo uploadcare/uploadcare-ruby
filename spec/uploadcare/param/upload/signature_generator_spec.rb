@@ -1,27 +1,27 @@
 # frozen_string_literal: true
 
-# @see https://uploadcare.com/docs/api_reference/upload/signed_uploads/
+require 'digest'
 
-require 'spec_helper'
-require 'param/upload/signature_generator'
+RSpec.describe Uploadcare::Param::Upload::SignatureGenerator do
+  it 'returns signature and expire' do
+    allow(Time).to receive(:now).and_return(Time.at(1000))
+    config = Uploadcare::Configuration.new(secret_key: 'secret', upload_signature_lifetime: 30)
 
-module Uploadcare
-  module Param
-    module Upload
-      RSpec.describe Uploadcare::Param::Upload::SignatureGenerator do
-        let!(:expires_at) { 1_454_903_856 }
-        let!(:expected_result) { { signature: '46f70d2b4fb6196daeb2c16bf44a7f1e', expire: expires_at } }
+    result = described_class.call(config: config)
 
-        before do
-          allow(Time).to receive(:now).and_return(expires_at - (60 * 30))
-          Uploadcare.config.secret_key = 'project_secret_key'
-        end
+    expect(result[:expire]).to eq(1030)
+    expected_signature = Digest::MD5.hexdigest('secret1030')
+    expect(result[:signature]).to eq(expected_signature)
+  end
 
-        it 'generates body params needed for signing uploads' do
-          signature_body = SignatureGenerator.call
-          expect(signature_body).to eq expected_result
-        end
-      end
-    end
+  it 'handles nil secret key' do
+    allow(Time).to receive(:now).and_return(Time.at(1000))
+    config = Uploadcare::Configuration.new(secret_key: nil, upload_signature_lifetime: 30)
+
+    result = described_class.call(config: config)
+
+    expect(result[:expire]).to eq(1030)
+    expected_signature = Digest::MD5.hexdigest('1030')
+    expect(result[:signature]).to eq(expected_signature)
   end
 end

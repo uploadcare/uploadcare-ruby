@@ -1,5 +1,7 @@
-require 'uploadcare'
-Uploadcare.config.public_key = 'YOUR_PUBLIC_KEY'
-Uploadcare.config.secret_key = 'YOUR_SECRET_KEY'
+require_relative '../../lib/uploadcare'
+require 'dotenv/load'
+Uploadcare.configuration.public_key = ENV.fetch('UPLOADCARE_PUBLIC_KEY', 'YOUR_PUBLIC_KEY')
+Uploadcare.configuration.secret_key = ENV.fetch('UPLOADCARE_SECRET_KEY', 'YOUR_SECRET_KEY')
 
-puts Uploadcare::File.delete('1bac376c-aa7e-4356-861b-dd2657b5bfd2')
+file = Uploadcare::File.info(uuid: '1bac376c-aa7e-4356-861b-dd2657b5bfd2')
+puts file.delete

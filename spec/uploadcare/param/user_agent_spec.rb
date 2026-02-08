@@ -1,22 +1,20 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
-require 'param/user_agent'
+RSpec.describe Uploadcare::Param::UserAgent do
+  it 'builds user agent string with framework data' do
+    config = Uploadcare::Configuration.new(public_key: 'pub', framework_data: 'Rails/8.0.0')
+    result = described_class.call(config: config)
 
-module Uploadcare
-  RSpec.describe Param::UserAgent do
-    subject { Param::UserAgent }
+    expect(result).to include('UploadcareRuby/')
+    expect(result).to include('/pub (Ruby/')
+    expect(result).to include('; Rails/8.0.0')
+  end
 
-    it 'contains gem version' do
-      user_agent_string = subject.call
-      expect(user_agent_string).to include(Uploadcare::VERSION)
-    end
+  it 'builds user agent string without framework data' do
+    config = Uploadcare::Configuration.new(public_key: 'pub', framework_data: '')
+    result = described_class.call(config: config)
 
-    it 'contains framework data when it is specified' do
-      Uploadcare.config.framework_data = 'Rails'
-      expect(subject.call).to include('; Rails')
-      Uploadcare.config.framework_data = ''
-      expect(subject.call).not_to include(';')
-    end
+    expect(result).to include('/pub (Ruby/')
+    expect(result).not_to include('; ')
   end
 end

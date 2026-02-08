@@ -1,22 +1,58 @@
 # frozen_string_literal: true
 
-# @see https://uploadcare.com/docs/api_reference/upload/signed_uploads/
+RSpec.describe Uploadcare::Param::Upload::UploadParamsGenerator do
+  it 'builds params with metadata' do
+    config = Uploadcare::Configuration.new(public_key: 'pub')
+    params = described_class.call(options: { metadata: { foo: 'bar' } }, config: config)
 
-require 'spec_helper'
-require 'param/upload/upload_params_generator'
+    expect(params['UPLOADCARE_PUB_KEY']).to eq('pub')
+    expect(params['metadata[foo]']).to eq('bar')
+  end
 
-module Uploadcare
-  module Param
-    module Upload
-      RSpec.describe Uploadcare::Param::Upload::UploadParamsGenerator do
-        subject { Uploadcare::Param::Upload::UploadParamsGenerator }
+  it 'adds signature when enabled' do
+    config = Uploadcare::Configuration.new(public_key: 'pub', sign_uploads: true)
+    allow(Uploadcare::Param::Upload::SignatureGenerator).to receive(:call).and_return({ signature: 'sig', expire: 123 })
 
-        it 'generates basic upload params headers' do
-          params = subject.call
-          expect(params['UPLOADCARE_PUB_KEY']).not_to be_nil
-          expect(params['UPLOADCARE_STORE']).not_to be_nil
-        end
-      end
-    end
+    params = described_class.call(options: {}, config: config)
+
+    expect(params['signature']).to eq('sig')
+    expect(params['expire']).to eq(123)
+  end
+
+  it 'sets store to 1 for true' do
+    config = Uploadcare::Configuration.new(public_key: 'pub')
+    params = described_class.call(options: { store: true }, config: config)
+
+    expect(params['UPLOADCARE_STORE']).to eq('1')
+  end
+
+  it 'sets store to 0 for false' do
+    config = Uploadcare::Configuration.new(public_key: 'pub')
+    params = described_class.call(options: { store: false }, config: config)
+
+    expect(params['UPLOADCARE_STORE']).to eq('0')
+  end
+
+  it 'uses explicit signature params when provided' do
+    config = Uploadcare::Configuration.new(public_key: 'pub', sign_uploads: true)
+    params = described_class.call(options: { signature: 'sig', expire: 123 }, config: config)
+
+    expect(params['signature']).to eq('sig')
+    expect(params['expire']).to eq(123)
+  end
+
+  it 'converts metadata values to strings' do
+    config = Uploadcare::Configuration.new(public_key: 'pub')
+    params = described_class.call(options: { metadata: { count: 12 } }, config: config)
+
+    expect(params['metadata[count]']).to eq('12')
+  end
+
+  it 'raises when metadata is not a hash' do
+    config = Uploadcare::Configuration.new(public_key: 'pub')
+
+    expect do
+      described_class.call(options: { metadata: 'nope' }, config: config)
+    end.to raise_error(NoMethodError)
   end
 end
