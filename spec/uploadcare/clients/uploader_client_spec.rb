@@ -63,4 +63,18 @@ RSpec.describe Uploadcare::UploaderClient do
       expect(result.success).to eq({ 'status' => 'success' })
     end
   end
+
+  describe '#file_info' do
+    it 'passes file ID and public key' do
+      client = described_class.new
+
+      allow(client).to receive(:get)
+        .with(path: 'info/',
+              params: { file_id: 'uuid', pub_key: 'demopublickey' },
+              request_options: { timeout: 1 })
+        .and_return({ 'uuid' => 'uuid' })
+
+      expect(client.file_info(uuid: 'uuid', request_options: { timeout: 1 })).to eq({ 'uuid' => 'uuid' })
+    end
+  end
 end

@@ -516,5 +516,24 @@ RSpec.describe Uploadcare::File do
         expect(result).to eq(result_without_uuid)
       end
     end
+
+    context 'when conversion returns a result object with uuids' do
+      let(:params) { { format: 'pdf' } }
+      let(:result_object) { double('Result', result: [{ 'uuid' => uuid }]) }
+
+      before do
+        allow(Uploadcare::DocumentConverter).to receive(:convert_document)
+          .and_return(result_object)
+        allow(described_class).to receive(:info)
+          .with(uuid: uuid, config: file.config, request_options: {})
+          .and_return(file)
+      end
+
+      it 'loads the converted file info' do
+        result = file.convert_document(params: params)
+
+        expect(result).to eq(file)
+      end
+    end
   end
 end
