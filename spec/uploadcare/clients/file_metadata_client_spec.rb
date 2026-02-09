@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'uri'
 
 RSpec.describe Uploadcare::FileMetadataClient do
   subject(:client) { described_class.new }
@@ -66,6 +67,24 @@ RSpec.describe Uploadcare::FileMetadataClient do
     it 'deletes the specified metadata key' do
       response = client.delete(uuid: uuid, key: key)
       expect(response.success).to be_nil
+    end
+  end
+
+  describe 'URL encoding' do
+    let(:encoded_uuid) { URI.encode_www_form_component(uuid) }
+    let(:encoded_key) { URI.encode_www_form_component(key) }
+
+    before do
+      stub_request(:get, "https://api.uploadcare.com/files/#{encoded_uuid}/metadata/#{encoded_key}/")
+        .to_return(status: 200, body: value.to_json, headers: { 'Content-Type' => 'application/json' })
+    end
+
+    let(:uuid) { 'file~uuid' }
+    let(:key) { 'custom key' }
+
+    it 'encodes uuid and key in metadata paths' do
+      response = client.show(uuid: uuid, key: key)
+      expect(response.success).to eq(value)
     end
   end
 end

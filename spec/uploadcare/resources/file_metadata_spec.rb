@@ -19,6 +19,16 @@ RSpec.describe Uploadcare::FileMetadata do
       result = file_metadata.index(uuid: uuid)
       expect(result).to be_a(described_class)
     end
+
+    it 'uses existing uuid when not provided' do
+      file_metadata.instance_variable_set(:@uuid, uuid)
+      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:index)
+        .with(uuid: uuid, request_options: {})
+        .and_return(response_body)
+
+      result = file_metadata.index
+      expect(result).to be_a(described_class)
+    end
   end
 
   describe '#[]' do
@@ -63,6 +73,16 @@ RSpec.describe Uploadcare::FileMetadata do
       result = file_metadata.show(uuid: uuid, key: key)
       expect(result).to eq(value)
     end
+
+    it 'uses existing uuid when not provided' do
+      file_metadata.instance_variable_set(:@uuid, uuid)
+      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:show)
+        .with(uuid: uuid, key: key, request_options: {})
+        .and_return(value)
+
+      result = file_metadata.show(key: key)
+      expect(result).to eq(value)
+    end
   end
 
   describe '#update' do
@@ -74,6 +94,16 @@ RSpec.describe Uploadcare::FileMetadata do
       result = file_metadata.update(uuid: uuid, key: key, value: value)
       expect(result).to eq(value)
     end
+
+    it 'uses existing uuid when not provided' do
+      file_metadata.instance_variable_set(:@uuid, uuid)
+      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:update)
+        .with(uuid: uuid, key: key, value: value, request_options: {})
+        .and_return(value)
+
+      result = file_metadata.update(key: key, value: value)
+      expect(result).to eq(value)
+    end
   end
 
   describe '#delete' do
@@ -83,6 +113,16 @@ RSpec.describe Uploadcare::FileMetadata do
         .and_return(nil)
 
       result = file_metadata.delete(uuid: uuid, key: key)
+      expect(result).to be_nil
+    end
+
+    it 'uses existing uuid when not provided' do
+      file_metadata.instance_variable_set(:@uuid, uuid)
+      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:delete)
+        .with(uuid: uuid, key: key, request_options: {})
+        .and_return(nil)
+
+      result = file_metadata.delete(key: key)
       expect(result).to be_nil
     end
   end
