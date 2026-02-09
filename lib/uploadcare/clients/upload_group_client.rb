@@ -60,6 +60,6 @@ class Uploadcare::UploadGroupClient < Uploadcare::UploadClient
   # @param uuids [Array] Array of file UUIDs or file objects
   # @return [Array] Array of file UUID strings
   def parse_uuids(uuids)
-    uuids.map { |file| file.methods.include?(:uuid) ? file.uuid : file }
+    uuids.map { |file| file.respond_to?(:uuid) ? file.uuid : file }
   end
 end

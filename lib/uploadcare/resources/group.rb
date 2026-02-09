@@ -42,10 +42,8 @@ class Uploadcare::Group < Uploadcare::BaseResource
   # @param uuid [String] The UUID of the group to retrieve.
   # @return [Uploadcare::Group] The updated instance with group information.
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Group/operation/groupInfo
-  # TODO - Remove uuid if the opeartion is being perfomed on same file
-
-  def info(uuid:, request_options: {})
-    response = Uploadcare::Result.unwrap(@group_client.info(uuid: uuid, request_options: request_options))
+  def info(uuid: nil, request_options: {})
+    response = Uploadcare::Result.unwrap(@group_client.info(uuid: uuid || id, request_options: request_options))
 
     assign_attributes(response)
     self
@@ -54,10 +52,8 @@ class Uploadcare::Group < Uploadcare::BaseResource
   # @param uuid [String] The UUID of the group to delete.
   # @return [Nil] Returns nil on successful deletion.
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Group/operation/deleteGroup
-  # TODO - Remove uuid if the opeartion is being perfomed on same file
-
-  def delete(uuid:, request_options: {})
-    Uploadcare::Result.unwrap(@group_client.delete(uuid: uuid, request_options: request_options))
+  def delete(uuid: nil, request_options: {})
+    Uploadcare::Result.unwrap(@group_client.delete(uuid: uuid || id, request_options: request_options))
   end
 
   # Create a group from a set of files by using their UUIDs
@@ -105,9 +101,8 @@ class Uploadcare::Group < Uploadcare::BaseResource
   # @return [Uploadcare::Group]
   def load
     group_with_info = self.class.info(group_id: id, config: @config)
-    # Copy attributes from the loaded group
-    group_with_info.instance_variables.each do |var|
-      instance_variable_set(var, group_with_info.instance_variable_get(var))
+    ATTRIBUTES.each do |attr|
+      instance_variable_set("@#{attr}", group_with_info.public_send(attr))
     end
     self
   end

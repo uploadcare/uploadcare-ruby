@@ -95,7 +95,7 @@ class Uploadcare::PaginatedCollection
     items = []
 
     while collection
-      items.concat(collection.resources)
+      items.concat(collection.resources || [])
       collection = collection.next_page
     end
 

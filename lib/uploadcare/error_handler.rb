@@ -26,7 +26,7 @@ module Uploadcare::ErrorHandler
     catch_upload_errors(response)
 
     error_message = extract_error_message(response)
-    raise_status_error(response[:status], error_message)
+    raise_status_error(response, error_message)
   end
 
   private
@@ -43,10 +43,17 @@ module Uploadcare::ErrorHandler
   end
 
   # Raise appropriate error based on HTTP status code
-  def raise_status_error(status, message)
+  def raise_status_error(response, message)
+    status = response.is_a?(Hash) ? response[:status] : response
     case status
     when 400 then raise Uploadcare::Exception::InvalidRequestError, message
     when 404 then raise Uploadcare::Exception::NotFoundError, message
+    when 429
+      headers = response.is_a?(Hash) ? response[:headers] : nil
+      retry_after = headers && (headers['retry-after'] || headers['Retry-After'])
+      timeout = retry_after.to_f
+      timeout = 10.0 if timeout <= 0
+      raise Uploadcare::Exception::ThrottleError.new(timeout, message: message)
     else raise Uploadcare::Exception::RequestError, message
     end
   end
@@ -59,5 +66,7 @@ module Uploadcare::ErrorHandler
     parsed_response = JSON.parse(response[:body].to_s)
     error = parsed_response['error'] if parsed_response.is_a?(Hash)
     raise Uploadcare::Exception::RequestError, error if error
+  rescue JSON::ParserError
+    nil
   end
 end

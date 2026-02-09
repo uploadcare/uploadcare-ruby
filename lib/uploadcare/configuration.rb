@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'logger'
+
 # Configuration class for Uploadcare client
 #
 # Manages all configuration options for both REST API and Upload API clients.

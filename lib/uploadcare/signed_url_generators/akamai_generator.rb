@@ -28,7 +28,9 @@ class Uploadcare::SignedUrlGenerators::AkamaiGenerator < Uploadcare::SignedUrlGe
   private
 
   def valid?(uuid)
-    uuid.match(UUID_REGEX)
+    raise ArgumentError, 'Must contain valid UUID' unless uuid.is_a?(String)
+
+    uuid.match?(UUID_REGEX)
   end
 
   def delimiter

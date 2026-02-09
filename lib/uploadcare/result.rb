@@ -61,7 +61,13 @@ class Uploadcare::Result
   end
 
   def value!
-    raise @error if failure?
+    if failure?
+      error = @error
+      raise error if error.is_a?(Exception)
+      raise error if error.is_a?(String)
+
+      raise RuntimeError, error.inspect
+    end
 
     @value
   end

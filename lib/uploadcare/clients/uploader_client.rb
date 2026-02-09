@@ -150,7 +150,7 @@ class Uploadcare::UploaderClient < Uploadcare::UploadClient
   def handle_polling_response(response)
     case response['status']
     when 'error'
-      raise Uploadcare::Exception::RequestError, response['error']
+      raise Uploadcare::Exception::RequestError, "Upload failed: #{response['error']}"
     when 'progress', 'waiting', 'unknown'
       raise Uploadcare::Exception::RetryError, response['error'] || 'Upload is taking longer than expected. Try increasing the max_request_tries config if you know your file uploads will take more time.' # rubocop:disable Layout/LineLength
     end
