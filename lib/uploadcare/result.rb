@@ -1,58 +1,75 @@
 # frozen_string_literal: true
 
-module Uploadcare
-  class Result
-    attr_reader :value, :error
+# Result wrapper for success/error handling.
+class Uploadcare::Result
+  attr_reader :value, :error
 
-    def initialize(value: nil, error: nil)
-      @value = value
-      @error = error
-    end
+  def initialize(value: nil, error: nil)
+    @value = value
+    @error = error
+  end
 
-    def self.success(value)
-      new(value: value)
-    end
+  # Build a success result.
+  #
+  # @param value [Object]
+  # @return [Uploadcare::Result]
+  def self.success(value)
+    new(value: value)
+  end
 
-    def self.failure(error)
-      new(error: error)
-    end
+  # Build a failure result.
+  #
+  # @param error [Object]
+  # @return [Uploadcare::Result]
+  def self.failure(error)
+    new(error: error)
+  end
 
-    def self.capture
-      success(yield)
-    rescue StandardError => e
-      failure(e)
-    end
+  # Capture exceptions and wrap in Result.
+  #
+  # @return [Uploadcare::Result]
+  def self.capture
+    success(yield)
+  rescue StandardError => e
+    failure(e)
+  end
 
-    def self.unwrap(value)
-      value.is_a?(Result) ? value.value! : value
-    end
+  # Unwrap a Result or return the value as-is.
+  #
+  # @param value [Object]
+  # @return [Object]
+  def self.unwrap(value)
+    value.is_a?(Uploadcare::Result) ? value.value! : value
+  end
 
-    def success?
-      @error.nil?
-    end
+  def success?
+    @error.nil?
+  end
 
-    def failure?
-      !success?
-    end
+  def failure?
+    !success?
+  end
 
-    def success
-      @value
-    end
+  # @return [Object] success value
+  def success
+    @value
+  end
 
-    def failure
-      @error
-    end
+  # @return [Object] error value
+  def failure
+    @error
+  end
 
-    def value!
-      raise @error if failure?
+  def value!
+    raise @error if failure?
 
-      @value
-    end
+    @value
+  end
 
-    def error_message
-      return nil if @error.nil?
+  # @return [String, nil] error message
+  def error_message
+    return nil if @error.nil?
 
-      @error.respond_to?(:message) ? @error.message : @error.to_s
-    end
+    @error.respond_to?(:message) ? @error.message : @error.to_s
   end
 end

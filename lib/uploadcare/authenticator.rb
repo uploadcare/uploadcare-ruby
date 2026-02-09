@@ -5,87 +5,85 @@ require 'addressable/uri'
 require 'openssl'
 require 'time'
 
-module Uploadcare
-  # Handles authentication for Uploadcare REST API requests
+# Handles authentication for Uploadcare REST API requests
+#
+# Supports two authentication modes:
+# - Simple authentication: Basic auth with public_key:secret_key
+# - Secure authentication: HMAC-SHA1 signature-based authentication
+#
+# @example Using the authenticator
+#   authenticator = Uploadcare::Authenticator.new(config: config)
+#   headers = authenticator.headers('GET', '/files/', '')
+#
+# @see https://uploadcare.com/docs/api_reference/rest/requests_auth/
+class Uploadcare::Authenticator
+  # @return [Hash] Default headers included in all requests
+  attr_reader :default_headers
+
+  # Initialize a new Authenticator
   #
-  # Supports two authentication modes:
-  # - Simple authentication: Basic auth with public_key:secret_key
-  # - Secure authentication: HMAC-SHA1 signature-based authentication
+  # @param config [Uploadcare::Configuration] Configuration object with API credentials
+  # @return [Uploadcare::Authenticator] new authenticator instance
+  def initialize(config:)
+    @config = config
+    @default_headers = {
+      'Accept' => 'application/vnd.uploadcare-v0.7+json',
+      'Content-Type' => 'application/json',
+      'User-Agent' => Uploadcare::Param::UserAgent.call(config: config)
+    }
+  end
+
+  # Generate authentication headers for an API request
   #
-  # @example Using the authenticator
-  #   authenticator = Uploadcare::Authenticator.new(config: config)
-  #   headers = authenticator.headers('GET', '/files/', '')
-  #
-  # @see https://uploadcare.com/docs/api_reference/rest/requests_auth/
-  class Authenticator
-    # @return [Hash] Default headers included in all requests
-    attr_reader :default_headers
+  # @param http_method [String] HTTP method (GET, POST, PUT, DELETE)
+  # @param uri [String] Request URI path
+  # @param body [String] Request body content (default: '')
+  # @param content_type [String] Content-Type header value (default: 'application/json')
+  # @return [Hash] Headers hash including authentication
+  # @raise [Uploadcare::Exception::AuthError] if public key is blank when using secure auth
+  def headers(http_method, uri, body = '', content_type = 'application/json')
+    return simple_auth_headers if @config.auth_type == 'Uploadcare.Simple'
+    return @default_headers if @config.secret_key.nil? || @config.secret_key.empty?
 
-    # Initialize a new Authenticator
-    #
-    # @param config [Uploadcare::Configuration] Configuration object with API credentials
-    # @return [Uploadcare::Authenticator] new authenticator instance
-    def initialize(config:)
-      @config = config
-      @default_headers = {
-        'Accept' => 'application/vnd.uploadcare-v0.7+json',
-        'Content-Type' => 'application/json',
-        'User-Agent' => Uploadcare::Param::UserAgent.call(config: config)
-      }
-    end
+    validate_public_key
+    secure_auth_headers(http_method, uri, body, content_type)
+  end
 
-    # Generate authentication headers for an API request
-    #
-    # @param http_method [String] HTTP method (GET, POST, PUT, DELETE)
-    # @param uri [String] Request URI path
-    # @param body [String] Request body content (default: '')
-    # @param content_type [String] Content-Type header value (default: 'application/json')
-    # @return [Hash] Headers hash including authentication
-    # @raise [Uploadcare::Exception::AuthError] if public key is blank when using secure auth
-    def headers(http_method, uri, body = '', content_type = 'application/json')
-      return simple_auth_headers if @config.auth_type == 'Uploadcare.Simple'
-      return @default_headers if @config.secret_key.nil? || @config.secret_key.empty?
+  private
 
-      validate_public_key
-      secure_auth_headers(http_method, uri, body, content_type)
-    end
+  def simple_auth_headers
+    @default_headers.merge({ 'Authorization' => "#{@config.auth_type} #{@config.public_key}:#{@config.secret_key}" })
+  end
 
-    private
+  def validate_public_key
+    return unless @config.public_key.nil? || @config.public_key.empty?
 
-    def simple_auth_headers
-      @default_headers.merge({ 'Authorization' => "#{@config.auth_type} #{@config.public_key}:#{@config.secret_key}" })
-    end
+    raise Uploadcare::Exception::AuthError, 'Public Key is blank.'
+  end
 
-    def validate_public_key
-      return unless @config.public_key.nil? || @config.public_key.empty?
+  def secure_auth_headers(http_method, uri, body, content_type)
+    date = Time.now.gmtime.strftime('%a, %d %b %Y %H:%M:%S GMT')
+    signature = generate_signature(http_method, uri, body, content_type, date)
+    auth_headers = { 'Authorization' => "Uploadcare #{@config.public_key}:#{signature}", 'Date' => date }
+    @default_headers.merge(auth_headers)
+  end
 
-      raise Uploadcare::Exception::AuthError, 'Public Key is blank.'
-    end
+  def generate_signature(http_method, uri, body, content_type, date)
+    # Ensure URI starts with / for signature
+    normalized_uri = uri.start_with?('/') ? uri : "/#{uri}"
 
-    def secure_auth_headers(http_method, uri, body, content_type)
-      date = Time.now.gmtime.strftime('%a, %d %b %Y %H:%M:%S GMT')
-      signature = generate_signature(http_method, uri, body, content_type, date)
-      auth_headers = { 'Authorization' => "Uploadcare #{@config.public_key}:#{signature}", 'Date' => date }
-      @default_headers.merge(auth_headers)
-    end
+    sign_string = [
+      http_method.upcase,
+      Digest::MD5.hexdigest(body),
+      content_type,
+      date,
+      normalized_uri
+    ].join("\n")
 
-    def generate_signature(http_method, uri, body, content_type, date)
-      # Ensure URI starts with / for signature
-      normalized_uri = uri.start_with?('/') ? uri : "/#{uri}"
-
-      sign_string = [
-        http_method.upcase,
-        Digest::MD5.hexdigest(body),
-        content_type,
-        date,
-        normalized_uri
-      ].join("\n")
-
-      OpenSSL::HMAC.hexdigest(
-        OpenSSL::Digest.new('sha1'),
-        @config.secret_key,
-        sign_string
-      )
-    end
+    OpenSSL::HMAC.hexdigest(
+      OpenSSL::Digest.new('sha1'),
+      @config.secret_key,
+      sign_string
+    )
   end
 end

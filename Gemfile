@@ -12,7 +12,10 @@ gem 'mutex_m'
 group :development, :test do
   gem 'byebug'
   gem 'dotenv', '~> 3.2' # For running examples with .env file
+  gem 'irb'
   gem 'rake'
+  gem 'rdoc'
+  gem 'redcarpet'
   gem 'rspec'
   gem 'rubocop'
   gem 'rubocop-rspec'
@@ -20,6 +23,7 @@ group :development, :test do
   gem 'tsort', require: false
   gem 'vcr'
   gem 'webmock'
+  gem 'yard'
 end
 
 # Specify your gem's dependencies in uploadcare-ruby.gemspec

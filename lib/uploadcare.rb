@@ -16,14 +16,24 @@ module Uploadcare
   @loader.setup
 
   class << self
+    # Configure Uploadcare with a block.
+    #
+    # @yieldparam config [Uploadcare::Configuration] configuration instance
+    # @return [void]
     def configure
       yield configuration if block_given?
     end
 
+    # Returns the global configuration instance.
+    #
+    # @return [Uploadcare::Configuration]
     def configuration
       @configuration ||= Configuration.new
     end
 
+    # Eager loads all Uploadcare classes for faster boot time.
+    #
+    # @return [void]
     def eager_load!
       @loader.eager_load
     end
