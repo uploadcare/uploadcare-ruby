@@ -145,6 +145,17 @@ module Uploadcare
       end
     end
 
+    describe '#all' do
+      it 'collects resources across pages' do
+        next_collection = described_class.new(params.merge(resources: [double('Resource3')], next_page: nil))
+        allow(subject).to receive(:next_page).and_return(next_collection, nil)
+
+        items = subject.all
+
+        expect(items.length).to eq(3)
+      end
+    end
+
     describe '#fetch_page' do
       let(:page_url) { 'https://api.uploadcare.com/files/?page=2&limit=50' }
       let(:page_response) do

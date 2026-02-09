@@ -33,12 +33,29 @@ RSpec.describe Uploadcare::Param::Upload::UploadParamsGenerator do
     expect(params['UPLOADCARE_STORE']).to eq('0')
   end
 
+  it 'passes through store values' do
+    config = Uploadcare::Configuration.new(public_key: 'pub')
+    params = described_class.call(options: { store: 'auto' }, config: config)
+
+    expect(params['UPLOADCARE_STORE']).to eq('auto')
+  end
+
   it 'uses explicit signature params when provided' do
     config = Uploadcare::Configuration.new(public_key: 'pub', sign_uploads: true)
     params = described_class.call(options: { signature: 'sig', expire: 123 }, config: config)
 
     expect(params['signature']).to eq('sig')
     expect(params['expire']).to eq(123)
+  end
+
+  it 'supports non-hash signature data' do
+    config = Uploadcare::Configuration.new(public_key: 'pub', sign_uploads: true)
+    allow(Uploadcare::Param::Upload::SignatureGenerator).to receive(:call).and_return('signature-string')
+
+    params = described_class.call(options: {}, config: config)
+
+    expect(params['signature']).to eq('signature-string')
+    expect(params['expire']).to be_nil
   end
 
   it 'converts metadata values to strings' do

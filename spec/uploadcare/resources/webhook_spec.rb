@@ -129,6 +129,16 @@ RSpec.describe Uploadcare::Webhook do
       expect(webhook).to be_a(described_class)
       expect(webhook.target_url).to eq(target_url)
     end
+
+    it 'allows deactivating a webhook' do
+      allow_any_instance_of(Uploadcare::WebhookClient).to receive(:update_webhook)
+        .with(id: webhook_id, options: hash_including(is_active: false), request_options: {})
+        .and_return(response_body.merge('is_active' => false))
+
+      webhook = described_class.update(id: webhook_id, is_active: false)
+
+      expect(webhook.is_active).to eq(false)
+    end
   end
   describe '.delete' do
     let(:target_url) { 'https://example.com/hooks' }

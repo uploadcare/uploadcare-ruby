@@ -49,4 +49,11 @@ RSpec.describe Uploadcare::Result do
 
     expect { result.value! }.to raise_error(StandardError, 'nope')
   end
+
+  it 'raises inspected value for non-exception errors' do
+    error = { error: 'boom' }
+    result = described_class.failure(error)
+
+    expect { result.value! }.to raise_error(RuntimeError, /\{error: "boom"\}/)
+  end
 end

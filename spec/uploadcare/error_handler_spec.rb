@@ -186,6 +186,32 @@ module Uploadcare
           handler.send(:catch_upload_errors, response)
         end.not_to raise_error
       end
+
+      it 'handles invalid JSON body' do
+        response = { status: 200, body: 'invalid-json' }
+
+        expect do
+          handler.send(:catch_upload_errors, response)
+        end.not_to raise_error
+      end
+    end
+
+    describe '#raise_throttle_error' do
+      it 'raises ThrottleError with retry-after' do
+        response = { status: 429, headers: { 'Retry-After' => '2.5' } }
+
+        expect do
+          handler.send(:raise_throttle_error, response, 'Too many requests')
+        end.to raise_error(Uploadcare::Exception::ThrottleError) { |error| expect(error.timeout).to eq(2.5) }
+      end
+
+      it 'defaults to 10 seconds when retry-after is missing' do
+        response = { status: 429, headers: {} }
+
+        expect do
+          handler.send(:raise_throttle_error, response, 'Too many requests')
+        end.to raise_error(Uploadcare::Exception::ThrottleError) { |error| expect(error.timeout).to eq(10.0) }
+      end
     end
   end
 end

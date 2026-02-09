@@ -94,6 +94,23 @@ module Uploadcare
           expect(signature_valid?).to be_falsey
         end
       end
+
+      context 'when webhook body is missing' do
+        let(:params) { super().merge(webhook_body: nil) }
+
+        it 'returns false' do
+          expect(signature_valid?).to be_falsey
+        end
+      end
+    end
+
+    describe '.secure_compare?' do
+      it 'falls back to byte comparison when OpenSSL helper is missing' do
+        allow(OpenSSL).to receive(:fixed_length_secure_compare).and_raise(NoMethodError)
+
+        expect(described_class.secure_compare?('abc', 'abc')).to be(true)
+        expect(described_class.secure_compare?('abc', 'abd')).to be(false)
+      end
     end
   end
 end
