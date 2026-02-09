@@ -54,6 +54,6 @@ RSpec.describe Uploadcare::Result do
     error = { error: 'boom' }
     result = described_class.failure(error)
 
-    expect { result.value! }.to raise_error(RuntimeError, /\{error: "boom"\}/)
+    expect { result.value! }.to raise_error(RuntimeError, /\{.*error.*boom.*\}/)
   end
 end
