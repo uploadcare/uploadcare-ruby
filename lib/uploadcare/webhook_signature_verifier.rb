@@ -44,11 +44,17 @@ class Uploadcare::WebhookSignatureVerifier
   # @param second [String] second string
   # @return [Boolean] true if strings are equal
   def self.secure_compare?(first, second)
+    return false if first.nil? || second.nil?
     return false unless first.bytesize == second.bytesize
 
-    left = first.unpack('C*')
-    res = 0
-    second.each_byte { |byte| res |= byte ^ left.shift }
-    res.zero?
+    OpenSSL.fixed_length_secure_compare(first, second)
+  rescue NoMethodError
+    result = 0
+    index = 0
+    while index < first.bytesize
+      result |= first.getbyte(index) ^ second.getbyte(index)
+      index += 1
+    end
+    result.zero?
   end
 end

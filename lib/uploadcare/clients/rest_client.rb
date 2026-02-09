@@ -151,7 +151,8 @@ class Uploadcare::RestClient
                      params.nil? || params.empty? ? '' : params.to_json
                    end
 
-    auth_headers = authenticator.headers(method, uri, body_content)
+    content_type = headers['Content-Type'] || authenticator.default_headers['Content-Type']
+    auth_headers = authenticator.headers(method, uri, body_content, content_type)
     req.headers.merge!(auth_headers)
     req.headers.merge!(headers)
   end

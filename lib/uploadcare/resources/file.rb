@@ -195,13 +195,10 @@ class Uploadcare::File < Uploadcare::BaseResource
   def uuid
     return @uuid if @uuid
 
-    # If initialized from URL, extract UUID
-    if @url
-      extracted_uuid = @url.gsub('https://ucarecdn.com/', '')
-      extracted_uuid.gsub(%r{/.*}, '')
-    else
-      @uuid
-    end
+    source = @url || @original_file_url
+    return @uuid unless source
+
+    @uuid = source[/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/]
   end
 
   # Returns the CDN URL for this file.

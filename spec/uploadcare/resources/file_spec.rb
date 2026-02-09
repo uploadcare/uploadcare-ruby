@@ -342,10 +342,20 @@ RSpec.describe Uploadcare::File do
     end
 
     context 'when uuid is not set but url is' do
-      let(:file) { described_class.new(url: 'https://ucarecdn.com/extracted-uuid-456/') }
+      let(:uuid_value) { SecureRandom.uuid }
+      let(:file) { described_class.new(url: "https://cdn.example.com/#{uuid_value}/") }
 
       it 'extracts uuid from url' do
-        expect(file.uuid).to eq('extracted-uuid-456')
+        expect(file.uuid).to eq(uuid_value)
+      end
+    end
+
+    context 'when uuid is not set but original_file_url is' do
+      let(:uuid_value) { SecureRandom.uuid }
+      let(:file) { described_class.new(original_file_url: "https://api.uploadcare.com/files/#{uuid_value}/") }
+
+      it 'extracts uuid from original_file_url' do
+        expect(file.uuid).to eq(uuid_value)
       end
     end
 

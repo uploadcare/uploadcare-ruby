@@ -6,7 +6,7 @@ require_relative 'base_generator'
 # Akamai signed URL generator.
 class Uploadcare::SignedUrlGenerators::AkamaiGenerator < Uploadcare::SignedUrlGenerators::BaseGenerator
   # UUID validation regex.
-  UUID_REGEX = '[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89aAbB][a-f0-9]{3}-[a-f0-9]{12}'
+  UUID_REGEX = /\A[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}\z/i
   # Akamai token template.
   TEMPLATE = 'https://{cdn_host}/{uuid}/?token=exp={expiration}{delimiter}acl={acl}{delimiter}hmac={token}'
 
@@ -30,7 +30,7 @@ class Uploadcare::SignedUrlGenerators::AkamaiGenerator < Uploadcare::SignedUrlGe
   def valid?(uuid)
     raise ArgumentError, 'Must contain valid UUID' unless uuid.is_a?(String)
 
-    uuid.match?(UUID_REGEX)
+    UUID_REGEX.match?(uuid)
   end
 
   def delimiter

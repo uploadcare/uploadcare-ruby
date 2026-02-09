@@ -36,10 +36,10 @@ module Uploadcare::ThrottleHandler
     if attempts.nil?
       attempts = respond_to?(:config) ? config.max_throttle_attempts : Uploadcare.configuration.max_throttle_attempts
     end
-    (attempts - 1).times do
+    (attempts - 1).times do |index|
       return yield
     rescue(Uploadcare::Exception::ThrottleError) => e
-      sleep(e.timeout)
+      sleep(e.timeout * (2**index))
     end
     yield
   end

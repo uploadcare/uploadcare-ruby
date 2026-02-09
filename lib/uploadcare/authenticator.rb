@@ -42,8 +42,10 @@ class Uploadcare::Authenticator
   # @return [Hash] Headers hash including authentication
   # @raise [Uploadcare::Exception::AuthError] if public key is blank when using secure auth
   def headers(http_method, uri, body = '', content_type = 'application/json')
-    return simple_auth_headers if @config.auth_type == 'Uploadcare.Simple'
-    return @default_headers if @config.secret_key.nil? || @config.secret_key.empty?
+    return simple_auth_headers(content_type) if @config.auth_type == 'Uploadcare.Simple'
+    if @config.secret_key.nil? || @config.secret_key.empty?
+      return @default_headers.merge({ 'Content-Type' => content_type })
+    end
 
     validate_public_key
     secure_auth_headers(http_method, uri, body, content_type)
@@ -51,8 +53,9 @@ class Uploadcare::Authenticator
 
   private
 
-  def simple_auth_headers
-    @default_headers.merge({ 'Authorization' => "#{@config.auth_type} #{@config.public_key}:#{@config.secret_key}" })
+  def simple_auth_headers(content_type)
+    @default_headers.merge({ 'Content-Type' => content_type,
+                             'Authorization' => "#{@config.auth_type} #{@config.public_key}:#{@config.secret_key}" })
   end
 
   def validate_public_key
@@ -65,7 +68,7 @@ class Uploadcare::Authenticator
     date = Time.now.gmtime.strftime('%a, %d %b %Y %H:%M:%S GMT')
     signature = generate_signature(http_method, uri, body, content_type, date)
     auth_headers = { 'Authorization' => "Uploadcare #{@config.public_key}:#{signature}", 'Date' => date }
-    @default_headers.merge(auth_headers)
+    @default_headers.merge({ 'Content-Type' => content_type }).merge(auth_headers)
   end
 
   def generate_signature(http_method, uri, body, content_type, date)

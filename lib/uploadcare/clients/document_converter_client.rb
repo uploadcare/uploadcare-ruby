@@ -16,11 +16,9 @@ class Uploadcare::DocumentConverterClient < Uploadcare::RestClient
   # @return [Hash] The response containing conversion details
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Conversion/operation/documentConvert
   def convert_document(paths:, options: {}, request_options: {})
-    body = {
-      paths: paths,
-      store: options[:store] ? '1' : '0',
-      save_in_group: options[:save_in_group] ? '1' : '0'
-    }
+    body = { paths: paths }
+    body[:store] = options[:store] ? '1' : '0' if options.key?(:store)
+    body[:save_in_group] = options[:save_in_group] ? '1' : '0' if options.key?(:save_in_group)
 
     post(path: '/convert/document/', params: body, headers: {}, request_options: request_options)
   end
