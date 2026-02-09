@@ -78,12 +78,14 @@ end
 ```
 
 #### Method Renames
+
 | Old Method (v4.x) | New Method (v5.0) |
 |-------------------|-------------------|
 | `Addons.check_aws_rekognition_detect_labels_status` | `Addons.aws_rekognition_detect_labels_status` |
 | `Addons.check_aws_rekognition_detect_moderation_labels_status` | `Addons.aws_rekognition_detect_moderation_labels_status` |
 | `Addons.check_uc_clamav_virus_scan_status` | `Addons.uc_clamav_virus_scan_status` |
 | `Addons.check_remove_bg_status` | `Addons.remove_bg_status` |
+
 
 #### Smart Upload Detection
 The `Uploader.upload` method now automatically detects the input type and selects the appropriate upload method:
@@ -141,7 +143,9 @@ gem "uploadcare-ruby"
 
 And then execute:
 
-    $ bundle
+```bash
+$ bundle
+```
 
 If already not, create your project in [Uploadcare dashboard](https://app.uploadcare.com/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby) and copy
 its [API keys](https://app.uploadcare.com/projects/-/api-keys/) from there.
@@ -394,7 +398,7 @@ presigned_urls.each_with_index do |presigned_url, index|
 
   break if part_data.nil? || part_data.empty?
 
-  upload_client.multipart_upload_part(presigned_url, part_data)
+  upload_client.multipart_upload_part(presigned_url: presigned_url, part_data: part_data)
 end
 
 # Step 3: Complete the upload
@@ -454,10 +458,10 @@ For example to track file uploading progress you can do something like this:
 
 ```ruby
 file = File.open("big_file.bin")
-progress = 0
-Uploadcare::Uploader.multipart_upload(file: file, store: true) do |options|
-  progress += (100.0 / options[:links_count])
-  puts "PROGRESS = #{progress}"
+progress_percent = 0
+Uploadcare::Uploader.multipart_upload(file: file, store: true) do |progress|
+  progress_percent += (100.0 / progress[:links_count])
+  puts "PROGRESS = #{progress_percent}"
 end
 ```
 
@@ -819,7 +823,7 @@ unless batch_result.problems.empty?
 end
 ```
 
-### Deleting Files
+## Deleting Files
 
 # Delete a single file
 ```ruby
@@ -833,15 +837,16 @@ puts deleted_file.datetime_removed
 ```ruby
 uuids = ['FILE_UUID_1', 'FILE_UUID_2']
 result = Uploadcare::File.batch_delete(uuids)
+result = Uploadcare::File.batch_delete(uuids: uuids)
 puts result.result
 ```
 
-### Copying Files
+## Copying Files
 
 # Copy a file to local storage
 ```ruby
 source = '1bac376c-aa7e-4356-861b-dd2657b5bfd2'
-file = Uploadcare::File.local_copy(source, store: true)
+file = Uploadcare::File.local_copy(source: source, options: { store: true })
 
 puts file.uuid
 # => "new-uuid-of-the-copied-file"
@@ -851,7 +856,7 @@ puts file.uuid
 ```ruby
 source_object = '1bac376c-aa7e-4356-861b-dd2657b5bfd2'
 target = 'custom_storage_connected_to_the_project'
-file = Uploadcare::File.remote_copy(source_object, target, make_public: true)
+file = Uploadcare::File.remote_copy(source: source_object, target: target, options: { make_public: true })
 
 puts file
 # => "https://my-storage.example.com/path/to/copied-file"
@@ -994,15 +999,15 @@ That's a requirement of our API.
 @file = "134dc30c-093e-4f48-a5b9-966fe9cb1d01"
 @file2 = "134dc30c-093e-4f48-a5b9-966fe9cb1d02"
 @files_ary = [@file, @file2]
-@group = Uploadcare::Group.create(uuids: @files)
+@group = Uploadcare::Group.create(uuids: @files_ary)
 
 # get a file group by its ID.
 @group = Uploadcare::Group.new(uuid: "Group UUID")
-@group.info(uuid: "Group UUID")
+@group.info
 
 # group can be deleted by group ID.
 @group = Uploadcare::Group.new(uuid: "Group UUID")
-@group.delete(uuid: "Group UUID")
+@group.delete
 # Note: This operation only removes the group object itself. All the files that were part of the group are left as is.
 
 # Returns group's CDN URL
