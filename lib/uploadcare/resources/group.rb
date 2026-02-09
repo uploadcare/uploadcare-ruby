@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'uri'
+
 module Uploadcare
   class Group < BaseResource
     ATTRIBUTES = %i[
@@ -84,8 +86,8 @@ module Uploadcare
       return @id if @id
       return unless @cdn_url
 
-      # If initialized from URL, extract ID
-      @id = @cdn_url.gsub('https://ucarecdn.com/', '').gsub(%r{/.*}, '')
+      uri = URI.parse(@cdn_url)
+      @id = uri.path.split('/').reject(&:empty?).first
       @id
     end
 
@@ -107,12 +109,7 @@ module Uploadcare
     # Returns CDN URLs of all files from group without API requesting
     # @return [Array<String>] Array of CDN URLs for all files in the group
     def file_cdn_urls
-      file_cdn_urls = []
-      (0...files_count).each do |file_index|
-        file_cdn_url = "#{cdn_url}nth/#{file_index}/"
-        file_cdn_urls << file_cdn_url
-      end
-      file_cdn_urls
+      files_count.times.map { |file_index| "#{cdn_url}nth/#{file_index}/" }
     end
   end
 end

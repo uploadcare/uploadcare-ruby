@@ -14,7 +14,8 @@ client = Uploadcare::UploadClient.new
 
 puts 'Uploading file...'
 result = nil
-File.open('spec/fixtures/kitten.jpeg', 'rb') do |file|
+fixture_path = File.expand_path('../../spec/fixtures/kitten.jpeg', __dir__)
+File.open(fixture_path, 'rb') do |file|
   result = client.upload_file(file: file, store: true)
 end
 

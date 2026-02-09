@@ -6,8 +6,6 @@ module Uploadcare
 
     def initialize(attributes = {}, config = Uploadcare.configuration)
       super
-      @project_client = Uploadcare::ProjectClient.new(config: config)
-      assign_attributes(attributes)
     end
 
     # Fetches project information

@@ -253,6 +253,10 @@ module Uploadcare
                                    request_options: request_options)
       end
 
+      if result.respond_to?(:result) && result.result.is_a?(Array) && result.result.first.is_a?(Hash)
+        return process_hash_result({ 'result' => result.result }, request_options: request_options)
+      end
+
       result
     end
 

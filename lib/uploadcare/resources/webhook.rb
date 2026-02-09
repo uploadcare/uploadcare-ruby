@@ -4,16 +4,11 @@ module Uploadcare
   class Webhook < BaseResource
     attr_accessor :id, :project, :created, :updated, :event, :target_url, :is_active, :signing_secret, :version
 
-    def initialize(attributes = {}, config = Uploadcare.configuration)
-      super
-    end
-
     # Class method to list all project webhooks
     # @return [Array<Uploadcare::Webhook>] Array of Webhook instances
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Webhook/operation/webhooksList
     def self.list(config: Uploadcare.configuration, request_options: {})
-      webhook_client = Uploadcare::WebhookClient.new(config: config)
-      response = Uploadcare::Result.unwrap(webhook_client.list_webhooks(request_options: request_options))
+      response = Uploadcare::Result.unwrap(webhook_client(config).list_webhooks(request_options: request_options))
 
       response.map { |webhook_data| new(webhook_data, config) }
     end
@@ -27,7 +22,6 @@ module Uploadcare
     # @return [Uploadcare::Webhook] The created webhook as an object
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Webhook/operation/webhookCreate
     def self.create(target_url:, config: Uploadcare.configuration, request_options: {}, **options)
-      client = Uploadcare::WebhookClient.new(config: config)
       event = options.fetch(:event, 'file.uploaded')
       is_active = options.key?(:is_active) ? options[:is_active] : true
       signing_secret = options[:signing_secret]
@@ -40,7 +34,9 @@ module Uploadcare
       payload[:signing_secret] = signing_secret if signing_secret
       payload[:version] = version if version
 
-      response = Uploadcare::Result.unwrap(client.create_webhook(options: payload, request_options: request_options))
+      response = Uploadcare::Result.unwrap(
+        webhook_client(config).create_webhook(options: payload, request_options: request_options)
+      )
       new(response, config)
     end
 
@@ -53,11 +49,10 @@ module Uploadcare
     # @return [Uploadcare::Webhook] The updated webhook as an object
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Webhook/operation/updateWebhook
     def self.update(id:, config: Uploadcare.configuration, request_options: {}, **options)
-      client = Uploadcare::WebhookClient.new(config: config)
       payload = update_payload(options)
 
       response = Uploadcare::Result.unwrap(
-        client.update_webhook(id: id, options: payload, request_options: request_options)
+        webhook_client(config).update_webhook(id: id, options: payload, request_options: request_options)
       )
       new(response, config)
     end
@@ -68,8 +63,9 @@ module Uploadcare
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Webhook/operation/webhookUnsubscribe
 
     def self.delete(target_url:, config: Uploadcare.configuration, request_options: {})
-      client = Uploadcare::WebhookClient.new(config: config)
-      Uploadcare::Result.unwrap(client.delete_webhook(target_url: target_url, request_options: request_options))
+      Uploadcare::Result.unwrap(
+        webhook_client(config).delete_webhook(target_url: target_url, request_options: request_options)
+      )
     end
 
     def self.update_payload(options)
@@ -78,5 +74,11 @@ module Uploadcare
       payload
     end
     private_class_method :update_payload
+
+    def self.webhook_client(config)
+      @webhook_clients ||= {}
+      @webhook_clients[config] ||= Uploadcare::WebhookClient.new(config: config)
+    end
+    private_class_method :webhook_client
   end
 end

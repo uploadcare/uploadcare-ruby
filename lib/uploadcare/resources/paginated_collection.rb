@@ -88,7 +88,17 @@ module Uploadcare
       fetch_page(@previous_page_url)
     end
 
-    # TODO: Add #all method which return an array of resource
+    def all
+      collection = self
+      items = []
+
+      while collection
+        items.concat(collection.resources)
+        collection = collection.next_page
+      end
+
+      items
+    end
 
     private
 

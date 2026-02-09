@@ -15,20 +15,31 @@ puts '=' * 50
 source_url = ENV.fetch('UPLOADCARE_TEST_URL', 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/Cat_November_2010-1a.jpg/1200px-Cat_November_2010-1a.jpg')
 
 client = Uploadcare::UploadClient.new
-result = client.upload_from_url(source_url: source_url, store: true).success
+result = client.upload_from_url(source_url: source_url, store: true)
+unless result.success?
+  warn "Upload failed: #{result.error_message}"
+  exit 1
+end
+
+payload = result.success
 
 puts 'Upload complete!'
-puts "File UUID: #{result['uuid']}"
-puts "Original filename: #{result['original_filename']}"
-puts "File size: #{result['size']} bytes"
+puts "File UUID: #{payload['uuid']}"
+puts "Original filename: #{payload['original_filename']}"
+puts "File size: #{payload['size']} bytes"
 puts
 
 # Example 2: Upload from URL (async mode - returns immediately)
 puts 'Example 2: Upload from URL (async mode)'
 puts '=' * 50
 
-result = client.upload_from_url(source_url: source_url, async: true).success
-token = result['token']
+result = client.upload_from_url(source_url: source_url, async: true)
+unless result.success?
+  warn "Async upload failed: #{result.error_message}"
+  exit 1
+end
+
+token = result.success['token']
 
 puts 'Upload started asynchronously'
 puts "Token: #{token}"
@@ -38,7 +49,13 @@ puts
 puts 'Example 3: Check upload status'
 puts '=' * 50
 
-status = client.upload_from_url_status(token: token).success
+status_result = client.upload_from_url_status(token: token)
+unless status_result.success?
+  warn "Status check failed: #{status_result.error_message}"
+  exit 1
+end
+
+status = status_result.success
 
 case status['status']
 when 'success'

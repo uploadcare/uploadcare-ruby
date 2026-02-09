@@ -43,7 +43,13 @@ begin
   file_paths.each_with_index do |path, index|
     File.open(path, 'rb') do |file|
       response = upload_client.upload_file(file: file, store: true)
-      uuid = response.values.first
+      if response.failure?
+        puts "✗ Upload failed: #{response.error_message}"
+        exit 1
+      end
+
+      payload = response.success
+      uuid = payload[File.basename(path)] || payload.values.first
       uuids << uuid
       puts "  #{index + 1}. #{File.basename(path)} → #{uuid}"
     end

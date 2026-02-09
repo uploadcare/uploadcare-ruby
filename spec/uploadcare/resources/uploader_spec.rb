@@ -238,7 +238,7 @@ RSpec.describe Uploadcare::Uploader do
   describe 'configuration and initialization' do
     it 'initializes with default configuration' do
       uploader = described_class.new
-      expect(uploader.instance_variable_get(:@uploader_client)).to be_kind_of(Uploadcare::UploaderClient)
+      expect(uploader.config).to be_a(Uploadcare::Configuration)
     end
 
     it 'uses class-level uploader_client when not instantiated' do

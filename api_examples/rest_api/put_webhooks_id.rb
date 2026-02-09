@@ -10,4 +10,5 @@ options = {
   is_active: true,
   signing_secret: 'webhook-secret'
 }
-Uploadcare::Webhook.update(id: webhook_id, **options)
+updated_webhook = Uploadcare::Webhook.update(id: webhook_id, **options)
+puts updated_webhook.inspect

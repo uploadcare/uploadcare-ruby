@@ -7,7 +7,7 @@ RSpec.describe Uploadcare::VideoConverter do
   let(:token) { '32921143' }
   subject(:video_converter) { described_class.new }
 
-  describe '#convert' do
+  describe '.convert' do
     let(:video_params) { { uuid: 'video_uuid', format: :mp4, quality: :lighter } }
     let(:options) { { store: true } }
     let(:response_body) do
@@ -24,7 +24,7 @@ RSpec.describe Uploadcare::VideoConverter do
       }
     end
 
-    subject { described_class.convert(params: video_params, options: options) }
+    subject(:convert_result) { described_class.convert(params: video_params, options: options) }
 
     before do
       allow_any_instance_of(Uploadcare::VideoConverterClient).to receive(:convert_video)
@@ -32,13 +32,18 @@ RSpec.describe Uploadcare::VideoConverter do
         .and_return(response_body)
     end
 
-    it { is_expected.to eq(response_body) }
+    it { is_expected.to be_a(described_class) }
 
     it 'returns the correct conversion details' do
-      result = subject['result'].first
+      result = convert_result.result.first
       expect(result['uuid']).to eq('d52d7136-a2e5-4338-9f45-affbf83b857d')
       expect(result['token']).to eq(445_630_631)
       expect(result['thumbnails_group_uuid']).to eq('575ed4e8-f4e8-4c14-a58b-1527b6d9ee46~1')
+    end
+
+    it 'raises when params are missing required keys' do
+      expect { described_class.convert(params: { format: :mp4, quality: :lighter }) }
+        .to raise_error(ArgumentError, 'params must include :uuid')
     end
   end
 

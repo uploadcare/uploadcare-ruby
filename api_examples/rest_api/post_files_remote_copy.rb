@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Copy a file to remote/custom storage
 # NOTE: Custom storage must be configured in your Uploadcare Dashboard first:
 #   Dashboard → Project Settings → Custom Storage

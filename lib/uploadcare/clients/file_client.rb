@@ -45,9 +45,7 @@ module Uploadcare
     # @return [Hash] The response body containing 'result' and 'problems'
     # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/filesDelete
     def batch_delete(uuids:, request_options: {})
-      # Call parent class delete method directly
-      RestClient.instance_method(:delete).bind(self).call(path: '/files/storage/', params: uuids, headers: {},
-                                                          request_options: request_options)
+      request(method: :delete, path: '/files/storage/', params: uuids, headers: {}, request_options: request_options)
     end
 
     # Copies a file to local storage

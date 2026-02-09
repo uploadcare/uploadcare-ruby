@@ -6,7 +6,6 @@ module Uploadcare
   class Uploader < BaseResource
     def initialize(attributes = {}, config = Uploadcare.configuration)
       super
-      @uploader_client = Uploadcare::UploaderClient.new(config: config)
     end
 
     # Upload file or group of files from array, File, or url
@@ -103,7 +102,8 @@ module Uploadcare
     end
 
     def self.uploader_client(config: Uploadcare.configuration)
-      Uploadcare::UploaderClient.new(config: config)
+      @uploader_clients ||= {}
+      @uploader_clients[config] ||= Uploadcare::UploaderClient.new(config: config)
     end
 
     # @param object [File]
