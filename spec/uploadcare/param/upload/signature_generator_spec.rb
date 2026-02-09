@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'digest'
+require 'openssl'
 
 RSpec.describe Uploadcare::Param::Upload::SignatureGenerator do
   it 'returns signature and expire' do
@@ -10,7 +10,7 @@ RSpec.describe Uploadcare::Param::Upload::SignatureGenerator do
     result = described_class.call(config: config)
 
     expect(result[:expire]).to eq(1030)
-    expected_signature = Digest::MD5.hexdigest('secret1030')
+    expected_signature = OpenSSL::HMAC.hexdigest('sha256', 'secret', '1030')
     expect(result[:signature]).to eq(expected_signature)
   end
 

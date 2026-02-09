@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'digest'
+require 'openssl'
 
 # Signature generator for signed uploads.
 class Uploadcare::Param::Upload::SignatureGenerator
@@ -17,8 +17,7 @@ class Uploadcare::Param::Upload::SignatureGenerator
     end
 
     expires_at = Time.now.to_i + lifetime
-    to_sign = secret_key + expires_at.to_s
-    signature = Digest::MD5.hexdigest(to_sign)
+    signature = OpenSSL::HMAC.hexdigest('sha256', secret_key, expires_at.to_s)
     { signature: signature, expire: expires_at }
   end
 end
