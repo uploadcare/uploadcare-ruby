@@ -1,4 +1,4 @@
-# Ruby integration for Uploadcare
+# Uploadcare Ruby SDK
 
 ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)
 [![Build Status][actions-img]][actions-badge]
@@ -37,11 +37,6 @@ wrapping Upload and REST APIs.
 ## Requirements
 
 - Ruby 3.3+ (compatible with Ruby 4.0 and Rails main)
-
-## Compatibility
-
-Note that `uploadcare-ruby` **3.x** is not backward compatible with
-**[2.x](https://github.com/uploadcare/uploadcare-ruby/tree/v2.x)**.
 
 ## Upgrading from v4.x to v5.0
 
