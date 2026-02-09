@@ -1,2 +1,4 @@
+---
 exclude:
-  - lib/uploadcare/authenticator.rb
+  code:
+    - lib/uploadcare/authenticator.rb
