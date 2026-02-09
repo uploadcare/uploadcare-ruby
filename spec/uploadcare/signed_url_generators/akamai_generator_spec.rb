@@ -11,7 +11,7 @@ RSpec.describe Uploadcare::SignedUrlGenerators::AkamaiGenerator do
     generator = described_class.new(cdn_host: 'cdn.test', secret_key: secret_key, ttl: 300, algorithm: 'sha256')
 
     signature_data = "exp=1300~acl=/#{uuid}/"
-    secret_key_bin = Array(secret_key.gsub(/\s/, '')).pack('H*')
+    secret_key_bin = Array(secret_key.delete(" \t\r\n")).pack('H*')
     expected_hmac = OpenSSL::HMAC.hexdigest('sha256', secret_key_bin, signature_data)
     expected = "https://cdn.test/#{uuid}/?token=exp=1300~acl=/#{uuid}/~hmac=#{expected_hmac}"
 
@@ -26,7 +26,7 @@ RSpec.describe Uploadcare::SignedUrlGenerators::AkamaiGenerator do
     generator = described_class.new(cdn_host: 'cdn.test', secret_key: secret_key, ttl: 300, algorithm: 'sha256')
 
     signature_data = "exp=1300~acl=/#{uuid}/*"
-    secret_key_bin = Array(secret_key.gsub(/\s/, '')).pack('H*')
+    secret_key_bin = Array(secret_key.delete(" \t\r\n")).pack('H*')
     expected_hmac = OpenSSL::HMAC.hexdigest('sha256', secret_key_bin, signature_data)
     expected = "https://cdn.test/#{uuid}/?token=exp=1300~acl=/#{uuid}/*~hmac=#{expected_hmac}"
 

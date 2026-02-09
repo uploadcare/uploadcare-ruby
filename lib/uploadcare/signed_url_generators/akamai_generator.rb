@@ -55,7 +55,7 @@ class Uploadcare::SignedUrlGenerators::AkamaiGenerator < Uploadcare::SignedUrlGe
 
   def build_signature(expire, acl)
     signature = ["exp=#{expire}", "acl=#{acl}"].join(delimiter)
-    secret_key_bin = Array(secret_key.gsub(/\s/, '')).pack('H*')
+    secret_key_bin = Array(secret_key.delete(" \t\r\n")).pack('H*')
     OpenSSL::HMAC.hexdigest(algorithm, secret_key_bin, signature)
   end
 
