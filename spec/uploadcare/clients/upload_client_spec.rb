@@ -446,6 +446,7 @@ module Uploadcare
         before do
           stub_request(:put, presigned_url)
             .to_return(status: 500, body: 'Internal Server Error')
+          allow(client).to receive(:sleep)
         end
 
         it 'retries on failure' do
@@ -460,6 +461,7 @@ module Uploadcare
           # First two attempts fail, third succeeds
           stub_request(:put, presigned_url)
             .to_return({ status: 500 }, { status: 500 }, { status: 200 })
+          allow(client).to receive(:sleep)
         end
 
         it 'succeeds after retries' do
