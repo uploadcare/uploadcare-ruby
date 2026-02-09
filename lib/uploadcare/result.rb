@@ -66,7 +66,7 @@ class Uploadcare::Result
       raise error if error.is_a?(Exception)
       raise error if error.is_a?(String)
 
-      raise RuntimeError, error.inspect
+      raise error.inspect
     end
 
     @value

@@ -45,17 +45,11 @@ module Uploadcare::ErrorHandler
   # Raise appropriate error based on HTTP status code
   def raise_status_error(response, message)
     status = response.is_a?(Hash) ? response[:status] : response
-    case status
-    when 400 then raise Uploadcare::Exception::InvalidRequestError, message
-    when 404 then raise Uploadcare::Exception::NotFoundError, message
-    when 429
-      headers = response.is_a?(Hash) ? response[:headers] : nil
-      retry_after = headers && (headers['retry-after'] || headers['Retry-After'])
-      timeout = retry_after.to_f
-      timeout = 10.0 if timeout <= 0
-      raise Uploadcare::Exception::ThrottleError.new(timeout, message: message)
-    else raise Uploadcare::Exception::RequestError, message
-    end
+    raise Uploadcare::Exception::InvalidRequestError, message if status == 400
+    raise Uploadcare::Exception::NotFoundError, message if status == 404
+    return raise_throttle_error(response, message) if status == 429
+
+    raise Uploadcare::Exception::RequestError, message
   end
 
   # Upload API returns its errors with code 200, and stores its actual code and details within response message
@@ -68,5 +62,13 @@ module Uploadcare::ErrorHandler
     raise Uploadcare::Exception::RequestError, error if error
   rescue JSON::ParserError
     nil
+  end
+
+  def raise_throttle_error(response, message)
+    headers = response.is_a?(Hash) ? response[:headers] : nil
+    retry_after = headers && (headers['retry-after'] || headers['Retry-After'])
+    timeout = retry_after.to_f
+    timeout = 10.0 if timeout <= 0
+    raise Uploadcare::Exception::ThrottleError.new(timeout, message: message)
   end
 end

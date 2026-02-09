@@ -148,13 +148,7 @@ class Uploadcare::RestClient
     body_content = if method == HTTP_GET
                      ''
                    else
-                     if params.nil? || params.empty?
-                       ''
-                     elsif params.is_a?(String)
-                       params.to_json
-                     else
-                       params.to_json
-                     end
+                     params.nil? || params.empty? ? '' : params.to_json
                    end
 
     auth_headers = authenticator.headers(method, uri, body_content)

@@ -48,6 +48,7 @@ class Uploadcare::Group < Uploadcare::BaseResource
     assign_attributes(response)
     self
   end
+
   # Deletes a group by UUID.
   # @param uuid [String] The UUID of the group to delete.
   # @return [Nil] Returns nil on successful deletion.

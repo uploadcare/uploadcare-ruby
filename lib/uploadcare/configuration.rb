@@ -111,7 +111,7 @@ class Uploadcare::Configuration
   def cdn_base
     lambda do
       if use_subdomains
-      Uploadcare::CnameGenerator.cdn_base_postfix
+        Uploadcare::CnameGenerator.cdn_base_postfix
       else
         default_cdn_base
       end

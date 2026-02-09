@@ -74,13 +74,13 @@ RSpec.describe Uploadcare::FileMetadataClient do
     let(:encoded_uuid) { URI.encode_www_form_component(uuid) }
     let(:encoded_key) { URI.encode_www_form_component(key) }
 
+    let(:uuid) { 'file~uuid' }
+    let(:key) { 'custom key' }
+
     before do
       stub_request(:get, "https://api.uploadcare.com/files/#{encoded_uuid}/metadata/#{encoded_key}/")
         .to_return(status: 200, body: value.to_json, headers: { 'Content-Type' => 'application/json' })
     end
-
-    let(:uuid) { 'file~uuid' }
-    let(:key) { 'custom key' }
 
     it 'encodes uuid and key in metadata paths' do
       response = client.show(uuid: uuid, key: key)

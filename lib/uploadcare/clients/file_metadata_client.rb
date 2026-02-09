@@ -20,7 +20,12 @@ class Uploadcare::FileMetadataClient < Uploadcare::RestClient
   def show(uuid:, key:, request_options: {})
     encoded_uuid = URI.encode_www_form_component(uuid)
     encoded_key = URI.encode_www_form_component(key)
-    get(path: "/files/#{encoded_uuid}/metadata/#{encoded_key}/", params: {}, headers: {}, request_options: request_options)
+    get(
+      path: "/files/#{encoded_uuid}/metadata/#{encoded_key}/",
+      params: {},
+      headers: {},
+      request_options: request_options
+    )
   end
 
   # Updates or creates a metadata key for a specific file by UUID
@@ -32,7 +37,12 @@ class Uploadcare::FileMetadataClient < Uploadcare::RestClient
   def update(uuid:, key:, value:, request_options: {})
     encoded_uuid = URI.encode_www_form_component(uuid)
     encoded_key = URI.encode_www_form_component(key)
-    put(path: "/files/#{encoded_uuid}/metadata/#{encoded_key}/", params: value, headers: {}, request_options: request_options)
+    put(
+      path: "/files/#{encoded_uuid}/metadata/#{encoded_key}/",
+      params: value,
+      headers: {},
+      request_options: request_options
+    )
   end
 
   # Deletes a specific metadata key for a file by UUID
@@ -43,6 +53,11 @@ class Uploadcare::FileMetadataClient < Uploadcare::RestClient
   def delete(uuid:, key:, request_options: {})
     encoded_uuid = URI.encode_www_form_component(uuid)
     encoded_key = URI.encode_www_form_component(key)
-    super(path: "/files/#{encoded_uuid}/metadata/#{encoded_key}/", params: {}, headers: {}, request_options: request_options)
+    super(
+      path: "/files/#{encoded_uuid}/metadata/#{encoded_key}/",
+      params: {},
+      headers: {},
+      request_options: request_options
+    )
   end
 end

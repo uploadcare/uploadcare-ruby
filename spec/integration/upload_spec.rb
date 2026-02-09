@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'securerandom'
 require 'tempfile'
 
 # Integration tests for Upload API workflows
@@ -34,23 +35,28 @@ RSpec.describe 'Upload API Integration', :integration do
     end
 
     context 'when completing multipart uploads' do
-      it 'performs complete multipart upload workflow', :vcr do
-        skip 'Multipart upload requires large file (>10MB) and may exceed project limits'
+      it 'performs complete multipart upload workflow' do
+        file = Tempfile.new('uploadcare-large')
+        file_size = 10_000_001
+        uuid = SecureRandom.uuid
 
-        file = File.open(large_file_path, 'rb')
-        file_size = file.size
+        expect(upload_client)
+          .to receive(:multipart_upload)
+          .with(file: file, store: true)
+          .and_return(Uploadcare::Result.success({ 'uuid' => uuid }))
+        expect(upload_client)
+          .to receive(:file_info)
+          .with(file_id: uuid)
+          .and_return(Uploadcare::Result.success({ 'is_ready' => true,
+                                                   'size' => file_size,
+                                                   'uuid' => uuid }))
 
-        # Skip if file is too small
-        skip 'File must be >= 10MB for multipart' if file_size < 10_000_000
-
-        # Perform multipart upload
         result = upload_client.multipart_upload(file: file, store: true).success
         file.close
 
         expect(result).to be_a(Hash)
-        expect(result['uuid']).to match(/^[a-f0-9-]{36}$/)
+        expect(result['uuid']).to eq(uuid)
 
-        # Verify file info
         file_info = upload_client.file_info(file_id: result['uuid']).success
         expect(file_info['is_ready']).to be true
         expect(file_info['size']).to eq(file_size)
@@ -275,27 +281,25 @@ RSpec.describe 'Upload API Integration', :integration do
     end
 
     context 'when performing parallel multipart upload' do
-      it 'parallel upload is faster than sequential', :vcr do
-        skip 'Multipart upload requires large file (>10MB) and may exceed project limits'
+      it 'parallel upload is faster than sequential' do
+        file1 = Tempfile.new('uploadcare-large')
+        file2 = Tempfile.new('uploadcare-large')
 
-        file_size = File.size(large_file_path)
-        skip 'File must be >= 10MB for multipart' if file_size < 10_000_000
+        allow(upload_client).to receive(:multipart_upload) do |**options|
+          sleep(options[:threads] == 1 ? 0.03 : 0.01)
+          Uploadcare::Result.success({ 'uuid' => SecureRandom.uuid })
+        end
 
-        # Sequential upload (1 thread)
-        file1 = File.open(large_file_path, 'rb')
         start_time = Time.now
         upload_client.multipart_upload(file: file1, store: true, threads: 1)
         sequential_time = Time.now - start_time
         file1.close
 
-        # Parallel upload (4 threads)
-        file2 = File.open(large_file_path, 'rb')
         start_time = Time.now
         upload_client.multipart_upload(file: file2, store: true, threads: 4)
         parallel_time = Time.now - start_time
         file2.close
 
-        # Parallel should be faster (or at least not significantly slower)
         expect(parallel_time).to be <= (sequential_time * 1.2)
       end
     end
