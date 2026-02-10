@@ -39,7 +39,7 @@ class Uploadcare::FileMetadataClient < Uploadcare::RestClient
     encoded_key = URI.encode_www_form_component(key)
     put(
       path: "/files/#{encoded_uuid}/metadata/#{encoded_key}/",
-      params: value,
+      params: value.to_json,
       headers: {},
       request_options: request_options
     )

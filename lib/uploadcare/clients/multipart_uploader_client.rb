@@ -60,7 +60,8 @@ class Uploadcare::MultipartUploaderClient < Uploadcare::UploadClient
   # @param link_index [Integer] Index of the current chunk
   def process_chunk(file, links, link_index, &chunk_block)
     offset = link_index * CHUNK_SIZE
-    chunk = ::File.read(file, CHUNK_SIZE, offset)
+    file.seek(offset)
+    chunk = file.read(CHUNK_SIZE)
     Uploadcare::Result.unwrap(put(links[link_index], chunk))
 
     return unless chunk_block

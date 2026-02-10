@@ -222,7 +222,7 @@ module Uploadcare
       it 'breaks when queue pop raises ThreadError' do
         queue = Queue.new
         allow(Queue).to receive(:new).and_return(queue)
-        allow(queue).to receive(:pop).with(true).and_raise(ThreadError)
+        allow(queue).to receive(:pop).and_raise(ThreadError)
 
         file_size = file.size
         presigned_urls = ['url1']

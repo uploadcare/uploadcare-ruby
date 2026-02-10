@@ -55,11 +55,11 @@ http_interactions:
       - 4fceec68-f74a-4f2a-ba03-0e392a2327e7
     body:
       encoding: UTF-8
-      string: '{"type":"token","token":"0313e4e2-f2ca-4564-833b-4f71bc8cba27"}'
+      string: '{"type":"token","token":"<uploadcare_upload_token>"}'
   recorded_at: Tue, 20 Sep 2022 13:24:01 GMT
 - request:
     method: get
-    uri: https://upload.uploadcare.com/from_url/status/?token=0313e4e2-f2ca-4564-833b-4f71bc8cba27
+    uri: https://upload.uploadcare.com/from_url/status/?token=<uploadcare_upload_token>
     body:
       encoding: UTF-8
       string: ''
@@ -112,7 +112,7 @@ http_interactions:
   recorded_at: Tue, 20 Sep 2022 13:24:02 GMT
 - request:
     method: get
-    uri: https://upload.uploadcare.com/from_url/status/?token=0313e4e2-f2ca-4564-833b-4f71bc8cba27
+    uri: https://upload.uploadcare.com/from_url/status/?token=<uploadcare_upload_token>
     body:
       encoding: UTF-8
       string: ''

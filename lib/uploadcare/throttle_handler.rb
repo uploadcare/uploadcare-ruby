@@ -4,7 +4,7 @@
 #
 # This module is included in client classes to provide automatic retry logic
 # when the API returns a throttle error (HTTP 429). It respects the retry-after
-# header and implements exponential backoff.
+# header (via ThrottleError#timeout) and implements exponential backoff.
 #
 # @example Including in a client class
 #   class MyClient

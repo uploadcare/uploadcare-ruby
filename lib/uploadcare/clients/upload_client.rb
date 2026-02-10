@@ -82,7 +82,9 @@ class Uploadcare::UploadClient < Uploadcare::RestClient
   # @see https://uploadcare.com/api-refs/upload-api/#operation/baseUpload
   def upload_file(file:, request_options: {}, **options)
     Uploadcare::Result.capture do
-      raise ArgumentError, 'file must be a File or IO object' unless file.respond_to?(:read)
+      unless file.respond_to?(:read) && file.respond_to?(:path)
+        raise ArgumentError, 'file must be a File or IO object with #read and #path'
+      end
 
       params = build_upload_params(file, options)
       Uploadcare::Result.unwrap(post(path: 'base/', params: params, request_options: request_options))
@@ -302,7 +304,9 @@ class Uploadcare::UploadClient < Uploadcare::RestClient
   #   end
   def multipart_upload(file:, request_options: {}, **options, &)
     Uploadcare::Result.capture do
-      raise ArgumentError, 'file must be a File or IO object' unless file.respond_to?(:read)
+      unless file.respond_to?(:read) && file.respond_to?(:path)
+        raise ArgumentError, 'file must be a File or IO object with #read and #path'
+      end
 
       file_size = file.respond_to?(:size) ? file.size : ::File.size(file.path)
       filename = file.respond_to?(:original_filename) ? file.original_filename : ::File.basename(file.path)
@@ -621,64 +625,49 @@ class Uploadcare::UploadClient < Uploadcare::RestClient
     mutex = Mutex.new
     queue = Queue.new
 
-    # Read all parts into memory (for thread safety)
-    parts = []
-    presigned_urls.each_with_index do |presigned_url, index|
-      file.seek(index * part_size)
-      part_data = file.read(part_size)
-
-      break if part_data.nil? || part_data.empty?
-
-      parts << { url: presigned_url, data: part_data, index: index }
-    end
-
-    # Add parts to queue
-    parts.each { |part| queue << part }
-
-    # Add sentinel values (nil) to signal workers to stop
+    presigned_urls.each_with_index { |url, index| queue << [url, index] }
     threads.times { queue << nil }
 
-    # Track errors from threads
     errors = []
+    file_path = file.path
 
-    # Create worker threads
     workers = threads.times.map do
       Thread.new do
-        loop do
-          part = begin
-            queue.pop(true)
-          rescue ThreadError
-            # Queue is empty, exit cleanly
-            break
-          end
+        worker_file = ::File.open(file_path, 'rb')
+        begin
+          loop do
+            job = begin
+              queue.pop
+            rescue ThreadError
+              break
+            end
+            break if job.nil?
 
-          # Sentinel value signals termination
-          break if part.nil?
+            presigned_url, index = job
+            offset = index * part_size
+            break if offset >= total_size
 
-          begin
-            Uploadcare::Result.unwrap(multipart_upload_part(presigned_url: part[:url], part_data: part[:data]))
+            worker_file.seek(offset)
+            part_data = worker_file.read(part_size)
+            break if part_data.nil? || part_data.empty?
+
+            Uploadcare::Result.unwrap(multipart_upload_part(presigned_url: presigned_url, part_data: part_data))
 
             mutex.synchronize do
-              uploaded += part[:data].bytesize
-              block&.call({ uploaded: uploaded, total: total_size, part: part[:index] + 1,
-                            total_parts: parts.length })
+              uploaded += part_data.bytesize
+              block&.call({ uploaded: uploaded, total: total_size, part: index + 1,
+                            total_parts: presigned_urls.length })
             end
-          rescue StandardError => e
-            mutex.synchronize { errors << e }
-            raise # Re-raise to terminate thread
           end
+        rescue StandardError => e
+          mutex.synchronize { errors << e }
+        ensure
+          worker_file.close
         end
       end
     end
 
-    # Wait for all threads to complete and collect any uncaught exceptions
-    workers.each do |worker|
-      worker.join
-    rescue StandardError => e
-      mutex.synchronize { errors << e unless errors.include?(e) }
-    end
-
-    # Check for errors and raise the first one
+    workers.each(&:join)
     raise errors.first if errors.any?
   end
 

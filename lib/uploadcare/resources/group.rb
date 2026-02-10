@@ -16,6 +16,7 @@ class Uploadcare::Group < Uploadcare::BaseResource
     super
     @group_client = Uploadcare::GroupClient.new(config: config)
   end
+
   # Retrieves a paginated list of groups based on the provided parameters.
   # @param params [Hash] Optional parameters for filtering and pagination.
   # @param config [Uploadcare::Configuration] The Uploadcare configuration to use.
@@ -90,6 +91,7 @@ class Uploadcare::Group < Uploadcare::BaseResource
   # @return [String, nil]
   def id
     return @id if @id
+    return @uuid if defined?(@uuid) && !@uuid.to_s.empty?
     return unless @cdn_url
 
     uri = URI.parse(@cdn_url)
@@ -120,6 +122,8 @@ class Uploadcare::Group < Uploadcare::BaseResource
   # Returns CDN URLs of all files from group without API requesting
   # @return [Array<String>] Array of CDN URLs for all files in the group
   def file_cdn_urls
+    return [] if files_count.nil?
+
     files_count.times.map { |file_index| "#{cdn_url}nth/#{file_index}/" }
   end
 end

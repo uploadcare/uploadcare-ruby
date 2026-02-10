@@ -40,12 +40,10 @@ class Uploadcare::Authenticator
   # @param body [String] Request body content (default: '')
   # @param content_type [String] Content-Type header value (default: 'application/json')
   # @return [Hash] Headers hash including authentication
-  # @raise [Uploadcare::Exception::AuthError] if public key is blank when using secure auth
+  # @raise [Uploadcare::Exception::AuthError] if public or secret key is blank when using secure auth
   def headers(http_method, uri, body = '', content_type = 'application/json')
     return simple_auth_headers(content_type) if @config.auth_type == 'Uploadcare.Simple'
-    if @config.secret_key.nil? || @config.secret_key.empty?
-      return @default_headers.merge({ 'Content-Type' => content_type })
-    end
+    raise Uploadcare::Exception::AuthError, 'Secret Key is blank.' if @config.secret_key.to_s.empty?
 
     validate_public_key
     secure_auth_headers(http_method, uri, body, content_type)

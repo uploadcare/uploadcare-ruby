@@ -25,7 +25,8 @@ if result.failure?
 end
 
 payload = result.success
-file_name, file_uuid = payload.first
+file_uuid = payload['uuid']
+file_name = payload['original_filename']
 
 puts 'File uploaded successfully!'
 puts "UUID: #{file_uuid}"

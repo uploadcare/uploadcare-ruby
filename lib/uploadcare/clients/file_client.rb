@@ -5,7 +5,7 @@ class Uploadcare::FileClient < Uploadcare::RestClient
   # Gets list of files without pagination fields
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/filesList
   def list(params: {}, request_options: {})
-    get(path: 'files/', params: params, headers: {}, request_options: request_options)
+    get(path: '/files/', params: params, headers: {}, request_options: request_options)
   end
 
   # Stores a file by UUID

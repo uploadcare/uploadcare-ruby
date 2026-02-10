@@ -61,11 +61,10 @@ RSpec.describe Uploadcare::Authenticator do
       context 'when secret_key is empty' do
         let(:secret_key) { '' }
 
-        it 'returns default headers without authentication' do
-          headers = authenticator.headers(http_method, uri, body)
-          expect(headers).not_to have_key('Authorization')
-          expect(headers['Accept']).to eq('application/vnd.uploadcare-v0.7+json')
-          expect(headers['Content-Type']).to eq('application/json')
+        it 'raises AuthError' do
+          expect do
+            authenticator.headers(http_method, uri, body)
+          end.to raise_error(Uploadcare::Exception::AuthError, 'Secret Key is blank.')
         end
       end
 

@@ -28,6 +28,7 @@ class Uploadcare::WebhookClient < Uploadcare::RestClient
 
     # Add signing_secret if provided
     payload.merge!({ signing_secret: options[:signing_secret] }.compact)
+    payload.merge!({ version: options[:version] }.compact)
 
     post(path: '/webhooks/', params: payload, headers: {}, request_options: request_options)
   end

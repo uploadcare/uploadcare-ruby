@@ -120,7 +120,10 @@ class Uploadcare::UploaderClient < Uploadcare::UploadClient
   # Convert upload options to API parameters
   def upload_options_to_params(options)
     params = { 'UPLOADCARE_PUB_KEY' => @config.public_key }
-    params['UPLOADCARE_STORE'] = store_value(options[:store]) if options[:store]
+    if options.key?(:store)
+      store = store_value(options[:store])
+      params['UPLOADCARE_STORE'] = store unless store.nil?
+    end
     params.merge!(generate_metadata_params(options[:metadata]))
     params
   end

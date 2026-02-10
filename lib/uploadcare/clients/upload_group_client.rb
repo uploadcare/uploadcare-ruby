@@ -10,6 +10,9 @@ class Uploadcare::UploadGroupClient < Uploadcare::UploadClient
   # @return [Hash] The response containing group information
   # @see https://uploadcare.com/api-refs/upload-api/#operation/createFilesGroup
   def create_group(uuids:, request_options: {}, **options)
+    raise ArgumentError, 'uuids must be an array' unless uuids.is_a?(Array)
+    raise ArgumentError, 'uuids cannot be empty' if uuids.empty?
+
     body_hash = group_body_hash(uuids, options)
     post(path: 'group/', params: body_hash, headers: {}, request_options: request_options)
   end

@@ -74,7 +74,7 @@ class Uploadcare::RestClient
   # @param path [String] API endpoint path
   # @param params [Hash] Request body parameters
   # @param headers [Hash] Additional request headers
-  # @return [Hash] Parsed JSON response body
+  # @return [Uploadcare::Result] Result wrapper
   def post(path:, params: {}, headers: {}, request_options: {})
     request(method: :post, path: path, params: params, headers: headers, request_options: request_options)
   end
@@ -84,7 +84,7 @@ class Uploadcare::RestClient
   # @param path [String] API endpoint path
   # @param params [Hash] Query parameters
   # @param headers [Hash] Additional request headers
-  # @return [Hash] Parsed JSON response body
+  # @return [Uploadcare::Result] Result wrapper
   def get(path:, params: {}, headers: {}, request_options: {})
     request(method: :get, path: path, params: params, headers: headers, request_options: request_options)
   end
@@ -94,7 +94,7 @@ class Uploadcare::RestClient
   # @param path [String] API endpoint path
   # @param params [Hash] Request body parameters
   # @param headers [Hash] Additional request headers
-  # @return [Hash] Parsed JSON response body
+  # @return [Uploadcare::Result] Result wrapper
   def put(path:, params: {}, headers: {}, request_options: {})
     request(method: :put, path: path, params: params, headers: headers, request_options: request_options)
   end
@@ -104,7 +104,7 @@ class Uploadcare::RestClient
   # @param path [String] API endpoint path
   # @param params [Hash] Request body parameters
   # @param headers [Hash] Additional request headers
-  # @return [Hash] Parsed JSON response body
+  # @return [Uploadcare::Result] Result wrapper
   def delete(path:, params: {}, headers: {}, request_options: {})
     request(method: :delete, path: path, params: params, headers: headers, request_options: request_options)
   end
@@ -148,7 +148,13 @@ class Uploadcare::RestClient
     body_content = if method == HTTP_GET
                      ''
                    else
-                     params.nil? || params.empty? ? '' : params.to_json
+                     if params.nil? || (params.respond_to?(:empty?) && params.empty?)
+                       ''
+                     elsif params.is_a?(String)
+                       params
+                     else
+                       params.to_json
+                     end
                    end
 
     content_type = headers['Content-Type'] || authenticator.default_headers['Content-Type']
@@ -163,7 +169,7 @@ class Uploadcare::RestClient
     else
       return if params.nil? || params.empty?
 
-      req.body = params.is_a?(String) ? params.to_json : params
+      req.body = params
     end
   end
 

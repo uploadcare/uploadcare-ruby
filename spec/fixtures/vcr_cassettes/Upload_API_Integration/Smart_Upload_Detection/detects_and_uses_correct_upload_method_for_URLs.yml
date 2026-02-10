@@ -55,11 +55,11 @@ http_interactions:
       - 7b88870b-2158-4f23-b0f9-3371266368a9
     body:
       encoding: ASCII-8BIT
-      string: '{"type":"token","token":"458ab752-9a67-496c-a00d-57042c09f398"}'
+      string: '{"type":"token","token":"<uploadcare_upload_token>"}'
   recorded_at: Tue, 25 Nov 2025 08:50:30 GMT
 - request:
     method: get
-    uri: https://upload.uploadcare.com/from_url/status/?token=458ab752-9a67-496c-a00d-57042c09f398
+    uri: https://upload.uploadcare.com/from_url/status/?token=<uploadcare_upload_token>
     body:
       encoding: US-ASCII
       string: ''

@@ -85,7 +85,7 @@ module Uploadcare
           next_collection = subject.next_page
 
           expect(next_collection).to be_a(described_class)
-          expect(mock_client).to have_received(:list).with(hash_including('page' => '2'))
+          expect(mock_client).to have_received(:list).with(params: hash_including('page' => '2'))
         end
 
         it 'returns new collection with updated resources' do
@@ -177,7 +177,7 @@ module Uploadcare
       it 'extracts params from URL' do
         subject.send(:fetch_page, page_url)
 
-        expect(mock_client).to have_received(:list).with(hash_including('page' => '2', 'limit' => '50'))
+        expect(mock_client).to have_received(:list).with(params: hash_including('page' => '2', 'limit' => '50'))
       end
 
       it 'returns new collection' do

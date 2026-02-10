@@ -799,7 +799,7 @@ puts stored_file.datetime_stored
 # Batch store files using their UUIDs
 ``` ruby
 uuids = ['uuid1', 'uuid2', 'uuid3']
-batch_result = Uploadcare::File.batch_store(uuids)
+batch_result = Uploadcare::File.batch_store(uuids: uuids)
 ```
 
 # Check the status of the operation
@@ -823,7 +823,7 @@ unless batch_result.problems.empty?
 end
 ```
 
-## Deleting Files
+#### Deleting Files
 
 # Delete a single file
 ```ruby
@@ -836,12 +836,11 @@ puts deleted_file.datetime_removed
 # Batch delete multiple files
 ```ruby
 uuids = ['FILE_UUID_1', 'FILE_UUID_2']
-result = Uploadcare::File.batch_delete(uuids)
 result = Uploadcare::File.batch_delete(uuids: uuids)
 puts result.result
 ```
 
-## Copying Files
+#### Copying Files
 
 # Copy a file to local storage
 ```ruby

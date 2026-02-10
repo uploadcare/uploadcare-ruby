@@ -103,7 +103,7 @@ class Uploadcare::Configuration
   # Returns the custom CNAME for the account
   # @return [String] The generated CNAME prefix
   def custom_cname
-    Uploadcare::CnameGenerator.generate_cname
+    Uploadcare::CnameGenerator.generate_cname(public_key: public_key)
   end
 
   # Returns the CDN base URL based on subdomain configuration
@@ -111,7 +111,7 @@ class Uploadcare::Configuration
   def cdn_base
     lambda do
       if use_subdomains
-        Uploadcare::CnameGenerator.cdn_base_postfix
+        Uploadcare::CnameGenerator.cdn_base_postfix(config: self)
       else
         default_cdn_base
       end
