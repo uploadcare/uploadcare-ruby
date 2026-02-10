@@ -621,7 +621,7 @@ class Uploadcare::UploadClient < Uploadcare::RestClient
   # @api private
   def upload_parts_parallel(file, presigned_urls, part_size, threads, &block)
     total_size = file.respond_to?(:size) ? file.size : ::File.size(file.path)
-    uploaded = 0
+    uploaded = { value: 0 }
     mutex = Mutex.new
     queue = Queue.new
 
@@ -630,45 +630,50 @@ class Uploadcare::UploadClient < Uploadcare::RestClient
 
     errors = []
     file_path = file.path
+    total_parts = presigned_urls.length
 
     workers = threads.times.map do
       Thread.new do
-        worker_file = ::File.open(file_path, 'rb')
-        begin
-          loop do
-            job = begin
-              queue.pop
-            rescue ThreadError
-              break
-            end
-            break if job.nil?
-
-            presigned_url, index = job
-            offset = index * part_size
-            break if offset >= total_size
-
-            worker_file.seek(offset)
-            part_data = worker_file.read(part_size)
-            break if part_data.nil? || part_data.empty?
-
-            Uploadcare::Result.unwrap(multipart_upload_part(presigned_url: presigned_url, part_data: part_data))
-
-            mutex.synchronize do
-              uploaded += part_data.bytesize
-              block&.call({ uploaded: uploaded, total: total_size, part: index + 1,
-                            total_parts: presigned_urls.length })
-            end
-          end
-        rescue StandardError => e
-          mutex.synchronize { errors << e }
-        ensure
-          worker_file.close
-        end
+        run_parallel_worker(queue, file_path, part_size, total_size, total_parts, mutex, uploaded, errors, &block)
       end
     end
 
     workers.each(&:join)
     raise errors.first if errors.any?
+  end
+
+  def run_parallel_worker(queue, file_path, part_size, total_size, total_parts, mutex, uploaded, errors, &block)
+    worker_file = ::File.open(file_path, 'rb')
+    begin
+      loop do
+        job = begin
+          queue.pop
+        rescue ThreadError
+          break
+        end
+        break if job.nil?
+
+        presigned_url, index = job
+        offset = index * part_size
+        break if offset >= total_size
+
+        worker_file.seek(offset)
+        part_data = worker_file.read(part_size)
+        break if part_data.nil? || part_data.empty?
+
+        Uploadcare::Result.unwrap(multipart_upload_part(presigned_url: presigned_url, part_data: part_data))
+
+        mutex.synchronize do
+          uploaded[:value] += part_data.bytesize
+          block&.call({ uploaded: uploaded[:value], total: total_size, part: index + 1,
+                        total_parts: total_parts })
+        end
+      end
+    rescue StandardError => e
+      mutex.synchronize { errors << e }
+    ensure
+      worker_file.close
+    end
   end
 
   def success_response?(response)

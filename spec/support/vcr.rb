@@ -20,23 +20,25 @@ VCR.configure do |config|
     end
 
     if (auth = i.request.headers['Authorization']&.first)
-      auth = auth.gsub(/\AUploadcare\\.Simple\\s+[^:\\s]+:[^\\s]+\\z/, 'Uploadcare.Simple <uploadcare_public_key>:<uploadcare_secret_key>')
-      auth = auth.gsub(/\AUploadcare\\s+[^:\\s]+:[^\\s]+\\z/, 'Uploadcare <uploadcare_public_key>:<uploadcare_rest_signature>')
+      auth = auth.gsub(/\AUploadcare\.Simple\s+[^:\s]+:[^\s]+\z/,
+                       'Uploadcare.Simple <uploadcare_public_key>:<uploadcare_secret_key>')
+      auth = auth.gsub(/\AUploadcare\s+[^:\s]+:[^\s]+\z/,
+                       'Uploadcare <uploadcare_public_key>:<uploadcare_rest_signature>')
       i.request.headers['Authorization'] = [auth]
     end
 
-    if i.request.uri
-      i.request.uri = i.request.uri.gsub(/([?&]token=)[^&]+/, '\\1<uploadcare_upload_token>')
-    end
+    i.request.uri = i.request.uri.gsub(/([?&]token=)[^&]+/, '\1<uploadcare_upload_token>') if i.request.uri
 
     if i.request.body
-      i.request.body = i.request.body.gsub(/(\"token\"\\s*:\\s*\")[^\"]+(\"\\s*(?:\\x7D|\\x5D))/, '\\1<uploadcare_upload_token>\\2')
-      i.request.body = i.request.body.gsub(/(name=\"signature\"\\r\\n\\r\\n)[^\\r\\n]+/, '\\1<uploadcare_signature>')
-      i.request.body = i.request.body.gsub(/(name=\"expire\"\\r\\n\\r\\n)[^\\r\\n]+/, '\\1<uploadcare_expire>')
+      i.request.body = i.request.body.gsub(/("token"\s*:\s*")[^"]+("\s*(?:\x7D|\x5D))/,
+                                           '\1<uploadcare_upload_token>\2')
+      i.request.body = i.request.body.gsub(/(name="signature"\r\n\r\n)[^\r\n]+/, '\1<uploadcare_signature>')
+      i.request.body = i.request.body.gsub(/(name="expire"\r\n\r\n)[^\r\n]+/, '\1<uploadcare_expire>')
     end
 
     if i.response.body.is_a?(String)
-      i.response.body = i.response.body.gsub(/(\"token\"\\s*:\\s*\")[^\"]+(\"\\s*(?:\\x7D|\\x5D))/, '\\1<uploadcare_upload_token>\\2')
+      i.response.body = i.response.body.gsub(/("token"\s*:\s*")[^"]+("\s*(?:\x7D|\x5D))/,
+                                             '\1<uploadcare_upload_token>\2')
     end
   end
   config.configure_rspec_metadata!

@@ -144,23 +144,19 @@ class Uploadcare::RestClient
   end
 
   def prepare_headers(req, method, uri, params, headers)
-    # For authentication, we need to know the body content for signature generation
-    body_content = if method == HTTP_GET
-                     ''
-                   else
-                     if params.nil? || (params.respond_to?(:empty?) && params.empty?)
-                       ''
-                     elsif params.is_a?(String)
-                       params
-                     else
-                       params.to_json
-                     end
-                   end
-
+    body_content = body_content_for_signature(method, params)
     content_type = headers['Content-Type'] || authenticator.default_headers['Content-Type']
     auth_headers = authenticator.headers(method, uri, body_content, content_type)
     req.headers.merge!(auth_headers)
     req.headers.merge!(headers)
+  end
+
+  def body_content_for_signature(method, params)
+    return '' if method == HTTP_GET
+    return '' if params.nil? || (params.respond_to?(:empty?) && params.empty?)
+    return params if params.is_a?(String)
+
+    params.to_json
   end
 
   def prepare_body_or_params(req, method, params)
