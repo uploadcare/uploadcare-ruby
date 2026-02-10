@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
+require 'securerandom'
 
 RSpec.describe 'Multi-account configuration' do
+  let(:account_one_secret_key) { SecureRandom.hex(16) }
+  let(:account_two_secret_key) { SecureRandom.hex(16) }
+
   let(:account_one_config) do
     Uploadcare::Configuration.new(
       public_key: 'public_key1',
-      secret_key: 'secret_key1',
+      secret_key: account_one_secret_key,
       use_subdomains: true,
       cdn_base_postfix: 'https://ucarecd.net/'
     )
@@ -15,7 +19,7 @@ RSpec.describe 'Multi-account configuration' do
   let(:account_two_config) do
     Uploadcare::Configuration.new(
       public_key: 'public_key2',
-      secret_key: 'secret_key2',
+      secret_key: account_two_secret_key,
       use_subdomains: true,
       cdn_base_postfix: 'https://ucarecd.net/'
     )
