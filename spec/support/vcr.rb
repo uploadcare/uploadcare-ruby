@@ -21,9 +21,8 @@ VCR.configure do |config|
 
     if (auth = i.request.headers['Authorization']&.first)
       auth = auth.gsub(/\AUploadcare\.Simple\s+[^:\s]+:[^\s]+\z/,
-                       'Uploadcare.Simple <uploadcare_public_key>:<uploadcare_secret_key>')
-      auth = auth.gsub(/\AUploadcare\s+[^:\s]+:[^\s]+\z/,
-                       'Uploadcare <uploadcare_public_key>:<uploadcare_rest_signature>')
+                       'Uploadcare.Simple <uploadcare_authorization>')
+      auth = auth.gsub(/\AUploadcare\s+[^:\s]+:[^\s]+\z/, 'Uploadcare <uploadcare_authorization>')
       i.request.headers['Authorization'] = [auth]
     end
 
