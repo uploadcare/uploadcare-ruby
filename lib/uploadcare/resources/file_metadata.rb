@@ -37,8 +37,11 @@ class Uploadcare::FileMetadata < Uploadcare::BaseResource
   # @return [String] The updated value of the metadata key
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata/operation/updateFileMetadataKey
   def update(key:, value:, uuid: nil, request_options: {})
-    Uploadcare::Result.unwrap(@file_metadata_client.update(uuid: uuid || @uuid, key: key, value: value,
-                                                           request_options: request_options))
+    target_uuid = uuid || @uuid
+    result = Uploadcare::Result.unwrap(@file_metadata_client.update(uuid: target_uuid, key: key, value: value,
+                                                                    request_options: request_options))
+    @metadata[key.to_s] = result if target_uuid == @uuid
+    result
   end
 
   # Retrieves the value of a specific metadata key for the file
@@ -54,8 +57,11 @@ class Uploadcare::FileMetadata < Uploadcare::BaseResource
   # @param key [String] The metadata key to delete
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata/operation/deleteFileMetadata
   def delete(key:, uuid: nil, request_options: {})
-    Uploadcare::Result.unwrap(@file_metadata_client.delete(uuid: uuid || @uuid, key: key,
-                                                           request_options: request_options))
+    target_uuid = uuid || @uuid
+    result = Uploadcare::Result.unwrap(@file_metadata_client.delete(uuid: target_uuid, key: key,
+                                                                    request_options: request_options))
+    @metadata.delete(key.to_s) if target_uuid == @uuid
+    result
   end
 
   # Get file's metadata keys and values

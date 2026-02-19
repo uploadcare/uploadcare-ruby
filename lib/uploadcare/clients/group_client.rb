@@ -17,7 +17,7 @@ class Uploadcare::GroupClient < Uploadcare::RestClient
   # @return [Hash] The response containing the group's details
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Group/operation/groupInfo
   def info(uuid:, request_options: {})
-    encoded_uuid = URI.encode_www_form_component(uuid)
+    encoded_uuid = URI::DEFAULT_PARSER.escape(uuid.to_s, /[^A-Za-z0-9\-._~]/)
     get(path: "/groups/#{encoded_uuid}/", params: {}, headers: {}, request_options: request_options)
   end
 
@@ -26,7 +26,7 @@ class Uploadcare::GroupClient < Uploadcare::RestClient
   # @return [NilClass] Returns nil on successful deletion
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Group/operation/deleteGroup
   def delete(uuid:, request_options: {})
-    encoded_uuid = URI.encode_www_form_component(uuid)
+    encoded_uuid = URI::DEFAULT_PARSER.escape(uuid.to_s, /[^A-Za-z0-9\-._~]/)
     super(path: "/groups/#{encoded_uuid}/", params: {}, headers: {}, request_options: request_options)
   end
 end

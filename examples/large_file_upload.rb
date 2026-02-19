@@ -49,7 +49,6 @@ begin
   begin
     file = File.open(file_path, 'rb')
 
-    # Upload with multipart and parallel threads
     result = upload_client.multipart_upload(file: file,
                                             store: true,
                                             threads: threads,
@@ -59,11 +58,10 @@ begin
                                             }) do |progress|
       uploaded_mb = (progress[:uploaded] / 1024.0 / 1024.0).round(2)
       total_mb = (progress[:total] / 1024.0 / 1024.0).round(2)
-      percentage = progress[:percentage].to_i
+      percentage = ((progress[:uploaded].to_f / progress[:total]) * 100).round
       part = progress[:part]
       total_parts = progress[:total_parts]
 
-      # Progress bar
       bar_length = 30
       filled = (bar_length * percentage / 100).to_i
       bar = ('█' * filled) + ('░' * (bar_length - filled))
@@ -71,6 +69,7 @@ begin
       print "\r#{bar} #{percentage}% | Part #{part}/#{total_parts} | #{uploaded_mb}/#{total_mb} MB"
       $stdout.flush
     end
+    result = Uploadcare::Result.unwrap(result)
   ensure
     file&.close
   end

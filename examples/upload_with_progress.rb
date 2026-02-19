@@ -41,25 +41,21 @@ begin
   start_time = Time.now
 
   result = Uploadcare::Uploader.upload(object: file, store: true) do |progress|
-    # Calculate progress metrics
     uploaded_mb = (progress[:uploaded] / 1024.0 / 1024.0).round(2)
     total_mb = (progress[:total] / 1024.0 / 1024.0).round(2)
-    percentage = progress[:percentage].to_i
+    percentage = ((progress[:uploaded].to_f / progress[:total]) * 100).round
     part = progress[:part]
     total_parts = progress[:total_parts]
 
-    # Calculate speed and ETA
     elapsed = Time.now - start_time
     speed_mbps = uploaded_mb / elapsed
     remaining_mb = total_mb - uploaded_mb
     eta_seconds = remaining_mb / speed_mbps if speed_mbps.positive?
 
-    # Create progress bar
     bar_length = 40
     filled = (bar_length * percentage / 100).to_i
     bar = ('█' * filled) + ('░' * (bar_length - filled))
 
-    # Display progress
     print "\r#{bar} #{percentage}% | "
     print "#{uploaded_mb}/#{total_mb} MB | "
     print "Part #{part}/#{total_parts} | "

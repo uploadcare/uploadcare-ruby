@@ -119,7 +119,7 @@ For large files, use progress callbacks:
 
 ```ruby
 Uploadcare::Uploader.upload(object: file, store: true) do |progress|
-  percentage = progress[:percentage]
+  percentage = (progress[:uploaded].to_f / progress[:total] * 100).round
   puts "Progress: #{percentage}%"
 end
 ```

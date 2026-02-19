@@ -40,98 +40,11 @@ wrapping Upload and REST APIs.
 
 ## Upgrading from v4.x to v5.0
 
-Version 5.0 is a major rewrite with significant architectural changes. Please review the following breaking changes before upgrading.
+Version 5.0 is a major rewrite with breaking changes.
 
-### Breaking Changes Summary
-
-#### Dependencies Changed
-- **Removed**: `dry-configurable`, `uploadcare-api_struct`, `mimemagic`, `parallel`, `retries`
-- **Added**: `zeitwerk`, `faraday`, `faraday-multipart`, `addressable`, `mime-types`
-
-#### Ruby Version
-- **Minimum Ruby version is now 3.3+** (dropped support for Ruby < 3.3)
-- Supported versions: Ruby 3.3, 3.4, 4.0
-
-#### Module/Class Namespace Changes
-```ruby
-# Old (v4.x)
-Uploadcare::Entity::File
-Uploadcare::Client::FileClient
-
-# New (v5.0)
-Uploadcare::File
-Uploadcare::FileClient
-```
-
-#### Configuration
-The configuration system has been rewritten from `Dry::Configurable` to a plain Ruby class. The syntax remains the same, but there are new options available:
-
-```ruby
-Uploadcare.configure do |config|
-  config.public_key = 'your_public_key'
-  config.secret_key = 'your_secret_key'
-  # New options in v5.0:
-  config.upload_timeout = 120                      # Upload request timeout (seconds)
-  config.max_upload_retries = 5                    # Maximum retry attempts
-  config.multipart_chunk_size = 10 * 1024 * 1024   # Chunk size for multipart uploads
-end
-```
-
-#### Method Renames
-
-| Old Method (v4.x) | New Method (v5.0) |
-|-------------------|-------------------|
-| `Addons.check_aws_rekognition_detect_labels_status` | `Addons.aws_rekognition_detect_labels_status` |
-| `Addons.check_aws_rekognition_detect_moderation_labels_status` | `Addons.aws_rekognition_detect_moderation_labels_status` |
-| `Addons.check_uc_clamav_virus_scan_status` | `Addons.uc_clamav_virus_scan_status` |
-| `Addons.check_remove_bg_status` | `Addons.remove_bg_status` |
-
-
-#### Smart Upload Detection
-The `Uploader.upload` method now automatically detects the input type and selects the appropriate upload method:
-
-```ruby
-# Automatically detects URL and uses upload_from_url
-Uploadcare::Uploader.upload(object: 'https://example.com/image.jpg')
-
-# Automatically uses multipart upload for files >= 10MB
-Uploadcare::Uploader.upload(object: large_file)
-
-# Handles arrays for batch uploads
-Uploadcare::Uploader.upload(object: [file1, file2, file3])
-```
-
-#### New Exception Classes
-More specific exception classes are now available for better error handling:
-
-```ruby
-rescue Uploadcare::Exception::NotFoundError => e
-  # Handle 404 specifically
-rescue Uploadcare::Exception::InvalidRequestError => e
-  # Handle 400 specifically
-rescue Uploadcare::Exception::UploadError => e
-  # Handle upload-specific failures
-rescue Uploadcare::Exception::RetryError => e
-  # Handle polling/retry scenarios
-rescue Uploadcare::Exception::RequestError => e
-  # Handle other errors (base class)
-```
-
-#### Batch Operations Return Type
-Batch operations now return a `BatchFileResult` object:
-
-```ruby
-result = Uploadcare::File.batch_store(uuids)
-result.status    # => 200
-result.result    # => Array of File objects
-result.problems  # => Hash of UUIDs that failed with reasons
-```
-
-#### Thread Safety
-- Upload operations are now thread-safe with proper mutex protection
-- Parallel multipart uploads use native Ruby threading instead of the `parallel` gem
-
-For a complete list of changes, see the [CHANGELOG](./CHANGELOG.md).
+Read the migration guide before upgrading:
+- [Migration guide v4.x to v5.0](./MIGRATING_V5.md)
+- [Changelog](./CHANGELOG.md)
 
 ## Installation
 
@@ -289,7 +202,7 @@ After the request for uploading-from-URL is sent, you can check the progress of 
 
 ```ruby
 Uploadcare::Uploader.upload_from_url_status(token: "1251ee66-3631-4416-a2fb-96ba59f5a515")
-# => Success({:size=>453543, :total=>453543, :done=>453543, :uuid=>"5c51a7fe-e45d-42a2-ba5e-79957ff4bdab", :file_id=>"5c51a7fe-e45d-42a2-ba5e-79957ff4bdab", :original_filename=>"2250", :is_image=>true, :is_stored=>false, :image_info=>{:dpi=>[96, 96], :width=>2250, :format=>"JPEG", :height=>2250, :sequence=>false, :color_mode=>"RGB", :orientation=>nil, :geo_location=>nil, :datetime_original=>nil}, :video_info=>nil, :content_info=>{:mime=>{:mime=>"image/jpeg", :type=>"image", :subtype=>"jpeg"}, :image=>{:dpi=>[96, 96], :width=>2250, :format=>"JPEG", :height=>2250, :sequence=>false, :color_mode=>"RGB", :orientation=>nil, :geo_location=>nil, :datetime_original=>nil}}, :is_ready=>true, :filename=>"2250", :mime_type=>"image/jpeg", :metadata=>{}, :status=>"success"})
+# => {"size"=>453543, "total"=>453543, "done"=>453543, "uuid"=>"5c51a7fe-e45d-42a2-ba5e-79957ff4bdab", ... "status"=>"success"}
 ```
 
 In case of the `async` option is disabled, uploadcare-ruby tries to request the upload status several times (depending on the `max_request_tries` config param) and then returns uploaded file attributes.
@@ -458,10 +371,9 @@ For example to track file uploading progress you can do something like this:
 
 ```ruby
 file = File.open("big_file.bin")
-progress_percent = 0
 Uploadcare::Uploader.multipart_upload(file: file, store: true) do |progress|
-  progress_percent += (100.0 / progress[:links_count])
-  puts "PROGRESS = #{progress_percent}"
+  progress_percent = (progress[:uploaded].to_f / progress[:total] * 100).round(2)
+  puts "PROGRESS = #{progress_percent}% (Part #{progress[:part]}/#{progress[:total_parts]})"
 end
 ```
 
@@ -476,204 +388,26 @@ PROGRESS = 13.636363636363637
 
 Options available in a block:
 
-- **:chunk_size** - size of each chunk in bytes;
-- **:object** - file object which is going to be uploaded;
-- **:offset** - offset from the beginning of a File object in bytes;
-- **:link_id** - index of a link provided by Uploadcare API. Might be treated as index of a chunk;
-- **:links** - array of links for uploading file's chunks;
-- **:links_count** - count of the array of links.
+- **:uploaded** - uploaded bytes so far
+- **:total** - total file size in bytes
+- **:part** - current part number
+- **:total_parts** - total number of parts
 
 #### Uploading options
 
 You can override [auto-store setting](https://app.uploadcare.com/projects/-/settings/#storage) from your Uploadcare project for each upload request:
 
 ```ruby
-@api.upload(object: files, store: true)          # mark the uploaded file as stored.
-@api.upload(object: files, store: false)         # do not mark the uploaded file as stored and remove it after 24 hours.
-@api.upload_from_url(url: url, store: "auto") # defers the choice of storage behavior to the auto-store setting.
+Uploadcare::Uploader.upload(object: file, store: true)
+Uploadcare::Uploader.upload(object: file, store: false)
+Uploadcare::Uploader.upload_from_url(url: url, store: "auto")
 ```
 
 You can upload file with custom metadata, for example `subsystem` and `pet`:
 
 ```ruby
-@api.upload(object: files, metadata: { subsystem: 'my_subsystem', pet: 'cat' } )
-@api.upload_from_url(url: url, metadata: { subsystem: 'my_subsystem', pet: 'cat' })
-```
-
-#### Smart Upload with Progress Tracking
-
-The `Uploadcare::Uploader` module provides intelligent upload handling with automatic method selection based on file size and source type:
-
-```ruby
-# Upload a small file (< 10MB) - automatically uses base upload
-file = File.open('photo.jpg', 'rb')
-result = Uploadcare::Uploader.upload(object: file, store: true)
-puts result.uuid
-# => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
-
-# Upload a large file (>= 10MB) - automatically uses multipart upload with progress
-large_file = File.open('video.mp4', 'rb')
-result = Uploadcare::Uploader.upload(object: large_file, store: true) do |progress|
-  puts "Progress: #{progress[:percentage]}% (Part #{progress[:part]}/#{progress[:total_parts]})"
-end
-puts result.uuid
-
-# Upload from URL - automatically detected
-result = Uploadcare::Uploader.upload(object: 'https://example.com/image.jpg', store: true)
-puts result.uuid
-
-# Batch upload multiple files
-files = [
-  File.open('photo1.jpg', 'rb'),
-  File.open('photo2.jpg', 'rb')
-]
-results = Uploadcare::Uploader.upload(object: files, store: true)
-results.each { |file| puts file.uuid }
-```
-
-The `Uploader.upload` method automatically:
-- Detects URLs and uses `upload_from_url`
-- Chooses base upload for files < 10MB
-- Chooses multipart upload for files >= 10MB
-- Handles arrays for batch uploads
-- Supports progress callbacks for large files
-
-#### Advanced Upload Options
-
-For more control, you can use the `UploadClient` directly:
-
-```ruby
-upload_client = Uploadcare::UploadClient.new
-
-# Upload with custom metadata
-file = File.open('document.pdf', 'rb')
-response = upload_client.upload_file(file: file,
-  store: true,
-  metadata: {
-    subsystem: 'documents',
-    category: 'invoices',
-    user_id: '12345'
-  }
-)
-
-# Multipart upload with parallel threads and progress
-large_file = File.open('large_video.mp4', 'rb')
-response = upload_client.multipart_upload(file: large_file,
-  store: true,
-  threads: 4,  # Upload 4 parts in parallel
-  part_size: 10 * 1024 * 1024  # 10MB chunks
-) do |progress|
-  uploaded_mb = (progress[:uploaded] / 1024.0 / 1024.0).round(2)
-  total_mb = (progress[:total] / 1024.0 / 1024.0).round(2)
-  puts "Uploaded #{uploaded_mb}/#{total_mb} MB"
-end
-
-# URL upload with custom polling
-response = upload_client.upload_from_url(
-  source_url: 'https://example.com/large-file.zip',
-  store: true,
-  poll_interval: 2,    # Check status every 2 seconds
-  poll_timeout: 600    # Wait up to 10 minutes
-)
-
-# Async URL upload (returns immediately with token)
-response = upload_client.upload_from_url(
-  source_url: 'https://example.com/file.zip',
-  async: true
-)
-token = response['token']
-
-# Check status later
-status = upload_client.upload_from_url_status(token: token)
-case status['status']
-when 'success'
-  puts "Upload complete: #{status['uuid']}"
-when 'progress'
-  puts "Upload in progress: #{status['done']}/#{status['total']} bytes"
-when 'waiting'
-  puts "Upload queued"
-when 'error'
-  puts "Upload failed: #{status['error']}"
-end
-```
-
-#### Multipart Upload for Large Files
-
-For files >= 10MB, multipart upload is automatically used. You can also use it explicitly:
-
-```ruby
-upload_client = Uploadcare::UploadClient.new
-file = File.open('large_file.bin', 'rb')
-
-# Simple multipart upload
-response = upload_client.multipart_upload(file: file, store: true)
-
-# With progress tracking
-upload_client.multipart_upload(file: file, store: true) do |progress|
-  percentage = (progress[:uploaded].to_f / progress[:total] * 100).round(2)
-  puts "Progress: #{percentage}% - Part #{progress[:part]}/#{progress[:total_parts]}"
-end
-
-# With parallel uploads (faster for large files)
-upload_client.multipart_upload(file: file,
-  store: true,
-  threads: 4,  # Upload 4 parts simultaneously
-  metadata: { source: 'api', type: 'video' }
-) do |progress|
-  puts "Uploaded #{progress[:uploaded]} / #{progress[:total]} bytes"
-end
-
-file.close
-```
-
-**Multipart Upload Options:**
-- **store** - storage behavior: `true`, `false`, or `'auto'` (default)
-- **metadata** - custom metadata hash
-- **part_size** - size of each part in bytes (default: 5MB)
-- **threads** - number of parallel upload threads (default: 1, max: 10)
-
-**Progress Callback:**
-The progress block receives a hash with:
-- **:uploaded** - bytes uploaded so far
-- **:total** - total file size in bytes
-- **:percentage** - upload percentage (0-100)
-- **:part** - current part number
-- **:total_parts** - total number of parts
-
-#### Manual Multipart Upload Control
-
-For advanced use cases, you can control each step of the multipart upload:
-
-```ruby
-upload_client = Uploadcare::UploadClient.new
-file = File.open('large_file.bin', 'rb')
-
-# Step 1: Start multipart upload
-response = upload_client.multipart_start(
-  filename: File.basename(file.path),
-  size: file.size,
-  content_type: 'application/octet-stream',
-  store: true
-)
-upload_uuid = response['uuid']
-presigned_urls = response['parts']
-
-# Step 2: Upload each part
-presigned_urls.each_with_index do |url, index|
-  part_size = 5 * 1024 * 1024  # 5MB
-  file.seek(index * part_size)
-  part_data = file.read(part_size)
-  break if part_data.nil? || part_data.empty?
-
-  upload_client.multipart_upload_part(presigned_url: url, part_data: part_data)
-  puts "Uploaded part #{index + 1}/#{presigned_urls.length}"
-end
-
-# Step 3: Complete the upload
-response = upload_client.multipart_complete(uuid: upload_uuid)
-puts "Upload complete: #{response['uuid']}"
-
-file.close
+Uploadcare::Uploader.upload(object: file, metadata: { subsystem: 'my_subsystem', pet: 'cat' })
+Uploadcare::Uploader.upload_from_url(url: url, metadata: { subsystem: 'my_subsystem', pet: 'cat' })
 ```
 
 ### File management
@@ -869,34 +603,31 @@ The File object also can be converted if it is a document or a video file. Imagi
 To convert it to an another file, just do:
 
 ```ruby
-@converted_file = @file.convert_document({ format: "png", page: "1" }, store: true)
+@converted_file = @file.convert_document(params: { format: "png" }, options: { store: true })
 # => {
 #    "uuid"=>"<NEW_FILE_UUID>"}
 #    ...other file info...
 # }
 # OR
-# Failure({:"<FILE_UUID>/document/-/format/png/-/page/1/"=>"the target_format is not a supported 'to' format for this source file. <you_source_file_extension> -> png"})
+# Failure({ "problem" => "the target format is not supported for this source file" })
 ```
 
 Same works for video files:
 
 ```ruby
 @converted_file = @file.convert_video(
-  {
+  params: {
     format: "ogg",
-    quality: "best",
-    cut: { start_time: "0:0:0.1", length: "end" },
-    size: { resize_mode: "change_ratio", width: "600", height: "400" },
-    thumb: { N: 1, number: 2 }
+    quality: "best"
   },
-  store: true
+  options: { store: true }
 )
 # => {
 #    "uuid"=>"<NEW_FILE_UUID>"}
 #    ...other file info...
 # }
 # OR
-# Failure({:"<FILE_UUID>/video/-/size/600x400/preserve_ratio/-/quality/best/-/format/ogg/-/cut/0:0:0.1/end/-/thumbs~1/2/"=>"CDN Path error: Failed to parse remainder \"/preserve_ratio\" of \"size/600x400/preserve_ratio\""})
+# Failure({ "problem" => "conversion failed for the requested profile" })
 ```
 
 More about file conversion [here](#conversion).
@@ -916,7 +647,7 @@ options = {
   from: '2022-01-01T00:00:00'   # Start from this point in the collection
 }
 
-@file_list = Uploadcare::File.list(options)
+@file_list = Uploadcare::File.list(options: options)
 # => Returns an instance of PaginatedCollection containing Uploadcare::File objects
 ```
 
@@ -940,7 +671,7 @@ options = {
   ordering: "-datetime_uploaded",
   from: "2017-01-01T00:00:00",
 }
-@list = Uploadcare::File.list(options)
+@list = Uploadcare::File.list(options: options)
 ```
 
 To simply get all associated objects:
@@ -1101,10 +832,10 @@ An `Add-On` is an application implemented by Uploadcare that accepts uploaded fi
 ```ruby
 # Execute AWS Rekognition Add-On for a given target to detect labels in an image.
 # Note: Detected labels are stored in the file's appdata.
-Uploadcare::Addons.aws_rekognition_detect_labels('FILE_UUID')
+Uploadcare::Addons.aws_rekognition_detect_labels(uuid: 'FILE_UUID')
 
 # Check the status of AWS Rekognition.
-Uploadcare::Addons.aws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_LABELS')
+Uploadcare::Addons.aws_rekognition_detect_labels_status(request_id: 'RETURNED_ID_FROM_WS_REKOGNITION_DETECT_LABELS')
 ```
 
 ##### AWS Rekognition Moderation
@@ -1113,37 +844,37 @@ Uploadcare::Addons.aws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REK
 # Execute AWS Rekognition Moderation Add-On for a given target to detect moderation labels in an image.
 # Note: Detected moderation labels are stored in the file's appdata.
 
-Uploadcare::Addons.aws_rekognition_detect_moderation_labels('FILE_UUID')
+Uploadcare::Addons.aws_rekognition_detect_moderation_labels(uuid: 'FILE_UUID')
 
 # Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
-Uploadcare::Addons.aws_rekognition_detect_moderation_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_MODERATION_LABELS')
+Uploadcare::Addons.aws_rekognition_detect_moderation_labels_status(request_id: 'RETURNED_ID_FROM_WS_REKOGNITION_DETECT_MODERATION_LABELS')
 ```
 
 ##### ClamAV
 
 ```ruby
 # ClamAV virus checking Add-On for a given target.
-Uploadcare::Addons.uc_clamav_virus_scan('FILE_UUID')
+Uploadcare::Addons.uc_clamav_virus_scan(uuid: 'FILE_UUID')
 
 # Check and purge infected file.
-Uploadcare::Addons.uc_clamav_virus_scan('FILE_UUID', purge_infected: true )
+Uploadcare::Addons.uc_clamav_virus_scan(uuid: 'FILE_UUID', params: { purge_infected: true })
 
 # Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
-Uploadcare::Addons.uc_clamav_virus_scan_status('RETURNED_ID_FROM_UC_CLAMAV_VIRUS_SCAN')
+Uploadcare::Addons.uc_clamav_virus_scan_status(request_id: 'RETURNED_ID_FROM_UC_CLAMAV_VIRUS_SCAN')
 ```
 
 ##### Remove.bg
 
 ```ruby
 # Execute remove.bg background image removal Add-On for a given target.
-Uploadcare::Addons.remove_bg('FILE_UUID')
+Uploadcare::Addons.remove_bg(uuid: 'FILE_UUID')
 
 # You can pass optional parameters.
 # See the full list of parameters here: https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/removeBgExecute
-Uploadcare::Addons.remove_bg('FILE_UUID', crop: true, type_level: '2')
+Uploadcare::Addons.remove_bg(uuid: 'FILE_UUID', params: { crop: true, type_level: '2' })
 
 # Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
-Uploadcare::Addons.remove_bg_status('RETURNED_ID_FROM_REMOVE_BG')
+Uploadcare::Addons.remove_bg_status(request_id: 'RETURNED_ID_FROM_REMOVE_BG')
 ```
 
 #### Project
@@ -1174,55 +905,33 @@ Then you can use this file identifier to convert your video in multiple ways:
 
 ```ruby
 Uploadcare::VideoConverter.convert(
-  [
-    {
-      uuid: "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40",
-      size: { resize_mode: "change_ratio", width: "600", height: "400" },
-      quality: "best",
-      format: "ogg",
-      cut: { start_time: "0:0:0.0", length: "0:0:1.0" },
-      thumbs: { N: 2, number: 1 }
-    }
-  ],
-  store: false
+  params: {
+    uuid: "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40",
+    quality: "best",
+    format: "ogg"
+  },
+  options: { store: false }
 )
 ```
 
 This method accepts options to set properties of an output file:
 
 - **uuid** — the file UUID-identifier.
-- **size**:
-  - **resize_mode** - size operation to apply to a video file. Can be `preserve_ratio (default)`, `change_ratio`, `scale_crop` or `add_padding`.
-  - **width** - width for a converted video.
-  - **height** - height for a converted video.
-
-```
-  NOTE: you can choose to provide a single dimension (width OR height).
-        The value you specify for any of the dimensions should be a non-zero integer divisible by 4
-```
-
 - **quality** - sets the level of video quality that affects file sizes and hence loading times and volumes of generated traffic. Can be `normal (default)`, `better`, `best`, `lighter`, `lightest`.
 - **format** - format for a converted video. Can be `mp4 (default)`, `webm`, `ogg`.
-- **cut**:
-  - **start_time** - defines the starting point of a fragment to cut based on your input file timeline.
-  - **length** - defines the duration of that fragment.
-- **thumbs**:
-  - **N** - quantity of thumbnails for your video - non-zero integer ranging from 1 to 50; defaults to 1.
-  - **number** - zero-based index of a particular thumbnail in a created set, ranging from 1 to (N - 1).
 - **store** - a flag indicating if Uploadcare should store your transformed outputs.
 
 ```ruby
 # Response
 {
-  :result => [
+  "result" => [
     {
-      :original_source=>"dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/video/-/size/600x400/change_ratio/-/quality/best/-/format/ogg/-/cut/0:0:0.0/0:0:1.0/-/thumbs~2/1/",
-      :token=>911933811,
-      :uuid=>"6f9b88bd-625c-4d60-bfde-145fa3813d95",
-      :thumbnails_group_uuid=>"cf34c5a1-8fcc-4db2-9ec5-62c389e84468~2"
+      "original_source" => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/video/-/format/ogg/-/quality/best/",
+      "token" => 911933811,
+      "uuid" => "6f9b88bd-625c-4d60-bfde-145fa3813d95"
     }
   ],
-  :problems=>{}
+  "problems" => {}
 }
 ```
 
@@ -1235,22 +944,18 @@ Params in the response:
   - **thumbnails_group_uuid** - holds :uuid-thumb-group, a UUID of a [file group](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/groupsList) with thumbnails for an output video, based on the thumbs [operation](https://uploadcare.com/docs/transformations/video-encoding/#operation-thumbs) parameters.
 - **problems** - problems related to your processing job, if any.
 
-To convert multiple videos just add params as a hash for each video to the first argument of the `Uploadcare::VideoConverter#convert` method:
+To convert multiple videos, pass an array of UUIDs in `params[:uuid]`.
 
 ```ruby
-Uploadcare::VideoConverter.convert(
-  [
-    { video_one_params }, { video_two_params }, ...
-  ],
-  store: false
-)
+Uploadcare::VideoConverter.convert(params: video_one_params, options: { store: false })
 ```
 
 To check a status of a video processing job you can simply use appropriate method of `Uploadcare::VideoConverter`:
 
 ```ruby
 token = 911933811
-Uploadcare::VideoConverter.status(token)
+video_converter = Uploadcare::VideoConverter.new
+video_converter.fetch_status(token: token)
 ```
 
 `token` here is a processing job token, obtained in a response of a convert video request.
@@ -1289,7 +994,8 @@ After each document file upload you obtain a file identifier in UUID format.
 You can use file identifier to determine the document format and possible conversion formats.
 
 ```ruby
-Uploadcare::DocumentConverter.info("dc99200d-9bd6-4b43-bfa9-aa7bfaefca40")
+document_converter = Uploadcare::DocumentConverter.new
+document_converter.info(uuid: "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40")
 
 # Response
 {:error=>nil, :format=>{
@@ -1303,29 +1009,12 @@ Uploadcare::DocumentConverter.info("dc99200d-9bd6-4b43-bfa9-aa7bfaefca40")
 Then you can use this file identifier to convert your document to a new format:
 
 ```ruby
-Uploadcare::DocumentConverter.convert(
-  [
-    {
-      uuid: "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40",
-      format: "pdf"
-    }
-  ],
-  store: false
-)
-```
-
-or create an image of a particular page (if using image format):
-
-```ruby
-Uploadcare::DocumentConverter.convert(
-  [
-    {
-      uuid: "a4b9db2f-1591-4f4c-8f68-94018924525d",
-      format: "png",
-      page: 1
-    }
-  ],
-  store: false
+Uploadcare::DocumentConverter.convert_document(
+  params: {
+    uuid: "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40",
+    format: "pdf"
+  },
+  options: { store: false }
 )
 ```
 
@@ -1333,19 +1022,18 @@ This method accepts options to set properties of an output file:
 
 - **uuid** — the file UUID-identifier.
 - **format** - defines the target format you want a source file converted to. The supported values are: `pdf` (default), `doc`, `docx`, `xls`, `xlsx`, `odt`, `ods`, `rtf`, `txt`, `jpg`, `png`. In case the format operation was not found, your input document will be converted to `pdf`.
-- **page** - a page number of a multi-paged document to either `jpg` or `png`. The method will not work for any other target formats.
 
 ```ruby
 # Response
 {
-  :result => [
+  "result" => [
     {
-      :original_source=>"a4b9db2f-1591-4f4c-8f68-94018924525d/document/-/format/png/-/page/1/",
-      :token=>21120220
-      :uuid=>"88fe5ada-90f1-422a-a233-3a0f3a7cf23c"
+      "original_source" => "a4b9db2f-1591-4f4c-8f68-94018924525d/document/-/format/pdf/",
+      "token" => 21120220,
+      "uuid" => "88fe5ada-90f1-422a-a233-3a0f3a7cf23c"
     }
   ],
-  :problems=>{}
+  "problems" => {}
 }
 ```
 
@@ -1357,22 +1045,14 @@ Params in the response:
   - **uuid** - UUID of your processed document file.
 - **problems** - problems related to your processing job, if any.
 
-To convert multiple documents just add params as a hash for each document to the first argument of the `Uploadcare::DocumentConverter#convert` method:
-
-```ruby
-Uploadcare::DocumentConverter.convert(
-  [
-    { doc_one_params }, { doc_two_params }, ...
-  ],
-  store: false
-)
-```
+To convert multiple documents, pass an array of UUIDs in `params[:uuid]`.
 
 To check a status of a document processing job you can simply use appropriate method of `Uploadcare::DocumentConverter`:
 
 ```ruby
 token = 21120220
-Uploadcare::DocumentConverter.status(token)
+document_converter = Uploadcare::DocumentConverter.new
+document_converter.fetch_status(token: token)
 ```
 
 `token` here is a processing job token, obtained in a response of a convert document request.
@@ -1437,6 +1117,7 @@ generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3")
 - [Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
 - [Upload API reference](https://uploadcare.com/api-refs/upload-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
 - [REST API reference](https://uploadcare.com/api-refs/rest-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
+- [Migration guide v4.x to v5.0](./MIGRATING_V5.md)
 - [Changelog](./CHANGELOG.md)
 - [Contributing guide](https://github.com/uploadcare/.github/blob/master/CONTRIBUTING.md)
 - [Security policy](https://github.com/uploadcare/uploadcare-ruby/security/policy)

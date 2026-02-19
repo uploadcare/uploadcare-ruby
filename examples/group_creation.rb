@@ -42,14 +42,8 @@ begin
 
   file_paths.each_with_index do |path, index|
     File.open(path, 'rb') do |file|
-      response = upload_client.upload_file(file: file, store: true)
-      if response.failure?
-        puts "✗ Upload failed: #{response.error_message}"
-        exit 1
-      end
-
-      payload = response.success
-      uuid = payload[File.basename(path)] || payload.values.first
+      response = Uploadcare::Result.unwrap(upload_client.upload_file(file: file, store: true))
+      uuid = response['uuid'] || response[File.basename(path)] || response.values.first
       uuids << uuid
       puts "  #{index + 1}. #{File.basename(path)} → #{uuid}"
     end
@@ -75,7 +69,7 @@ begin
 
   # Step 3: Get group info
   puts 'Step 3: Retrieving group info...'
-  info = upload_client.group_info(group_id: group.id)
+  info = Uploadcare::Result.unwrap(upload_client.group_info(group_id: group.id))
 
   puts '✓ Group info retrieved'
   puts
