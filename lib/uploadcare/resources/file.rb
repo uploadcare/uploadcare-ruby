@@ -121,11 +121,12 @@ class Uploadcare::File < Uploadcare::BaseResource
   def self.batch_store(uuids:, config: Uploadcare.configuration, request_options: {})
     file_client = Uploadcare::FileClient.new(config: config)
     response = Uploadcare::Result.unwrap(file_client.batch_store(uuids: uuids, request_options: request_options))
+    normalized = response.transform_keys(&:to_s)
 
     Uploadcare::BatchFileResult.new(
-      status: response[:status],
-      result: response[:result],
-      problems: response[:problems] || {},
+      status: normalized['status'],
+      result: normalized['result'],
+      problems: normalized['problems'] || {},
       config: config
     )
   end
@@ -138,11 +139,12 @@ class Uploadcare::File < Uploadcare::BaseResource
   def self.batch_delete(uuids:, config: Uploadcare.configuration, request_options: {})
     file_client = Uploadcare::FileClient.new(config: config)
     response = Uploadcare::Result.unwrap(file_client.batch_delete(uuids: uuids, request_options: request_options))
+    normalized = response.transform_keys(&:to_s)
 
     Uploadcare::BatchFileResult.new(
-      status: response[:status],
-      result: response[:result],
-      problems: response[:problems] || {},
+      status: normalized['status'],
+      result: normalized['result'],
+      problems: normalized['problems'] || {},
       config: config
     )
   end

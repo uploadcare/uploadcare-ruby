@@ -75,7 +75,7 @@ module Uploadcare
       end
 
       before do
-        allow(mock_client).to receive(:list).and_return(next_page_response)
+        allow(mock_client).to receive(:list).and_return(Uploadcare::Result.success(next_page_response))
         allow(mock_client).to receive(:config).and_return(Uploadcare.configuration)
         allow(mock_resource_class).to receive(:new).and_return(double('Resource'))
       end
@@ -118,7 +118,7 @@ module Uploadcare
       end
 
       before do
-        allow(mock_client).to receive(:list).and_return(previous_page_response)
+        allow(mock_client).to receive(:list).and_return(Uploadcare::Result.success(previous_page_response))
         allow(mock_client).to receive(:config).and_return(Uploadcare.configuration)
         allow(mock_resource_class).to receive(:new).and_return(double('Resource'))
       end
@@ -169,7 +169,7 @@ module Uploadcare
       end
 
       before do
-        allow(mock_client).to receive(:list).and_return(page_response)
+        allow(mock_client).to receive(:list).and_return(Uploadcare::Result.success(page_response))
         allow(mock_client).to receive(:config).and_return(Uploadcare.configuration)
         allow(mock_resource_class).to receive(:new).and_return(double('Resource'))
       end

@@ -17,8 +17,8 @@ class Uploadcare::DocumentConverterClient < Uploadcare::RestClient
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Conversion/operation/documentConvert
   def convert_document(paths:, options: {}, request_options: {})
     body = { paths: paths }
-    body[:store] = options[:store] ? '1' : '0' if options.key?(:store)
-    body[:save_in_group] = options[:save_in_group] ? '1' : '0' if options.key?(:save_in_group)
+    body[:store] = normalize_bool_param(options[:store]) if options.key?(:store)
+    body[:save_in_group] = normalize_bool_param(options[:save_in_group]) if options.key?(:save_in_group)
 
     post(path: '/convert/document/', params: body, headers: {}, request_options: request_options)
   end
@@ -29,5 +29,15 @@ class Uploadcare::DocumentConverterClient < Uploadcare::RestClient
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Conversion/operation/documentConvertStatus
   def status(token:, request_options: {})
     get(path: "/convert/document/status/#{token}/", params: {}, headers: {}, request_options: request_options)
+  end
+
+  private
+
+  def normalize_bool_param(value)
+    case value
+    when true, 1, '1', 'true' then '1'
+    when false, 0, '0', 'false' then '0'
+    else value ? '1' : '0'
+    end
   end
 end

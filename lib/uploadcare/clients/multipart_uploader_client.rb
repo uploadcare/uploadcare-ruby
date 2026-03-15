@@ -62,7 +62,7 @@ class Uploadcare::MultipartUploaderClient < Uploadcare::UploadClient
     offset = link_index * CHUNK_SIZE
     file.seek(offset)
     chunk = file.read(CHUNK_SIZE)
-    Uploadcare::Result.unwrap(put(links[link_index], chunk))
+    upload_part_to_url(links[link_index], chunk)
 
     return unless chunk_block
 

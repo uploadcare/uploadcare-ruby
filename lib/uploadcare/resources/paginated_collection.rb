@@ -122,7 +122,7 @@ class Uploadcare::PaginatedCollection
   end
 
   def fetch_response(params)
-    client.list(params: params)
+    Uploadcare::Result.unwrap(client.list(params: params))
   end
 
   def build_paginated_collection(response)

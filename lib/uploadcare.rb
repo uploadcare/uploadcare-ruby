@@ -3,6 +3,9 @@
 require 'zeitwerk'
 require 'faraday'
 
+module Uploadcare
+end
+
 # CNAME generator
 require_relative 'uploadcare/cname_generator'
 

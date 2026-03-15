@@ -40,9 +40,7 @@ module Uploadcare
         stub_request(:post, 'https://upload.uploadcare.com/multipart/start/')
           .to_return(status: 200, body: upload_start_response.to_json, headers: { 'Content-Type' => 'application/json' })
 
-        # Mock the put method to avoid actual S3 requests
-        allow(client).to receive(:put).and_call_original
-        allow(client).to receive(:put).with(/s3\.amazonaws\.com/, anything).and_return(true)
+        allow(client).to receive(:upload_part_to_url).and_return(true)
 
         stub_request(:post, 'https://upload.uploadcare.com/multipart/complete/')
           .to_return(status: 200, body: upload_complete_response.to_json, headers: { 'Content-Type' => 'application/json' })
@@ -216,13 +214,13 @@ module Uploadcare
       end
 
       before do
-        allow(client).to receive(:put).with(/s3\.amazonaws\.com/, anything).and_return(true)
+        allow(client).to receive(:upload_part_to_url).and_return(true)
       end
 
       it 'uploads all chunks' do
         client.send(:upload_chunks, file, links)
 
-        expect(client).to have_received(:put).with(/s3\.amazonaws\.com/, anything).twice
+        expect(client).to have_received(:upload_part_to_url).twice
       end
 
       it 'calls progress callback for each chunk' do
@@ -245,13 +243,13 @@ module Uploadcare
       let(:link_index) { 0 }
 
       before do
-        allow(client).to receive(:put).with(/s3\.amazonaws\.com/, anything).and_return(true)
+        allow(client).to receive(:upload_part_to_url).and_return(true)
       end
 
       it 'uploads a single chunk' do
         client.send(:process_chunk, file, links, link_index)
 
-        expect(client).to have_received(:put).with(links[0], anything)
+        expect(client).to have_received(:upload_part_to_url).with(links[0], anything)
       end
 
       it 'calls progress callback with correct parameters' do
@@ -270,7 +268,7 @@ module Uploadcare
 
       context 'with error' do
         before do
-          allow(client).to receive(:put).with(/s3\.amazonaws\.com/, anything).and_raise(StandardError.new('Upload failed'))
+          allow(client).to receive(:upload_part_to_url).and_raise(StandardError.new('Upload failed'))
         end
 
         it 'logs error and re-raises' do
