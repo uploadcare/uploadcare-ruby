@@ -1,19 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Large File Upload Example
-# Demonstrates multipart upload with parallel processing
-
 require_relative '../lib/uploadcare'
 require 'dotenv/load'
 
-# Configure Uploadcare
-Uploadcare.configure do |config|
-  config.public_key = ENV.fetch('UPLOADCARE_PUBLIC_KEY')
-  config.secret_key = ENV.fetch('UPLOADCARE_SECRET_KEY')
-end
-
-# Get file path and optional thread count
 file_path = ARGV[0]
 threads = (ARGV[1] || 4).to_i
 
@@ -42,20 +32,24 @@ puts "Threads: #{threads}"
 puts
 
 begin
-  upload_client = Uploadcare::UploadClient.new
-  file = nil
+  client = Uploadcare::Client.new(
+    public_key: ENV.fetch('UPLOADCARE_PUBLIC_KEY'),
+    secret_key: ENV.fetch('UPLOADCARE_SECRET_KEY')
+  )
+
   start_time = Time.now
+  result = nil
 
-  begin
-    file = File.open(file_path, 'rb')
-
-    result = upload_client.multipart_upload(file: file,
-                                            store: true,
-                                            threads: threads,
-                                            metadata: {
-                                              source: 'large_file_example',
-                                              upload_method: 'multipart'
-                                            }) do |progress|
+  File.open(file_path, 'rb') do |file|
+    result = client.uploads.multipart_upload(
+      file: file,
+      store: true,
+      threads: threads,
+      metadata: {
+        source: 'large_file_example',
+        upload_method: 'multipart'
+      }
+    ) do |progress|
       uploaded_mb = (progress[:uploaded] / 1024.0 / 1024.0).round(2)
       total_mb = (progress[:total] / 1024.0 / 1024.0).round(2)
       percentage = ((progress[:uploaded].to_f / progress[:total]) * 100).round
@@ -64,14 +58,11 @@ begin
 
       bar_length = 30
       filled = (bar_length * percentage / 100).to_i
-      bar = ('█' * filled) + ('░' * (bar_length - filled))
+      bar = ('#' * filled) + ('.' * (bar_length - filled))
 
       print "\r#{bar} #{percentage}% | Part #{part}/#{total_parts} | #{uploaded_mb}/#{total_mb} MB"
       $stdout.flush
     end
-    result = Uploadcare::Result.unwrap(result)
-  ensure
-    file&.close
   end
 
   elapsed = Time.now - start_time
@@ -82,19 +73,14 @@ begin
   puts
   puts 'Upload Details:'
   puts '-' * 50
-  puts "UUID: #{result['uuid']}"
+  puts "UUID: #{result.uuid}"
   puts "Size: #{file_size_mb} MB"
   puts "Time: #{elapsed.round(2)} seconds"
   puts "Speed: #{(file_size_mb / elapsed).round(2)} MB/s"
   puts "Threads: #{threads}"
   puts 'Method: Multipart upload'
   puts
-  puts "CDN URL: https://ucarecdn.com/#{result['uuid']}/"
-  puts
-  puts 'Performance Tips:'
-  puts '- Use 4-8 threads for optimal performance'
-  puts '- More threads = faster upload (up to network limits)'
-  puts '- Adjust chunk size for very large files'
+  puts "CDN URL: #{result.cdn_url}"
 rescue StandardError => e
   puts
   puts "✗ Upload failed: #{e.message}"

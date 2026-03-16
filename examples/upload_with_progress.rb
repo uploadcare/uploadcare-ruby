@@ -1,19 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Upload with Progress Example
-# Demonstrates large file upload with real-time progress tracking
-
 require_relative '../lib/uploadcare'
 require 'dotenv/load'
 
-# Configure Uploadcare
-Uploadcare.configure do |config|
-  config.public_key = ENV.fetch('UPLOADCARE_PUBLIC_KEY', nil)
-  config.secret_key = ENV.fetch('UPLOADCARE_SECRET_KEY', nil)
-end
-
-# Get file path from command line argument
 file_path = ARGV[0]
 
 unless file_path && File.exist?(file_path)
@@ -32,15 +22,22 @@ puts "Size: #{file_size_mb} MB"
 puts
 
 if file_size < 10_000_000
-  puts 'Note: File is < 10MB, will use base upload (no progress tracking)'
+  puts 'Note: File is < 10MB, so the upload may complete without multipart progress updates'
   puts
 end
 
+file = nil
+
 begin
+  client = Uploadcare::Client.new(
+    public_key: ENV.fetch('UPLOADCARE_PUBLIC_KEY'),
+    secret_key: ENV.fetch('UPLOADCARE_SECRET_KEY')
+  )
+
   file = File.open(file_path, 'rb')
   start_time = Time.now
 
-  result = Uploadcare::Uploader.upload(object: file, store: true) do |progress|
+  result = client.uploads.upload(file, store: true) do |progress|
     uploaded_mb = (progress[:uploaded] / 1024.0 / 1024.0).round(2)
     total_mb = (progress[:total] / 1024.0 / 1024.0).round(2)
     percentage = ((progress[:uploaded].to_f / progress[:total]) * 100).round
@@ -54,7 +51,7 @@ begin
 
     bar_length = 40
     filled = (bar_length * percentage / 100).to_i
-    bar = ('█' * filled) + ('░' * (bar_length - filled))
+    bar = ('#' * filled) + ('.' * (bar_length - filled))
 
     print "\r#{bar} #{percentage}% | "
     print "#{uploaded_mb}/#{total_mb} MB | "
@@ -64,7 +61,6 @@ begin
     $stdout.flush
   end
 
-  file.close
   elapsed = Time.now - start_time
 
   puts
@@ -76,9 +72,11 @@ begin
   puts "Total time: #{elapsed.round(2)} seconds"
   puts "Average speed: #{(file_size_mb / elapsed).round(2)} MB/s"
   puts
-  puts "CDN URL: https://ucarecdn.com/#{result.uuid}/"
+  puts "CDN URL: #{result.cdn_url}"
 rescue StandardError => e
   puts
   puts "✗ Upload failed: #{e.message}"
   exit 1
+ensure
+  file&.close
 end

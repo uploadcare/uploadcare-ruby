@@ -1,19 +1,9 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Simple Upload Example
-# Demonstrates the basic file upload functionality
-
 require_relative '../lib/uploadcare'
 require 'dotenv/load'
 
-# Configure Uploadcare
-Uploadcare.configure do |config|
-  config.public_key = ENV.fetch('UPLOADCARE_PUBLIC_KEY')
-  config.secret_key = ENV.fetch('UPLOADCARE_SECRET_KEY')
-end
-
-# Get file path from command line argument
 file_path = ARGV[0]
 
 unless file_path && File.exist?(file_path)
@@ -27,18 +17,20 @@ puts "Size: #{(File.size(file_path) / 1024.0).round(2)} KB"
 puts
 
 begin
-  # Open and upload the file
-  result = nil
-  File.open(file_path, 'rb') do |file|
-    result = Uploadcare::Uploader.upload(object: file, store: true)
+  client = Uploadcare::Client.new(
+    public_key: ENV.fetch('UPLOADCARE_PUBLIC_KEY'),
+    secret_key: ENV.fetch('UPLOADCARE_SECRET_KEY')
+  )
+
+  uploaded_file = File.open(file_path, 'rb') do |file|
+    client.files.upload(file, store: true)
   end
 
-  # Display results
   puts '✓ Upload successful!'
   puts
-  puts "UUID: #{result.uuid}"
-  puts "Filename: #{result.original_filename}"
-  puts "CDN URL: https://ucarecdn.com/#{result.uuid}/"
+  puts "UUID: #{uploaded_file.uuid}"
+  puts "Filename: #{uploaded_file.original_filename}"
+  puts "CDN URL: #{uploaded_file.cdn_url}"
   puts
   puts 'The file has been stored and is ready to use.'
 rescue StandardError => e
