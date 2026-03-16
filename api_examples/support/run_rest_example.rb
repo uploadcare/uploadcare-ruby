@@ -30,7 +30,10 @@ module ApiExamples::RunRestExample
         end
       when 'post_files_local_copy.rb'
         ApiExamples::ExampleHelper.with_uploaded_file do |file|
-          client.files.copy_to_local(source: file.uuid, options: { store: true })
+          copied = client.files.copy_to_local(source: file.uuid, options: { store: true })
+          copied
+        ensure
+          ApiExamples::ExampleHelper.safe_delete_file(copied)
         end
       when 'post_files_remote_copy.rb'
         target = ENV.fetch('UPLOADCARE_REMOTE_STORAGE', nil)

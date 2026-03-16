@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'json'
+require 'time'
 
 # Handles API errors and converts them to appropriate exceptions.
 #
@@ -85,7 +86,16 @@ module Uploadcare::Internal::ErrorHandler
   def raise_throttle_error(response, message)
     headers = response.is_a?(Hash) ? response[:headers] : nil
     retry_after = headers && (headers['retry-after'] || headers['Retry-After'])
-    timeout = retry_after.to_f
+    timeout =
+      if retry_after.to_s.match?(/\A\d+(\.\d+)?\z/)
+        retry_after.to_f
+      else
+        begin
+          [Time.httpdate(retry_after.to_s) - Time.now, 0].max
+        rescue ArgumentError
+          0
+        end
+      end
     timeout = 10.0 if timeout <= 0
     raise Uploadcare::Exception::ThrottleError.new(message, timeout: timeout)
   end

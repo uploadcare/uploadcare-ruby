@@ -17,6 +17,7 @@ module Uploadcare
     # @yieldparam config [Uploadcare::Configuration] The configuration object
     def configure
       yield configuration if block_given?
+    ensure
       @client = nil
     end
 

@@ -90,6 +90,24 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
       end
     end
 
+    context 'when upload options are invalid' do
+      it 'returns a failure Result when threads is less than 1' do
+        result = uploader.upload(file: tempfile, threads: 0)
+
+        expect(result.failure?).to be(true)
+        expect(result.error).to be_a(ArgumentError)
+        expect(result.error.message).to eq('threads must be >= 1')
+      end
+
+      it 'returns a failure Result when part_size is not positive' do
+        result = uploader.upload(file: tempfile, part_size: 0)
+
+        expect(result.failure?).to be(true)
+        expect(result.error).to be_a(ArgumentError)
+        expect(result.error.message).to eq('part_size must be > 0')
+      end
+    end
+
     context 'when performing sequential upload (threads <= 1)' do
       before do
         allow(upload_files_api).to receive(:multipart_start)

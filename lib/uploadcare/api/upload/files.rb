@@ -203,8 +203,8 @@ class Uploadcare::Api::Upload::Files
     store = store_value(options[:store])
     params['store'] = store unless store.nil?
 
-    params['check_URL_duplicates'] = options[:check_URL_duplicates].to_s if options[:check_URL_duplicates]
-    params['save_URL_duplicates'] = options[:save_URL_duplicates].to_s if options[:save_URL_duplicates]
+    params['check_URL_duplicates'] = options[:check_URL_duplicates].to_s if options.key?(:check_URL_duplicates)
+    params['save_URL_duplicates'] = options[:save_URL_duplicates].to_s if options.key?(:save_URL_duplicates)
 
     metadata_params = generate_metadata_params(options[:metadata])
     params.merge!(metadata_params) if metadata_params.any?

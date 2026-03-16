@@ -136,6 +136,30 @@ RSpec.describe Uploadcare::Api::Upload::Files do
 
       expect(stub).to have_been_requested
     end
+
+    it 'preserves explicit false duplicate flags in the request params' do
+      stub = stub_request(:post, 'https://upload.uploadcare.com/from_url/')
+             .with(
+               body: hash_including(
+                 'check_URL_duplicates' => 'false',
+                 'save_URL_duplicates' => 'false'
+               )
+             )
+             .to_return(
+               status: 200,
+               body: { token: 'upload-token' }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      files.from_url(
+        source_url: source_url,
+        async: true,
+        check_URL_duplicates: false,
+        save_URL_duplicates: false
+      )
+
+      expect(stub).to have_been_requested
+    end
   end
 
   describe '#from_url_status' do

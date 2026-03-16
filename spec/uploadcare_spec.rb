@@ -24,6 +24,21 @@ RSpec.describe Uploadcare do
       client2 = described_class.client
       expect(client1).not_to equal(client2)
     end
+
+    it 'resets the memoized client even when the block raises' do
+      client1 = described_class.client
+
+      expect do
+        described_class.configure do |config|
+          config.public_key = 'broken'
+          raise 'boom'
+        end
+      end.to raise_error(RuntimeError, 'boom')
+
+      client2 = described_class.client
+      expect(client1).not_to equal(client2)
+      expect(client2.config.public_key).to eq('broken')
+    end
   end
 
   describe '.configuration' do

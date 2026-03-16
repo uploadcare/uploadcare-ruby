@@ -99,6 +99,21 @@ RSpec.describe Uploadcare::Internal::ErrorHandler do
           expect(e.timeout).to eq(3.0)
         end
       end
+
+      it 'parses Retry-After as an HTTP-date' do
+        future_time = (Time.now + 5).httpdate
+        error = faraday_error(
+          status: 429,
+          body: '{"detail":"Throttled"}',
+          headers: { 'Retry-After' => future_time }
+        )
+
+        begin
+          handler.handle_error(error)
+        rescue Uploadcare::Exception::ThrottleError => e
+          expect(e.timeout).to be_between(1.0, 5.5)
+        end
+      end
     end
 
     context 'with other HTTP status codes' do

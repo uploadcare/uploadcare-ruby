@@ -121,6 +121,7 @@ module ApiExamples::ExampleHelper
     yield file, response
   ensure
     file&.close
+    safe_delete_file(response['completed_uuid']) if response.is_a?(Hash) && response['completed_uuid']
   end
 
   def upload_multipart_part(file:, session:, index:)
@@ -132,11 +133,15 @@ module ApiExamples::ExampleHelper
     data.bytesize
   end
 
-  def finish_multipart_upload(file:, session:)
+  def finish_multipart_upload(file:, session:, skip_indices: [])
     session.fetch('parts').each_index do |index|
+      next if skip_indices.include?(index)
+
       upload_multipart_part(file: file, session: session, index: index)
     end
-    unwrap(client.api.upload.files.multipart_complete(uuid: session.fetch('uuid')))
+    result = unwrap(client.api.upload.files.multipart_complete(uuid: session.fetch('uuid')))
+    session['completed_uuid'] = result['uuid']
+    result
   end
 
   def uploaded_uuid_from_base_response(response)
@@ -171,9 +176,16 @@ module ApiExamples::ExampleHelper
   end
 
   def safe_delete_group(group)
-    return unless group&.id
+    group_id = if group.respond_to?(:id)
+                 group.id
+               elsif group.is_a?(Hash)
+                 group['id'] || group[:id]
+               else
+                 group
+               end
+    return if group_id.to_s.empty?
 
-    client.api.rest.groups.delete(uuid: group.id)
+    client.api.rest.groups.delete(uuid: group_id)
   rescue StandardError
     nil
   end

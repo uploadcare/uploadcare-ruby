@@ -27,7 +27,10 @@ module ApiExamples::RunUploadExample
         end
       when 'post_group.rb'
         ApiExamples::ExampleHelper.with_uploaded_files do |files|
-          ApiExamples::ExampleHelper.unwrap(client.api.upload.groups.create(files: files.map(&:uuid)))
+          group = ApiExamples::ExampleHelper.unwrap(client.api.upload.groups.create(files: files.map(&:uuid)))
+          group
+        ensure
+          ApiExamples::ExampleHelper.safe_delete_group(group)
         end
       when 'get_group_info.rb'
         ApiExamples::ExampleHelper.with_uploaded_group do |group, _files|
@@ -45,7 +48,11 @@ module ApiExamples::RunUploadExample
       when 'put_multipart_part.rb'
         ApiExamples::ExampleHelper.with_multipart_session do |file, session|
           uploaded = ApiExamples::ExampleHelper.upload_multipart_part(file: file, session: session, index: 0)
-          completed = ApiExamples::ExampleHelper.finish_multipart_upload(file: file, session: session)
+          completed = ApiExamples::ExampleHelper.finish_multipart_upload(
+            file: file,
+            session: session,
+            skip_indices: [0]
+          )
           {
             'uuid' => session.fetch('uuid'),
             'uploaded_bytes' => uploaded,

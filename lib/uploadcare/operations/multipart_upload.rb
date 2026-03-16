@@ -42,6 +42,7 @@ class Uploadcare::Operations::MultipartUpload
       file_size = prepared_file.size
       filename = prepared_file.original_filename
       content_type = MIME::Types.type_for(prepared_file.path).first&.content_type || 'application/octet-stream'
+      part_size, threads = normalize_upload_options(options)
 
       start_response = Uploadcare::Result.unwrap(
         upload_client.files.multipart_start(
@@ -55,9 +56,6 @@ class Uploadcare::Operations::MultipartUpload
 
       uuid = start_response['uuid']
       presigned_urls = start_response['parts']
-
-      part_size = options.fetch(:part_size, config.multipart_chunk_size)
-      threads = options.fetch(:threads, 1)
 
       if threads > 1
         upload_parts_parallel(prepared_file, presigned_urls, part_size, threads, &block)
@@ -76,6 +74,16 @@ class Uploadcare::Operations::MultipartUpload
   end
 
   private
+
+  def normalize_upload_options(options)
+    part_size = Integer(options.fetch(:part_size, config.multipart_chunk_size || CHUNK_SIZE))
+    threads = Integer(options.fetch(:threads, 1))
+
+    raise ArgumentError, 'part_size must be > 0' if part_size <= 0
+    raise ArgumentError, 'threads must be >= 1' if threads < 1
+
+    [part_size, threads]
+  end
 
   def upload_parts_sequential(file, presigned_urls, part_size, &block)
     total_size = file.respond_to?(:size) ? file.size : ::File.size(file.path)

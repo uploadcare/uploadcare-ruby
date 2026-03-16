@@ -307,6 +307,7 @@ class Uploadcare::Resources::File < Uploadcare::Resources::BaseResource
   def cdn_url
     return @url if uploadcare_cdn_url?(@url)
     return @original_file_url if uploadcare_cdn_url?(@original_file_url)
+    return nil unless uuid
 
     "#{config.cdn_base}#{uuid}/"
   end

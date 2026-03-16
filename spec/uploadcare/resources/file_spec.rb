@@ -447,5 +447,11 @@ RSpec.describe Uploadcare::Resources::File do
       )
       expect(file.cdn_url).to eq("https://ucarecdn.com/#{file_uuid}/")
     end
+
+    it 'returns nil when no CDN url or uuid is available' do
+      file = described_class.new({ 'original_file_url' => 'https://example.com/photo.jpg' }, client)
+
+      expect(file.cdn_url).to be_nil
+    end
   end
 end
