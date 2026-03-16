@@ -2,216 +2,189 @@
 
 require 'spec_helper'
 
-RSpec.describe Uploadcare::Group do
-  let(:uuid) { 'group_uuid_1~2' }
-  let(:response_body) do
+RSpec.describe Uploadcare::Resources::Group do
+  let(:config) do
+    Uploadcare::Configuration.new(
+      public_key: 'demopublickey',
+      secret_key: 'demosecretkey',
+      auth_type: 'Uploadcare.Simple'
+    )
+  end
+  let(:client) { Uploadcare::Client.new(config: config) }
+  let(:rest) { instance_double(Uploadcare::Api::Rest) }
+  let(:rest_groups) { instance_double(Uploadcare::Api::Rest::Groups) }
+  let(:upload_api) { instance_double(Uploadcare::Api::Upload) }
+  let(:upload_groups) { double('upload_groups') }
+  let(:api) { instance_double(Uploadcare::Client::Api, rest: rest, upload: upload_api) }
+
+  let(:group_id) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890~3' }
+  let(:group_attrs) do
     {
-      'id' => uuid,
-      'datetime_created' => '2023-11-01T12:49:10.477888Z',
-      'files_count' => 2,
-      'cdn_url' => "https://ucarecdn.com/#{uuid}/",
-      'url' => "https://api.uploadcare.com/groups/#{uuid}/",
-      'files' => [
-        {
-          'uuid' => 'file_uuid_1',
-          'datetime_uploaded' => '2023-11-01T12:49:09.945335Z',
-          'is_image' => true,
-          'mime_type' => 'image/jpeg',
-          'original_filename' => 'file1.jpg',
-          'size' => 12_345
-        }
-      ]
+      'id' => group_id,
+      'datetime_created' => '2025-01-01T00:00:00Z',
+      'datetime_stored' => nil,
+      'files_count' => 3,
+      'cdn_url' => "https://ucarecdn.com/#{group_id}/",
+      'url' => "https://api.uploadcare.com/groups/#{group_id}/",
+      'files' => []
     }
   end
 
-  subject(:group) { described_class.new({}) }
+  before do
+    allow(client).to receive(:api).and_return(api)
+    allow(rest).to receive(:groups).and_return(rest_groups)
+    allow(upload_api).to receive(:groups).and_return(upload_groups)
+  end
 
-  describe '#list' do
-    let(:response_body) do
-      {
-        'next' => nil,
-        'previous' => nil,
-        'per_page' => 10,
-        'results' => [
-          {
-            'id' => 'group_uuid_1~2',
-            'datetime_created' => '2023-11-01T12:49:10.477888Z',
-            'files_count' => 2,
-            'cdn_url' => 'https://ucarecdn.com/group_uuid_1~2/',
-            'url' => 'https://api.uploadcare.com/groups/group_uuid_1~2/'
-          },
-          {
-            'id' => 'group_uuid_2~3',
-            'datetime_created' => '2023-11-02T14:49:10.477888Z',
-            'files_count' => 3,
-            'cdn_url' => 'https://ucarecdn.com/group_uuid_2~3/',
-            'url' => 'https://api.uploadcare.com/groups/group_uuid_2~3/'
-          }
-        ],
-        'total' => 2
-      }
-    end
-    subject { described_class.list }
-
-    before do
-      allow_any_instance_of(Uploadcare::GroupClient).to receive(:list).and_return(response_body)
-    end
-
-    it { is_expected.to be_a(Uploadcare::PaginatedCollection) }
-    it { expect(subject.resources.size).to eq(2) }
-
-    it 'returns a PaginatedCollection containing Group Resources' do
-      first_group = subject.resources.first
-      expect(first_group).to be_a(described_class)
-      expect(first_group.id).to eq('group_uuid_1~2')
-      expect(first_group.datetime_created).to eq('2023-11-01T12:49:10.477888Z')
-      expect(first_group.files_count).to eq(2)
-      expect(first_group.cdn_url).to eq('https://ucarecdn.com/group_uuid_1~2/')
-      expect(first_group.url).to eq('https://api.uploadcare.com/groups/group_uuid_1~2/')
+  describe 'ATTRIBUTES' do
+    it 'defines expected attributes' do
+      expect(described_class::ATTRIBUTES).to include(:id, :files_count, :cdn_url, :files, :datetime_created)
     end
   end
 
-  describe '#info' do
-    it 'fetches and assigns group info' do
-      allow_any_instance_of(Uploadcare::GroupClient).to receive(:info)
-        .with(uuid: uuid, request_options: {})
-        .and_return(response_body)
+  describe '.find' do
+    it 'fetches group info by ID' do
+      allow(rest_groups).to receive(:info)
+        .with(uuid: group_id, request_options: {})
+        .and_return(Uploadcare::Result.success(group_attrs))
 
-      result = group.info(uuid: uuid)
+      group = described_class.find(group_id: group_id, client: client)
+      expect(group).to be_a(described_class)
+      expect(group.id).to eq(group_id)
+      expect(group.files_count).to eq(3)
+    end
 
-      expect(result.id).to eq(uuid)
-      expect(result.datetime_created).to eq('2023-11-01T12:49:10.477888Z')
-      expect(result.files_count).to eq(2)
-      expect(result.cdn_url).to eq("https://ucarecdn.com/#{uuid}/")
-      expect(result.url).to eq("https://api.uploadcare.com/groups/#{uuid}/")
-      expect(result.files.first['uuid']).to eq('file_uuid_1')
-      expect(result.files.first['original_filename']).to eq('file1.jpg')
-      expect(result.files.first['size']).to eq(12_345)
+    it 'is aliased as retrieve and info' do
+      expect(described_class).to respond_to(:retrieve)
+      expect(described_class).to respond_to(:info)
+    end
+  end
+
+  describe '.list' do
+    let(:list_response) do
+      {
+        'results' => [group_attrs],
+        'next' => nil,
+        'previous' => nil,
+        'per_page' => 10,
+        'total' => 1
+      }
+    end
+
+    it 'returns a Paginated collection of groups' do
+      allow(rest_groups).to receive(:list)
+        .with(params: {}, request_options: {})
+        .and_return(Uploadcare::Result.success(list_response))
+
+      result = described_class.list(client: client)
+      expect(result).to be_a(Uploadcare::Collections::Paginated)
+      expect(result.resources.length).to eq(1)
+      expect(result.resources.first).to be_a(described_class)
+      expect(result.total).to eq(1)
+    end
+
+    it 'passes params through' do
+      allow(rest_groups).to receive(:list)
+        .with(params: { limit: 5 }, request_options: {})
+        .and_return(Uploadcare::Result.success(list_response))
+
+      described_class.list(params: { limit: 5 }, client: client)
+    end
+  end
+
+  describe '.create' do
+    it 'creates a group from file UUIDs' do
+      uuids = %w[uuid-1 uuid-2 uuid-3]
+      allow(upload_groups).to receive(:create)
+        .with(files: uuids, request_options: {})
+        .and_return(Uploadcare::Result.success(group_attrs))
+
+      group = described_class.create(uuids: uuids, client: client)
+      expect(group).to be_a(described_class)
+      expect(group.id).to eq(group_id)
+      expect(group.files_count).to eq(3)
+    end
+  end
+
+  describe '#reload' do
+    it 'reloads group info from the API' do
+      group = described_class.new(group_attrs, client)
+      updated_attrs = group_attrs.merge('files_count' => 5)
+
+      allow(rest_groups).to receive(:info)
+        .with(uuid: group_id, request_options: {})
+        .and_return(Uploadcare::Result.success(updated_attrs))
+
+      result = group.reload
+      expect(result).to eq(group)
+      expect(group.files_count).to eq(5)
+    end
+
+    it 'is aliased as load' do
+      group = described_class.new(group_attrs, client)
+      expect(group).to respond_to(:load)
     end
   end
 
   describe '#delete' do
     it 'deletes the group' do
-      allow_any_instance_of(Uploadcare::GroupClient).to receive(:delete)
-        .with(uuid: uuid, request_options: {})
-        .and_return(nil)
+      group = described_class.new(group_attrs, client)
 
-      result = group.delete(uuid: uuid)
+      allow(rest_groups).to receive(:delete)
+        .with(uuid: group_id, request_options: {})
+        .and_return(Uploadcare::Result.success(nil))
 
-      expect(result).to be_nil
-    end
-  end
-
-  describe '.create' do
-    let(:uuids) { %w[uuid-1 uuid-2] }
-    let(:create_response) do
-      {
-        'id' => 'new-group-uuid~2',
-        'datetime_created' => '2023-11-01T12:49:10.477888Z',
-        'files_count' => 2,
-        'cdn_url' => 'https://ucarecdn.com/new-group-uuid~2/',
-        'files' => uuids.map { |u| { 'uuid' => u } }
-      }
-    end
-
-    it 'creates a new group' do
-      allow_any_instance_of(Uploadcare::UploadGroupClient).to receive(:create_group)
-        .with(uuids: uuids, request_options: {})
-        .and_return(create_response)
-
-      result = described_class.create(uuids: uuids)
-
-      expect(result).to be_a(described_class)
-      expect(result.id).to eq('new-group-uuid~2')
-      expect(result.files_count).to eq(2)
-    end
-  end
-
-  describe '.info' do
-    it 'fetches group info as class method' do
-      allow_any_instance_of(Uploadcare::GroupClient).to receive(:info)
-        .with(uuid: uuid, request_options: {})
-        .and_return(response_body)
-
-      result = described_class.info(group_id: uuid)
-
-      expect(result).to be_a(described_class)
-      expect(result.id).to eq(uuid)
-      expect(result.files_count).to eq(2)
+      expect { group.delete }.not_to raise_error
     end
   end
 
   describe '#id' do
-    context 'when id is already set' do
-      let(:group) { described_class.new({ 'id' => 'test-id' }) }
-
-      it 'returns the id' do
-        expect(group.id).to eq('test-id')
-      end
+    it 'returns the id attribute when set' do
+      group = described_class.new(group_attrs, client)
+      expect(group.id).to eq(group_id)
     end
 
-    context 'when id is not set but cdn_url is' do
-      let(:group) { described_class.new({ 'cdn_url' => 'https://ucarecdn.com/extracted-id~3/' }) }
-
-      it 'extracts id from cdn_url' do
-        expect(group.id).to eq('extracted-id~3')
-      end
+    it 'falls back to uuid when id not set' do
+      group = described_class.new({ 'uuid' => 'some-uuid' }, client)
+      expect(group.id).to eq('some-uuid')
     end
 
-    context 'when neither id nor cdn_url is set' do
-      let(:group) { described_class.new({}) }
-
-      it 'returns nil' do
-        expect(group.id).to be_nil
-      end
+    it 'extracts id from cdn_url when id and uuid not set' do
+      group = described_class.new({ 'cdn_url' => "https://ucarecdn.com/#{group_id}/" }, client)
+      expect(group.id).to eq(group_id)
     end
-  end
 
-  describe '#load' do
-    let(:group) { described_class.new({ 'id' => uuid }) }
-
-    it 'loads group metadata' do
-      allow_any_instance_of(Uploadcare::GroupClient).to receive(:info)
-        .with(uuid: uuid, request_options: {})
-        .and_return(response_body)
-
-      result = group.load
-
-      expect(result).to eq(group)
-      expect(group.datetime_created).to eq('2023-11-01T12:49:10.477888Z')
-      expect(group.files_count).to eq(2)
+    it 'returns nil when no id source is available' do
+      group = described_class.new({}, client)
+      expect(group.id).to be_nil
     end
   end
 
   describe '#cdn_url' do
-    context 'when cdn_url is already set' do
-      let(:group) { described_class.new({ 'cdn_url' => 'https://ucarecdn.com/existing~2/' }) }
-
-      it 'returns the existing cdn_url' do
-        expect(group.cdn_url).to eq('https://ucarecdn.com/existing~2/')
-      end
+    it 'returns the cdn_url attribute when set' do
+      group = described_class.new(group_attrs, client)
+      expect(group.cdn_url).to eq("https://ucarecdn.com/#{group_id}/")
     end
 
-    context 'when cdn_url is not set' do
-      let(:group) { described_class.new({ 'id' => 'generated-id~3' }) }
-
-      it 'generates cdn_url from id' do
-        expect(group.cdn_url).to eq('https://ucarecdn.com/generated-id~3/')
-      end
+    it 'builds CDN URL from config and id when cdn_url not set' do
+      group = described_class.new({ 'id' => group_id }, client)
+      expect(group.cdn_url).to eq("https://ucarecdn.com/#{group_id}/")
     end
   end
 
   describe '#file_cdn_urls' do
-    let(:group) { described_class.new({ 'id' => 'test-group~3', 'files_count' => 3 }) }
-
-    it 'returns array of file CDN URLs' do
+    it 'returns array of nth CDN URLs for each file' do
+      group = described_class.new(group_attrs, client)
       urls = group.file_cdn_urls
-
-      expect(urls).to be_an(Array)
       expect(urls.length).to eq(3)
-      expect(urls[0]).to eq('https://ucarecdn.com/test-group~3/nth/0/')
-      expect(urls[1]).to eq('https://ucarecdn.com/test-group~3/nth/1/')
-      expect(urls[2]).to eq('https://ucarecdn.com/test-group~3/nth/2/')
+      expect(urls[0]).to eq("https://ucarecdn.com/#{group_id}/nth/0/")
+      expect(urls[1]).to eq("https://ucarecdn.com/#{group_id}/nth/1/")
+      expect(urls[2]).to eq("https://ucarecdn.com/#{group_id}/nth/2/")
+    end
+
+    it 'returns empty array when files_count is nil' do
+      group = described_class.new({ 'id' => group_id }, client)
+      expect(group.file_cdn_urls).to eq([])
     end
   end
 end

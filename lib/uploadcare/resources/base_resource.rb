@@ -1,59 +1,63 @@
 # frozen_string_literal: true
 
-# Base class for all Uploadcare resource objects
+# Base class for all Uploadcare resource objects.
 #
-# Provides common functionality for resource classes including:
-# - Configuration management
-# - Attribute assignment from API responses
-# - Access to REST client
-#
-# @example Creating a custom resource
-#   class MyResource < Uploadcare::BaseResource
-#     attr_accessor :name, :value
-#
-#     def fetch
-#       response = rest_client.get(path: '/my-endpoint/')
-#       assign_attributes(response)
-#       self
-#     end
-#   end
-#
-# @abstract Subclass and add resource-specific attributes and methods
-class Uploadcare::BaseResource
-  # @return [Uploadcare::Configuration] The configuration object for this resource
-  attr_accessor :config
+# Resources represent domain objects returned by the Uploadcare API.
+# They hold attributes and a reference to the client that created them,
+# enabling instance methods to make further API calls.
+module Uploadcare
+  module Resources
+    class BaseResource
+      # @return [Uploadcare::Client] Client that created this resource
+      attr_reader :client
 
-  # Initialize a new resource instance
-  #
-  # @param attributes [Hash] Initial attributes to assign to the resource
-  # @param config [Uploadcare::Configuration] Configuration object (defaults to global config)
-  # @return [Uploadcare::BaseResource] new resource instance
-  def initialize(attributes = {}, config = Uploadcare.configuration)
-    @config = config
-    assign_attributes(attributes)
-  end
+      # @return [Uploadcare::Configuration] Configuration from the client
+      attr_reader :config
 
-  protected
+      # Initialize a new resource with attributes and client context.
+      #
+      # @param attributes [Hash] API response attributes
+      # @param client_or_config [Uploadcare::Client, Uploadcare::Configuration, nil]
+      def initialize(attributes = {}, client_or_config = Uploadcare.client)
+        @client = self.class.resolve_client(client_or_config)
+        @config = @client.config
+        assign_attributes(attributes)
+      end
 
-  # Get a REST client instance for making API requests
-  #
-  # @return [Uploadcare::RestClient] REST client configured with this resource's config
-  def rest_client
-    @rest_client ||= Uploadcare::RestClient.new(config: @config)
-  end
+      protected
 
-  private
+      # Assign hash attributes to instance variables via setter methods.
+      #
+      # @param attributes [Hash] Key-value pairs to assign
+      def assign_attributes(attributes)
+        attributes.each do |key, value|
+          setter = "#{key}="
+          public_send(setter, value) if respond_to?(setter)
+        end
+      end
 
-  # Assign attributes from a hash to the resource
-  #
-  # Only assigns values for attributes that have a setter method defined.
-  #
-  # @param attributes [Hash] Hash of attribute names to values
-  # @api private
-  def assign_attributes(attributes)
-    attributes.each do |key, value|
-      setter = "#{key}="
-      send(setter, value) if respond_to?(setter)
+      class << self
+        # Resolve a client from various input types.
+        #
+        # @param client_or_config [Uploadcare::Client, Uploadcare::Configuration, nil]
+        # @param client [Uploadcare::Client, nil] Explicit client
+        # @param config [Uploadcare::Configuration] Configuration fallback
+        # @return [Uploadcare::Client]
+        def resolve_client(client_or_config = nil, client: nil, config: Uploadcare.configuration)
+          return client if client
+
+          case client_or_config
+          when nil
+            Uploadcare.client(config: config)
+          when Uploadcare::Client
+            client_or_config
+          when Uploadcare::Configuration
+            Uploadcare.client(config: client_or_config)
+          else
+            Uploadcare.client(config: config)
+          end
+        end
+      end
     end
   end
 end

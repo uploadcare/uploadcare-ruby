@@ -1,176 +1,195 @@
 # frozen_string_literal: true
 
-RSpec.describe Uploadcare::Webhook do
+require 'spec_helper'
+
+RSpec.describe Uploadcare::Resources::Webhook do
+  let(:config) do
+    Uploadcare::Configuration.new(
+      public_key: 'demopublickey',
+      secret_key: 'demosecretkey',
+      auth_type: 'Uploadcare.Simple'
+    )
+  end
+  let(:client) { Uploadcare::Client.new(config: config) }
+  let(:rest) { instance_double(Uploadcare::Api::Rest) }
+  let(:rest_webhooks) { instance_double(Uploadcare::Api::Rest::Webhooks) }
+  let(:api) { instance_double(Uploadcare::Client::Api, rest: rest) }
+
+  let(:webhook_attrs) do
+    {
+      'id' => 123,
+      'project' => 456,
+      'created' => '2025-01-01T00:00:00Z',
+      'updated' => '2025-01-01T00:00:00Z',
+      'event' => 'file.uploaded',
+      'target_url' => 'https://example.com/webhook',
+      'is_active' => true,
+      'signing_secret' => 'secret123',
+      'version' => '0.7'
+    }
+  end
+
+  before do
+    allow(client).to receive(:api).and_return(api)
+    allow(rest).to receive(:webhooks).and_return(rest_webhooks)
+  end
+
   describe '.list' do
-    let(:response_body) do
-      [
-        {
-          'id' => 1,
-          'project' => 13,
-          'created' => '2016-04-27T11:49:54.948615Z',
-          'updated' => '2016-04-27T12:04:57.819933Z',
-          'event' => 'file.infected',
-          'target_url' => 'http://example.com/hooks/receiver',
-          'is_active' => true,
-          'signing_secret' => '7kMVZivndx0ErgvhRKAr',
-          'version' => '0.7'
-        }
-      ]
-    end
-
-    before do
-      allow_any_instance_of(Uploadcare::WebhookClient).to receive(:list_webhooks)
+    it 'returns an array of Webhook resources' do
+      allow(rest_webhooks).to receive(:list)
         .with(request_options: {})
-        .and_return(response_body)
+        .and_return(Uploadcare::Result.success([webhook_attrs]))
+
+      result = described_class.list(client: client)
+      expect(result).to be_an(Array)
+      expect(result.length).to eq(1)
+      expect(result.first).to be_a(described_class)
+      expect(result.first.id).to eq(123)
+      expect(result.first.target_url).to eq('https://example.com/webhook')
+      expect(result.first.event).to eq('file.uploaded')
     end
 
-    it 'returns a list of webhooks as Webhook objects' do
-      webhooks = described_class.list
-      expect(webhooks).to all(be_a(described_class))
-      expect(webhooks.first.id).to eq(1)
-      expect(webhooks.first.event).to eq('file.infected')
-      expect(webhooks.first.target_url).to eq('http://example.com/hooks/receiver')
+    it 'returns empty array when no webhooks exist' do
+      allow(rest_webhooks).to receive(:list)
+        .with(request_options: {})
+        .and_return(Uploadcare::Result.success([]))
+
+      result = described_class.list(client: client)
+      expect(result).to eq([])
     end
   end
+
   describe '.create' do
-    let(:target_url) { 'https://example.com/hooks' }
-    let(:event) { 'file.uploaded' }
-    let(:is_active) { true }
-    let(:signing_secret) { 'secret' }
-    let(:version) { '0.7' }
-    let(:response_body) do
-      {
-        'id' => 1,
-        'project' => 13,
-        'created' => '2016-04-27T11:49:54.948615Z',
-        'updated' => '2016-04-27T12:04:57.819933Z',
-        'event' => 'file.uploaded',
-        'target_url' => 'https://example.com/hooks',
-        'is_active' => true,
-        'signing_secret' => 'secret',
-        'version' => '0.7'
-      }
-    end
+    it 'creates a webhook with default event and is_active' do
+      allow(rest_webhooks).to receive(:create)
+        .with(
+          options: { target_url: 'https://example.com/hook', event: 'file.uploaded', is_active: true },
+          request_options: {}
+        )
+        .and_return(Uploadcare::Result.success(webhook_attrs))
 
-    before do
-      allow_any_instance_of(Uploadcare::WebhookClient).to receive(:create_webhook)
-        .with(options: hash_including(target_url: target_url, event: event, is_active: is_active,
-                                      signing_secret: signing_secret),
-              request_options: {})
-        .and_return(response_body)
-    end
-
-    it 'creates a new webhook with arguments' do
-      webhook = described_class.create(target_url: target_url, event: event, is_active: is_active,
-                                       signing_secret: signing_secret)
+      webhook = described_class.create(target_url: 'https://example.com/hook', client: client)
       expect(webhook).to be_a(described_class)
-      expect(webhook.id).to eq(1)
-      expect(webhook.event).to eq('file.uploaded')
-      expect(webhook.target_url).to eq('https://example.com/hooks')
+      expect(webhook.target_url).to eq('https://example.com/webhook')
     end
 
-    it 'creates webhook with minimal arguments' do
-      allow_any_instance_of(Uploadcare::WebhookClient).to receive(:create_webhook)
-        .with(options: hash_including(target_url: target_url, event: 'file.uploaded', is_active: true),
-              request_options: {})
-        .and_return(response_body)
+    it 'creates a webhook with custom event and is_active' do
+      allow(rest_webhooks).to receive(:create)
+        .with(
+          options: { target_url: 'https://example.com/hook', event: 'file.stored', is_active: false },
+          request_options: {}
+        )
+        .and_return(Uploadcare::Result.success(webhook_attrs.merge('event' => 'file.stored', 'is_active' => false)))
 
-      webhook = described_class.create(target_url: target_url)
+      webhook = described_class.create(
+        target_url: 'https://example.com/hook',
+        event: 'file.stored',
+        is_active: false,
+        client: client
+      )
       expect(webhook).to be_a(described_class)
-      expect(webhook.target_url).to eq('https://example.com/hooks')
+    end
+
+    it 'includes signing_secret when provided' do
+      allow(rest_webhooks).to receive(:create)
+        .with(
+          options: {
+            target_url: 'https://example.com/hook',
+            event: 'file.uploaded',
+            is_active: true,
+            signing_secret: 'my-secret'
+          },
+          request_options: {}
+        )
+        .and_return(Uploadcare::Result.success(webhook_attrs))
+
+      described_class.create(
+        target_url: 'https://example.com/hook',
+        signing_secret: 'my-secret',
+        client: client
+      )
+    end
+
+    it 'includes version when provided' do
+      allow(rest_webhooks).to receive(:create)
+        .with(
+          options: {
+            target_url: 'https://example.com/hook',
+            event: 'file.uploaded',
+            is_active: true,
+            version: '0.7'
+          },
+          request_options: {}
+        )
+        .and_return(Uploadcare::Result.success(webhook_attrs))
+
+      described_class.create(
+        target_url: 'https://example.com/hook',
+        version: '0.7',
+        client: client
+      )
     end
   end
+
   describe '.update' do
-    let(:webhook_id) { 1 }
-    let(:target_url) { 'https://example.com/hooks/updated' }
-    let(:event) { 'file.uploaded' }
-    let(:is_active) { true }
-    let(:signing_secret) { 'updated-secret' }
-    let(:response_body) do
-      {
-        'id' => 1,
-        'project' => 13,
-        'created' => '2016-04-27T11:49:54.948615Z',
-        'updated' => '2016-04-27T12:04:57.819933Z',
-        'event' => 'file.uploaded',
-        'target_url' => 'https://example.com/hooks/updated',
-        'is_active' => true,
-        'signing_secret' => 'updated-secret',
-        'version' => '0.7'
-      }
-    end
+    it 'updates a webhook by id' do
+      updated_attrs = webhook_attrs.merge('target_url' => 'https://new-url.com/hook')
 
-    before do
-      allow_any_instance_of(Uploadcare::WebhookClient).to receive(:update_webhook)
-        .with(id: webhook_id,
-              options: hash_including(target_url: target_url, event: event, is_active: is_active,
-                                      signing_secret: signing_secret),
-              request_options: {})
-        .and_return(response_body)
-    end
+      allow(rest_webhooks).to receive(:update)
+        .with(
+          id: 123,
+          options: { target_url: 'https://new-url.com/hook' },
+          request_options: {}
+        )
+        .and_return(Uploadcare::Result.success(updated_attrs))
 
-    it 'returns the updated webhook as an object' do
-      webhook = described_class.update(id: webhook_id, target_url: target_url, event: event, is_active: is_active,
-                                       signing_secret: signing_secret)
+      webhook = described_class.update(id: 123, target_url: 'https://new-url.com/hook', client: client)
       expect(webhook).to be_a(described_class)
-      expect(webhook.id).to eq(1)
-      expect(webhook.target_url).to eq(target_url)
-      expect(webhook.event).to eq(event)
-      expect(webhook.is_active).to eq(true)
-      expect(webhook.signing_secret).to eq(signing_secret)
+      expect(webhook.target_url).to eq('https://new-url.com/hook')
     end
 
-    it 'updates webhook with partial options' do
-      allow_any_instance_of(Uploadcare::WebhookClient).to receive(:update_webhook)
-        .with(id: webhook_id, options: hash_including(target_url: target_url), request_options: {})
-        .and_return(response_body)
+    it 'can update is_active' do
+      allow(rest_webhooks).to receive(:update)
+        .with(
+          id: 123,
+          options: { is_active: false },
+          request_options: {}
+        )
+        .and_return(Uploadcare::Result.success(webhook_attrs.merge('is_active' => false)))
 
-      webhook = described_class.update(id: webhook_id, target_url: target_url)
-      expect(webhook).to be_a(described_class)
-      expect(webhook.target_url).to eq(target_url)
-    end
-
-    it 'allows deactivating a webhook' do
-      allow_any_instance_of(Uploadcare::WebhookClient).to receive(:update_webhook)
-        .with(id: webhook_id, options: hash_including(is_active: false), request_options: {})
-        .and_return(response_body.merge('is_active' => false))
-
-      webhook = described_class.update(id: webhook_id, is_active: false)
-
-      expect(webhook.is_active).to eq(false)
+      webhook = described_class.update(id: 123, is_active: false, client: client)
+      expect(webhook.is_active).to be false
     end
   end
+
   describe '.delete' do
-    let(:target_url) { 'https://example.com/hooks' }
+    it 'deletes a webhook by target_url' do
+      allow(rest_webhooks).to receive(:delete)
+        .with(target_url: 'https://example.com/webhook', request_options: {})
+        .and_return(Uploadcare::Result.success(nil))
 
-    before do
-      allow_any_instance_of(Uploadcare::WebhookClient).to receive(:delete_webhook)
-        .with(target_url: target_url, request_options: {})
-        .and_return(nil)
+      expect {
+        described_class.delete(target_url: 'https://example.com/webhook', client: client)
+      }.not_to raise_error
     end
 
-    it 'deletes the webhook successfully' do
-      expect { described_class.delete(target_url: target_url) }.not_to raise_error
+    it 'is aliased as unsubscribe' do
+      expect(described_class).to respond_to(:unsubscribe)
     end
+  end
 
-    it 'passes target_url to client for deletion' do
-      expect_any_instance_of(Uploadcare::WebhookClient).to receive(:delete_webhook)
-        .with(target_url: target_url, request_options: {})
-
-      described_class.delete(target_url: target_url)
-    end
-
-    it 'returns nil on successful deletion' do
-      result = described_class.delete(target_url: target_url)
-      expect(result).to be_nil
-    end
-
-    it 'accepts string URLs' do
-      url = 'https://example.com/webhook'
-      expect_any_instance_of(Uploadcare::WebhookClient).to receive(:delete_webhook)
-        .with(target_url: url, request_options: {}).and_return(nil)
-
-      expect { described_class.delete(target_url: url) }.not_to raise_error
+  describe 'attributes' do
+    it 'exposes all webhook attributes' do
+      webhook = described_class.new(webhook_attrs, client)
+      expect(webhook.id).to eq(123)
+      expect(webhook.project).to eq(456)
+      expect(webhook.created).to eq('2025-01-01T00:00:00Z')
+      expect(webhook.updated).to eq('2025-01-01T00:00:00Z')
+      expect(webhook.event).to eq('file.uploaded')
+      expect(webhook.target_url).to eq('https://example.com/webhook')
+      expect(webhook.is_active).to be true
+      expect(webhook.signing_secret).to eq('secret123')
+      expect(webhook.version).to eq('0.7')
     end
   end
 end

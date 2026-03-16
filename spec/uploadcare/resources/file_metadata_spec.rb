@@ -2,285 +2,177 @@
 
 require 'spec_helper'
 
-RSpec.describe Uploadcare::FileMetadata do
-  subject(:file_metadata) { described_class.new }
+RSpec.describe Uploadcare::Resources::FileMetadata do
+  let(:config) do
+    Uploadcare::Configuration.new(
+      public_key: 'demopublickey',
+      secret_key: 'demosecretkey',
+      auth_type: 'Uploadcare.Simple'
+    )
+  end
+  let(:client) { Uploadcare::Client.new(config: config) }
+  let(:rest) { instance_double(Uploadcare::Api::Rest) }
+  let(:rest_metadata) { instance_double(Uploadcare::Api::Rest::FileMetadata) }
+  let(:api) { instance_double(Uploadcare::Client::Api, rest: rest) }
 
-  let(:uuid) { 'file-uuid' }
-  let(:key) { 'custom-key' }
-  let(:value) { 'custom-value' }
-  let(:response_body) { { key => value } }
+  let(:file_uuid) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' }
 
-  describe '#index' do
-    it 'retrieves all metadata keys and values' do
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:index)
-        .with(uuid: uuid, request_options: {})
-        .and_return(response_body)
+  before do
+    allow(client).to receive(:api).and_return(api)
+    allow(rest).to receive(:file_metadata).and_return(rest_metadata)
+  end
 
-      result = file_metadata.index(uuid: uuid)
-      expect(result).to be_a(described_class)
-    end
-
-    it 'uses existing uuid when not provided' do
-      file_metadata.instance_variable_set(:@uuid, uuid)
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:index)
-        .with(uuid: uuid, request_options: {})
-        .and_return(response_body)
-
-      result = file_metadata.index
-      expect(result).to be_a(described_class)
+  describe '#initialize' do
+    it 'initializes with empty metadata hash' do
+      metadata = described_class.new({}, client)
+      expect(metadata.to_h).to eq({})
     end
   end
 
-  describe '#[]' do
-    before do
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:index)
-        .with(uuid: uuid, request_options: {})
-        .and_return(response_body)
-      file_metadata.index(uuid: uuid)
+  describe 'class methods' do
+    describe '.index' do
+      it 'returns metadata hash for a file' do
+        allow(rest_metadata).to receive(:index)
+          .with(uuid: file_uuid, request_options: {})
+          .and_return(Uploadcare::Result.success({ 'key1' => 'value1', 'key2' => 'value2' }))
+
+        result = described_class.index(uuid: file_uuid, client: client)
+        expect(result).to eq({ 'key1' => 'value1', 'key2' => 'value2' })
+      end
     end
 
-    it 'accesses metadata values dynamically' do
-      expect(file_metadata[key]).to eq(value)
-    end
-  end
+    describe '.show' do
+      it 'returns a single metadata value' do
+        allow(rest_metadata).to receive(:show)
+          .with(uuid: file_uuid, key: 'key1', request_options: {})
+          .and_return(Uploadcare::Result.success('value1'))
 
-  describe '#[]=' do
-    it 'sets metadata values dynamically' do
-      file_metadata[key] = value
-      expect(file_metadata[key]).to eq(value)
-    end
-  end
-
-  describe '#to_h' do
-    before do
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:index)
-        .with(uuid: uuid, request_options: {})
-        .and_return(response_body)
-      file_metadata.index(uuid: uuid)
+        result = described_class.show(uuid: file_uuid, key: 'key1', client: client)
+        expect(result).to eq('value1')
+      end
     end
 
-    it 'returns all metadata as a hash' do
-      expect(file_metadata.to_h).to eq(response_body)
-    end
-  end
+    describe '.update' do
+      it 'updates a metadata key and returns the value' do
+        allow(rest_metadata).to receive(:update)
+          .with(uuid: file_uuid, key: 'key1', value: 'new-value', request_options: {})
+          .and_return(Uploadcare::Result.success('new-value'))
 
-  describe '#show' do
-    it 'retrieves a specific metadata key value' do
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:show)
-        .with(uuid: uuid, key: key, request_options: {})
-        .and_return(value)
-
-      result = file_metadata.show(uuid: uuid, key: key)
-      expect(result).to eq(value)
+        result = described_class.update(uuid: file_uuid, key: 'key1', value: 'new-value', client: client)
+        expect(result).to eq('new-value')
+      end
     end
 
-    it 'uses existing uuid when not provided' do
-      file_metadata.instance_variable_set(:@uuid, uuid)
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:show)
-        .with(uuid: uuid, key: key, request_options: {})
-        .and_return(value)
+    describe '.delete' do
+      it 'deletes a metadata key' do
+        allow(rest_metadata).to receive(:delete)
+          .with(uuid: file_uuid, key: 'key1', request_options: {})
+          .and_return(Uploadcare::Result.success(nil))
 
-      result = file_metadata.show(key: key)
-      expect(result).to eq(value)
+        expect {
+          described_class.delete(uuid: file_uuid, key: 'key1', client: client)
+        }.not_to raise_error
+      end
     end
   end
 
-  describe '#update' do
-    it 'updates a specific metadata key value' do
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:update)
-        .with(uuid: uuid, key: key, value: value, request_options: {})
-        .and_return(value)
-
-      result = file_metadata.update(uuid: uuid, key: key, value: value)
-      expect(result).to eq(value)
+  describe 'instance methods' do
+    let(:metadata_instance) do
+      instance = described_class.new({ 'uuid' => file_uuid }, client)
+      instance.instance_variable_set(:@uuid, file_uuid)
+      instance
     end
 
-    it 'uses existing uuid when not provided' do
-      file_metadata.instance_variable_set(:@uuid, uuid)
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:update)
-        .with(uuid: uuid, key: key, value: value, request_options: {})
-        .and_return(value)
+    describe '#index' do
+      it 'fetches all metadata and stores it internally' do
+        allow(rest_metadata).to receive(:index)
+          .with(uuid: file_uuid, request_options: {})
+          .and_return(Uploadcare::Result.success({ 'key1' => 'value1' }))
 
-      result = file_metadata.update(key: key, value: value)
-      expect(result).to eq(value)
+        result = metadata_instance.index
+        expect(result).to eq(metadata_instance)
+        expect(metadata_instance['key1']).to eq('value1')
+        expect(metadata_instance.to_h).to eq({ 'key1' => 'value1' })
+      end
     end
 
-    it 'updates in-memory metadata cache' do
-      file_metadata.instance_variable_set(:@uuid, uuid)
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:update)
-        .with(uuid: uuid, key: key, value: value, request_options: {})
-        .and_return(value)
+    describe '#[] and #[]=' do
+      it 'gets and sets metadata locally' do
+        metadata_instance['color'] = 'red'
+        expect(metadata_instance['color']).to eq('red')
+      end
 
-      file_metadata.update(uuid: uuid, key: key, value: value)
-      expect(file_metadata[key]).to eq(value)
+      it 'converts symbol keys to strings' do
+        metadata_instance[:shape] = 'circle'
+        expect(metadata_instance[:shape]).to eq('circle')
+        expect(metadata_instance['shape']).to eq('circle')
+      end
     end
 
-    it 'does not update in-memory metadata cache when uuid targets a different file' do
-      other_uuid = 'other-file-uuid'
-      original_value = 'original-value'
+    describe '#to_h' do
+      it 'returns a copy of the metadata hash' do
+        metadata_instance['a'] = '1'
+        metadata_instance['b'] = '2'
+        h = metadata_instance.to_h
+        expect(h).to eq({ 'a' => '1', 'b' => '2' })
 
-      file_metadata.instance_variable_set(:@uuid, uuid)
-      file_metadata[key] = original_value
-
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:update)
-        .with(uuid: other_uuid, key: key, value: value, request_options: {})
-        .and_return(value)
-
-      result = file_metadata.update(uuid: other_uuid, key: key, value: value)
-
-      expect(result).to eq(value)
-      expect(file_metadata[key]).to eq(original_value)
-    end
-  end
-
-  describe '#delete' do
-    it 'deletes a specific metadata key' do
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:delete)
-        .with(uuid: uuid, key: key, request_options: {})
-        .and_return(nil)
-
-      result = file_metadata.delete(uuid: uuid, key: key)
-      expect(result).to be_nil
+        h['c'] = '3'
+        expect(metadata_instance['c']).to be_nil
+      end
     end
 
-    it 'uses existing uuid when not provided' do
-      file_metadata.instance_variable_set(:@uuid, uuid)
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:delete)
-        .with(uuid: uuid, key: key, request_options: {})
-        .and_return(nil)
+    describe '#update' do
+      it 'persists a key-value pair to the server' do
+        allow(rest_metadata).to receive(:update)
+          .with(uuid: file_uuid, key: 'color', value: 'blue', request_options: {})
+          .and_return(Uploadcare::Result.success('blue'))
 
-      result = file_metadata.delete(key: key)
-      expect(result).to be_nil
+        result = metadata_instance.update(key: 'color', value: 'blue')
+        expect(result).to eq('blue')
+        expect(metadata_instance['color']).to eq('blue')
+      end
+
+      it 'does not update local metadata when uuid differs' do
+        allow(rest_metadata).to receive(:update)
+          .with(uuid: 'other-uuid', key: 'color', value: 'blue', request_options: {})
+          .and_return(Uploadcare::Result.success('blue'))
+
+        metadata_instance.update(key: 'color', value: 'blue', uuid: 'other-uuid')
+        expect(metadata_instance['color']).to be_nil
+      end
     end
 
-    it 'removes value from in-memory metadata cache' do
-      file_metadata.instance_variable_set(:@uuid, uuid)
-      file_metadata[key] = value
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:delete)
-        .with(uuid: uuid, key: key, request_options: {})
-        .and_return(nil)
+    describe '#show' do
+      it 'retrieves a single metadata value from the server' do
+        allow(rest_metadata).to receive(:show)
+          .with(uuid: file_uuid, key: 'color', request_options: {})
+          .and_return(Uploadcare::Result.success('green'))
 
-      file_metadata.delete(uuid: uuid, key: key)
-      expect(file_metadata[key]).to be_nil
+        result = metadata_instance.show(key: 'color')
+        expect(result).to eq('green')
+      end
     end
 
-    it 'does not remove in-memory metadata cache when uuid targets a different file' do
-      other_uuid = 'other-file-uuid'
+    describe '#delete' do
+      it 'deletes a metadata key on the server' do
+        metadata_instance['temp'] = 'data'
+        allow(rest_metadata).to receive(:delete)
+          .with(uuid: file_uuid, key: 'temp', request_options: {})
+          .and_return(Uploadcare::Result.success(nil))
 
-      file_metadata.instance_variable_set(:@uuid, uuid)
-      file_metadata[key] = value
+        metadata_instance.delete(key: 'temp')
+        expect(metadata_instance['temp']).to be_nil
+      end
 
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:delete)
-        .with(uuid: other_uuid, key: key, request_options: {})
-        .and_return(nil)
+      it 'does not delete local metadata when uuid differs' do
+        metadata_instance['temp'] = 'data'
+        allow(rest_metadata).to receive(:delete)
+          .with(uuid: 'other-uuid', key: 'temp', request_options: {})
+          .and_return(Uploadcare::Result.success(nil))
 
-      result = file_metadata.delete(uuid: other_uuid, key: key)
-
-      expect(result).to be_nil
-      expect(file_metadata[key]).to eq(value)
-    end
-  end
-  describe '.index' do
-    it 'retrieves all metadata keys and values' do
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:index)
-        .with(uuid: uuid, request_options: {})
-        .and_return(response_body)
-
-      result = described_class.index(uuid: uuid)
-      expect(result).to eq(response_body)
-    end
-
-    it 'uses default configuration when none provided' do
-      expect(Uploadcare::FileMetadataClient).to receive(:new).with(config: Uploadcare.configuration).and_call_original
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:index).and_return(response_body)
-
-      described_class.index(uuid: uuid)
-    end
-
-    it 'uses the provided configuration' do
-      config = Uploadcare.configuration
-      expect(Uploadcare::FileMetadataClient).to receive(:new).with(config: config).and_call_original
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:index).and_return(response_body)
-
-      described_class.index(uuid: uuid, config: config)
-    end
-  end
-
-  describe '.show' do
-    it 'retrieves a specific metadata key value' do
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:show)
-        .with(uuid: uuid, key: key, request_options: {})
-        .and_return(value)
-
-      result = described_class.show(uuid: uuid, key: key)
-      expect(result).to eq(value)
-    end
-
-    it 'uses default configuration when none provided' do
-      expect(Uploadcare::FileMetadataClient).to receive(:new).with(config: Uploadcare.configuration).and_call_original
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:show).and_return(value)
-
-      described_class.show(uuid: uuid, key: key)
-    end
-
-    it 'uses the provided configuration' do
-      config = Uploadcare.configuration
-      expect(Uploadcare::FileMetadataClient).to receive(:new).with(config: config).and_call_original
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:show).and_return(value)
-
-      described_class.show(uuid: uuid, key: key, config: config)
-    end
-  end
-
-  describe '.update' do
-    it 'updates a specific metadata key value' do
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:update)
-        .with(uuid: uuid, key: key, value: value, request_options: {})
-        .and_return(value)
-
-      result = described_class.update(uuid: uuid, key: key, value: value)
-      expect(result).to eq(value)
-    end
-
-    it 'uses default configuration when none provided' do
-      expect(Uploadcare::FileMetadataClient).to receive(:new).with(config: Uploadcare.configuration).and_call_original
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:update).and_return(value)
-
-      described_class.update(uuid: uuid, key: key, value: value)
-    end
-
-    it 'uses the provided configuration' do
-      config = Uploadcare.configuration
-      expect(Uploadcare::FileMetadataClient).to receive(:new).with(config: config).and_call_original
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:update).and_return(value)
-
-      described_class.update(uuid: uuid, key: key, value: value, config: config)
-    end
-  end
-
-  describe '.delete' do
-    it 'deletes a specific metadata key' do
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:delete)
-        .with(uuid: uuid, key: key, request_options: {})
-        .and_return(nil)
-
-      result = described_class.delete(uuid: uuid, key: key)
-      expect(result).to be_nil
-    end
-
-    it 'uses default configuration when none provided' do
-      expect(Uploadcare::FileMetadataClient).to receive(:new).with(config: Uploadcare.configuration).and_call_original
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:delete).and_return(nil)
-
-      described_class.delete(uuid: uuid, key: key)
-    end
-
-    it 'uses the provided configuration' do
-      config = Uploadcare.configuration
-      expect(Uploadcare::FileMetadataClient).to receive(:new).with(config: config).and_call_original
-      allow_any_instance_of(Uploadcare::FileMetadataClient).to receive(:delete).and_return(nil)
-
-      described_class.delete(uuid: uuid, key: key, config: config)
+        metadata_instance.delete(key: 'temp', uuid: 'other-uuid')
+        expect(metadata_instance['temp']).to eq('data')
+      end
     end
   end
 end

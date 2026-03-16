@@ -2,95 +2,75 @@
 
 require 'spec_helper'
 
-module Uploadcare
-  RSpec.describe BaseResource do
-    let(:config) { Uploadcare.configuration }
-    let(:attributes) { { 'name' => 'test', 'value' => 123 } }
+RSpec.describe Uploadcare::Resources::BaseResource do
+  let(:config) do
+    Uploadcare::Configuration.new(
+      public_key: 'demopublickey',
+      secret_key: 'demosecretkey',
+      auth_type: 'Uploadcare.Simple'
+    )
+  end
+  let(:client) { Uploadcare::Client.new(config: config) }
 
-    # Create a test subclass for testing
-    let(:test_class) do
-      Class.new(described_class) do
-        attr_accessor :name, :value, :readonly_attr
-
-        def readonly_attr
-          @readonly_attr
-        end
-      end
+  describe '#initialize' do
+    it 'accepts attributes and a client' do
+      resource = described_class.new({}, client)
+      expect(resource.client).to eq(client)
+      expect(resource.config).to eq(client.config)
     end
 
-    subject { test_class.new(attributes, config) }
-
-    describe '#initialize' do
-      it 'sets config' do
-        expect(subject.config).to eq(config)
-      end
-
-      it 'assigns attributes' do
-        expect(subject.name).to eq('test')
-        expect(subject.value).to eq(123)
-      end
-
-      it 'uses global config by default' do
-        resource = test_class.new(attributes)
-
-        expect(resource.config).to eq(Uploadcare.configuration)
-      end
-
-      it 'does not assign attributes without setters' do
-        attrs = { 'name' => 'test', 'nonexistent' => 'should not set' }
-        resource = test_class.new(attrs, config)
-
-        expect(resource.name).to eq('test')
-        expect(resource).not_to respond_to(:nonexistent)
-      end
+    it 'defaults to Uploadcare.client when no client given' do
+      allow(Uploadcare).to receive(:client).and_return(client)
+      resource = described_class.new({})
+      expect(resource.client).to eq(client)
     end
 
-    describe '#rest_client' do
-      it 'returns a RestClient instance' do
-        client = subject.send(:rest_client)
+    it 'resolves a Configuration into a client' do
+      resource = described_class.new({}, config)
+      expect(resource.client).to be_a(Uploadcare::Client)
+      expect(resource.config.public_key).to eq('demopublickey')
+    end
+  end
 
-        expect(client).to be_a(Uploadcare::RestClient)
-      end
-
-      it 'uses the resource config' do
-        client = subject.send(:rest_client)
-
-        expect(client.instance_variable_get(:@config)).to eq(config)
-      end
-
-      it 'memoizes the client' do
-        client1 = subject.send(:rest_client)
-        client2 = subject.send(:rest_client)
-
-        expect(client1).to be(client2)
-      end
+  describe '.resolve_client' do
+    it 'returns the explicit client when provided' do
+      result = described_class.resolve_client(client: client)
+      expect(result).to eq(client)
     end
 
-    describe '#assign_attributes' do
-      it 'assigns attributes with setters' do
-        subject.send(:assign_attributes, { 'name' => 'updated', 'value' => 456 })
+    it 'wraps a Configuration in a client' do
+      result = described_class.resolve_client(config)
+      expect(result).to be_a(Uploadcare::Client)
+      expect(result.config.public_key).to eq('demopublickey')
+    end
 
-        expect(subject.name).to eq('updated')
-        expect(subject.value).to eq(456)
+    it 'wraps a Client passed as first argument' do
+      result = described_class.resolve_client(client)
+      expect(result).to eq(client)
+    end
+
+    it 'falls back to Uploadcare.client for nil' do
+      allow(Uploadcare).to receive(:client).and_return(client)
+      result = described_class.resolve_client(nil)
+      expect(result).to eq(client)
+    end
+  end
+
+  describe '#assign_attributes' do
+    it 'sets attributes via setter methods' do
+      klass = Class.new(described_class) do
+        attr_accessor :name, :value
       end
 
-      it 'skips attributes without setters' do
-        expect do
-          subject.send(:assign_attributes, { 'nonexistent' => 'value' })
-        end.not_to raise_error
-      end
+      resource = klass.new({ 'name' => 'test', 'value' => 42 }, client)
+      expect(resource.name).to eq('test')
+      expect(resource.value).to eq(42)
+    end
 
-      it 'handles empty hash' do
-        expect do
-          subject.send(:assign_attributes, {})
-        end.not_to raise_error
-      end
-
-      it 'handles string keys' do
-        subject.send(:assign_attributes, { 'name' => 'string_key' })
-
-        expect(subject.name).to eq('string_key')
-      end
+    it 'ignores attributes without setter methods' do
+      expect {
+        described_class.new({ 'nonexistent_attr' => 'ignored' }, client)
+      }.not_to raise_error
     end
   end
 end

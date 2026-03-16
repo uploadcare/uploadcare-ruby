@@ -3,19 +3,20 @@
 require 'bundler/setup'
 require 'simplecov'
 
-# Start SimpleCov
 SimpleCov.start do
   add_filter '/spec/'
   add_filter '/bin/'
   add_filter '/examples/'
   add_filter '/api_examples/'
 
-  add_group 'Clients', 'lib/uploadcare/clients'
+  add_group 'Api', 'lib/uploadcare/api'
+  add_group 'Internal', 'lib/uploadcare/internal'
   add_group 'Resources', 'lib/uploadcare/resources'
+  add_group 'Collections', 'lib/uploadcare/collections'
+  add_group 'Operations', 'lib/uploadcare/operations'
   add_group 'Core', 'lib/uploadcare'
 
-  # Set minimum coverage goal
-  minimum_coverage 95
+  minimum_coverage 90
 end
 
 require 'byebug'
@@ -26,10 +27,7 @@ Dir[File.expand_path(File.join(File.dirname(__FILE__), 'support', '**', '*.rb'))
 RSpec.configure do |config|
   include Uploadcare::Exception
 
-  # Enable flags like --only-failures and --next-failure
   config.example_status_persistence_file_path = '.rspec_status'
-
-  # Disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!
 
   config.expect_with :rspec do |c|

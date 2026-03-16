@@ -1,281 +1,358 @@
 # frozen_string_literal: true
 
-# File resource.
-class Uploadcare::File < Uploadcare::BaseResource
-  # File attributes exposed by the API.
-  ATTRIBUTES = %i[
-    datetime_removed datetime_stored datetime_uploaded is_image is_ready mime_type original_file_url
-    original_filename size url uuid variations content_info metadata appdata source
-  ].freeze
+# File resource representing an uploaded file in Uploadcare.
+#
+# Provides both class methods (find, list, upload, batch operations, copy)
+# and instance methods (store, delete, reload, convert) for working with files.
+#
+# @example Finding a file
+#   file = Uploadcare::File.find(uuid: "file-uuid")
+#   file.original_filename  # => "photo.jpg"
+#
+# @example Uploading
+#   file = Uploadcare::File.upload(File.open("photo.jpg"), store: true)
+#
+# @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File
+module Uploadcare
+  module Resources
+    class File < BaseResource
+      ATTRIBUTES = %i[
+        datetime_removed datetime_stored datetime_uploaded is_image is_ready mime_type original_file_url
+        original_filename size url uuid variations content_info metadata appdata source
+      ].freeze
 
-  attr_accessor(*ATTRIBUTES)
+      attr_accessor(*ATTRIBUTES)
 
-  def initialize(attributes = {}, config = Uploadcare.configuration)
-    super
-    @file_client = Uploadcare::FileClient.new(config: config)
-  end
+      # --- Class methods ---
 
-  # Gets file info by UUID
-  # @param uuid [String] The file UUID
-  # @param config [Uploadcare::Configuration] Configuration object
-  # @return [Uploadcare::File] The file object with full info
-  def self.info(uuid:, config: Uploadcare.configuration, request_options: {})
-    file_client = Uploadcare::FileClient.new(config: config)
-    response = Uploadcare::Result.unwrap(file_client.info(uuid: uuid, request_options: request_options))
-    new(response, config)
-  end
+      # Find a file by UUID.
+      #
+      # @param uuid [String] File UUID
+      # @param params [Hash] Optional parameters (e.g., include: "appdata")
+      # @param client [Uploadcare::Client, nil] Client instance
+      # @param config [Uploadcare::Configuration] Configuration fallback
+      # @param request_options [Hash] Request options
+      # @return [Uploadcare::Resources::File]
+      def self.find(uuid:, params: {}, client: nil, config: Uploadcare.configuration, request_options: {})
+        resolved_client = resolve_client(client: client, config: config)
+        response = if params.empty?
+                     Uploadcare::Result.unwrap(
+                       resolved_client.api.rest.files.info(uuid: uuid, request_options: request_options)
+                     )
+                   else
+                     Uploadcare::Result.unwrap(
+                       resolved_client.api.rest.files.info(uuid: uuid, params: params, request_options: request_options)
+                     )
+                   end
+        new(response, resolved_client)
+      end
 
-  # Gets file info by UUID with optional parameters
-  # @param uuid [String] The file UUID
-  # @param params [Hash] Optional parameters like include: "appdata"
-  # @param config [Uploadcare::Configuration] Configuration object
-  # @return [Uploadcare::File] The file object with full info
-  def self.file(uuid:, params: {}, config: Uploadcare.configuration, request_options: {})
-    file_client = Uploadcare::FileClient.new(config: config)
-    response = Uploadcare::Result.unwrap(file_client.info(uuid: uuid, params: params,
-                                                          request_options: request_options))
-    new(response, config)
-  end
+      class << self
+        alias retrieve find
+        alias info find
+      end
 
-  # This method returns a list of Files
-  # This is a paginated FileList, so all pagination methods apply
-  # @param options [Hash] Optional parameters
-  # @param config [Uploadcare::Configuration] Configuration object
-  # @return [Uploadcare::FileList]
-  # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/filesList
-  def self.list(options: {}, config: Uploadcare.configuration, request_options: {})
-    file_client = Uploadcare::FileClient.new(config: config)
-    response = Uploadcare::Result.unwrap(file_client.list(params: options, request_options: request_options))
+      # List files with optional filtering and pagination.
+      #
+      # @param options [Hash] Query parameters (limit, ordering, etc.)
+      # @param client [Uploadcare::Client, nil] Client instance
+      # @param config [Uploadcare::Configuration] Configuration fallback
+      # @param request_options [Hash] Request options
+      # @return [Uploadcare::Collections::Paginated]
+      def self.list(options: {}, client: nil, config: Uploadcare.configuration, request_options: {})
+        resolved_client = resolve_client(client: client, config: config)
+        response = Uploadcare::Result.unwrap(
+          resolved_client.api.rest.files.list(params: options, request_options: request_options)
+        )
 
-    files = response['results'].map do |file_data|
-      new(file_data, config)
+        files = response['results'].map { |data| new(data, resolved_client) }
+
+        Uploadcare::Collections::Paginated.new(
+          resources: files,
+          next_page: response['next'],
+          previous_page: response['previous'],
+          per_page: response['per_page'],
+          total: response['total'],
+          api_client: resolved_client.api.rest.files,
+          resource_class: self,
+          client: resolved_client
+        )
+      end
+
+      # Upload a single file.
+      #
+      # @param file [File, IO] File to upload
+      # @param client [Uploadcare::Client, nil] Client instance
+      # @param config [Uploadcare::Configuration] Configuration fallback
+      # @param options [Hash] Upload options
+      # @return [Uploadcare::Resources::File]
+      def self.upload(file, client: nil, config: Uploadcare.configuration, request_options: {}, **options)
+        resolved_client = resolve_client(client: client, config: config)
+        resolved_client.uploads.upload_file(file: file, request_options: request_options, **options)
+      end
+
+      # Upload multiple files.
+      #
+      # @param files [Array<File, IO>] Files to upload
+      # @param client [Uploadcare::Client, nil] Client instance
+      # @param config [Uploadcare::Configuration] Configuration fallback
+      # @param options [Hash] Upload options
+      # @return [Array<Uploadcare::Resources::File>]
+      def self.upload_many(files, client: nil, config: Uploadcare.configuration, request_options: {}, **options)
+        resolved_client = resolve_client(client: client, config: config)
+        resolved_client.uploads.upload_files(files: files, request_options: request_options, **options)
+      end
+
+      # Upload a file from URL.
+      #
+      # @param url [String] Source URL
+      # @param client [Uploadcare::Client, nil] Client instance
+      # @param config [Uploadcare::Configuration] Configuration fallback
+      # @param options [Hash] Upload options
+      # @return [Uploadcare::Resources::File]
+      def self.upload_url(url, client: nil, config: Uploadcare.configuration, request_options: {}, **options)
+        resolved_client = resolve_client(client: client, config: config)
+        resolved_client.uploads.upload_from_url(url: url, request_options: request_options, **options)
+      end
+
+      class << self
+        alias upload_from_url upload_url
+      end
+
+      # Batch store files.
+      #
+      # @param uuids [Array<String>] File UUIDs to store
+      # @param client [Uploadcare::Client, nil] Client instance
+      # @param config [Uploadcare::Configuration] Configuration fallback
+      # @param request_options [Hash] Request options
+      # @return [Uploadcare::Collections::BatchResult]
+      def self.batch_store(uuids:, client: nil, config: Uploadcare.configuration, request_options: {})
+        resolved_client = resolve_client(client: client, config: config)
+        response = Uploadcare::Result.unwrap(
+          resolved_client.api.rest.files.batch_store(uuids: uuids, request_options: request_options)
+        )
+        normalized = response.transform_keys(&:to_s)
+
+        Uploadcare::Collections::BatchResult.new(
+          status: normalized['status'],
+          result: normalized['result'],
+          problems: normalized['problems'] || {},
+          client: resolved_client
+        )
+      end
+
+      # Batch delete files.
+      #
+      # @param uuids [Array<String>] File UUIDs to delete
+      # @param client [Uploadcare::Client, nil] Client instance
+      # @param config [Uploadcare::Configuration] Configuration fallback
+      # @param request_options [Hash] Request options
+      # @return [Uploadcare::Collections::BatchResult]
+      def self.batch_delete(uuids:, client: nil, config: Uploadcare.configuration, request_options: {})
+        resolved_client = resolve_client(client: client, config: config)
+        response = Uploadcare::Result.unwrap(
+          resolved_client.api.rest.files.batch_delete(uuids: uuids, request_options: request_options)
+        )
+        normalized = response.transform_keys(&:to_s)
+
+        Uploadcare::Collections::BatchResult.new(
+          status: normalized['status'],
+          result: normalized['result'],
+          problems: normalized['problems'] || {},
+          client: resolved_client
+        )
+      end
+
+      # Copy a file to local storage (class method).
+      #
+      # @param source [String] CDN URL or UUID
+      # @param options [Hash] Optional parameters
+      # @return [Uploadcare::Resources::File]
+      def self.local_copy(source:, options: {}, client: nil, config: Uploadcare.configuration, request_options: {})
+        resolved_client = resolve_client(client: client, config: config)
+        response = Uploadcare::Result.unwrap(
+          resolved_client.api.rest.files.local_copy(source: source, options: options, request_options: request_options)
+        )
+        new(response['result'], resolved_client)
+      end
+
+      class << self
+        alias copy_to_local local_copy
+      end
+
+      # Copy a file to remote storage (class method).
+      #
+      # @param source [String] CDN URL or UUID
+      # @param target [String] Custom storage name
+      # @param options [Hash] Optional parameters
+      # @return [String] URL of the copied file
+      def self.remote_copy(source:, target:, options: {}, client: nil, config: Uploadcare.configuration,
+                           request_options: {})
+        resolved_client = resolve_client(client: client, config: config)
+        response = Uploadcare::Result.unwrap(
+          resolved_client.api.rest.files.remote_copy(
+            source: source, target: target, options: options, request_options: request_options
+          )
+        )
+        response['result']
+      end
+
+      class << self
+        alias copy_to_remote remote_copy
+      end
+
+      # --- Instance methods ---
+
+      # Store this file, making it permanently available.
+      #
+      # @param request_options [Hash] Request options
+      # @return [self]
+      def store(request_options: {})
+        response = Uploadcare::Result.unwrap(client.api.rest.files.store(uuid: uuid, request_options: request_options))
+        assign_attributes(response)
+        self
+      end
+
+      # Delete this file.
+      #
+      # @param request_options [Hash] Request options
+      # @return [self]
+      def delete(request_options: {})
+        response = Uploadcare::Result.unwrap(client.api.rest.files.delete(uuid: uuid, request_options: request_options))
+        assign_attributes(response)
+        self
+      end
+
+      # Reload file information from the API.
+      #
+      # @param params [Hash] Optional parameters
+      # @param request_options [Hash] Request options
+      # @return [self]
+      def reload(params: {}, request_options: {})
+        response = Uploadcare::Result.unwrap(
+          client.api.rest.files.info(uuid: uuid, params: params, request_options: request_options)
+        )
+        assign_attributes(response)
+        self
+      end
+      alias load reload
+
+      # Copy this file to local storage.
+      #
+      # @param options [Hash] Optional parameters
+      # @param request_options [Hash] Request options
+      # @return [Uploadcare::Resources::File] The copied file
+      def copy_to_local(options: {}, request_options: {})
+        response = Uploadcare::Result.unwrap(
+          client.api.rest.files.local_copy(source: uuid, options: options, request_options: request_options)
+        )
+        self.class.new(response['result'], client)
+      end
+      alias local_copy copy_to_local
+
+      # Copy this file to remote storage.
+      #
+      # @param target [String] Custom storage name
+      # @param options [Hash] Optional parameters
+      # @param request_options [Hash] Request options
+      # @return [String] URL of the copied file
+      def copy_to_remote(target:, options: {}, request_options: {})
+        response = Uploadcare::Result.unwrap(
+          client.api.rest.files.remote_copy(
+            source: uuid, target: target, options: options, request_options: request_options
+          )
+        )
+        response['result']
+      end
+      alias remote_copy copy_to_remote
+
+      # Convert this file to a document format.
+      #
+      # @param params [Hash] Conversion parameters (:format, etc.)
+      # @param options [Hash] Optional parameters (:store, etc.)
+      # @param request_options [Hash] Request options
+      # @return [Uploadcare::Resources::File] The converted file
+      def convert_to_document(params: {}, options: {}, request_options: {})
+        convert_file(params, Uploadcare::Resources::DocumentConversion, options, request_options: request_options)
+      end
+
+      # Convert this file to a video format.
+      #
+      # @param params [Hash] Conversion parameters (:format, :quality, etc.)
+      # @param options [Hash] Optional parameters (:store, etc.)
+      # @param request_options [Hash] Request options
+      # @return [Uploadcare::Resources::File] The converted file
+      def convert_to_video(params: {}, options: {}, request_options: {})
+        convert_file(params, Uploadcare::Resources::VideoConversion, options, request_options: request_options)
+      end
+
+      # Returns the file UUID, extracting from URL if needed.
+      #
+      # @return [String, nil]
+      def uuid
+        return @uuid if @uuid
+
+        source = @url || @original_file_url
+        return @uuid unless source
+
+        @uuid = source[/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/]
+      end
+
+      # Returns the CDN URL for this file.
+      #
+      # @return [String]
+      def cdn_url
+        return @url if @url
+
+        "#{config.cdn_base}#{uuid}/"
+      end
+
+      private
+
+      def convert_file(params, converter, options = {}, request_options: {})
+        raise ArgumentError, 'The first argument must be a Hash' unless params.is_a?(Hash)
+
+        params_with_symbolized_keys = params.transform_keys(&:to_sym)
+        params_with_symbolized_keys[:uuid] = uuid
+
+        result = if converter.respond_to?(:convert_document)
+                   converter.convert_document(
+                     params: params_with_symbolized_keys, options: options, config: config,
+                     request_options: request_options
+                   )
+                 elsif converter.respond_to?(:convert)
+                   converter.convert(
+                     params: params_with_symbolized_keys, options: options, config: config,
+                     request_options: request_options
+                   )
+                 else
+                   raise Uploadcare::Exception::ConversionError,
+                         "Converter #{converter.name} does not respond to convert_document or convert"
+                 end
+
+        process_convert_result(result, request_options: request_options)
+      end
+
+      def process_convert_result(result, request_options: {})
+        if result.is_a?(Hash) && result['result']&.first
+          return process_hash_result(result, request_options: request_options)
+        end
+
+        if result.respond_to?(:result) && result.result.is_a?(Array) && result.result.first.is_a?(Hash)
+          return process_hash_result({ 'result' => result.result }, request_options: request_options)
+        end
+
+        result
+      end
+
+      def process_hash_result(result, request_options: {})
+        result_data = result['result'].first
+        if result_data['uuid']
+          return self.class.find(uuid: result_data['uuid'], client: client, request_options: request_options)
+        end
+
+        result
+      end
     end
-
-    Uploadcare::PaginatedCollection.new(
-      resources: files,
-      next_page: response['next'],
-      previous_page: response['previous'],
-      per_page: response['per_page'],
-      total: response['total'],
-      client: file_client,
-      resource_class: self
-    )
-  end
-
-  # Stores the file, making it permanently available
-  # @return [Uploadcare::File] The updated File instance
-  # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/storeFile
-  def store(request_options: {})
-    response = Uploadcare::Result.unwrap(@file_client.store(uuid: uuid, request_options: request_options))
-
-    assign_attributes(response)
-    self
-  end
-
-  # Removes individual files. Returns file info.
-  # @return [Uploadcare::File] The deleted File instance
-  # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/deleteFileStorage
-  def delete(request_options: {})
-    response = Uploadcare::Result.unwrap(@file_client.delete(uuid: uuid, request_options: request_options))
-
-    assign_attributes(response)
-    self
-  end
-
-  # Get File information by its UUID (immutable)
-  # @return [Uploadcare::File] The File instance
-  # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/fileinfo
-  def info(params: {}, request_options: {})
-    response = Uploadcare::Result.unwrap(@file_client.info(uuid: uuid, params: params,
-                                                           request_options: request_options))
-
-    assign_attributes(response)
-    self
-  end
-
-  # Copies this file to local storage
-  # @param options [Hash] Optional parameters
-  # @return [Uploadcare::File] The copied file instance
-  def local_copy(options: {}, request_options: {})
-    response = Uploadcare::Result.unwrap(@file_client.local_copy(source: uuid, options: options,
-                                                                 request_options: request_options))
-    file_data = response['result']
-    self.class.new(file_data, @config)
-  end
-
-  # Copies this file to remote storage
-  # @param target [String] The name of the custom storage
-  # @param options [Hash] Optional parameters
-  # @return [String] The URL of the copied file in the remote storage
-  def remote_copy(target:, options: {}, request_options: {})
-    response = Uploadcare::Result.unwrap(@file_client.remote_copy(source: uuid, target: target, options: options,
-                                                                  request_options: request_options))
-    response['result']
-  end
-
-  # Batch store files, making them permanently available
-  # @param uuids [Array<String>] List of file UUIDs to store
-  # @param config [Uploadcare::Configuration] Configuration object
-  # @return [Uploadcare::BatchFileResult]
-  # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/filesStoring
-  def self.batch_store(uuids:, config: Uploadcare.configuration, request_options: {})
-    file_client = Uploadcare::FileClient.new(config: config)
-    response = Uploadcare::Result.unwrap(file_client.batch_store(uuids: uuids, request_options: request_options))
-    normalized = response.transform_keys(&:to_s)
-
-    Uploadcare::BatchFileResult.new(
-      status: normalized['status'],
-      result: normalized['result'],
-      problems: normalized['problems'] || {},
-      config: config
-    )
-  end
-
-  # Batch delete files, removing them permanently
-  # @param uuids [Array<String>] List of file UUIDs to delete
-  # @param config [Uploadcare::Configuration] Configuration object
-  # @return [Uploadcare::BatchFileResult]
-  # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/filesDelete
-  def self.batch_delete(uuids:, config: Uploadcare.configuration, request_options: {})
-    file_client = Uploadcare::FileClient.new(config: config)
-    response = Uploadcare::Result.unwrap(file_client.batch_delete(uuids: uuids, request_options: request_options))
-    normalized = response.transform_keys(&:to_s)
-
-    Uploadcare::BatchFileResult.new(
-      status: normalized['status'],
-      result: normalized['result'],
-      problems: normalized['problems'] || {},
-      config: config
-    )
-  end
-
-  # Copies a file to local storage
-  # @param source [String] The CDN URL or UUID of the file to copy
-  # @param options [Hash] Optional parameters
-  # @param config [Uploadcare::Configuration] Configuration object
-  # @return [Uploadcare::File] The copied file
-  def self.local_copy(source:, options: {}, config: Uploadcare.configuration, request_options: {})
-    file_client = Uploadcare::FileClient.new(config: config)
-    response = Uploadcare::Result.unwrap(file_client.local_copy(source: source, options: options,
-                                                                request_options: request_options))
-    file_data = response['result']
-    new(file_data, config)
-  end
-
-  # Copies a file to remote storage
-  # @param source [String] The CDN URL or UUID of the file to copy
-  # @param target [String] The name of the custom storage
-  # @param options [Hash] Optional parameters
-  # @param config [Uploadcare::Configuration] Configuration object
-  # @return [String] The URL of the copied file in the remote storage
-  def self.remote_copy(source:, target:, options: {}, config: Uploadcare.configuration, request_options: {})
-    file_client = Uploadcare::FileClient.new(config: config)
-    response = Uploadcare::Result.unwrap(file_client.remote_copy(source: source, target: target, options: options,
-                                                                 request_options: request_options))
-    response['result']
-  end
-
-  # Convert this file to a document format
-  # @param params [Hash] Conversion parameters (format, page, etc.)
-  # @param options [Hash] Optional parameters (store, etc.)
-  # @return [Uploadcare::File] The converted file
-  def convert_document(params: {}, options: {}, request_options: {})
-    convert_file(params, Uploadcare::DocumentConverter, options, request_options: request_options)
-  end
-
-  # Convert this file to a video format
-  # @param params [Hash] Conversion parameters (format, quality, cut, size, thumb, etc.)
-  # @param options [Hash] Optional parameters (store, etc.)
-  # @return [Uploadcare::File] The converted file
-  def convert_video(params: {}, options: {}, request_options: {})
-    convert_file(params, Uploadcare::VideoConverter, options, request_options: request_options)
-  end
-
-  # Returns the file UUID if present, or extracts from URL.
-  #
-  # @return [String, nil]
-  def uuid
-    return @uuid if @uuid
-
-    source = @url || @original_file_url
-    return @uuid unless source
-
-    @uuid = source[/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/]
-  end
-
-  # Returns the CDN URL for this file.
-  #
-  # @return [String]
-  def cdn_url
-    return @url if @url
-
-    # Generate CDN URL from uuid and config
-    "#{@config.cdn_base.call}#{uuid}/"
-  end
-
-  # Reloads file metadata from the API.
-  #
-  # @return [Uploadcare::File]
-  def load
-    info
-    self
-  end
-
-  private
-
-  def convert_file(params, converter, options = {}, request_options: {})
-    validate_convert_params(params)
-    prepared_params = prepare_convert_params(params)
-    result = perform_conversion(converter, prepared_params, options, request_options: request_options)
-    process_convert_result(result, request_options: request_options)
-  end
-
-  def validate_convert_params(params)
-    error_class = if defined?(Uploadcare::Exception::ConversionError)
-                    Uploadcare::Exception::ConversionError
-                  else
-                    ArgumentError
-                  end
-    raise error_class, 'The first argument must be a Hash' unless params.is_a?(Hash)
-  end
-
-  def prepare_convert_params(params)
-    params_with_symbolized_keys = params.transform_keys(&:to_sym)
-    params_with_symbolized_keys[:uuid] = uuid
-    params_with_symbolized_keys
-  end
-
-  def perform_conversion(converter, params, options, request_options: {})
-    if converter.respond_to?(:convert_document)
-      converter.convert_document(params: params, options: options, config: @config, request_options: request_options)
-    elsif converter.respond_to?(:convert)
-      converter.convert(params: params, options: options, config: @config, request_options: request_options)
-    else
-      raise Uploadcare::Exception::ConversionError,
-            "Converter #{converter.name} does not respond to convert_document or convert"
-    end
-  end
-
-  def process_convert_result(result, request_options: {})
-    if result.is_a?(Hash) && result['result']&.first
-      return process_hash_result(result,
-                                 request_options: request_options)
-    end
-
-    if result.respond_to?(:result) && result.result.is_a?(Array) && result.result.first.is_a?(Hash)
-      return process_hash_result({ 'result' => result.result }, request_options: request_options)
-    end
-
-    result
-  end
-
-  def process_hash_result(result, request_options: {})
-    result_data = result['result'].first
-    if result_data['uuid']
-      return self.class.info(uuid: result_data['uuid'], config: @config,
-                             request_options: request_options)
-    end
-
-    result
   end
 end

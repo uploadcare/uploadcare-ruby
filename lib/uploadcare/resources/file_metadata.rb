@@ -1,111 +1,134 @@
 # frozen_string_literal: true
 
-# File metadata resource.
-class Uploadcare::FileMetadata < Uploadcare::BaseResource
-  def initialize(attributes = {}, config = Uploadcare.configuration)
-    super
-    @file_metadata_client = Uploadcare::FileMetadataClient.new(config: config)
-    @metadata = {}
-  end
+# File metadata resource for managing key-value metadata on files.
+#
+# @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata
+module Uploadcare
+  module Resources
+    class FileMetadata < BaseResource
+      def initialize(attributes = {}, client_or_config = Uploadcare.client)
+        super
+        @metadata = {}
+      end
 
-  # Retrieves metadata for the file
-  # @return [Hash] The metadata keys and values for the file
-  # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata/operation/_fileMetadata
-  def index(uuid: nil, request_options: {})
-    response = Uploadcare::Result.unwrap(@file_metadata_client.index(uuid: uuid || @uuid,
-                                                                     request_options: request_options))
-    @metadata = response if response.is_a?(Hash)
-    self
-  end
+      # --- Instance methods ---
 
-  # Access metadata values dynamically
-  def [](key)
-    @metadata[key.to_s]
-  end
+      # Retrieve all metadata for the file.
+      #
+      # @param uuid [String, nil] File UUID (defaults to instance UUID)
+      # @param request_options [Hash] Request options
+      # @return [self]
+      def index(uuid: nil, request_options: {})
+        response = Uploadcare::Result.unwrap(
+          client.api.rest.file_metadata.index(uuid: uuid || @uuid, request_options: request_options)
+        )
+        @metadata = response if response.is_a?(Hash)
+        self
+      end
 
-  # Set metadata values dynamically
-  def []=(key, value)
-    @metadata[key.to_s] = value
-  end
+      # Access a metadata value by key.
+      #
+      # @param key [String, Symbol] Metadata key
+      # @return [String, nil] Metadata value
+      def [](key)
+        @metadata[key.to_s]
+      end
 
-  # Return all metadata as a hash
-  def to_h
-    @metadata.dup
-  end
+      # Set a metadata value by key (local only, call #update to persist).
+      #
+      # @param key [String, Symbol] Metadata key
+      # @param value [String] Metadata value
+      def []=(key, value)
+        @metadata[key.to_s] = value
+      end
 
-  # Updates metadata key's value
-  # @return [String] The updated value of the metadata key
-  # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata/operation/updateFileMetadataKey
-  def update(key:, value:, uuid: nil, request_options: {})
-    target_uuid = uuid || @uuid
-    result = Uploadcare::Result.unwrap(@file_metadata_client.update(uuid: target_uuid, key: key, value: value,
-                                                                    request_options: request_options))
-    @metadata[key.to_s] = result if target_uuid == @uuid
-    result
-  end
+      # Return all metadata as a hash.
+      #
+      # @return [Hash]
+      def to_h
+        @metadata.dup
+      end
 
-  # Retrieves the value of a specific metadata key for the file
-  # @param key [String] The metadata key to retrieve
-  # @return [String] The value of the metadata key
-  # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata/operation/fileMetadata
-  def show(key:, uuid: nil, request_options: {})
-    Uploadcare::Result.unwrap(@file_metadata_client.show(uuid: uuid || @uuid, key: key,
-                                                         request_options: request_options))
-  end
+      # Update a metadata key's value on the server.
+      #
+      # @param key [String] Metadata key
+      # @param value [String] Metadata value
+      # @param uuid [String, nil] File UUID (defaults to instance UUID)
+      # @param request_options [Hash] Request options
+      # @return [String] The updated value
+      def update(key:, value:, uuid: nil, request_options: {})
+        target_uuid = uuid || @uuid
+        result = Uploadcare::Result.unwrap(
+          client.api.rest.file_metadata.update(
+            uuid: target_uuid, key: key, value: value, request_options: request_options
+          )
+        )
+        @metadata[key.to_s] = result if target_uuid == @uuid
+        result
+      end
 
-  # Deletes a specific metadata key for the file
-  # @param key [String] The metadata key to delete
-  # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata/operation/deleteFileMetadata
-  def delete(key:, uuid: nil, request_options: {})
-    target_uuid = uuid || @uuid
-    result = Uploadcare::Result.unwrap(@file_metadata_client.delete(uuid: target_uuid, key: key,
-                                                                    request_options: request_options))
-    @metadata.delete(key.to_s) if target_uuid == @uuid
-    result
-  end
+      # Retrieve a single metadata key's value.
+      #
+      # @param key [String] Metadata key
+      # @param uuid [String, nil] File UUID (defaults to instance UUID)
+      # @param request_options [Hash] Request options
+      # @return [String] Metadata value
+      def show(key:, uuid: nil, request_options: {})
+        Uploadcare::Result.unwrap(
+          client.api.rest.file_metadata.show(uuid: uuid || @uuid, key: key, request_options: request_options)
+        )
+      end
 
-  # Get file's metadata keys and values
-  # @param uuid [String] The UUID of the file
-  # @param config [Uploadcare::Configuration] Configuration object
-  # @return [Hash] The metadata keys and values for the file
-  # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata/operation/_fileMetadata
-  def self.index(uuid:, config: Uploadcare.configuration, request_options: {})
-    file_metadata_client = Uploadcare::FileMetadataClient.new(config: config)
-    Uploadcare::Result.unwrap(file_metadata_client.index(uuid: uuid, request_options: request_options))
-  end
+      # Delete a metadata key.
+      #
+      # @param key [String] Metadata key
+      # @param uuid [String, nil] File UUID (defaults to instance UUID)
+      # @param request_options [Hash] Request options
+      # @return [nil]
+      def delete(key:, uuid: nil, request_options: {})
+        target_uuid = uuid || @uuid
+        result = Uploadcare::Result.unwrap(
+          client.api.rest.file_metadata.delete(uuid: target_uuid, key: key, request_options: request_options)
+        )
+        @metadata.delete(key.to_s) if target_uuid == @uuid
+        result
+      end
 
-  # Get the value of a single metadata key
-  # @param uuid [String] The UUID of the file
-  # @param key [String] The metadata key
-  # @param config [Uploadcare::Configuration] Configuration object
-  # @return [String] The value of the metadata key
-  # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata/operation/fileMetadata
-  def self.show(uuid:, key:, config: Uploadcare.configuration, request_options: {})
-    file_metadata_client = Uploadcare::FileMetadataClient.new(config: config)
-    Uploadcare::Result.unwrap(file_metadata_client.show(uuid: uuid, key: key, request_options: request_options))
-  end
+      # --- Class methods ---
 
-  # Update the value of a single metadata key. If the key does not exist, it will be created
-  # @param uuid [String] The UUID of the file
-  # @param key [String] The metadata key
-  # @param value [String] The metadata value
-  # @param config [Uploadcare::Configuration] Configuration object
-  # @return [String] The value of the updated or added metadata key
-  # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata/operation/updateFileMetadataKey
-  def self.update(uuid:, key:, value:, config: Uploadcare.configuration, request_options: {})
-    file_metadata_client = Uploadcare::FileMetadataClient.new(config: config)
-    Uploadcare::Result.unwrap(file_metadata_client.update(uuid: uuid, key: key, value: value,
-                                                          request_options: request_options))
-  end
+      # Get all metadata for a file.
+      def self.index(uuid:, client: nil, config: Uploadcare.configuration, request_options: {})
+        resolved_client = resolve_client(client: client, config: config)
+        Uploadcare::Result.unwrap(
+          resolved_client.api.rest.file_metadata.index(uuid: uuid, request_options: request_options)
+        )
+      end
 
-  # Delete a file's metadata key
-  # @param uuid [String] The UUID of the file
-  # @param key [String] The metadata key to delete
-  # @param config [Uploadcare::Configuration] Configuration object
-  # @return [Nil] Returns nil on successful deletion
-  # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata/operation/deleteFileMetadata
-  def self.delete(uuid:, key:, config: Uploadcare.configuration, request_options: {})
-    file_metadata_client = Uploadcare::FileMetadataClient.new(config: config)
-    Uploadcare::Result.unwrap(file_metadata_client.delete(uuid: uuid, key: key, request_options: request_options))
+      # Get a single metadata key's value.
+      def self.show(uuid:, key:, client: nil, config: Uploadcare.configuration, request_options: {})
+        resolved_client = resolve_client(client: client, config: config)
+        Uploadcare::Result.unwrap(
+          resolved_client.api.rest.file_metadata.show(uuid: uuid, key: key, request_options: request_options)
+        )
+      end
+
+      # Update a metadata key's value.
+      def self.update(uuid:, key:, value:, client: nil, config: Uploadcare.configuration, request_options: {})
+        resolved_client = resolve_client(client: client, config: config)
+        Uploadcare::Result.unwrap(
+          resolved_client.api.rest.file_metadata.update(
+            uuid: uuid, key: key, value: value, request_options: request_options
+          )
+        )
+      end
+
+      # Delete a metadata key.
+      def self.delete(uuid:, key:, client: nil, config: Uploadcare.configuration, request_options: {})
+        resolved_client = resolve_client(client: client, config: config)
+        Uploadcare::Result.unwrap(
+          resolved_client.api.rest.file_metadata.delete(uuid: uuid, key: key, request_options: request_options)
+        )
+      end
+    end
   end
 end
