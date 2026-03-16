@@ -35,6 +35,7 @@ class Uploadcare::Api::Rest::DocumentConversions
     body = { paths: paths }
     body[:store] = normalize_bool_param(options[:store]) if options.key?(:store)
     body[:save_in_group] = normalize_bool_param(options[:save_in_group]) if options.key?(:save_in_group)
+    body.compact!
 
     rest.post(path: '/convert/document/', params: body, headers: {}, request_options: request_options)
   end
@@ -53,10 +54,11 @@ class Uploadcare::Api::Rest::DocumentConversions
   private
 
   def normalize_bool_param(value)
-    case value
+    normalized = value.is_a?(String) ? value.strip.downcase : value
+
+    case normalized
     when true, 1, '1', 'true' then '1'
     when false, 0, '0', 'false' then '0'
-    else value ? '1' : '0'
     end
   end
 end

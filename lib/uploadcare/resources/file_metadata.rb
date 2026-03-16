@@ -20,7 +20,7 @@ class Uploadcare::Resources::FileMetadata < Uploadcare::Resources::BaseResource
     response = Uploadcare::Result.unwrap(
       client.api.rest.file_metadata.index(uuid: uuid || @uuid, request_options: request_options)
     )
-    @metadata = response if response.is_a?(Hash)
+    @metadata = response.is_a?(Hash) ? response.transform_keys(&:to_s) : {}
     self
   end
 
@@ -72,9 +72,12 @@ class Uploadcare::Resources::FileMetadata < Uploadcare::Resources::BaseResource
   # @param request_options [Hash] Request options
   # @return [String] Metadata value
   def show(key:, uuid: nil, request_options: {})
-    Uploadcare::Result.unwrap(
-      client.api.rest.file_metadata.show(uuid: uuid || @uuid, key: key, request_options: request_options)
+    target_uuid = uuid || @uuid
+    result = Uploadcare::Result.unwrap(
+      client.api.rest.file_metadata.show(uuid: target_uuid, key: key, request_options: request_options)
     )
+    @metadata[key.to_s] = result if target_uuid == @uuid
+    result
   end
 
   # Delete a metadata key.

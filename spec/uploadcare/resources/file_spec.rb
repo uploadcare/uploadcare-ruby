@@ -404,6 +404,14 @@ RSpec.describe Uploadcare::Resources::File do
       expect(file.uuid).to eq(file_uuid)
     end
 
+    it 'does not extract uuid from non-Uploadcare original_file_url' do
+      file = described_class.new(
+        { 'original_file_url' => "https://example.com/#{file_uuid}/photo.jpg" },
+        client
+      )
+      expect(file.uuid).to be_nil
+    end
+
     it 'returns nil when no uuid source is available' do
       file = described_class.new({}, client)
       expect(file.uuid).to be_nil
@@ -411,13 +419,32 @@ RSpec.describe Uploadcare::Resources::File do
   end
 
   describe '#cdn_url' do
-    it 'returns the url attribute when set' do
+    it 'returns the CDN url attribute when set' do
       file = described_class.new(file_attrs, client)
       expect(file.cdn_url).to eq("https://ucarecdn.com/#{file_uuid}/")
     end
 
     it 'builds CDN URL from config and uuid' do
       file = described_class.new({ 'uuid' => file_uuid }, client)
+      expect(file.cdn_url).to eq("https://ucarecdn.com/#{file_uuid}/")
+    end
+
+    it 'falls back to Uploadcare original_file_url when url is not a CDN URL' do
+      file = described_class.new(
+        {
+          'url' => "https://api.uploadcare.com/files/#{file_uuid}/",
+          'original_file_url' => "https://ucarecdn.com/#{file_uuid}/photo.jpg"
+        },
+        client
+      )
+      expect(file.cdn_url).to eq("https://ucarecdn.com/#{file_uuid}/photo.jpg")
+    end
+
+    it 'ignores non-Uploadcare original_file_url values' do
+      file = described_class.new(
+        { 'uuid' => file_uuid, 'original_file_url' => 'https://example.com/photo.jpg' },
+        client
+      )
       expect(file.cdn_url).to eq("https://ucarecdn.com/#{file_uuid}/")
     end
   end

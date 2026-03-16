@@ -18,7 +18,10 @@ class Uploadcare::Internal::UploadIo
   end
 
   def self.path_backed?(source)
-    source.respond_to?(:path) && source.path && ::File.exist?(source.path)
+    source.respond_to?(:path) &&
+      source.path &&
+      ::File.file?(source.path) &&
+      ::File.readable?(source.path)
   end
 
   def self.extract_filename(source)

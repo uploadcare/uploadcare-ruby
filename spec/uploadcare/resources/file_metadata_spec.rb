@@ -94,6 +94,17 @@ RSpec.describe Uploadcare::Resources::FileMetadata do
         expect(metadata_instance['key1']).to eq('value1')
         expect(metadata_instance.to_h).to eq({ 'key1' => 'value1' })
       end
+
+      it 'normalizes metadata keys to strings' do
+        allow(rest_metadata).to receive(:index)
+          .with(uuid: file_uuid, request_options: {})
+          .and_return(Uploadcare::Result.success({ key1: 'value1' }))
+
+        metadata_instance.index
+
+        expect(metadata_instance['key1']).to eq('value1')
+        expect(metadata_instance.to_h).to eq({ 'key1' => 'value1' })
+      end
     end
 
     describe '#[] and #[]=' do
@@ -150,6 +161,17 @@ RSpec.describe Uploadcare::Resources::FileMetadata do
 
         result = metadata_instance.show(key: 'color')
         expect(result).to eq('green')
+        expect(metadata_instance['color']).to eq('green')
+      end
+
+      it 'does not update local metadata when uuid differs' do
+        allow(rest_metadata).to receive(:show)
+          .with(uuid: 'other-uuid', key: 'color', request_options: {})
+          .and_return(Uploadcare::Result.success('green'))
+
+        result = metadata_instance.show(key: 'color', uuid: 'other-uuid')
+        expect(result).to eq('green')
+        expect(metadata_instance['color']).to be_nil
       end
     end
 

@@ -154,6 +154,37 @@ RSpec.describe Uploadcare::Api::Rest::DocumentConversions do
 
       expect(stub).to have_been_requested
     end
+
+    it 'normalizes case-insensitive string booleans' do
+      stub = stub_request(:post, 'https://api.uploadcare.com/convert/document/')
+             .with(body: hash_including('store' => '0', 'save_in_group' => '1'))
+             .to_return(
+               status: 200,
+               body: { result: [], problems: {} }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      document_conversions.convert(paths: [conversion_path], options: { store: 'False', save_in_group: 'TRUE' })
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'omits unsupported boolean-like values' do
+      stub = stub_request(:post, 'https://api.uploadcare.com/convert/document/')
+             .with do |request|
+               body = JSON.parse(request.body)
+               body['paths'] == [conversion_path] && !body.key?('store')
+             end
+             .to_return(
+               status: 200,
+               body: { result: [], problems: {} }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      document_conversions.convert(paths: [conversion_path], options: { store: 'no' })
+
+      expect(stub).to have_been_requested
+    end
   end
 
   describe '#status' do

@@ -50,5 +50,18 @@ RSpec.describe Uploadcare::Internal::UploadIo do
         described_class.wrap('not-io')
       end.to raise_error(ArgumentError, /readable IO/)
     end
+
+    it 'does not treat directories as path-backed files' do
+      Dir.mktmpdir do |directory|
+        source = StringIO.new('stream-data')
+        source.define_singleton_method(:path) { directory }
+
+        wrapped = described_class.wrap(source, filename: 'directory.txt')
+
+        expect(File.file?(wrapped.path)).to eq(true)
+        expect(wrapped.original_filename).to eq('directory.txt')
+        wrapped.close!
+      end
+    end
   end
 end

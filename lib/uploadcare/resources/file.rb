@@ -6,11 +6,13 @@
 # and instance methods (store, delete, reload, convert) for working with files.
 #
 # @example Finding a file
-#   file = Uploadcare::File.find(uuid: "file-uuid")
+#   client = Uploadcare.client
+#   file = client.files.find(uuid: "file-uuid")
 #   file.original_filename  # => "photo.jpg"
 #
 # @example Uploading
-#   file = Uploadcare::File.upload(File.open("photo.jpg"), store: true)
+#   client = Uploadcare.client
+#   file = client.files.upload(::File.open("photo.jpg"), store: true)
 #
 # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File
 class Uploadcare::Resources::File < Uploadcare::Resources::BaseResource
@@ -288,7 +290,12 @@ class Uploadcare::Resources::File < Uploadcare::Resources::BaseResource
   def uuid
     return @uuid if @uuid
 
-    source = @url || @original_file_url
+    source =
+      if @url
+        @url
+      elsif uploadcare_cdn_url?(@original_file_url)
+        @original_file_url
+      end
     return @uuid unless source
 
     @uuid = source[/[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/]
@@ -298,12 +305,17 @@ class Uploadcare::Resources::File < Uploadcare::Resources::BaseResource
   #
   # @return [String]
   def cdn_url
-    return @url if @url
+    return @url if uploadcare_cdn_url?(@url)
+    return @original_file_url if uploadcare_cdn_url?(@original_file_url)
 
     "#{config.cdn_base}#{uuid}/"
   end
 
   private
+
+  def uploadcare_cdn_url?(value)
+    value.to_s.start_with?(config.cdn_base.to_s)
+  end
 
   def convert_file(params, converter, options = {}, request_options: {})
     raise ArgumentError, 'The first argument must be a Hash' unless params.is_a?(Hash)
