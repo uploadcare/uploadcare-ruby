@@ -6,7 +6,7 @@
 module Uploadcare
   module Resources
     class FileMetadata < BaseResource
-      def initialize(attributes = {}, client_or_config = Uploadcare.client)
+      def initialize(attributes = {}, client_or_config = nil)
         super
         @metadata = {}
       end

@@ -43,7 +43,7 @@ module Uploadcare
         # @param client [Uploadcare::Client, nil] Explicit client
         # @param config [Uploadcare::Configuration] Configuration fallback
         # @return [Uploadcare::Client]
-        def resolve_client(client_or_config = nil, client: nil, config: Uploadcare.configuration)
+        def resolve_client(client_or_config = nil, client: nil, config: nil)
           return client if client
 
           case client_or_config
@@ -52,6 +52,8 @@ module Uploadcare
           when Uploadcare::Configuration
             Uploadcare.client(config: client_or_config)
           when nil
+            return Uploadcare.client(config: config) if config
+
             raise ArgumentError, 'client or config is required'
           else
             raise ArgumentError, 'client or config is required'

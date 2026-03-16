@@ -54,6 +54,12 @@ RSpec.describe Uploadcare::Resources::BaseResource do
         described_class.resolve_client(nil)
       }.to raise_error(ArgumentError, /client or config is required/)
     end
+
+    it 'uses the config keyword when provided' do
+      result = described_class.resolve_client(config: config)
+      expect(result).to be_a(Uploadcare::Client)
+      expect(result.config.public_key).to eq('demopublickey')
+    end
   end
 
   describe '#assign_attributes' do
