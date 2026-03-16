@@ -19,6 +19,7 @@ Metrics/BlockLength:
     - 'bin/'
     - 'spec/**/*'
     - 'uploadcare-ruby.gemspec'
+    - 'api_examples/support/**/*.rb'
 
 Metrics/ClassLength:
   Max: 100
@@ -33,6 +34,7 @@ Metrics/ModuleLength:
   Exclude:
     - 'spec/**/*'
     - 'lib/uploadcare/uploader.rb'  # Uploader module with multiple upload strategies
+    - 'api_examples/support/**/*.rb'
 
 Metrics/MethodLength:
   Max: 20
@@ -41,6 +43,7 @@ Metrics/MethodLength:
     - 'lib/uploadcare/clients/multipart_uploader_client.rb'
     - 'lib/uploadcare/clients/uploader_client.rb'
     - 'lib/uploadcare/uploader.rb'  # Parallel upload coordination
+    - 'api_examples/support/**/*.rb'
 
 Metrics/AbcSize:
   Max: 17
@@ -49,6 +52,7 @@ Metrics/AbcSize:
     - 'lib/uploadcare/clients/multipart_uploader_client.rb'
     - 'lib/uploadcare/clients/uploader_client.rb'
     - 'lib/uploadcare/uploader.rb'  # Parallel upload coordination
+    - 'api_examples/support/**/*.rb'
 
 Metrics/CyclomaticComplexity:
   Max: 7
@@ -57,6 +61,7 @@ Metrics/CyclomaticComplexity:
     - 'lib/uploadcare/clients/multipart_uploader_client.rb'
     - 'lib/uploadcare/clients/uploader_client.rb'
     - 'lib/uploadcare/uploader.rb'  # Parallel upload coordination
+    - 'api_examples/support/**/*.rb'
 
 Metrics/PerceivedComplexity:
   Max: 8
@@ -64,6 +69,7 @@ Metrics/PerceivedComplexity:
     - 'lib/uploadcare/clients/upload_client.rb'  # Parallel upload coordination is inherently complex
     - 'lib/uploadcare/clients/multipart_uploader_client.rb'
     - 'lib/uploadcare/clients/uploader_client.rb'
+    - 'api_examples/support/**/*.rb'
 
 Metrics/ParameterLists:
   Exclude:

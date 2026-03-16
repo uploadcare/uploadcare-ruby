@@ -36,8 +36,8 @@ class Uploadcare::Configuration
 
   def initialize(**options)
     values = DEFAULTS.merge(options)
-    values[:public_key] = ENV.fetch('UPLOADCARE_PUBLIC_KEY', '') if values[:public_key].nil?
-    values[:secret_key] = ENV.fetch('UPLOADCARE_SECRET_KEY', '') if values[:secret_key].nil?
+    values[:public_key] = ENV.fetch('UPLOADCARE_PUBLIC_KEY', '') unless options.key?(:public_key)
+    values[:secret_key] = ENV.fetch('UPLOADCARE_SECRET_KEY', '') unless options.key?(:secret_key)
 
     values.each do |attribute, value|
       send("#{attribute}=", value)
@@ -56,7 +56,7 @@ class Uploadcare::Configuration
   end
 
   def with(**options)
-    self.class.new(**to_h.merge(options))
+    self.class.new(**to_h, **options)
   end
 
   def to_h

@@ -29,7 +29,7 @@ jobs:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
     - name: Run tests
-      run: bundle exec rake
+      run: bundle exec rspec
       env:
         UPLOADCARE_PUBLIC_KEY: demopublickey
         UPLOADCARE_SECRET_KEY: demoprivatekey
