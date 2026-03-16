@@ -17,8 +17,8 @@ module Uploadcare
       end
 
       def status(token:, request_options: {})
-        Uploadcare::Resources::VideoConversion.new({}, client).fetch_status(
-          token: token, request_options: request_options
+        Uploadcare::Resources::VideoConversion.status(
+          token: token, client: client, request_options: request_options
         )
       end
     end

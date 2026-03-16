@@ -72,6 +72,24 @@ RSpec.describe Uploadcare::Api::Upload::Files do
     end
   end
 
+  describe '#direct_many' do
+    it 'raises ArgumentError when files is not an array' do
+      result = files.direct_many(files: 'not-an-array')
+
+      expect(result).to be_failure
+      expect(result.error).to be_a(ArgumentError)
+      expect(result.error.message).to include('files must be an array')
+    end
+
+    it 'raises ArgumentError when files is empty' do
+      result = files.direct_many(files: [])
+
+      expect(result).to be_failure
+      expect(result.error).to be_a(ArgumentError)
+      expect(result.error.message).to include('files cannot be empty')
+    end
+  end
+
   describe '#from_url' do
     let(:source_url) { 'https://example.com/image.jpg' }
 

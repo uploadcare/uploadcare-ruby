@@ -166,6 +166,58 @@ RSpec.describe Uploadcare::Client do
     end
   end
 
+  describe 'DocumentConversionsAccessor delegation' do
+    let(:rest) { instance_double(Uploadcare::Api::Rest) }
+    let(:document_conversions) { instance_double(Uploadcare::Api::Rest::DocumentConversions) }
+    let(:api_instance) { instance_double(Uploadcare::Client::Api, rest: rest) }
+
+    before do
+      allow(client).to receive(:api).and_return(api_instance)
+      allow(rest).to receive(:document_conversions).and_return(document_conversions)
+    end
+
+    it 'delegates status without constructing a throwaway resource in the accessor' do
+      allow(document_conversions).to receive(:status)
+        .with(token: 'doc-token', request_options: {})
+        .and_return(Uploadcare::Result.success({ 'status' => 'finished' }))
+
+      result = client.conversions.documents.status(token: 'doc-token')
+      expect(result).to be_a(Uploadcare::Resources::DocumentConversion)
+      expect(result.status).to eq('finished')
+    end
+
+    it 'delegates info through the resource class' do
+      allow(document_conversions).to receive(:info)
+        .with(uuid: 'doc-uuid', request_options: {})
+        .and_return(Uploadcare::Result.success({ 'format' => 'pdf' }))
+
+      result = client.conversions.documents.info(uuid: 'doc-uuid')
+      expect(result).to be_a(Uploadcare::Resources::DocumentConversion)
+      expect(result.format).to eq('pdf')
+    end
+  end
+
+  describe 'VideoConversionsAccessor delegation' do
+    let(:rest) { instance_double(Uploadcare::Api::Rest) }
+    let(:video_conversions) { instance_double(Uploadcare::Api::Rest::VideoConversions) }
+    let(:api_instance) { instance_double(Uploadcare::Client::Api, rest: rest) }
+
+    before do
+      allow(client).to receive(:api).and_return(api_instance)
+      allow(rest).to receive(:video_conversions).and_return(video_conversions)
+    end
+
+    it 'delegates status through the resource class' do
+      allow(video_conversions).to receive(:status)
+        .with(token: 'video-token', request_options: {})
+        .and_return(Uploadcare::Result.success({ 'status' => 'processing' }))
+
+      result = client.conversions.videos.status(token: 'video-token')
+      expect(result).to be_a(Uploadcare::Resources::VideoConversion)
+      expect(result.status).to eq('processing')
+    end
+  end
+
   describe '#upload' do
     it 'delegates to uploads.upload' do
       uploads = instance_double(Uploadcare::Operations::UploadRouter)

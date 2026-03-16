@@ -44,6 +44,9 @@ module Uploadcare
         # @see https://uploadcare.com/api-refs/upload-api/#operation/baseUpload
         def direct_many(files:, request_options: {}, **options)
           Uploadcare::Result.capture do
+            raise ArgumentError, 'files must be an array' unless files.is_a?(Array)
+            raise ArgumentError, 'files cannot be empty' if files.empty?
+
             prepared_files = files.map { |file| Uploadcare::Internal::UploadIo.wrap(file) }
             params = Uploadcare::Internal::UploadParamsGenerator.call(
               options: options, config: upload.config

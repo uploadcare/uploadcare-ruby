@@ -17,14 +17,14 @@ module Uploadcare
       end
 
       def status(token:, request_options: {})
-        Uploadcare::Resources::DocumentConversion.new({}, client).fetch_status(
-          token: token, request_options: request_options
+        Uploadcare::Resources::DocumentConversion.status(
+          token: token, client: client, request_options: request_options
         )
       end
 
       def info(uuid:, request_options: {})
-        Uploadcare::Resources::DocumentConversion.new({}, client).info(
-          uuid: uuid, request_options: request_options
+        Uploadcare::Resources::DocumentConversion.info_for(
+          uuid: uuid, client: client, request_options: request_options
         )
       end
     end

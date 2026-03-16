@@ -34,6 +34,11 @@ module Uploadcare
         new(response, resolved_client)
       end
 
+      def self.status(token:, client: nil, config: Uploadcare.configuration, request_options: {})
+        resolved_client = resolve_client(client: client, config: config)
+        new({}, resolved_client).fetch_status(token: token, request_options: request_options)
+      end
+
       # Get conversion job status.
       #
       # @param token [String] Job token
