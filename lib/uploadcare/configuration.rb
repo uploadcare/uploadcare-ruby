@@ -60,8 +60,6 @@ class Uploadcare::Configuration
   end
 
   def to_h
-    DEFAULTS.keys.each_with_object({}) do |attribute, result|
-      result[attribute] = public_send(attribute)
-    end
+    DEFAULTS.keys.to_h { |attribute| [attribute, public_send(attribute)] }
   end
 end

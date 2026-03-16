@@ -116,8 +116,7 @@ class Uploadcare::Operations::MultipartUpload
   end
 
   def run_parallel_worker(queue, file_path, part_size, total_size, total_parts, mutex, uploaded, errors, &block)
-    worker_file = ::File.open(file_path, 'rb')
-    begin
+    ::File.open(file_path, 'rb') do |worker_file|
       loop do
         job = queue.pop
         break if job.nil?
@@ -139,8 +138,6 @@ class Uploadcare::Operations::MultipartUpload
       end
     rescue StandardError => e
       mutex.synchronize { errors << e }
-    ensure
-      worker_file.close
     end
   end
 end

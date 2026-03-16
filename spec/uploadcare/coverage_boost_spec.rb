@@ -287,6 +287,7 @@ RSpec.describe 'Coverage: edge cases and error paths' do
     let(:handler_class) do
       Class.new do
         include Uploadcare::Internal::ThrottleHandler
+
         def config
           Uploadcare::Configuration.new(max_throttle_attempts: 2)
         end
