@@ -19,7 +19,7 @@ module Uploadcare
 
         # Upload a file directly (POST /base/).
         #
-        # @param file [File, IO] File object to upload (must respond to #read and #path)
+        # @param file [File, IO] File object to upload
         # @param options [Hash] Upload options (:store, :metadata, :signature, :expire)
         # @param request_options [Hash] Request options
         # @return [Uploadcare::Result] Upload response with file UUID
@@ -27,12 +27,11 @@ module Uploadcare
         # @see https://uploadcare.com/api-refs/upload-api/#operation/baseUpload
         def direct(file:, request_options: {}, **options)
           Uploadcare::Result.capture do
-            unless file.respond_to?(:read) && file.respond_to?(:path)
-              raise ArgumentError, 'file must be a File or IO object with #read and #path'
-            end
-
-            params = build_upload_params(file, options)
+            prepared_file = Uploadcare::Internal::UploadIo.wrap(file)
+            params = build_upload_params(prepared_file, options)
             Uploadcare::Result.unwrap(upload.post(path: 'base/', params: params, request_options: request_options))
+          ensure
+            prepared_file&.close!
           end
         end
 
@@ -45,11 +44,14 @@ module Uploadcare
         # @see https://uploadcare.com/api-refs/upload-api/#operation/baseUpload
         def direct_many(files:, request_options: {}, **options)
           Uploadcare::Result.capture do
+            prepared_files = files.map { |file| Uploadcare::Internal::UploadIo.wrap(file) }
             params = Uploadcare::Internal::UploadParamsGenerator.call(
               options: options, config: upload.config
             )
-            files.each { |file| form_data_for(file, params) }
+            prepared_files.each { |file| form_data_for(file, params) }
             Uploadcare::Result.unwrap(upload.post(path: '/base/', params: params, request_options: request_options))
+          ensure
+            prepared_files&.each(&:close!)
           end
         end
 

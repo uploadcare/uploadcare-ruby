@@ -40,13 +40,10 @@ module Uploadcare
       # @return [Uploadcare::Result] Result containing { 'uuid' => '...' }
       def upload(file:, request_options: {}, **options, &block)
         Uploadcare::Result.capture do
-          unless file.respond_to?(:read) && file.respond_to?(:path)
-            raise ArgumentError, 'file must be a File or IO object with #read and #path'
-          end
-
-          file_size = file.respond_to?(:size) ? file.size : ::File.size(file.path)
-          filename = file.respond_to?(:original_filename) ? file.original_filename : ::File.basename(file.path)
-          content_type = MIME::Types.type_for(file.path).first&.content_type || 'application/octet-stream'
+          prepared_file = Uploadcare::Internal::UploadIo.wrap(file)
+          file_size = prepared_file.size
+          filename = prepared_file.original_filename
+          content_type = MIME::Types.type_for(prepared_file.path).first&.content_type || 'application/octet-stream'
 
           start_response = Uploadcare::Result.unwrap(
             upload_client.files.multipart_start(
@@ -65,9 +62,9 @@ module Uploadcare
           threads = options.fetch(:threads, 1)
 
           if threads > 1
-            upload_parts_parallel(file, presigned_urls, part_size, threads, &block)
+            upload_parts_parallel(prepared_file, presigned_urls, part_size, threads, &block)
           else
-            upload_parts_sequential(file, presigned_urls, part_size, &block)
+            upload_parts_sequential(prepared_file, presigned_urls, part_size, &block)
           end
 
           Uploadcare::Result.unwrap(
@@ -75,6 +72,8 @@ module Uploadcare
           )
 
           { 'uuid' => uuid }
+        ensure
+          prepared_file&.close!
         end
       end
 

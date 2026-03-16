@@ -2,6 +2,7 @@
 
 require 'spec_helper'
 require 'tempfile'
+require 'stringio'
 
 RSpec.describe Uploadcare::Operations::UploadRouter do
   let(:config) do
@@ -47,6 +48,20 @@ RSpec.describe Uploadcare::Operations::UploadRouter do
         expect(result.uuid).to eq(file_uuid)
 
         tempfile.close!
+      end
+    end
+
+    context 'with a non-path IO object' do
+      it 'routes to upload_file' do
+        io = StringIO.new('stream data')
+
+        allow(upload_files_api).to receive(:direct_many)
+          .with(files: [io], request_options: {})
+          .and_return(Uploadcare::Result.success({ 'upload.bin' => file_uuid }))
+
+        result = router.upload(io)
+        expect(result).to be_a(Uploadcare::Resources::File)
+        expect(result.uuid).to eq(file_uuid)
       end
     end
 

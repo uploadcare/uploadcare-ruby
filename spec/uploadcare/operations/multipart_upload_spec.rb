@@ -61,7 +61,7 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
         expect(result).to be_a(Uploadcare::Result)
         expect(result.failure?).to be(true)
         expect(result.error).to be_a(ArgumentError)
-        expect(result.error.message).to include('File or IO object')
+        expect(result.error.message).to include('readable IO object')
       end
 
       it 'returns a failure Result for an integer' do
@@ -75,11 +75,18 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
         expect(result.failure?).to be(true)
       end
 
-      it 'returns a failure Result for an object with read but no path' do
-        obj = StringIO.new('data')
+      it 'accepts an object with read but no path by normalizing it to a temp file' do
+        obj = StringIO.new(file_content)
+
+        allow(upload_files_api).to receive(:multipart_start)
+          .and_return(Uploadcare::Result.success(start_response))
+        allow(upload_client).to receive(:upload_part_to_url)
+        allow(upload_files_api).to receive(:multipart_complete)
+          .and_return(Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
+
         result = uploader.upload(file: obj)
-        expect(result.failure?).to be(true)
-        expect(result.error).to be_a(ArgumentError)
+        expect(result.success?).to be(true)
+        expect(result.value!).to eq({ 'uuid' => 'mp-uuid-123' })
       end
     end
 

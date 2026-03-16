@@ -2,6 +2,7 @@
 
 require 'spec_helper'
 require 'tempfile'
+require 'stringio'
 
 RSpec.describe Uploadcare::Api::Upload::Files do
   let(:config) do
@@ -46,12 +47,28 @@ RSpec.describe Uploadcare::Api::Upload::Files do
       expect(result).to be_success
     end
 
-    it 'raises ArgumentError when file does not respond to #read and #path' do
+    it 'raises ArgumentError when file does not respond to #read' do
       result = files.direct(file: 'not-a-file')
 
       expect(result).to be_failure
       expect(result.error).to be_a(ArgumentError)
-      expect(result.error.message).to include('file must be a File or IO object')
+      expect(result.error.message).to include('file must be a readable IO object')
+    end
+
+    it 'uploads a StringIO by normalizing it to a temp file' do
+      io = StringIO.new('fake image data')
+
+      stub_request(:post, 'https://upload.uploadcare.com/base/')
+        .to_return(
+          status: 200,
+          body: { 'upload.bin' => 'uploaded-uuid-123' }.to_json,
+          headers: { 'Content-Type' => 'application/json' }
+        )
+
+      result = files.direct(file: io)
+
+      expect(result).to be_success
+      expect(result.value!).to eq({ 'upload.bin' => 'uploaded-uuid-123' })
     end
   end
 

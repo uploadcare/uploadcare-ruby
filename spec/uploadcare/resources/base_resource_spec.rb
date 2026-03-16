@@ -19,10 +19,10 @@ RSpec.describe Uploadcare::Resources::BaseResource do
       expect(resource.config).to eq(client.config)
     end
 
-    it 'defaults to Uploadcare.client when no client given' do
-      allow(Uploadcare).to receive(:client).and_return(client)
-      resource = described_class.new({})
-      expect(resource.client).to eq(client)
+    it 'raises when no client or config is given' do
+      expect {
+        described_class.new({})
+      }.to raise_error(ArgumentError, /client or config is required/)
     end
 
     it 'resolves a Configuration into a client' do
@@ -49,10 +49,10 @@ RSpec.describe Uploadcare::Resources::BaseResource do
       expect(result).to eq(client)
     end
 
-    it 'falls back to Uploadcare.client for nil' do
-      allow(Uploadcare).to receive(:client).and_return(client)
-      result = described_class.resolve_client(nil)
-      expect(result).to eq(client)
+    it 'raises for nil' do
+      expect {
+        described_class.resolve_client(nil)
+      }.to raise_error(ArgumentError, /client or config is required/)
     end
   end
 

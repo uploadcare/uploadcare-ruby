@@ -18,7 +18,7 @@ module Uploadcare
       #
       # @param attributes [Hash] API response attributes
       # @param client_or_config [Uploadcare::Client, Uploadcare::Configuration, nil]
-      def initialize(attributes = {}, client_or_config = Uploadcare.client)
+      def initialize(attributes = {}, client_or_config = nil)
         @client = self.class.resolve_client(client_or_config)
         @config = @client.config
         assign_attributes(attributes)
@@ -47,14 +47,14 @@ module Uploadcare
           return client if client
 
           case client_or_config
-          when nil
-            Uploadcare.client(config: config)
           when Uploadcare::Client
             client_or_config
           when Uploadcare::Configuration
             Uploadcare.client(config: client_or_config)
+          when nil
+            raise ArgumentError, 'client or config is required'
           else
-            Uploadcare.client(config: config)
+            raise ArgumentError, 'client or config is required'
           end
         end
       end

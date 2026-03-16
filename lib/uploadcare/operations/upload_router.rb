@@ -138,11 +138,22 @@ module Uploadcare
       private
 
       def file?(object)
-        object.respond_to?(:path) && ::File.exist?(object.path)
+        !object.is_a?(String) && object.respond_to?(:read)
       end
 
       def big_file?(object)
-        file?(object) && object.size >= client.config.multipart_size_threshold
+        return false unless file?(object)
+
+        upload_size(object) >= client.config.multipart_size_threshold
+      rescue StandardError
+        false
+      end
+
+      def upload_size(object)
+        return object.size if object.respond_to?(:size)
+        return ::File.size(object.path) if object.respond_to?(:path) && object.path && ::File.exist?(object.path)
+
+        0
       end
     end
   end
