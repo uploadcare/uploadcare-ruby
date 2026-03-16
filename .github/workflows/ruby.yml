@@ -48,5 +48,18 @@ jobs:
       with:
         ruby-version: ${{ matrix.ruby-version }}
         bundler-cache: true
+    - name: Fetch base branch
+      if: github.event_name == 'pull_request'
+      run: git fetch --no-tags --depth=1 origin ${{ github.base_ref }}
     - name: Check codestyle
-      run: bundle exec rubocop
+      run: |
+        if [ "${{ github.event_name }}" = "pull_request" ]; then
+          files=$(git diff --name-only --diff-filter=ACMRT origin/${{ github.base_ref }}...HEAD -- '*.rb')
+        else
+          files=$(git diff --name-only --diff-filter=ACMRT HEAD^ HEAD -- '*.rb')
+        fi
+        if [ -z "$files" ]; then
+          echo "No Ruby files changed"
+          exit 0
+        fi
+        printf '%s\n' "$files" | xargs bundle exec rubocop
