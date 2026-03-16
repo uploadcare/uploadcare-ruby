@@ -47,6 +47,9 @@ class Uploadcare::Collections::Paginated
   # @return [Uploadcare::Client, nil] Client for resource instantiation
   attr_reader :client
 
+  # @return [Hash] Request options used when fetching pages
+  attr_reader :request_options
+
   # Initialize a new Paginated collection.
   #
   # @param params [Hash] Collection parameters
@@ -58,6 +61,7 @@ class Uploadcare::Collections::Paginated
   # @option params [Object] :api_client API client for fetching pages
   # @option params [Class] :resource_class Class for instantiating resources
   # @option params [Uploadcare::Client, nil] :client Client for resources
+  # @option params [Hash] :request_options Request options for subsequent page fetches
   def initialize(params = {})
     @resources = params[:resources] || []
     @next_page_url = params[:next_page]
@@ -67,6 +71,7 @@ class Uploadcare::Collections::Paginated
     @api_client = params[:api_client]
     @resource_class = params[:resource_class]
     @client = params[:client]
+    @request_options = params[:request_options] || {}
   end
 
   # Iterate over resources in the current page.
@@ -122,7 +127,7 @@ class Uploadcare::Collections::Paginated
   end
 
   def fetch_response(params)
-    Uploadcare::Result.unwrap(api_client.list(params: params))
+    Uploadcare::Result.unwrap(api_client.list(params: params, request_options: request_options))
   end
 
   def build_paginated_collection(response)
@@ -136,7 +141,8 @@ class Uploadcare::Collections::Paginated
       total: response['total'],
       api_client: api_client,
       resource_class: resource_class,
-      client: client
+      client: client,
+      request_options: request_options
     )
   end
 

@@ -5,12 +5,14 @@ require_relative '../lib/uploadcare'
 require 'dotenv/load'
 
 file_path = ARGV[0]
+script_name = File.basename($PROGRAM_NAME)
+multipart_threshold = 10 * 1024 * 1024
 
 unless file_path && File.exist?(file_path)
-  puts 'Usage: ruby upload_with_progress.rb <file_path>'
-  puts 'Example: ruby upload_with_progress.rb large_video.mp4'
+  puts "Usage: ruby examples/#{script_name} <file_path>"
+  puts "Example: ruby examples/#{script_name} large_video.mp4"
   puts
-  puts 'Note: Progress tracking works best with files >= 10MB'
+  puts 'Note: Progress tracking works best with files >= 10 MiB'
   exit 1
 end
 
@@ -21,8 +23,8 @@ puts "Uploading: #{file_path}"
 puts "Size: #{file_size_mb} MB"
 puts
 
-if file_size < 10_000_000
-  puts 'Note: File is < 10MB, so the upload may complete without multipart progress updates'
+if file_size < multipart_threshold
+  puts 'Note: File is < 10 MiB, so the upload may complete without multipart progress updates'
   puts
 end
 

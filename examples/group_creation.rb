@@ -7,8 +7,9 @@ require 'dotenv/load'
 file_paths = ARGV
 
 if file_paths.empty?
-  puts 'Usage: ruby group_creation.rb <file1> <file2> <file3> ...'
-  puts 'Example: ruby group_creation.rb photo1.jpg photo2.jpg photo3.jpg'
+  script_name = File.basename($PROGRAM_NAME)
+  puts "Usage: ruby examples/#{script_name} <file1> <file2> <file3> ..."
+  puts "Example: ruby examples/#{script_name} photo1.jpg photo2.jpg photo3.jpg"
   exit 1
 end
 
@@ -46,7 +47,7 @@ begin
   puts
 
   puts 'Step 2: Creating group...'
-  group = client.groups.create(uuids)
+  group = client.groups.create(uuids: uuids)
 
   puts '✓ Group created!'
   puts
@@ -67,10 +68,11 @@ begin
   puts '-' * 50
 
   Array(info.files).each_with_index do |file, index|
-    puts "#{index + 1}. #{file['original_filename']}"
-    puts "   UUID: #{file['uuid']}"
-    puts "   Size: #{(file['size'] / 1024.0).round(2)} KB"
-    puts "   URL: #{client.config.cdn_base}#{file['uuid']}/"
+    file_resource = Uploadcare::Resources::File.new(file, client)
+    puts "#{index + 1}. #{file_resource.original_filename}"
+    puts "   UUID: #{file_resource.uuid}"
+    puts "   Size: #{(file_resource.size / 1024.0).round(2)} KB"
+    puts "   URL: #{file_resource.cdn_url}"
     puts
   end
 

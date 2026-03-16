@@ -18,6 +18,7 @@ group :development, :test do
   gem 'redcarpet'
   gem 'rspec'
   gem 'rubocop'
+  gem 'rubocop-rake'
   gem 'rubocop-rspec'
   gem 'simplecov', require: false
   gem 'tsort', require: false

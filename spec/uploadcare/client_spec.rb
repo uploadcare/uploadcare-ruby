@@ -14,7 +14,9 @@ RSpec.describe Uploadcare::Client do
 
   describe '#initialize' do
     it 'accepts a config object' do
-      expect(client.config).to eq(config)
+      expect(client.config).to be_a(Uploadcare::Configuration)
+      expect(client.config).not_to equal(config)
+      expect(client.config.to_h).to eq(config.to_h)
     end
 
     it 'defaults to Uploadcare.configuration when no config given' do
@@ -327,7 +329,7 @@ RSpec.describe Uploadcare::Client do
       allow(upload_groups).to receive(:create)
         .and_return(Uploadcare::Result.success({ 'id' => 'group-id~2' }))
 
-      result = client.groups.create(%w[uuid-1 uuid-2])
+      result = client.groups.create(uuids: %w[uuid-1 uuid-2])
       expect(result).to be_a(Uploadcare::Resources::Group)
     end
   end

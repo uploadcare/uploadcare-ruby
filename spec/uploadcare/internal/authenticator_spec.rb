@@ -52,14 +52,28 @@ RSpec.describe Uploadcare::Internal::Authenticator do
         expect(result['User-Agent']).to include('UploadcareRuby/')
       end
 
-      it 'does not raise when secret_key is blank' do
+      it 'raises AuthError when secret_key is blank' do
         blank_config = Uploadcare::Configuration.new(
           public_key: public_key,
           secret_key: '',
           auth_type: 'Uploadcare.Simple'
         )
         auth = described_class.new(config: blank_config)
-        expect { auth.headers('GET', '/files/') }.not_to raise_error
+        expect { auth.headers('GET', '/files/') }.to raise_error(
+          Uploadcare::Exception::AuthError, /Secret Key is blank/
+        )
+      end
+
+      it 'raises AuthError when public_key is blank' do
+        blank_config = Uploadcare::Configuration.new(
+          public_key: '',
+          secret_key: secret_key,
+          auth_type: 'Uploadcare.Simple'
+        )
+        auth = described_class.new(config: blank_config)
+        expect { auth.headers('GET', '/files/') }.to raise_error(
+          Uploadcare::Exception::AuthError, /Public Key is blank/
+        )
       end
     end
 

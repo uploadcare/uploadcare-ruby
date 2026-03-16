@@ -165,7 +165,7 @@ RSpec.describe 'Integration: end-to-end workflows' do
     end
 
     it 'performs the full group lifecycle' do
-      group = client.groups.create([file_uuid, 'uuid-2'])
+      group = client.groups.create(uuids: [file_uuid, 'uuid-2'])
       expect(group).to be_a(Uploadcare::Resources::Group)
       expect(group.id).to eq(group_id)
       expect(group.files_count).to eq(2)

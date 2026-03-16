@@ -23,6 +23,9 @@ module Uploadcare::Internal::ThrottleHandler
     if attempts.nil?
       attempts = respond_to?(:config) ? config.max_throttle_attempts : Uploadcare.configuration.max_throttle_attempts
     end
+    attempts = attempts.to_i
+    raise ArgumentError, 'max_attempts must be at least 1' if attempts < 1
+
     (attempts - 1).times do |index|
       return yield
     rescue Uploadcare::Exception::ThrottleError => e

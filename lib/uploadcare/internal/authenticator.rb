@@ -40,11 +40,12 @@ class Uploadcare::Internal::Authenticator
   # @raise [Uploadcare::Exception::AuthError] if credentials are blank when using secure auth
   def headers(http_method, uri, body = '', content_type = nil)
     resolved_content_type = content_type || 'application/json'
-    return simple_auth_headers(resolved_content_type) if @config.auth_type == 'Uploadcare.Simple'
-
     raise Uploadcare::Exception::AuthError, 'Secret Key is blank.' if @config.secret_key.to_s.empty?
 
     validate_public_key
+
+    return simple_auth_headers(resolved_content_type) if @config.auth_type == 'Uploadcare.Simple'
+
     secure_auth_headers(http_method, uri, body, resolved_content_type)
   end
 

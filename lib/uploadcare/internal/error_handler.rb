@@ -38,7 +38,10 @@ module Uploadcare::Internal::ErrorHandler
   # @return [String] Extracted error message
   def extract_error_message(response)
     parsed = JSON.parse(response[:body].to_s)
-    parsed['detail'] || parsed.map { |k, v| "#{k}: #{v}" }.join('; ')
+    return parsed['detail'] if parsed.is_a?(Hash) && parsed['detail']
+    return parsed.map { |k, v| "#{k}: #{v}" }.join('; ') if parsed.is_a?(Hash)
+
+    parsed.to_s
   rescue JSON::ParserError
     response[:body].to_s
   end
@@ -84,6 +87,6 @@ module Uploadcare::Internal::ErrorHandler
     retry_after = headers && (headers['retry-after'] || headers['Retry-After'])
     timeout = retry_after.to_f
     timeout = 10.0 if timeout <= 0
-    raise Uploadcare::Exception::ThrottleError.new(timeout, message: message)
+    raise Uploadcare::Exception::ThrottleError.new(message, timeout: timeout)
   end
 end

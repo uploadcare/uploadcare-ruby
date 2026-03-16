@@ -24,11 +24,11 @@ class Uploadcare::Client
 
   def initialize(config: nil, **options)
     base_config = config || Uploadcare.configuration
-    @config = options.empty? ? base_config : base_config.with(**options)
+    @config = base_config.with(**options)
   end
 
   def with(**options)
-    self.class.new(config: config, **options)
+    self.class.new(config: config.with, **options)
   end
 
   def api

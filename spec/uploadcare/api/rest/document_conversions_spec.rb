@@ -23,8 +23,10 @@ RSpec.describe Uploadcare::Api::Rest::DocumentConversions do
   end
 
   describe '#info' do
+    let(:encoded_uuid) { URI.encode_www_form_component(file_uuid) }
+
     before do
-      stub_request(:get, "https://api.uploadcare.com/convert/document/#{file_uuid}/")
+      stub_request(:get, "https://api.uploadcare.com/convert/document/#{encoded_uuid}/")
         .to_return(
           status: 200,
           body: {
@@ -40,6 +42,22 @@ RSpec.describe Uploadcare::Api::Rest::DocumentConversions do
 
       expect(result).to be_success
       expect(result.value!['format']['name']).to eq('pdf')
+    end
+
+    it 'URI-encodes the UUID in the path' do
+      special_uuid = 'uuid/with spaces'
+      encoded_special_uuid = URI.encode_www_form_component(special_uuid)
+
+      stub = stub_request(:get, "https://api.uploadcare.com/convert/document/#{encoded_special_uuid}/")
+             .to_return(
+               status: 200,
+               body: { format: { name: 'pdf' } }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      document_conversions.info(uuid: special_uuid)
+
+      expect(stub).to have_been_requested
     end
 
     it 'returns a failure Result when file is not found' do

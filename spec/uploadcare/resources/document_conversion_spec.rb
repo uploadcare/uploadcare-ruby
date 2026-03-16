@@ -91,7 +91,7 @@ RSpec.describe Uploadcare::Resources::DocumentConversion do
 
   describe '#info' do
     it 'fetches document format information' do
-      conversion = described_class.new({}, client)
+      conversion = described_class.new({ 'uuid' => file_uuid }, client)
       info_response = {
         'format' => 'pdf',
         'error' => nil
@@ -101,10 +101,18 @@ RSpec.describe Uploadcare::Resources::DocumentConversion do
         .with(uuid: file_uuid, request_options: {})
         .and_return(Uploadcare::Result.success(info_response))
 
-      result = conversion.info(uuid: file_uuid)
+      result = conversion.info
       expect(result).to eq(conversion)
       expect(conversion.format).to eq('pdf')
       expect(conversion.error).to be_nil
+    end
+
+    it 'raises when uuid is missing' do
+      conversion = described_class.new({}, client)
+
+      expect do
+        conversion.info
+      end.to raise_error(ArgumentError, 'uuid is required')
     end
   end
 

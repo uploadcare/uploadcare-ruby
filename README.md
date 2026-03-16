@@ -369,7 +369,7 @@ remote_url = file.copy_to_remote(target: "custom_storage")
 Create a group:
 
 ```ruby
-group = client.groups.create(["uuid-1", "uuid-2"])
+group = client.groups.create(uuids: ["uuid-1", "uuid-2"])
 ```
 
 Find and list groups:

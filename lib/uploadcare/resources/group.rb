@@ -41,7 +41,8 @@ class Uploadcare::Resources::Group < Uploadcare::Resources::BaseResource
       total: response['total'],
       api_client: resolved_client.api.rest.groups,
       resource_class: self,
-      client: resolved_client
+      client: resolved_client,
+      request_options: request_options
     )
   end
 

@@ -135,7 +135,7 @@ module ApiExamples::RunRestExample
       when 'get_convert_document_status_token.rb'
         ExampleHelper.with_uploaded_pdf do |file|
           response = client.conversions.documents.convert(uuid: file.uuid, format: :jpg)
-          client.conversions.documents.status(token: response.fetch('result').first.fetch('token'))
+          client.conversions.documents.status(token: ExampleHelper.conversion_token(response))
         end
       when 'post_convert_video.rb'
         ExampleHelper.with_uploaded_video do |file|
@@ -144,7 +144,7 @@ module ApiExamples::RunRestExample
       when 'get_convert_video_status_token.rb'
         ExampleHelper.with_uploaded_video do |file|
           response = client.conversions.videos.convert(uuid: file.uuid, format: :webm, quality: :normal)
-          client.conversions.videos.status(token: response.result.first.fetch('token'))
+          client.conversions.videos.status(token: ExampleHelper.conversion_token(response))
         end
       else
         raise "No REST API example mapped for #{File.basename($PROGRAM_NAME)}"

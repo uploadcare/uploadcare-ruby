@@ -65,8 +65,10 @@ RSpec.describe Uploadcare::Api::Rest::Files do
   end
 
   describe '#info' do
+    let(:encoded_uuid) { URI.encode_www_form_component(file_uuid) }
+
     before do
-      stub_request(:get, "https://api.uploadcare.com/files/#{file_uuid}/")
+      stub_request(:get, "https://api.uploadcare.com/files/#{encoded_uuid}/")
         .to_return(
           status: 200,
           body: {
@@ -90,7 +92,7 @@ RSpec.describe Uploadcare::Api::Rest::Files do
     end
 
     it 'accepts additional params like include' do
-      stub_request(:get, "https://api.uploadcare.com/files/#{file_uuid}/")
+      stub_request(:get, "https://api.uploadcare.com/files/#{encoded_uuid}/")
         .with(query: { include: 'appdata' })
         .to_return(
           status: 200,
@@ -116,11 +118,29 @@ RSpec.describe Uploadcare::Api::Rest::Files do
       expect(result).to be_failure
       expect(result.error).to be_a(Uploadcare::Exception::NotFoundError)
     end
+
+    it 'URI-encodes the UUID in the path' do
+      special_uuid = 'uuid/with spaces'
+      encoded_special_uuid = URI.encode_www_form_component(special_uuid)
+
+      stub = stub_request(:get, "https://api.uploadcare.com/files/#{encoded_special_uuid}/")
+             .to_return(
+               status: 200,
+               body: { uuid: special_uuid }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      files.info(uuid: special_uuid)
+
+      expect(stub).to have_been_requested
+    end
   end
 
   describe '#store' do
+    let(:encoded_uuid) { URI.encode_www_form_component(file_uuid) }
+
     before do
-      stub_request(:put, "https://api.uploadcare.com/files/#{file_uuid}/storage/")
+      stub_request(:put, "https://api.uploadcare.com/files/#{encoded_uuid}/storage/")
         .to_return(
           status: 200,
           body: { uuid: file_uuid, is_stored: true }.to_json,
@@ -137,8 +157,10 @@ RSpec.describe Uploadcare::Api::Rest::Files do
   end
 
   describe '#delete' do
+    let(:encoded_uuid) { URI.encode_www_form_component(file_uuid) }
+
     before do
-      stub_request(:delete, "https://api.uploadcare.com/files/#{file_uuid}/storage/")
+      stub_request(:delete, "https://api.uploadcare.com/files/#{encoded_uuid}/storage/")
         .to_return(
           status: 200,
           body: { uuid: file_uuid }.to_json,

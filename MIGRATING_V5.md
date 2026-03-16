@@ -144,7 +144,7 @@ client.files.batch_delete(uuids: uuids)
 Uploadcare::Group.create(uuids: uuids)
 
 # v5
-client.groups.create(uuids)
+client.groups.create(uuids: uuids)
 ```
 
 ```ruby

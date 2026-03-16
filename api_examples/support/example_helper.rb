@@ -65,7 +65,7 @@ module ApiExamples::ExampleHelper
 
   def with_uploaded_group
     with_uploaded_files do |files|
-      group = client.groups.create(files.map(&:uuid))
+      group = client.groups.create(uuids: files.map(&:uuid))
       yield group, files
     ensure
       safe_delete_group(group)
@@ -138,6 +138,16 @@ module ApiExamples::ExampleHelper
 
   def uploaded_uuid_from_base_response(response)
     response.values.first
+  end
+
+  def conversion_token(response)
+    result = if response.respond_to?(:result)
+               response.result
+             else
+               response.fetch('result')
+             end
+
+    Array(result).first.fetch('token')
   end
 
   def safe_delete_file(file)

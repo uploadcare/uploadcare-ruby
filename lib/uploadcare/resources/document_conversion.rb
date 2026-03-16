@@ -4,14 +4,15 @@
 #
 # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Conversion
 class Uploadcare::Resources::DocumentConversion < Uploadcare::Resources::BaseResource
-  attr_accessor :error, :format, :converted_groups, :status, :result
+  attr_accessor :uuid, :error, :format, :converted_groups, :status, :result
 
   # Get document format info and possible conversions.
   #
-  # @param uuid [String] Document file UUID
   # @param request_options [Hash] Request options
   # @return [self]
-  def info(uuid:, request_options: {})
+  def info(request_options: {})
+    raise ArgumentError, 'uuid is required' if uuid.to_s.empty?
+
     response = Uploadcare::Result.unwrap(
       client.api.rest.document_conversions.info(uuid: uuid, request_options: request_options)
     )
@@ -48,7 +49,7 @@ class Uploadcare::Resources::DocumentConversion < Uploadcare::Resources::BaseRes
 
   def self.info_for(uuid:, client: nil, config: Uploadcare.configuration, request_options: {})
     resolved_client = resolve_client(client: client, config: config)
-    new({}, resolved_client).info(uuid: uuid, request_options: request_options)
+    new({ 'uuid' => uuid }, resolved_client).info(request_options: request_options)
   end
 
   # Get conversion job status.

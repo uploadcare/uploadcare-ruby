@@ -44,11 +44,15 @@ class Uploadcare::Api::Upload::Files
       raise ArgumentError, 'files must be an array' unless files.is_a?(Array)
       raise ArgumentError, 'files cannot be empty' if files.empty?
 
-      prepared_files = files.map { |file| Uploadcare::Internal::UploadIo.wrap(file) }
+      prepared_files = []
       params = Uploadcare::Internal::UploadParamsGenerator.call(
         options: options, config: upload.config
       )
-      prepared_files.each { |file| form_data_for(file, params) }
+      files.each do |file|
+        prepared_file = Uploadcare::Internal::UploadIo.wrap(file)
+        prepared_files << prepared_file
+        form_data_for(prepared_file, params)
+      end
       Uploadcare::Result.unwrap(upload.post(path: '/base/', params: params, request_options: request_options))
     ensure
       prepared_files&.each(&:close!)

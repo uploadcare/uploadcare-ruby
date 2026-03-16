@@ -5,7 +5,7 @@ class Uploadcare::Exception::ThrottleError < StandardError
   attr_reader :timeout
 
   # @param timeout [Float] Amount of seconds the request have been throttled for
-  def initialize(timeout = 10.0, message: nil)
+  def initialize(message = nil, timeout: 10.0)
     super(message)
     @timeout = timeout
   end

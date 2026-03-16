@@ -70,7 +70,8 @@ class Uploadcare::Resources::File < Uploadcare::Resources::BaseResource
       total: response['total'],
       api_client: resolved_client.api.rest.files,
       resource_class: self,
-      client: resolved_client
+      client: resolved_client,
+      request_options: request_options
     )
   end
 
@@ -322,7 +323,7 @@ class Uploadcare::Resources::File < Uploadcare::Resources::BaseResource
                )
              else
                raise Uploadcare::Exception::ConversionError,
-                     "Converter #{converter.name} does not respond to convert_document or convert"
+                     "Converter #{converter.name} must implement .convert_document or .convert"
              end
 
     process_convert_result(result, request_options: request_options)

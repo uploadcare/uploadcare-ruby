@@ -28,7 +28,8 @@ RSpec.describe Uploadcare::Collections::Paginated do
       total: 25,
       api_client: api_client,
       resource_class: resource_class,
-      client: client
+      client: client,
+      request_options: { timeout: 5 }
     )
   end
 
@@ -42,6 +43,7 @@ RSpec.describe Uploadcare::Collections::Paginated do
       expect(collection.api_client).to eq(api_client)
       expect(collection.resource_class).to eq(resource_class)
       expect(collection.client).to eq(client)
+      expect(collection.request_options).to eq(timeout: 5)
     end
 
     it 'defaults resources to empty array' do
@@ -90,7 +92,7 @@ RSpec.describe Uploadcare::Collections::Paginated do
       }
 
       allow(api_client).to receive(:list)
-        .with(params: { 'limit' => '10', 'offset' => '10' })
+        .with(params: { 'limit' => '10', 'offset' => '10' }, request_options: { timeout: 5 })
         .and_return(Uploadcare::Result.success(next_response))
 
       page2 = collection.next_page
@@ -138,7 +140,7 @@ RSpec.describe Uploadcare::Collections::Paginated do
       }
 
       allow(api_client).to receive(:list)
-        .with(params: { 'limit' => '10', 'offset' => '0' })
+        .with(params: { 'limit' => '10', 'offset' => '0' }, request_options: {})
         .and_return(Uploadcare::Result.success(prev_response))
 
       page1 = prev_collection.previous_page
@@ -163,7 +165,7 @@ RSpec.describe Uploadcare::Collections::Paginated do
       }
 
       allow(api_client).to receive(:list)
-        .with(params: { 'limit' => '10', 'offset' => '10' })
+        .with(params: { 'limit' => '10', 'offset' => '10' }, request_options: { timeout: 5 })
         .and_return(Uploadcare::Result.success(page2_response))
 
       all_items = collection.all

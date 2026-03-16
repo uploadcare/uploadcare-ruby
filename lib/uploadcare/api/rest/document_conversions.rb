@@ -19,7 +19,8 @@ class Uploadcare::Api::Rest::DocumentConversions
   # @return [Uploadcare::Result] Document format info
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Conversion/operation/documentConvertInfo
   def info(uuid:, request_options: {})
-    rest.get(path: "/convert/document/#{uuid}/", params: {}, headers: {},
+    encoded_uuid = URI.encode_www_form_component(uuid.to_s)
+    rest.get(path: "/convert/document/#{encoded_uuid}/", params: {}, headers: {},
              request_options: request_options)
   end
 

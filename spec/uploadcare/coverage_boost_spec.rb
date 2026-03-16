@@ -299,7 +299,7 @@ RSpec.describe 'Coverage: edge cases and error paths' do
       expect do
         handler.handle_throttling do
           call_count += 1
-          raise Uploadcare::Exception::ThrottleError, 0.001 if call_count < 2
+          raise Uploadcare::Exception::ThrottleError.new(timeout: 0.001) if call_count < 2
 
           'success'
         end
@@ -349,7 +349,8 @@ RSpec.describe 'Coverage: edge cases and error paths' do
 
     it 'creates client with config object' do
       c = Uploadcare::Client.new(config: config)
-      expect(c.config).to equal(config)
+      expect(c.config).not_to equal(config)
+      expect(c.config.to_h).to eq(config.to_h)
     end
 
     it 'creates new client via with' do

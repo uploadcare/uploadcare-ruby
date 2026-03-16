@@ -37,7 +37,8 @@ class Uploadcare::Api::Rest::Files
   # @return [Uploadcare::Result] File details
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/fileInfo
   def info(uuid:, params: {}, request_options: {})
-    rest.get(path: "/files/#{uuid}/", params: params, headers: {}, request_options: request_options)
+    encoded_uuid = URI.encode_www_form_component(uuid.to_s)
+    rest.get(path: "/files/#{encoded_uuid}/", params: params, headers: {}, request_options: request_options)
   end
 
   # Store a file by UUID, making it permanently available.
@@ -47,7 +48,8 @@ class Uploadcare::Api::Rest::Files
   # @return [Uploadcare::Result] Updated file details
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/filesStore
   def store(uuid:, request_options: {})
-    rest.put(path: "/files/#{uuid}/storage/", params: {}, headers: {}, request_options: request_options)
+    encoded_uuid = URI.encode_www_form_component(uuid.to_s)
+    rest.put(path: "/files/#{encoded_uuid}/storage/", params: {}, headers: {}, request_options: request_options)
   end
 
   # Delete a file by UUID.
@@ -57,7 +59,8 @@ class Uploadcare::Api::Rest::Files
   # @return [Uploadcare::Result] Deleted file details
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/deleteFileStorage
   def delete(uuid:, request_options: {})
-    rest.request(method: :delete, path: "/files/#{uuid}/storage/", params: {}, headers: {},
+    encoded_uuid = URI.encode_www_form_component(uuid.to_s)
+    rest.request(method: :delete, path: "/files/#{encoded_uuid}/storage/", params: {}, headers: {},
                  request_options: request_options)
   end
 

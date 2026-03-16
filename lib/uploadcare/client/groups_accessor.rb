@@ -7,7 +7,7 @@ class Uploadcare::Client::GroupsAccessor
     @client = client
   end
 
-  def create(uuids, request_options: {}, **options)
+  def create(uuids:, request_options: {}, **options)
     Uploadcare::Resources::Group.create(
       uuids: uuids, client: client, request_options: request_options, **options
     )

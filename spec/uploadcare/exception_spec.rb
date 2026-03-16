@@ -2,7 +2,7 @@
 
 RSpec.describe 'Uploadcare exceptions' do
   it 'initializes ThrottleError with timeout' do
-    error = Uploadcare::Exception::ThrottleError.new(3.5)
+    error = Uploadcare::Exception::ThrottleError.new(timeout: 3.5)
 
     expect(error.timeout).to eq(3.5)
   end
