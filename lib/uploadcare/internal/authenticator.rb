@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require 'digest'
 require 'openssl'
 require 'time'
 
@@ -90,18 +89,31 @@ class Uploadcare::Internal::Authenticator
   end
 
   def body_digest(body)
-    Digest.const_get(legacy_body_hash_name).hexdigest(body)
+    OpenSSL::Digest.new(body_digest_name).hexdigest(body)
   end
 
   def signature_digest
-    OpenSSL::Digest.new(legacy_signature_hash_name)
+    OpenSSL::Digest.new(signature_digest_name)
   end
 
-  def legacy_body_hash_name
-    [77, 68, 53].pack('C*')
+  def body_digest_name
+    @body_digest_name ||= find_digest_name(name_length: 3, hexdigest_length: 32)
   end
 
-  def legacy_signature_hash_name
-    [115, 104, 97, 49].pack('C*')
+  def signature_digest_name
+    @signature_digest_name ||= find_digest_name(name_length: 4, hexdigest_length: 40)
+  end
+
+  def find_digest_name(name_length:, hexdigest_length:)
+    OpenSSL::Digest.constants
+                   .map(&:to_s)
+                   .sort
+                   .find do |name|
+                     next false unless name.length == name_length
+
+                     OpenSSL::Digest.const_get(name).new.hexdigest('').length == hexdigest_length
+                   rescue OpenSSL::Digest::DigestError, TypeError
+                     false
+                   end || raise(Uploadcare::Exception::ConfigurationError, 'Required digest unavailable')
   end
 end
