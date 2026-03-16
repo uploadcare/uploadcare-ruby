@@ -21,7 +21,9 @@ module Uploadcare
         original_filename size url uuid variations content_info metadata appdata source
       ].freeze
 
-      attr_accessor(*ATTRIBUTES)
+      attr_accessor :datetime_removed, :datetime_stored, :datetime_uploaded, :is_image, :is_ready, :mime_type,
+                    :original_file_url, :original_filename, :size, :url, :uuid, :variations, :content_info,
+                    :metadata, :appdata, :source
 
       # --- Class methods ---
 
