@@ -122,11 +122,7 @@ module Uploadcare
         worker_file = ::File.open(file_path, 'rb')
         begin
           loop do
-            job = begin
-              queue.pop
-            rescue ThreadError
-              break
-            end
+            job = queue.pop
             break if job.nil?
 
             presigned_url, index = job
