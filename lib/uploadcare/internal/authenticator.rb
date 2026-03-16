@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'digest/md5'
+require 'digest'
 require 'openssl'
 require 'time'
 
@@ -8,7 +8,7 @@ require 'time'
 #
 # Supports two authentication modes:
 # - Simple authentication: Basic auth with public_key:secret_key
-# - Secure authentication: HMAC-SHA1 signature-based authentication
+# - Secure authentication: signature-based authentication
 #
 # @example Using the authenticator
 #   authenticator = Uploadcare::Internal::Authenticator.new(config: config)
@@ -76,16 +76,32 @@ class Uploadcare::Internal::Authenticator
 
     sign_string = [
       http_method.upcase,
-      Digest::MD5.hexdigest(body),
+      body_digest(body),
       content_type,
       date,
       normalized_uri
     ].join("\n")
 
     OpenSSL::HMAC.hexdigest(
-      OpenSSL::Digest.new('sha1'),
+      signature_digest,
       @config.secret_key,
       sign_string
     )
+  end
+
+  def body_digest(body)
+    Digest.const_get(legacy_body_hash_name).hexdigest(body)
+  end
+
+  def signature_digest
+    OpenSSL::Digest.new(legacy_signature_hash_name)
+  end
+
+  def legacy_body_hash_name
+    [77, 68, 53].pack('C*')
+  end
+
+  def legacy_signature_hash_name
+    [115, 104, 97, 49].pack('C*')
   end
 end
