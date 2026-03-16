@@ -70,14 +70,8 @@ module ApiExamples::RunUploadExample
   end
 
   def run_base_upload(client)
-    handle = File.open(ApiExamples::ExampleHelper.fixture_path('kitten.jpeg'), 'rb')
-    response = ApiExamples::ExampleHelper.unwrap(client.api.upload.files.direct(file: handle, store: true))
-    response
-  ensure
-    handle&.close
-    if response
-      file_uuid = ApiExamples::ExampleHelper.uploaded_uuid_from_base_response(response)
-      ApiExamples::ExampleHelper.safe_delete_file(file_uuid)
+    ApiExamples::ExampleHelper.with_fixture_file('kitten.jpeg') do |handle|
+      ApiExamples::ExampleHelper.unwrap(client.api.upload.files.direct(file: handle, store: true))
     end
   end
 

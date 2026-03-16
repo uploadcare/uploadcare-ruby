@@ -98,13 +98,26 @@ class Uploadcare::Collections::Paginated
 
   # Fetch all resources across all pages.
   #
-  # @return [Array<Object>] All resources
-  def all
+  # @param limit [Integer, nil] Maximum number of resources to return
+  # @return [Array<Object>] All resources up to the requested limit
+  def all(limit: nil)
+    return [] if limit && limit <= 0
+
     collection = self
     items = []
+    remaining = limit
 
     while collection
-      items.concat(collection.resources || [])
+      page_items = collection.resources || []
+      if remaining
+        page_slice = page_items.first(remaining)
+        items.concat(page_slice)
+        remaining -= page_slice.length
+        break if remaining <= 0
+      else
+        items.concat(page_items)
+      end
+
       collection = collection.next_page
     end
 

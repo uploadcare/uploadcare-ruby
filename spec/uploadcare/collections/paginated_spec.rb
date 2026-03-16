@@ -202,5 +202,28 @@ RSpec.describe Uploadcare::Collections::Paginated do
       )
       expect(empty.all).to eq([])
     end
+
+    it 'respects a positive limit' do
+      file2_attrs = { 'uuid' => 'page2-uuid' }
+      page2_response = {
+        'results' => [file2_attrs],
+        'next' => nil,
+        'previous' => nil,
+        'per_page' => 10,
+        'total' => 2
+      }
+
+      allow(api_client).to receive(:list)
+        .with(params: { 'limit' => '10', 'offset' => '10' }, request_options: { timeout: 5 })
+        .and_return(Uploadcare::Result.success(page2_response))
+
+      all_items = collection.all(limit: 1)
+      expect(all_items.length).to eq(1)
+      expect(all_items.first.uuid).to eq(file_uuid)
+    end
+
+    it 'returns empty array for a non-positive limit' do
+      expect(collection.all(limit: 0)).to eq([])
+    end
   end
 end

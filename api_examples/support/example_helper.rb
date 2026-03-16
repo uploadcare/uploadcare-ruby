@@ -66,6 +66,15 @@ module ApiExamples::ExampleHelper
     Array(files).each { |file| safe_delete_file(file) }
   end
 
+  def with_fixture_file(name)
+    handle = File.open(fixture_path(name), 'rb')
+    response = yield handle
+    response
+  ensure
+    handle&.close
+    safe_delete_file(uploaded_uuid_from_base_response(response)) if response
+  end
+
   def with_uploaded_group
     with_uploaded_files do |files|
       group = client.groups.create(uuids: files.map(&:uuid))
