@@ -20,7 +20,7 @@ The test suite uses two complementary approaches for mocking HTTP requests:
 - **Fast, deterministic tests** — When you need predictable, instant responses
 
 ```ruby
-# Example: spec/uploadcare/clients/file_client_spec.rb
+# Example: spec/uploadcare/api/rest/files_spec.rb
 describe '#store' do
   before do
     stub_request(:put, "#{rest_api_root}/files/#{uuid}/storage/")
@@ -49,11 +49,11 @@ end
 - **Verifying real API behavior** — When you need to ensure compatibility with the actual API
 
 ```ruby
-# Example: spec/uploadcare/resources/uploader_spec.rb
-it 'uploads a file' do
-  VCR.use_cassette('upload_upload_one') do
-    upload = described_class.upload(object: file)
-    expect(upload).to be_kind_of(Uploadcare::File)
+# Example: spec/uploadcare/integration_spec.rb
+it 'performs the full lifecycle' do
+  VCR.use_cassette('file_lifecycle') do
+    file = client.files.find(uuid: uuid)
+    expect(file).to be_kind_of(Uploadcare::File)
   end
 end
 ```
@@ -73,10 +73,9 @@ end
 ```ruby
 # Example: spec/uploadcare/resources/file_spec.rb
 before do
-  allow_any_instance_of(Uploadcare::FileClient)
-    .to receive(:get)
-    .with("/files/#{uuid}/", {})
-    .and_return(response_body)
+  allow(client.api.rest.files).to receive(:info)
+    .with(uuid: uuid, request_options: {})
+    .and_return(Uploadcare::Result.success(response_body))
 end
 ```
 
@@ -92,7 +91,9 @@ spec/
 ├── support/
 │   └── vcr.rb                   # VCR configuration
 └── uploadcare/
-    ├── clients/                 # Client specs (use WebMock)
+    ├── api/                     # API endpoint specs (use WebMock)
+    ├── client_spec.rb           # Client/accessor specs
+    ├── operations/              # Workflow helpers
     └── resources/               # Resource specs (use RSpec mocks)
 ```
 
@@ -142,14 +143,14 @@ end
 
 ```bash
 # Run all tests
-bundle exec rspec
+mise exec -- bundle exec rspec
 
 # Run only unit tests (fast)
-bundle exec rspec spec/uploadcare/
+mise exec -- bundle exec rspec spec/uploadcare/
 
 # Run integration tests
-bundle exec rspec spec/integration/
+mise exec -- bundle exec rspec spec/integration/
 
 # Run with verbose output
-bundle exec rspec --format documentation
+mise exec -- bundle exec rspec --format documentation
 ```

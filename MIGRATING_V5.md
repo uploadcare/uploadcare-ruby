@@ -1,82 +1,290 @@
 # Migrating From v4.x to v5.0
 
-Version 5.0 is a major rewrite with architectural changes. Review these updates before upgrading.
+Version 5 is a rewrite. The main change is architectural: application code should now be written against `Uploadcare::Client` and its domain accessors instead of a mix of global helpers and transport-oriented classes.
 
-## Breaking Changes Summary
+## Core Shift
 
-### Dependencies Changed
-- Removed: `dry-configurable`, `uploadcare-api_struct`, `mimemagic`, `parallel`, `retries`
-- Added: `zeitwerk`, `faraday`, `faraday-multipart`, `addressable`, `mime-types`
+### v4 style
 
-### Ruby Version
-- Minimum Ruby version is now 3.3+.
-- Supported versions: Ruby 3.3, 3.4, 4.0.
+The old API encouraged a flatter surface with more global access:
 
-### Module/Class Namespace Changes
+- entity-style objects
+- transport-specific client classes in application code
+- older upload helpers and naming
+
+### v5 style
+
+The new API is organized around:
+
+- `Uploadcare::Client`
+- `client.files`
+- `client.groups`
+- `client.uploads`
+- `client.project`
+- `client.webhooks`
+- `client.file_metadata`
+- `client.addons`
+- `client.conversions`
+- `client.api.rest` and `client.api.upload` for endpoint-level access
+
+## What To Change First
+
+1. Create explicit clients instead of relying on implicit global state.
+2. Move application code to the convenience layer (`client.files`, `client.groups`, and so on).
+3. Use `client.api.*` only where you need exact endpoint parity.
+4. Stop depending on internal transport classes as part of your app-facing API.
+
+## Configuration
+
+### Before
+
+Configuration was more framework-shaped and less client-oriented.
+
+### After
+
+Configuration is a plain Ruby object and every client owns its own config.
 
 ```ruby
-# Old (v4.x)
-Uploadcare::Entity::File
-Uploadcare::Client::FileClient
+base = Uploadcare::Configuration.new(
+  public_key: ENV.fetch("UPLOADCARE_PUBLIC_KEY"),
+  secret_key: ENV.fetch("UPLOADCARE_SECRET_KEY")
+)
 
-# New (v5.0)
-Uploadcare::File
-Uploadcare::FileClient
+client = Uploadcare::Client.new(config: base)
+other = Uploadcare::Client.new(config: base.with(public_key: "other", secret_key: "secret"))
 ```
 
-### Configuration
-Configuration moved from `Dry::Configurable` to a plain Ruby configuration class.
+Global configuration still exists:
 
 ```ruby
 Uploadcare.configure do |config|
-  config.public_key = 'your_public_key'
-  config.secret_key = 'your_secret_key'
-  config.upload_timeout = 120
-  config.max_upload_retries = 5
-  config.multipart_chunk_size = 10 * 1024 * 1024
+  config.public_key = ENV.fetch("UPLOADCARE_PUBLIC_KEY")
+  config.secret_key = ENV.fetch("UPLOADCARE_SECRET_KEY")
 end
 ```
 
-### Method Renames
+But the recommended approach for applications, especially multi-tenant apps, is explicit clients.
 
-| Old Method (v4.x) | New Method (v5.0) |
-|-------------------|-------------------|
-| `Addons.check_aws_rekognition_detect_labels_status` | `Addons.aws_rekognition_detect_labels_status` |
-| `Addons.check_aws_rekognition_detect_moderation_labels_status` | `Addons.aws_rekognition_detect_moderation_labels_status` |
-| `Addons.check_uc_clamav_virus_scan_status` | `Addons.uc_clamav_virus_scan_status` |
-| `Addons.check_remove_bg_status` | `Addons.remove_bg_status` |
+## Public API Mapping
 
-### Smart Upload Detection
-`Uploadcare::Uploader.upload` now auto-detects input type and chooses the upload method.
+### Uploads
 
 ```ruby
-Uploadcare::Uploader.upload(object: 'https://example.com/image.jpg')
-Uploadcare::Uploader.upload(object: large_file)
-Uploadcare::Uploader.upload(object: [file1, file2, file3])
+# v4-ish
+Uploadcare::Uploader.upload(object: file, store: true)
+
+# v5
+client.files.upload(file, store: true)
+# or
+client.uploads.upload(file, store: true)
 ```
 
-### New Exception Classes
-More specific exception classes are available:
-- `Uploadcare::Exception::NotFoundError`
-- `Uploadcare::Exception::InvalidRequestError`
-- `Uploadcare::Exception::UploadError`
-- `Uploadcare::Exception::RetryError`
-- `Uploadcare::Exception::RequestError`
+```ruby
+# v4-ish
+Uploadcare::Uploader.upload(object: url, store: true)
 
-### Batch Operations Return Type
-Batch operations now return `Uploadcare::BatchFileResult`.
+# v5
+client.files.upload_from_url(url, store: true)
+```
 
 ```ruby
-result = Uploadcare::File.batch_store(uuids: uuids)
+# v4-ish
+Uploadcare::Uploader.upload_from_url(url: url, async: true)
+
+# v5
+client.uploads.upload_from_url(url: url, async: true)
+```
+
+```ruby
+# v4-ish
+Uploadcare::Uploader.upload_from_url_status(token: token)
+
+# v5
+client.uploads.upload_from_url_status(token: token)
+```
+
+### Files
+
+```ruby
+# v4-ish
+Uploadcare::File.info(uuid: uuid)
+
+# v5
+client.files.find(uuid: uuid)
+```
+
+```ruby
+# v4-ish
+Uploadcare::File.list(options: { limit: 100 })
+
+# v5
+client.files.list(limit: 100)
+```
+
+```ruby
+# v4-ish
+Uploadcare::File.batch_store(uuids: uuids)
+
+# v5
+client.files.batch_store(uuids: uuids)
+```
+
+```ruby
+# v4-ish
+Uploadcare::File.batch_delete(uuids: uuids)
+
+# v5
+client.files.batch_delete(uuids: uuids)
+```
+
+### Groups
+
+```ruby
+# v4-ish
+Uploadcare::Group.create(uuids: uuids)
+
+# v5
+client.groups.create(uuids)
+```
+
+```ruby
+# v4-ish
+Uploadcare::Group.info(group_id: group_id)
+
+# v5
+client.groups.find(group_id: group_id)
+```
+
+### Metadata
+
+```ruby
+# v4-ish
+Uploadcare::FileMetadata.update(uuid: uuid, key: "key", value: "value")
+
+# v5
+client.file_metadata.update(uuid: uuid, key: "key", value: "value")
+```
+
+### Webhooks
+
+```ruby
+# v4-ish
+Uploadcare::Webhook.create(target_url: url)
+
+# v5
+client.webhooks.create(target_url: url)
+```
+
+### Add-ons
+
+```ruby
+# v4-ish
+Uploadcare::Addons.check_remove_bg_status(request_id: request_id)
+
+# v5
+client.addons.remove_bg_status(request_id: request_id)
+```
+
+## Namespace Changes
+
+The public top-level resource constants remain:
+
+- `Uploadcare::File`
+- `Uploadcare::Group`
+- `Uploadcare::Project`
+- `Uploadcare::Webhook`
+- `Uploadcare::FileMetadata`
+- `Uploadcare::DocumentConversion`
+- `Uploadcare::VideoConversion`
+
+But the main entry point for application code is now `Uploadcare::Client`.
+
+Internal transport and implementation classes are no longer the recommended public surface.
+
+## Result and Error Handling
+
+This is one of the most important behavioral changes.
+
+### Convenience layer
+
+The convenience layer unwraps results and raises exceptions:
+
+```ruby
+file = client.files.find(uuid: uuid)
+```
+
+If the request fails, you get a typed exception.
+
+### Raw API layer
+
+The raw API layer returns `Uploadcare::Result`:
+
+```ruby
+result = client.api.rest.files.info(uuid: uuid)
+
+if result.success?
+  puts result.success
+else
+  warn result.error_message
+end
+```
+
+If your v4 code expected direct hashes everywhere, be explicit about whether you want the convenience layer or the raw parity layer.
+
+## Return Type Changes
+
+### Files and groups
+
+Convenience methods return resources and collections:
+
+- `client.files.find` -> `Uploadcare::File`
+- `client.files.list` -> `Uploadcare::Collections::Paginated`
+- `client.groups.find` -> `Uploadcare::Group`
+
+### Batch operations
+
+Batch operations return `Uploadcare::Collections::BatchResult`:
+
+```ruby
+result = client.files.batch_store(uuids: uuids)
+
 result.status
 result.result
 result.problems
 ```
 
-### Thread Safety
-- Upload operations are thread-safe.
-- Multipart uploads use native Ruby threads.
+### Conversions
+
+Document and video conversions are not perfectly symmetrical:
+
+- `client.conversions.documents.convert` returns the API response hash
+- `client.conversions.videos.convert` returns a `Uploadcare::VideoConversion` resource
+
+If you are migrating conversion code, verify the return type you rely on.
+
+## Exceptions
+
+Version 5 exposes more specific exception types, including:
+
+- `Uploadcare::Exception::RequestError`
+- `Uploadcare::Exception::InvalidRequestError`
+- `Uploadcare::Exception::NotFoundError`
+- `Uploadcare::Exception::UploadError`
+- `Uploadcare::Exception::MultipartUploadError`
+- `Uploadcare::Exception::UploadTimeoutError`
+- `Uploadcare::Exception::ThrottleError`
+
+## Recommended Migration Strategy
+
+1. Introduce `Uploadcare::Client` and pass it explicitly where possible.
+2. Move upload code to `client.files` / `client.uploads`.
+3. Move file, group, metadata, and webhook code to client accessors.
+4. Replace any direct reliance on internal transport classes with `client.api`.
+5. Audit return-type assumptions, especially for conversions and batch operations.
+6. Add tests around multi-account behavior if your app uses more than one Uploadcare project.
 
 ## See Also
-- [README](./README.md)
-- [CHANGELOG](./CHANGELOG.md)
+
+- [README.md](./README.md)
+- [api_examples/README.md](./api_examples/README.md)
+- [CHANGELOG.md](./CHANGELOG.md)
