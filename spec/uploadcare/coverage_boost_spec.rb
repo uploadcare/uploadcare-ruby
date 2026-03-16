@@ -40,7 +40,7 @@ RSpec.describe 'Coverage: edge cases and error paths' do
     end
 
     it 'builds URI with query params for GET requests' do
-      stub_request(:get, /api\.uploadcare\.com\/files\//)
+      stub_request(:get, %r{api\.uploadcare\.com/files/})
         .to_return(status: 200, body: '{"results":[]}', headers: { 'Content-Type' => 'application/json' })
 
       result = rest.get(path: '/files/', params: { limit: 10 }, headers: {})
@@ -176,7 +176,7 @@ RSpec.describe 'Coverage: edge cases and error paths' do
     let(:router) { Uploadcare::Operations::UploadRouter.new(client: client) }
 
     it 'raises ArgumentError for invalid source types' do
-      expect { router.upload(12345) }.to raise_error(ArgumentError, /Expected input/)
+      expect { router.upload(12_345) }.to raise_error(ArgumentError, /Expected input/)
     end
   end
 
@@ -299,7 +299,8 @@ RSpec.describe 'Coverage: edge cases and error paths' do
       expect do
         handler.handle_throttling do
           call_count += 1
-          raise Uploadcare::Exception::ThrottleError.new(0.001) if call_count < 2
+          raise Uploadcare::Exception::ThrottleError, 0.001 if call_count < 2
+
           'success'
         end
       end.not_to raise_error

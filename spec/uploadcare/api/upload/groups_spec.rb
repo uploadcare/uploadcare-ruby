@@ -51,12 +51,12 @@ RSpec.describe Uploadcare::Api::Upload::Groups do
 
     it 'includes pub_key in the request params' do
       stub = stub_request(:post, 'https://upload.uploadcare.com/group/')
-        .with(body: hash_including('pub_key' => 'demopublickey'))
-        .to_return(
-          status: 200,
-          body: { id: 'group-uuid~3', files_count: 3 }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('pub_key' => 'demopublickey'))
+             .to_return(
+               status: 200,
+               body: { id: 'group-uuid~3', files_count: 3 }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       groups.create(files: file_uuids)
 
@@ -65,12 +65,12 @@ RSpec.describe Uploadcare::Api::Upload::Groups do
 
     it 'sends each file UUID as files[N] parameter' do
       stub = stub_request(:post, 'https://upload.uploadcare.com/group/')
-        .with(body: /files%5B0%5D=uuid-1.*files%5B1%5D=uuid-2.*files%5B2%5D=uuid-3/)
-        .to_return(
-          status: 200,
-          body: { id: 'group-uuid~3', files_count: 3 }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: /files%5B0%5D=uuid-1.*files%5B1%5D=uuid-2.*files%5B2%5D=uuid-3/)
+             .to_return(
+               status: 200,
+               body: { id: 'group-uuid~3', files_count: 3 }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       groups.create(files: file_uuids)
 
@@ -97,12 +97,12 @@ RSpec.describe Uploadcare::Api::Upload::Groups do
       file_obj = double('file', uuid: 'obj-uuid-1')
 
       stub = stub_request(:post, 'https://upload.uploadcare.com/group/')
-        .with(body: /files%5B0%5D=obj-uuid-1/)
-        .to_return(
-          status: 200,
-          body: { id: 'group-uuid~1', files_count: 1 }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: /files%5B0%5D=obj-uuid-1/)
+             .to_return(
+               status: 200,
+               body: { id: 'group-uuid~1', files_count: 1 }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       groups.create(files: [file_obj])
 
@@ -111,12 +111,12 @@ RSpec.describe Uploadcare::Api::Upload::Groups do
 
     it 'accepts optional signature and expire parameters' do
       stub = stub_request(:post, 'https://upload.uploadcare.com/group/')
-        .with(body: hash_including('signature' => 'abc123', 'expire' => '1700000000'))
-        .to_return(
-          status: 200,
-          body: { id: 'group-uuid~1', files_count: 1 }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('signature' => 'abc123', 'expire' => '1700000000'))
+             .to_return(
+               status: 200,
+               body: { id: 'group-uuid~1', files_count: 1 }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       groups.create(files: ['uuid-1'], signature: 'abc123', expire: '1700000000')
 
@@ -163,12 +163,12 @@ RSpec.describe Uploadcare::Api::Upload::Groups do
 
     it 'includes pub_key in the query params' do
       stub = stub_request(:get, 'https://upload.uploadcare.com/group/info/')
-        .with(query: hash_including('pub_key' => 'demopublickey'))
-        .to_return(
-          status: 200,
-          body: { id: group_id }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(query: hash_including('pub_key' => 'demopublickey'))
+             .to_return(
+               status: 200,
+               body: { id: group_id }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       groups.info(group_id: group_id)
 

@@ -69,9 +69,9 @@ RSpec.describe Uploadcare::Resources::FileMetadata do
           .with(uuid: file_uuid, key: 'key1', request_options: {})
           .and_return(Uploadcare::Result.success(nil))
 
-        expect {
+        expect do
           described_class.delete(uuid: file_uuid, key: 'key1', client: client)
-        }.not_to raise_error
+        end.not_to raise_error
       end
     end
   end

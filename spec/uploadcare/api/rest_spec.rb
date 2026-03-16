@@ -254,14 +254,23 @@ RSpec.describe Uploadcare::Api::Rest do
     end
 
     it 'memoizes endpoint instances' do
-      expect(rest.files).to be(rest.files)
-      expect(rest.groups).to be(rest.groups)
-      expect(rest.project).to be(rest.project)
-      expect(rest.webhooks).to be(rest.webhooks)
-      expect(rest.file_metadata).to be(rest.file_metadata)
-      expect(rest.addons).to be(rest.addons)
-      expect(rest.document_conversions).to be(rest.document_conversions)
-      expect(rest.video_conversions).to be(rest.video_conversions)
+      files = rest.files
+      groups = rest.groups
+      project = rest.project
+      webhooks = rest.webhooks
+      file_metadata = rest.file_metadata
+      addons = rest.addons
+      document_conversions = rest.document_conversions
+      video_conversions = rest.video_conversions
+
+      expect(rest.files).to be(files)
+      expect(rest.groups).to be(groups)
+      expect(rest.project).to be(project)
+      expect(rest.webhooks).to be(webhooks)
+      expect(rest.file_metadata).to be(file_metadata)
+      expect(rest.addons).to be(addons)
+      expect(rest.document_conversions).to be(document_conversions)
+      expect(rest.video_conversions).to be(video_conversions)
     end
   end
 

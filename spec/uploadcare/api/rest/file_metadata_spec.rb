@@ -10,12 +10,11 @@ RSpec.describe Uploadcare::Api::Rest::FileMetadata do
       auth_type: 'Uploadcare.Simple'
     )
   end
+  let(:file_uuid) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' }
 
   let(:rest) { Uploadcare::Api::Rest.new(config: config) }
 
   subject(:file_metadata) { described_class.new(rest: rest) }
-
-  let(:file_uuid) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' }
 
   describe '#initialize' do
     it 'stores the rest client' do
@@ -124,12 +123,12 @@ RSpec.describe Uploadcare::Api::Rest::FileMetadata do
 
     it 'sends the value as a JSON string in the request body' do
       stub = stub_request(:put, "https://api.uploadcare.com/files/#{file_uuid}/metadata/my-key/")
-        .with(body: '"new-value"')
-        .to_return(
-          status: 200,
-          body: '"new-value"',
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: '"new-value"')
+             .to_return(
+               status: 200,
+               body: '"new-value"',
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       file_metadata.update(uuid: file_uuid, key: 'my-key', value: 'new-value')
 
@@ -159,11 +158,11 @@ RSpec.describe Uploadcare::Api::Rest::FileMetadata do
       encoded_key = URI.encode_www_form_component('special/key')
 
       stub = stub_request(:delete, "https://api.uploadcare.com/files/#{encoded_uuid}/metadata/#{encoded_key}/")
-        .to_return(
-          status: 200,
-          body: ''.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .to_return(
+               status: 200,
+               body: ''.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       file_metadata.delete(uuid: 'test-uuid', key: 'special/key')
 

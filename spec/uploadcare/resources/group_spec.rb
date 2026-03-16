@@ -88,7 +88,9 @@ RSpec.describe Uploadcare::Resources::Group do
         .with(params: { limit: 5 }, request_options: {})
         .and_return(Uploadcare::Result.success(list_response))
 
-      described_class.list(params: { limit: 5 }, client: client)
+      result = described_class.list(params: { limit: 5 }, client: client)
+
+      expect(result).to be_a(Uploadcare::Collections::Paginated)
     end
   end
 

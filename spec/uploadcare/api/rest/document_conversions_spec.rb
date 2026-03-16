@@ -10,12 +10,11 @@ RSpec.describe Uploadcare::Api::Rest::DocumentConversions do
       auth_type: 'Uploadcare.Simple'
     )
   end
+  let(:file_uuid) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' }
 
   let(:rest) { Uploadcare::Api::Rest.new(config: config) }
 
   subject(:document_conversions) { described_class.new(rest: rest) }
-
-  let(:file_uuid) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' }
 
   describe '#initialize' do
     it 'stores the rest client' do
@@ -84,12 +83,12 @@ RSpec.describe Uploadcare::Api::Rest::DocumentConversions do
 
     it 'sends paths in the request body' do
       stub = stub_request(:post, 'https://api.uploadcare.com/convert/document/')
-        .with(body: hash_including('paths' => [conversion_path]))
-        .to_return(
-          status: 200,
-          body: { result: [], problems: {} }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('paths' => [conversion_path]))
+             .to_return(
+               status: 200,
+               body: { result: [], problems: {} }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       document_conversions.convert(paths: [conversion_path])
 
@@ -98,12 +97,12 @@ RSpec.describe Uploadcare::Api::Rest::DocumentConversions do
 
     it 'accepts store option' do
       stub = stub_request(:post, 'https://api.uploadcare.com/convert/document/')
-        .with(body: hash_including('paths' => [conversion_path], 'store' => '1'))
-        .to_return(
-          status: 200,
-          body: { result: [], problems: {} }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('paths' => [conversion_path], 'store' => '1'))
+             .to_return(
+               status: 200,
+               body: { result: [], problems: {} }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       document_conversions.convert(paths: [conversion_path], options: { store: true })
 
@@ -112,12 +111,12 @@ RSpec.describe Uploadcare::Api::Rest::DocumentConversions do
 
     it 'accepts save_in_group option' do
       stub = stub_request(:post, 'https://api.uploadcare.com/convert/document/')
-        .with(body: hash_including('save_in_group' => '1'))
-        .to_return(
-          status: 200,
-          body: { result: [], problems: {} }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('save_in_group' => '1'))
+             .to_return(
+               status: 200,
+               body: { result: [], problems: {} }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       document_conversions.convert(paths: [conversion_path], options: { save_in_group: true })
 
@@ -126,12 +125,12 @@ RSpec.describe Uploadcare::Api::Rest::DocumentConversions do
 
     it 'normalizes boolean store parameter' do
       stub = stub_request(:post, 'https://api.uploadcare.com/convert/document/')
-        .with(body: hash_including('store' => '0'))
-        .to_return(
-          status: 200,
-          body: { result: [], problems: {} }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('store' => '0'))
+             .to_return(
+               status: 200,
+               body: { result: [], problems: {} }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       document_conversions.convert(paths: [conversion_path], options: { store: false })
 

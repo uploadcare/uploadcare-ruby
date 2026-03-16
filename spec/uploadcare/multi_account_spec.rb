@@ -69,11 +69,11 @@ RSpec.describe 'Multi-account support' do
       file_b_attrs = { 'uuid' => 'uuid-from-account-b', 'original_filename' => 'b.jpg' }
 
       allow(files_a).to receive(:info)
-        .with(uuid: 'uuid-from-account-a', request_options: {})
+        .with(uuid: 'uuid-from-account-a', params: {}, request_options: {})
         .and_return(Uploadcare::Result.success(file_a_attrs))
 
       allow(files_b).to receive(:info)
-        .with(uuid: 'uuid-from-account-b', request_options: {})
+        .with(uuid: 'uuid-from-account-b', params: {}, request_options: {})
         .and_return(Uploadcare::Result.success(file_b_attrs))
 
       file_a = Uploadcare::Resources::File.find(uuid: 'uuid-from-account-a', client: client_a)
@@ -147,7 +147,7 @@ RSpec.describe 'Multi-account support' do
       stored_attrs = file_attrs.merge('datetime_stored' => '2025-01-01T00:00:00Z')
 
       allow(files_a).to receive(:info)
-        .with(uuid: 'file-uuid', request_options: {})
+        .with(uuid: 'file-uuid', params: {}, request_options: {})
         .and_return(Uploadcare::Result.success(file_attrs))
 
       allow(files_a).to receive(:store)

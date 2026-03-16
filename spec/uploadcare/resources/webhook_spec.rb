@@ -103,11 +103,13 @@ RSpec.describe Uploadcare::Resources::Webhook do
         )
         .and_return(Uploadcare::Result.success(webhook_attrs))
 
-      described_class.create(
+      webhook = described_class.create(
         target_url: 'https://example.com/hook',
         signing_secret: 'my-secret',
         client: client
       )
+
+      expect(webhook).to be_a(described_class)
     end
 
     it 'includes version when provided' do
@@ -123,11 +125,13 @@ RSpec.describe Uploadcare::Resources::Webhook do
         )
         .and_return(Uploadcare::Result.success(webhook_attrs))
 
-      described_class.create(
+      webhook = described_class.create(
         target_url: 'https://example.com/hook',
         version: '0.7',
         client: client
       )
+
+      expect(webhook).to be_a(described_class)
     end
   end
 
@@ -168,9 +172,9 @@ RSpec.describe Uploadcare::Resources::Webhook do
         .with(target_url: 'https://example.com/webhook', request_options: {})
         .and_return(Uploadcare::Result.success(nil))
 
-      expect {
+      expect do
         described_class.delete(target_url: 'https://example.com/webhook', client: client)
-      }.not_to raise_error
+      end.not_to raise_error
     end
 
     it 'is aliased as unsubscribe' do

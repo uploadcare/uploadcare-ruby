@@ -10,12 +10,11 @@ RSpec.describe Uploadcare::Api::Rest::Groups do
       auth_type: 'Uploadcare.Simple'
     )
   end
+  let(:group_uuid) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890~3' }
 
   let(:rest) { Uploadcare::Api::Rest.new(config: config) }
 
   subject(:groups) { described_class.new(rest: rest) }
-
-  let(:group_uuid) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890~3' }
 
   describe '#initialize' do
     it 'stores the rest client' do
@@ -92,11 +91,11 @@ RSpec.describe Uploadcare::Api::Rest::Groups do
 
     it 'URI-encodes the tilde character in the group UUID' do
       stub = stub_request(:get, 'https://api.uploadcare.com/groups/a1b2c3d4-e5f6-7890-abcd-ef1234567890~3/')
-        .to_return(
-          status: 200,
-          body: { id: group_uuid }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .to_return(
+               status: 200,
+               body: { id: group_uuid }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       groups.info(uuid: group_uuid)
 

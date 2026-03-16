@@ -10,12 +10,11 @@ RSpec.describe Uploadcare::Api::Rest::Files do
       auth_type: 'Uploadcare.Simple'
     )
   end
+  let(:file_uuid) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' }
 
   let(:rest) { Uploadcare::Api::Rest.new(config: config) }
 
   subject(:files) { described_class.new(rest: rest) }
-
-  let(:file_uuid) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' }
 
   describe '#initialize' do
     it 'stores the rest client' do
@@ -73,7 +72,7 @@ RSpec.describe Uploadcare::Api::Rest::Files do
           body: {
             uuid: file_uuid,
             filename: 'test.jpg',
-            size: 12345,
+            size: 12_345,
             is_stored: true,
             is_image: true,
             mime_type: 'image/jpeg'

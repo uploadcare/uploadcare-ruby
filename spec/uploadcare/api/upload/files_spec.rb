@@ -125,12 +125,12 @@ RSpec.describe Uploadcare::Api::Upload::Files do
 
     it 'includes pub_key in the request params' do
       stub = stub_request(:post, 'https://upload.uploadcare.com/from_url/')
-        .with(body: hash_including('pub_key' => 'demopublickey', 'source_url' => source_url))
-        .to_return(
-          status: 200,
-          body: { token: 'upload-token' }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('pub_key' => 'demopublickey', 'source_url' => source_url))
+             .to_return(
+               status: 200,
+               body: { token: 'upload-token' }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       files.from_url(source_url: source_url, async: true)
 
@@ -217,12 +217,12 @@ RSpec.describe Uploadcare::Api::Upload::Files do
 
     it 'includes UPLOADCARE_PUB_KEY in the params' do
       stub = stub_request(:post, 'https://upload.uploadcare.com/multipart/start/')
-        .with(body: hash_including('UPLOADCARE_PUB_KEY' => 'demopublickey'))
-        .to_return(
-          status: 200,
-          body: { uuid: 'mp-uuid', parts: [] }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('UPLOADCARE_PUB_KEY' => 'demopublickey'))
+             .to_return(
+               status: 200,
+               body: { uuid: 'mp-uuid', parts: [] }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       files.multipart_start(filename: 'test.mp4', size: 100_000_000, content_type: 'video/mp4')
 
@@ -263,12 +263,12 @@ RSpec.describe Uploadcare::Api::Upload::Files do
 
     it 'includes UPLOADCARE_PUB_KEY and uuid in the params' do
       stub = stub_request(:post, 'https://upload.uploadcare.com/multipart/complete/')
-        .with(body: hash_including('UPLOADCARE_PUB_KEY' => 'demopublickey', 'uuid' => 'mp-uuid'))
-        .to_return(
-          status: 200,
-          body: { uuid: 'mp-uuid' }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('UPLOADCARE_PUB_KEY' => 'demopublickey', 'uuid' => 'mp-uuid'))
+             .to_return(
+               status: 200,
+               body: { uuid: 'mp-uuid' }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       files.multipart_complete(uuid: 'mp-uuid')
 
@@ -285,7 +285,7 @@ RSpec.describe Uploadcare::Api::Upload::Files do
           body: {
             uuid: 'file-uuid',
             filename: 'test.jpg',
-            size: 12345,
+            size: 12_345,
             is_image: true
           }.to_json,
           headers: { 'Content-Type' => 'application/json' }

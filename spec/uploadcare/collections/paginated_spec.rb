@@ -56,8 +56,7 @@ RSpec.describe Uploadcare::Collections::Paginated do
     end
 
     it 'delegates each to resources' do
-      uuids = []
-      collection.each { |file| uuids << file.uuid }
+      uuids = collection.map(&:uuid)
       expect(uuids).to eq([file_uuid])
     end
 

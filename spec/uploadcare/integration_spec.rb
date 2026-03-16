@@ -111,7 +111,7 @@ RSpec.describe 'Integration: end-to-end workflows' do
   end
 
   describe 'batch file operations' do
-    let(:uuids) { ['uuid-1', 'uuid-2'] }
+    let(:uuids) { %w[uuid-1 uuid-2] }
 
     before do
       stub_request(:put, 'https://api.uploadcare.com/files/storage/')

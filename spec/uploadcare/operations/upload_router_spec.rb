@@ -103,9 +103,9 @@ RSpec.describe Uploadcare::Operations::UploadRouter do
 
     context 'with an unsupported type' do
       it 'raises ArgumentError' do
-        expect {
-          router.upload(12345)
-        }.to raise_error(ArgumentError, /Expected input to be a File\/Array\/URL/)
+        expect do
+          router.upload(12_345)
+        end.to raise_error(ArgumentError, %r{Expected input to be a File/Array/URL})
       end
     end
   end

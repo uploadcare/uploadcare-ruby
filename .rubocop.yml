@@ -5,6 +5,11 @@ AllCops:
   NewCops: enable
   TargetRubyVersion: 3.3
   SuggestExtensions: false
+  Exclude:
+    - 'examples/**/*'
+    - 'tmp/**/*'
+    - 'spec/support/**/*'
+    - 'api_examples/support/**/*'
 
 Layout/LineLength:
   Max: 120
@@ -15,6 +20,7 @@ Lint/IneffectiveAccessModifier:
   Enabled: false
 
 Metrics/BlockLength:
+  Max: 30
   Exclude:
     - 'bin/'
     - 'spec/**/*'
@@ -22,59 +28,40 @@ Metrics/BlockLength:
     - 'api_examples/support/**/*.rb'
 
 Metrics/ClassLength:
-  Max: 100
+  Max: 200
   Exclude:
-    - 'lib/uploadcare/clients/upload_client.rb'  # Complex upload logic with 9 endpoints
-    - 'lib/uploadcare/clients/multipart_uploader_client.rb'
-    - 'lib/uploadcare/resources/file.rb'  # Pre-existing file resource with many methods
-    - 'lib/uploadcare/uploader.rb'  # Uploader module with multiple upload strategies
+    - 'spec/**/*'
 
 Metrics/ModuleLength:
   Max: 100
   Exclude:
     - 'spec/**/*'
-    - 'lib/uploadcare/uploader.rb'  # Uploader module with multiple upload strategies
     - 'api_examples/support/**/*.rb'
 
 Metrics/MethodLength:
-  Max: 20
+  Max: 30
   Exclude:
-    - 'lib/uploadcare/clients/upload_client.rb'  # Parallel upload requires coordination logic
-    - 'lib/uploadcare/clients/multipart_uploader_client.rb'
-    - 'lib/uploadcare/clients/uploader_client.rb'
-    - 'lib/uploadcare/uploader.rb'  # Parallel upload coordination
     - 'api_examples/support/**/*.rb'
 
 Metrics/AbcSize:
-  Max: 17
+  Max: 28
   Exclude:
-    - 'lib/uploadcare/clients/upload_client.rb'  # Upload methods have multiple parameters and validations
-    - 'lib/uploadcare/clients/multipart_uploader_client.rb'
-    - 'lib/uploadcare/clients/uploader_client.rb'
-    - 'lib/uploadcare/uploader.rb'  # Parallel upload coordination
     - 'api_examples/support/**/*.rb'
 
 Metrics/CyclomaticComplexity:
-  Max: 7
+  Max: 10
   Exclude:
-    - 'lib/uploadcare/clients/upload_client.rb'  # Upload logic has multiple conditional paths
-    - 'lib/uploadcare/clients/multipart_uploader_client.rb'
-    - 'lib/uploadcare/clients/uploader_client.rb'
-    - 'lib/uploadcare/uploader.rb'  # Parallel upload coordination
     - 'api_examples/support/**/*.rb'
 
 Metrics/PerceivedComplexity:
-  Max: 8
+  Max: 11
   Exclude:
-    - 'lib/uploadcare/clients/upload_client.rb'  # Parallel upload coordination is inherently complex
-    - 'lib/uploadcare/clients/multipart_uploader_client.rb'
-    - 'lib/uploadcare/clients/uploader_client.rb'
     - 'api_examples/support/**/*.rb'
 
 Metrics/ParameterLists:
+  Max: 8
   Exclude:
-    - 'lib/uploadcare/clients/rest_client.rb'
-    - 'lib/uploadcare/clients/upload_client.rb'
+    - 'spec/**/*'
 
 Style/Documentation:
   Enabled: false

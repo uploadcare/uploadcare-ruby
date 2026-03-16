@@ -18,20 +18,20 @@ RSpec.describe Uploadcare::Internal::UploadIo do
       expect(wrapped.size).to eq(3)
 
       wrapped.close!
-      expect(::File.exist?(file.path)).to eq(true)
+      expect(File.exist?(file.path)).to eq(true)
       file.close!
     end
 
     it 'normalizes a non-path IO object into a temp file' do
       wrapped = described_class.wrap(StringIO.new('stream-data'))
 
-      expect(::File.exist?(wrapped.path)).to eq(true)
+      expect(File.exist?(wrapped.path)).to eq(true)
       expect(wrapped.original_filename).to eq('upload.bin')
       expect(wrapped.size).to eq(11)
 
       path = wrapped.path
       wrapped.close!
-      expect(::File.exist?(path)).to eq(false)
+      expect(File.exist?(path)).to eq(false)
     end
 
     it 'preserves original_filename when available on the source object' do
@@ -41,14 +41,14 @@ RSpec.describe Uploadcare::Internal::UploadIo do
       wrapped = described_class.wrap(io)
 
       expect(wrapped.original_filename).to eq('avatar.png')
-      expect(::File.extname(wrapped.path)).to eq('.png')
+      expect(File.extname(wrapped.path)).to eq('.png')
       wrapped.close!
     end
 
     it 'raises for unreadable input' do
-      expect {
+      expect do
         described_class.wrap('not-io')
-      }.to raise_error(ArgumentError, /readable IO/)
+      end.to raise_error(ArgumentError, /readable IO/)
     end
   end
 end

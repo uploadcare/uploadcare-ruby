@@ -1,21 +1,17 @@
 # frozen_string_literal: true
 
-module Uploadcare
-  class Client
-    class ConversionsAccessor
-      attr_reader :client
+class Uploadcare::Client::ConversionsAccessor
+  attr_reader :client
 
-      def initialize(client:)
-        @client = client
-      end
+  def initialize(client:)
+    @client = client
+  end
 
-      def documents
-        @documents ||= DocumentConversionsAccessor.new(client: client)
-      end
+  def documents
+    @documents ||= Uploadcare::Client::DocumentConversionsAccessor.new(client: client)
+  end
 
-      def videos
-        @videos ||= VideoConversionsAccessor.new(client: client)
-      end
-    end
+  def videos
+    @videos ||= Uploadcare::Client::VideoConversionsAccessor.new(client: client)
   end
 end

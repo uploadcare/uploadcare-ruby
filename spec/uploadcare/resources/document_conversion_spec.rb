@@ -79,11 +79,13 @@ RSpec.describe Uploadcare::Resources::DocumentConversion do
         )
         .and_return(Uploadcare::Result.success({ 'result' => [] }))
 
-      described_class.convert_document(
+      result = described_class.convert_document(
         params: { uuid: file_uuid, format: 'png' },
         options: { store: true },
         client: client
       )
+
+      expect(result).to eq({ 'result' => [] })
     end
   end
 

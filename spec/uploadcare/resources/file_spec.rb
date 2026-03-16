@@ -74,7 +74,7 @@ RSpec.describe Uploadcare::Resources::File do
   describe '.find' do
     it 'fetches file info by UUID' do
       allow(rest_files).to receive(:info)
-        .with(uuid: file_uuid, request_options: {})
+        .with(uuid: file_uuid, params: {}, request_options: {})
         .and_return(Uploadcare::Result.success(file_attrs))
 
       file = described_class.find(uuid: file_uuid, client: client)
@@ -128,7 +128,9 @@ RSpec.describe Uploadcare::Resources::File do
         .with(params: { limit: 5 }, request_options: {})
         .and_return(Uploadcare::Result.success(list_response))
 
-      described_class.list(options: { limit: 5 }, client: client)
+      result = described_class.list(options: { limit: 5 }, client: client)
+
+      expect(result).to be_a(Uploadcare::Collections::Paginated)
     end
   end
 
@@ -348,9 +350,9 @@ RSpec.describe Uploadcare::Resources::File do
     end
 
     it 'raises ArgumentError when params is not a Hash' do
-      expect {
+      expect do
         file.convert_to_document(params: 'not-a-hash')
-      }.to raise_error(ArgumentError, 'The first argument must be a Hash')
+      end.to raise_error(ArgumentError, 'The first argument must be a Hash')
     end
 
     it 'converts with document conversion' do
@@ -377,9 +379,9 @@ RSpec.describe Uploadcare::Resources::File do
     end
 
     it 'raises ArgumentError when params is not a Hash' do
-      expect {
+      expect do
         file.convert_to_video(params: 'not-a-hash')
-      }.to raise_error(ArgumentError, 'The first argument must be a Hash')
+      end.to raise_error(ArgumentError, 'The first argument must be a Hash')
     end
   end
 

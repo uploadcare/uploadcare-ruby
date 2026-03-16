@@ -22,7 +22,7 @@ RSpec.describe Uploadcare::Internal::ThrottleHandler do
 
       result = handler.handle_throttling(max_attempts: 3) do
         call_count += 1
-        raise Uploadcare::Exception::ThrottleError.new(0.01) if call_count < 2
+        raise Uploadcare::Exception::ThrottleError, 0.01 if call_count < 2
 
         'recovered'
       end
@@ -36,7 +36,7 @@ RSpec.describe Uploadcare::Internal::ThrottleHandler do
 
       expect do
         handler.handle_throttling(max_attempts: 3) do
-          raise Uploadcare::Exception::ThrottleError.new(0.01)
+          raise Uploadcare::Exception::ThrottleError, 0.01
         end
       end.to raise_error(Uploadcare::Exception::ThrottleError)
     end
@@ -48,7 +48,7 @@ RSpec.describe Uploadcare::Internal::ThrottleHandler do
       begin
         handler.handle_throttling(max_attempts: 4) do
           call_count += 1
-          raise Uploadcare::Exception::ThrottleError.new(2.0)
+          raise Uploadcare::Exception::ThrottleError, 2.0
         end
       rescue Uploadcare::Exception::ThrottleError
         # expected
@@ -66,7 +66,7 @@ RSpec.describe Uploadcare::Internal::ThrottleHandler do
       begin
         handler.handle_throttling(max_attempts: 5) do
           call_count += 1
-          raise Uploadcare::Exception::ThrottleError.new(0.01)
+          raise Uploadcare::Exception::ThrottleError, 0.01
         end
       rescue Uploadcare::Exception::ThrottleError
         # expected
@@ -83,7 +83,7 @@ RSpec.describe Uploadcare::Internal::ThrottleHandler do
       expect do
         handler.handle_throttling(max_attempts: 1) do
           call_count += 1
-          raise Uploadcare::Exception::ThrottleError.new(0.01)
+          raise Uploadcare::Exception::ThrottleError, 0.01
         end
       end.to raise_error(Uploadcare::Exception::ThrottleError)
 
@@ -114,7 +114,7 @@ RSpec.describe Uploadcare::Internal::ThrottleHandler do
         begin
           handler_with_config.handle_throttling do
             call_count += 1
-            raise Uploadcare::Exception::ThrottleError.new(0.01)
+            raise Uploadcare::Exception::ThrottleError, 0.01
           end
         rescue Uploadcare::Exception::ThrottleError
           # expected

@@ -9,8 +9,7 @@ RSpec.describe Uploadcare::Internal::ErrorHandler do
 
   def faraday_error(status:, body:, headers: {})
     response = { status: status, body: body, headers: headers }
-    error = Faraday::ClientError.new('request failed', response)
-    error
+    Faraday::ClientError.new('request failed', response)
   end
 
   describe '#handle_error' do

@@ -10,12 +10,11 @@ RSpec.describe Uploadcare::Api::Rest::VideoConversions do
       auth_type: 'Uploadcare.Simple'
     )
   end
+  let(:file_uuid) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' }
 
   let(:rest) { Uploadcare::Api::Rest.new(config: config) }
 
   subject(:video_conversions) { described_class.new(rest: rest) }
-
-  let(:file_uuid) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' }
 
   describe '#initialize' do
     it 'stores the rest client' do
@@ -50,12 +49,12 @@ RSpec.describe Uploadcare::Api::Rest::VideoConversions do
 
     it 'sends paths in the request body' do
       stub = stub_request(:post, 'https://api.uploadcare.com/convert/video/')
-        .with(body: hash_including('paths' => [conversion_path]))
-        .to_return(
-          status: 200,
-          body: { result: [], problems: {} }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('paths' => [conversion_path]))
+             .to_return(
+               status: 200,
+               body: { result: [], problems: {} }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       video_conversions.convert(paths: [conversion_path])
 
@@ -64,12 +63,12 @@ RSpec.describe Uploadcare::Api::Rest::VideoConversions do
 
     it 'merges additional options like store' do
       stub = stub_request(:post, 'https://api.uploadcare.com/convert/video/')
-        .with(body: hash_including('paths' => [conversion_path], 'store' => '1'))
-        .to_return(
-          status: 200,
-          body: { result: [], problems: {} }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('paths' => [conversion_path], 'store' => '1'))
+             .to_return(
+               status: 200,
+               body: { result: [], problems: {} }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       video_conversions.convert(paths: [conversion_path], options: { store: '1' })
 

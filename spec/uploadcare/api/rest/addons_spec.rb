@@ -10,13 +10,12 @@ RSpec.describe Uploadcare::Api::Rest::Addons do
       auth_type: 'Uploadcare.Simple'
     )
   end
+  let(:file_uuid) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' }
+  let(:request_id) { 'req-abc-123' }
 
   let(:rest) { Uploadcare::Api::Rest.new(config: config) }
 
   subject(:addons) { described_class.new(rest: rest) }
-
-  let(:file_uuid) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' }
-  let(:request_id) { 'req-abc-123' }
 
   describe '#initialize' do
     it 'stores the rest client' do
@@ -43,12 +42,12 @@ RSpec.describe Uploadcare::Api::Rest::Addons do
 
     it 'sends the file UUID as the target parameter' do
       stub = stub_request(:post, 'https://api.uploadcare.com/addons/aws_rekognition_detect_labels/execute/')
-        .with(body: hash_including('target' => file_uuid))
-        .to_return(
-          status: 200,
-          body: { request_id: request_id }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('target' => file_uuid))
+             .to_return(
+               status: 200,
+               body: { request_id: request_id }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       addons.aws_rekognition_detect_labels(uuid: file_uuid)
 
@@ -94,12 +93,12 @@ RSpec.describe Uploadcare::Api::Rest::Addons do
 
     it 'sends the file UUID as the target parameter' do
       stub = stub_request(:post, 'https://api.uploadcare.com/addons/aws_rekognition_detect_moderation_labels/execute/')
-        .with(body: hash_including('target' => file_uuid))
-        .to_return(
-          status: 200,
-          body: { request_id: request_id }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('target' => file_uuid))
+             .to_return(
+               status: 200,
+               body: { request_id: request_id }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       addons.aws_rekognition_detect_moderation_labels(uuid: file_uuid)
 
@@ -145,12 +144,12 @@ RSpec.describe Uploadcare::Api::Rest::Addons do
 
     it 'sends the file UUID as the target parameter' do
       stub = stub_request(:post, 'https://api.uploadcare.com/addons/uc_clamav_virus_scan/execute/')
-        .with(body: hash_including('target' => file_uuid))
-        .to_return(
-          status: 200,
-          body: { request_id: request_id }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('target' => file_uuid))
+             .to_return(
+               status: 200,
+               body: { request_id: request_id }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       addons.uc_clamav_virus_scan(uuid: file_uuid)
 
@@ -159,12 +158,12 @@ RSpec.describe Uploadcare::Api::Rest::Addons do
 
     it 'merges additional params' do
       stub = stub_request(:post, 'https://api.uploadcare.com/addons/uc_clamav_virus_scan/execute/')
-        .with(body: hash_including('target' => file_uuid, 'purge_infected' => true))
-        .to_return(
-          status: 200,
-          body: { request_id: request_id }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('target' => file_uuid, 'purge_infected' => true))
+             .to_return(
+               status: 200,
+               body: { request_id: request_id }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       addons.uc_clamav_virus_scan(uuid: file_uuid, params: { purge_infected: true })
 
@@ -211,12 +210,12 @@ RSpec.describe Uploadcare::Api::Rest::Addons do
 
     it 'sends the target and params in the request body' do
       stub = stub_request(:post, 'https://api.uploadcare.com/addons/remove_bg/execute/')
-        .with(body: hash_including('target' => file_uuid, 'params' => { 'crop' => true }))
-        .to_return(
-          status: 200,
-          body: { request_id: request_id }.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('target' => file_uuid, 'params' => { 'crop' => true }))
+             .to_return(
+               status: 200,
+               body: { request_id: request_id }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       addons.remove_bg(uuid: file_uuid, params: { crop: true })
 

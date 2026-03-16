@@ -45,21 +45,21 @@ RSpec.describe Uploadcare::Resources::VideoConversion do
     end
 
     it 'raises ArgumentError when uuid is missing' do
-      expect {
+      expect do
         described_class.convert(params: { format: 'mp4', quality: 'best' }, client: client)
-      }.to raise_error(ArgumentError, 'params must include :uuid')
+      end.to raise_error(ArgumentError, 'params must include :uuid')
     end
 
     it 'raises ArgumentError when format is missing' do
-      expect {
+      expect do
         described_class.convert(params: { uuid: file_uuid, quality: 'best' }, client: client)
-      }.to raise_error(ArgumentError, 'params must include :format')
+      end.to raise_error(ArgumentError, 'params must include :format')
     end
 
     it 'raises ArgumentError when quality is missing' do
-      expect {
+      expect do
         described_class.convert(params: { uuid: file_uuid, format: 'mp4' }, client: client)
-      }.to raise_error(ArgumentError, 'params must include :quality')
+      end.to raise_error(ArgumentError, 'params must include :quality')
     end
 
     it 'handles multiple UUIDs' do
@@ -77,10 +77,14 @@ RSpec.describe Uploadcare::Resources::VideoConversion do
         )
         .and_return(Uploadcare::Result.success(conversion_response))
 
-      described_class.convert(
+      result = described_class.convert(
         params: { uuid: uuids, format: 'webm', quality: 'normal' },
         client: client
       )
+
+      expect(result).to be_a(described_class)
+      expect(result.result).to eq([])
+      expect(result.problems).to eq({})
     end
 
     it 'passes options through' do
@@ -92,11 +96,15 @@ RSpec.describe Uploadcare::Resources::VideoConversion do
         )
         .and_return(Uploadcare::Result.success({ 'result' => [], 'problems' => {} }))
 
-      described_class.convert(
+      result = described_class.convert(
         params: { uuid: file_uuid, format: 'mp4', quality: 'best' },
         options: { store: true },
         client: client
       )
+
+      expect(result).to be_a(described_class)
+      expect(result.result).to eq([])
+      expect(result.problems).to eq({})
     end
   end
 

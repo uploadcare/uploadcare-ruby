@@ -393,9 +393,9 @@ RSpec.describe Uploadcare::Client do
       allow(rest_webhooks).to receive(:delete)
         .and_return(Uploadcare::Result.success(nil))
 
-      expect {
+      expect do
         client.webhooks.delete(target_url: 'https://example.com')
-      }.not_to raise_error
+      end.not_to raise_error
     end
   end
 
@@ -474,9 +474,9 @@ RSpec.describe Uploadcare::Client do
       allow(rest_metadata).to receive(:delete)
         .and_return(Uploadcare::Result.success(nil))
 
-      expect {
+      expect do
         client.file_metadata.delete(uuid: file_uuid, key: 'key')
-      }.not_to raise_error
+      end.not_to raise_error
     end
   end
 end

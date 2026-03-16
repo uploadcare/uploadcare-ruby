@@ -312,7 +312,7 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
 
       it 'propagates the first error from parallel workers' do
         allow(upload_client).to receive(:upload_part_to_url) do
-          raise RuntimeError, 'network timeout'
+          raise 'network timeout'
         end
 
         result = uploader.upload(file: tempfile, threads: 3)
@@ -332,10 +332,10 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
             @pos = 0
           end
 
-          def read(n = nil)
+          def read(length = nil)
             return nil if @pos >= @content.bytesize
 
-            data = n ? @content[@pos, n] : @content[@pos..]
+            data = length ? @content[@pos, length] : @content[@pos..]
             @pos += data.bytesize
             data
           end
@@ -346,7 +346,7 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
         end.new(tempfile.path, file_content)
 
         allow(upload_files_api).to receive(:multipart_start) do |args|
-          expect(args[:size]).to eq(::File.size(tempfile.path))
+          expect(args[:size]).to eq(File.size(tempfile.path))
           Uploadcare::Result.success(start_response)
         end
         allow(upload_client).to receive(:upload_part_to_url)
@@ -369,9 +369,9 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
             @size = size
           end
 
-          def read(_n = nil) = 'data'
+          def read(_length = nil) = 'data'
           def seek(_pos) = nil
-          def size = @size
+          attr_reader :size
         end.new(tempfile.path, file_content.bytesize)
 
         allow(upload_files_api).to receive(:multipart_start) do |args|

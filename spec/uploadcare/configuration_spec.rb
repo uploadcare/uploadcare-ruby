@@ -178,7 +178,8 @@ RSpec.describe Uploadcare::Configuration do
 
     it 'generates consistent cnames for the same key' do
       config = described_class.new(public_key: 'test-key')
-      expect(config.custom_cname).to eq(config.custom_cname)
+      custom_cname = config.custom_cname
+      expect(config.custom_cname).to eq(custom_cname)
     end
 
     it 'generates different cnames for different keys' do

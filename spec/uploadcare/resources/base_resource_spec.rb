@@ -20,9 +20,9 @@ RSpec.describe Uploadcare::Resources::BaseResource do
     end
 
     it 'raises when no client or config is given' do
-      expect {
+      expect do
         described_class.new({})
-      }.to raise_error(ArgumentError, /client or config is required/)
+      end.to raise_error(ArgumentError, /client or config is required/)
     end
 
     it 'resolves a Configuration into a client' do
@@ -50,9 +50,9 @@ RSpec.describe Uploadcare::Resources::BaseResource do
     end
 
     it 'raises for nil' do
-      expect {
+      expect do
         described_class.resolve_client(nil)
-      }.to raise_error(ArgumentError, /client or config is required/)
+      end.to raise_error(ArgumentError, /client or config is required/)
     end
 
     it 'uses the config keyword when provided' do
@@ -74,9 +74,9 @@ RSpec.describe Uploadcare::Resources::BaseResource do
     end
 
     it 'ignores attributes without setter methods' do
-      expect {
+      expect do
         described_class.new({ 'nonexistent_attr' => 'ignored' }, client)
-      }.not_to raise_error
+      end.not_to raise_error
     end
   end
 end

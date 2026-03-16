@@ -138,9 +138,7 @@ RSpec.describe Uploadcare::Api::Upload do
 
     it 'raises MultipartUploadError after max retries on non-2xx responses' do
       stub_request(:put, presigned_url)
-        .to_return(status: 500, body: 'Internal Server Error', headers: {})
-
-      Uploadcare::Exception::UploadError # force Zeitwerk to load upload_error.rb
+        .to_return(status: 500, body: 'Internal Server Error', headers: {}) # force Zeitwerk to load upload_error.rb
       expect do
         upload.upload_part_to_url(presigned_url, 'data', max_retries: 1)
       end.to raise_error(Uploadcare::Exception::MultipartUploadError, /Failed to upload part/)
@@ -174,8 +172,11 @@ RSpec.describe Uploadcare::Api::Upload do
     end
 
     it 'memoizes endpoint instances' do
-      expect(upload.files).to be(upload.files)
-      expect(upload.groups).to be(upload.groups)
+      files = upload.files
+      groups = upload.groups
+
+      expect(upload.files).to be(files)
+      expect(upload.groups).to be(groups)
     end
   end
 

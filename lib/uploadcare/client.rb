@@ -19,57 +19,55 @@
 # @example Raw API access
 #   client.api.rest.files.list(params: { limit: 10 })
 #   client.api.upload.files.direct(file: file_obj)
-module Uploadcare
-  class Client
-    attr_reader :config
+class Uploadcare::Client
+  attr_reader :config
 
-    def initialize(config: nil, **options)
-      base_config = config || Uploadcare.configuration
-      @config = options.empty? ? base_config : base_config.with(**options)
-    end
+  def initialize(config: nil, **options)
+    base_config = config || Uploadcare.configuration
+    @config = options.empty? ? base_config : base_config.with(**options)
+  end
 
-    def with(**options)
-      self.class.new(config: config, **options)
-    end
+  def with(**options)
+    self.class.new(config: config, **options)
+  end
 
-    def api
-      @api ||= Api.new(config: config)
-    end
+  def api
+    @api ||= Api.new(config: config)
+  end
 
-    def files
-      @files ||= FilesAccessor.new(client: self)
-    end
+  def files
+    @files ||= FilesAccessor.new(client: self)
+  end
 
-    def groups
-      @groups ||= GroupsAccessor.new(client: self)
-    end
+  def groups
+    @groups ||= GroupsAccessor.new(client: self)
+  end
 
-    def uploads
-      @uploads ||= Uploadcare::Operations::UploadRouter.new(client: self)
-    end
+  def uploads
+    @uploads ||= Uploadcare::Operations::UploadRouter.new(client: self)
+  end
 
-    def project
-      @project ||= ProjectAccessor.new(client: self)
-    end
+  def project
+    @project ||= ProjectAccessor.new(client: self)
+  end
 
-    def webhooks
-      @webhooks ||= WebhooksAccessor.new(client: self)
-    end
+  def webhooks
+    @webhooks ||= WebhooksAccessor.new(client: self)
+  end
 
-    def addons
-      @addons ||= AddonsAccessor.new(client: self)
-    end
+  def addons
+    @addons ||= AddonsAccessor.new(client: self)
+  end
 
-    def file_metadata
-      @file_metadata ||= FileMetadataAccessor.new(client: self)
-    end
+  def file_metadata
+    @file_metadata ||= FileMetadataAccessor.new(client: self)
+  end
 
-    def conversions
-      @conversions ||= ConversionsAccessor.new(client: self)
-    end
+  def conversions
+    @conversions ||= ConversionsAccessor.new(client: self)
+  end
 
-    def upload(source, request_options: {}, **options, &block)
-      uploads.upload(source, request_options: request_options, **options, &block)
-    end
+  def upload(source, request_options: {}, **options, &block)
+    uploads.upload(source, request_options: request_options, **options, &block)
   end
 end

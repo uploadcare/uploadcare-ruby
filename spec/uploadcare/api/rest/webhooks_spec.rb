@@ -199,12 +199,12 @@ RSpec.describe Uploadcare::Api::Rest::Webhooks do
 
     it 'sends the target_url in the request body' do
       stub = stub_request(:delete, 'https://api.uploadcare.com/webhooks/unsubscribe/')
-        .with(body: hash_including('target_url' => 'https://example.com/hook'))
-        .to_return(
-          status: 200,
-          body: ''.to_json,
-          headers: { 'Content-Type' => 'application/json' }
-        )
+             .with(body: hash_including('target_url' => 'https://example.com/hook'))
+             .to_return(
+               status: 200,
+               body: ''.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
 
       webhooks.delete(target_url: 'https://example.com/hook')
 
