@@ -3,12 +3,12 @@
 require 'zeitwerk'
 require 'faraday'
 
-require_relative 'uploadcare/cname_generator'
-
 module Uploadcare
   @loader = Zeitwerk::Loader.for_gem
 
   @loader.setup
+
+  require_relative 'uploadcare/cname_generator'
 
   class << self
     # Configure the global Uploadcare instance.

@@ -7,6 +7,9 @@ require 'securerandom'
 
 require_relative '../../lib/uploadcare'
 
+module ApiExamples
+end
+
 module ApiExamples::ExampleHelper
   SAMPLE_IMAGE_URL = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/JPEG_example_flower.jpg'
   SAMPLE_VIDEO_URL = 'https://samplelib.com/lib/preview/mp4/sample-5s.mp4'
