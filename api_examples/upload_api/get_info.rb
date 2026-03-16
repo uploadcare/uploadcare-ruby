@@ -1,7 +1,4 @@
-require 'uploadcare'
-Uploadcare.configuration.public_key = ENV.fetch('UPLOADCARE_PUBLIC_KEY', 'YOUR_PUBLIC_KEY')
-Uploadcare.configuration.secret_key = ENV.fetch('UPLOADCARE_SECRET_KEY', 'YOUR_SECRET_KEY')
+#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-uuid = ENV.fetch('UPLOADCARE_FILE_UUID', '740e1b8c-1ad8-4324-b7ec-112c79d8eac2')
-info = Uploadcare::File.info(uuid: uuid)
-puts info.inspect
+require_relative '../support/run_upload_example'

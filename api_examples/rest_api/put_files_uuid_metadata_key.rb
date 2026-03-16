@@ -1,9 +1,4 @@
-require_relative '../../lib/uploadcare'
-require 'dotenv/load'
-Uploadcare.configuration.public_key = ENV.fetch('UPLOADCARE_PUBLIC_KEY', 'YOUR_PUBLIC_KEY')
-Uploadcare.configuration.secret_key = ENV.fetch('UPLOADCARE_SECRET_KEY', 'YOUR_SECRET_KEY')
+#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-uuid = ENV.fetch('UPLOADCARE_FILE_UUID', '1bac376c-aa7e-4356-861b-dd2657b5bfd2')
-key = ENV.fetch('UPLOADCARE_METADATA_KEY', 'pet')
-value = ENV.fetch('UPLOADCARE_METADATA_VALUE', 'dog')
-Uploadcare::FileMetadata.update(uuid: uuid, key: key, value: value)
+require_relative '../support/run_rest_example'

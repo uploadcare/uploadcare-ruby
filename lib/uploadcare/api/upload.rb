@@ -5,6 +5,7 @@ require 'faraday/multipart'
 require 'mime/types'
 require 'securerandom'
 require 'uri'
+require 'addressable/uri'
 
 # Base client for the Uploadcare Upload API.
 #
