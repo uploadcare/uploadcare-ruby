@@ -75,6 +75,20 @@ RSpec.describe Uploadcare::Api::Rest::VideoConversions do
       expect(stub).to have_been_requested
     end
 
+    it 'normalizes boolean store values' do
+      stub = stub_request(:post, 'https://api.uploadcare.com/convert/video/')
+             .with(body: hash_including('paths' => [conversion_path], 'store' => '1'))
+             .to_return(
+               status: 200,
+               body: { result: [], problems: {} }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      video_conversions.convert(paths: [conversion_path], options: { store: true })
+
+      expect(stub).to have_been_requested
+    end
+
     it 'returns a failure Result on error' do
       stub_request(:post, 'https://api.uploadcare.com/convert/video/')
         .to_return(

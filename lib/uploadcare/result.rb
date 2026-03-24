@@ -60,6 +60,10 @@ class Uploadcare::Result
     @error
   end
 
+  # Return the success value or raise the wrapped error.
+  #
+  # @return [Object]
+  # @raise [Exception, RuntimeError]
   def value!
     if failure?
       error = @error

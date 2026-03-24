@@ -160,6 +160,21 @@ RSpec.describe Uploadcare::Api::Upload do
       expect(result).to be true
       expect(call_count).to eq(2)
     end
+
+    it 'treats max_retries as the number of retries after the initial attempt' do
+      call_count = 0
+
+      stub_request(:put, presigned_url).to_return do |_request|
+        call_count += 1
+        { status: 500, body: 'error' }
+      end
+
+      expect do
+        upload.upload_part_to_url(presigned_url, 'data', max_retries: 2)
+      end.to raise_error(Uploadcare::Exception::MultipartUploadError, /Failed to upload part after 2 retries/)
+
+      expect(call_count).to eq(3)
+    end
   end
 
   describe 'endpoint accessors' do

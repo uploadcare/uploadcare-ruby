@@ -32,15 +32,22 @@ class Uploadcare::Resources::VideoConversion < Uploadcare::Resources::BaseResour
     new(response, resolved_client)
   end
 
+  # Fetch video conversion status for a job token.
+  #
+  # @param token [String]
+  # @param client [Uploadcare::Client, nil]
+  # @param config [Uploadcare::Configuration]
+  # @param request_options [Hash]
+  # @return [Uploadcare::Resources::VideoConversion]
   def self.status(token:, client: nil, config: Uploadcare.configuration, request_options: {})
     resolved_client = resolve_client(client: client, config: config)
     new({}, resolved_client).fetch_status(token: token, request_options: request_options)
   end
 
-  # Get conversion job status.
+  # Refresh this resource from the conversion status endpoint.
   #
-  # @param token [String] Job token
-  # @param request_options [Hash] Request options
+  # @param token [String]
+  # @param request_options [Hash]
   # @return [self]
   def fetch_status(token:, request_options: {})
     response = Uploadcare::Result.unwrap(

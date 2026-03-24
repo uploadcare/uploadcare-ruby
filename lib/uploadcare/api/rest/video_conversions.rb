@@ -20,7 +20,10 @@ class Uploadcare::Api::Rest::VideoConversions
   # @return [Uploadcare::Result] Conversion details
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Video/operation/convertVideo
   def convert(paths:, options: {}, request_options: {})
-    params = { paths: paths }.merge(options)
+    params = { paths: paths }
+    params[:store] = normalize_bool_param(options[:store]) if options.key?(:store)
+    params.merge!(options.except(:store))
+    params.compact!
     rest.post(path: '/convert/video/', params: params, headers: {}, request_options: request_options)
   end
 
@@ -33,5 +36,17 @@ class Uploadcare::Api::Rest::VideoConversions
   def status(token:, request_options: {})
     rest.get(path: "/convert/video/status/#{token}/", params: {}, headers: {},
              request_options: request_options)
+  end
+
+  private
+
+  def normalize_bool_param(value)
+    normalized = value.is_a?(String) ? value.strip.downcase : value
+
+    case normalized
+    when true, 1, '1', 'true' then '1'
+    when false, 0, '0', 'false' then '0'
+    else value
+    end
   end
 end

@@ -19,6 +19,7 @@ The gem is built around:
 - full endpoint coverage through `client.api.rest` and `client.api.upload`
 
 - [Requirements](#requirements)
+- [Compatibility](#compatibility)
 - [Installation](#installation)
 - [Design](#design)
 - [Quick Start](#quick-start)
@@ -27,10 +28,12 @@ The gem is built around:
 - [Uploads](#uploads)
 - [Files](#files)
 - [Groups](#groups)
+- [Project](#project)
 - [Metadata](#metadata)
 - [Webhooks](#webhooks)
 - [Add-ons](#add-ons)
 - [Conversions](#conversions)
+- [Secure Delivery](#secure-delivery)
 - [Errors and Results](#errors-and-results)
 - [Request Options](#request-options)
 - [Raw API Access](#raw-api-access)
@@ -40,6 +43,14 @@ The gem is built around:
 ## Requirements
 
 - Ruby 3.3+
+
+## Compatibility
+
+This gem is intended for plain Ruby applications and for framework integrations built on top of it.
+
+- Use explicit `Uploadcare::Client` instances when you need multiple accounts in one process.
+- Use `Uploadcare.configure` and `Uploadcare.client` when one global default client is enough.
+- Use `client.api.rest` and `client.api.upload` when you want endpoint-level parity with the official API references.
 
 ## Installation
 
@@ -124,6 +135,30 @@ end
 ```
 
 The recommended style is explicit `Uploadcare::Client` instances. Global configuration is best treated as a default.
+
+## Example Usage
+
+This is the shortest end-to-end flow for the main public API:
+
+```ruby
+require "uploadcare"
+
+client = Uploadcare::Client.new(
+  public_key: ENV.fetch("UPLOADCARE_PUBLIC_KEY"),
+  secret_key: ENV.fetch("UPLOADCARE_SECRET_KEY")
+)
+
+file = File.open("photo.jpg", "rb") do |io|
+  client.files.upload(io, store: true)
+end
+
+group = client.groups.create(uuids: [file.uuid])
+
+puts file.uuid
+puts file.cdn_url
+puts group.id
+puts group.cdn_url
+```
 
 ## Configuration
 
@@ -306,6 +341,19 @@ Common upload options:
 - `async: true` for URL uploads
 - `threads:` and `part_size:` for multipart uploads
 
+If you prefer the older top-level style, the same flows can still be written through the global client:
+
+```ruby
+Uploadcare.configure do |config|
+  config.public_key = ENV.fetch("UPLOADCARE_PUBLIC_KEY")
+  config.secret_key = ENV.fetch("UPLOADCARE_SECRET_KEY")
+end
+
+file = File.open("photo.jpg", "rb") do |io|
+  Uploadcare.files.upload(io, store: true)
+end
+```
+
 ## Files
 
 ### Find a file
@@ -327,6 +375,12 @@ List responses are `Uploadcare::Collections::Paginated`:
 files.next_page
 files.previous_page
 files.all
+```
+
+Filters and API parameters can still be passed through:
+
+```ruby
+files = client.files.list(stored: true, removed: false, limit: 100)
 ```
 
 ### Resource operations
@@ -392,6 +446,18 @@ group.cdn_url
 group.file_cdn_urls
 ```
 
+## Project
+
+Fetch the current project:
+
+```ruby
+project = client.project.current
+
+puts project.name
+puts project.pub_key
+puts project.collaborators
+```
+
 ## Metadata
 
 ```ruby
@@ -452,6 +518,26 @@ status = client.conversions.videos.status(token: job.result.first.fetch("token")
 Document conversion `convert` returns the API response hash.
 
 Video conversion `convert` returns a `Uploadcare::VideoConversion` resource.
+
+## Secure Delivery
+
+The gem includes signed URL generators for delivery workflows.
+
+```ruby
+generator = Uploadcare::SignedUrlGenerators::AkamaiGenerator.new(
+  cdn_host: "example.com",
+  secret_key: "your_hex_encoded_akamai_secret"
+)
+
+signed_url = generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3")
+```
+
+Custom ACL and wildcard examples:
+
+```ruby
+generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3", "/*")
+generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3", wildcard: true)
+```
 
 ## Errors and Results
 
@@ -524,6 +610,8 @@ client.api.upload.groups.create(files: ["uuid-1", "uuid-2"])
 ```
 
 Use this layer when you want exact control over the documented endpoints or when you are wrapping the gem from another library.
+
+The raw layer is part of the public surface, but it is intentionally less promoted than `client.files`, `client.groups`, and the other convenience accessors.
 
 ## Examples
 

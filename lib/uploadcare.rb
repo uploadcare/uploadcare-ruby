@@ -41,46 +41,48 @@ module Uploadcare
       Client.new(config: config || configuration, **options)
     end
 
-    # Convenience accessor for files domain.
-    #
     # @return [Uploadcare::Client::FilesAccessor]
     def files
       client.files
     end
 
-    # Convenience accessor for groups domain.
-    #
     # @return [Uploadcare::Client::GroupsAccessor]
     def groups
       client.groups
     end
 
-    # Convenience accessor for uploads domain.
-    #
     # @return [Uploadcare::Operations::UploadRouter]
     def uploads
       client.uploads
     end
 
-    # Convenience accessor for project domain.
-    #
     # @return [Uploadcare::Client::ProjectAccessor]
     def project
       client.project
     end
 
+    # Eager-load the gem namespace through Zeitwerk.
+    #
+    # @return [void]
     def eager_load!
       @loader.eager_load
     end
   end
 
-  # --- Public top-level constants (per blueprint compatibility policy) ---
+  # Top-level aliases for the public resource classes.
   File = Resources::File
+  # Alias for the group resource.
   Group = Resources::Group
+  # Alias for the project resource.
   Project = Resources::Project
+  # Alias for the webhook resource.
   Webhook = Resources::Webhook
+  # Alias for the file metadata resource.
   FileMetadata = Resources::FileMetadata
+  # Alias for the add-on execution resource.
   AddonExecution = Resources::AddonExecution
+  # Alias for the document conversion resource.
   DocumentConversion = Resources::DocumentConversion
+  # Alias for the video conversion resource.
   VideoConversion = Resources::VideoConversion
 end

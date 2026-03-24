@@ -127,6 +127,42 @@ RSpec.describe Uploadcare::Api::Rest do
       expect(result).to be_failure
       expect(result.error).to be_a(Uploadcare::Exception::InvalidRequestError)
     end
+
+    it 'uses the resolved Content-Type consistently for signing and request headers' do
+      authenticator = instance_double(Uploadcare::Internal::Authenticator)
+      allow(authenticator).to receive(:default_headers).and_return(
+        { 'Accept' => 'application/vnd.uploadcare-v0.7+json', 'Content-Type' => 'application/json' }
+      )
+      allow(authenticator).to receive(:headers)
+        .with('POST', '/files/local_copy/', 'plain body', 'text/plain')
+        .and_return(
+          {
+            'Accept' => 'application/vnd.uploadcare-v0.7+json',
+            'Authorization' => 'Uploadcare.Simple demopublickey:demosecretkey',
+            'Content-Type' => 'text/plain'
+          }
+        )
+
+      rest.instance_variable_set(:@authenticator, authenticator)
+
+      stub = stub_request(:post, 'https://api.uploadcare.com/files/local_copy/')
+             .with(body: 'plain body', headers: { 'Content-Type' => 'text/plain' })
+             .to_return(
+               status: 200,
+               body: { type: 'file', result: { uuid: 'new-uuid' } }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      result = rest.post(
+        path: '/files/local_copy/',
+        params: 'plain body',
+        headers: { 'content-type' => 'text/plain' },
+        request_options: {}
+      )
+
+      expect(result).to be_success
+      expect(stub).to have_been_requested
+    end
   end
 
   describe '#put' do

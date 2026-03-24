@@ -112,13 +112,13 @@ class Uploadcare::Api::Upload
 
       true
     rescue StandardError => e
-      retries += 1
       if retries >= max_retries
         raise Uploadcare::Exception::MultipartUploadError,
               "Failed to upload part after #{max_retries} retries: #{e.message}"
       end
 
       sleep(2**retries)
+      retries += 1
       retry
     end
   end

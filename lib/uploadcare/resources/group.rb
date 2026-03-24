@@ -6,6 +6,7 @@ require 'uri'
 #
 # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/Group
 class Uploadcare::Resources::Group < Uploadcare::Resources::BaseResource
+  # API fields assigned onto group resources.
   ATTRIBUTES = %i[
     id datetime_removed datetime_stored datetime_uploaded is_image is_ready mime_type original_file_url cdn_url
     original_filename size url uuid variations content_info metadata appdata source datetime_created files_count

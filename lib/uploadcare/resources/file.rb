@@ -16,6 +16,7 @@
 #
 # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File
 class Uploadcare::Resources::File < Uploadcare::Resources::BaseResource
+  # API fields assigned onto file resources.
   ATTRIBUTES = %i[
     datetime_removed datetime_stored datetime_uploaded is_image is_ready mime_type original_file_url
     original_filename size url uuid variations content_info metadata appdata source

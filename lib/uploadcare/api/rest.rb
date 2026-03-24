@@ -19,6 +19,7 @@ class Uploadcare::Api::Rest
   include Uploadcare::Internal::ErrorHandler
   include Uploadcare::Internal::ThrottleHandler
 
+  # Verb name used when deciding whether params belong in the query string.
   HTTP_GET = 'GET'
 
   # @return [Uploadcare::Configuration]
@@ -186,10 +187,11 @@ class Uploadcare::Api::Rest
 
   def prepare_headers(req, method, uri, params, headers)
     body_content = body_content_for_signature(method, params)
-    content_type = headers['Content-Type'] || authenticator.default_headers['Content-Type']
+    content_type = extract_content_type(headers) || authenticator.default_headers['Content-Type']
     auth_headers = authenticator.headers(method, uri, body_content, content_type)
+    normalized_headers = normalize_content_type_header(headers, content_type)
     req.headers.merge!(auth_headers)
-    req.headers.merge!(headers)
+    req.headers.merge!(normalized_headers)
   end
 
   def body_content_for_signature(method, params)
@@ -215,6 +217,19 @@ class Uploadcare::Api::Rest
 
     req.options.timeout = request_options[:timeout] if request_options[:timeout]
     req.options.open_timeout = request_options[:open_timeout] if request_options[:open_timeout]
+  end
+
+  def extract_content_type(headers)
+    headers['Content-Type'] || headers['content-type'] || headers[:content_type] || headers[:'Content-Type']
+  end
+
+  def normalize_content_type_header(headers, content_type)
+    normalized_headers = headers.dup
+    normalized_headers.delete('content-type')
+    normalized_headers.delete(:content_type)
+    normalized_headers.delete(:'Content-Type')
+    normalized_headers['Content-Type'] = content_type if content_type
+    normalized_headers
   end
 
   def build_uri(path, query_params = {})

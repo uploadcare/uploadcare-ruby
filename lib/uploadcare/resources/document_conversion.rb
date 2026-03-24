@@ -42,11 +42,25 @@ class Uploadcare::Resources::DocumentConversion < Uploadcare::Resources::BaseRes
     )
   end
 
+  # Fetch document conversion status for a job token.
+  #
+  # @param token [String]
+  # @param client [Uploadcare::Client, nil]
+  # @param config [Uploadcare::Configuration]
+  # @param request_options [Hash]
+  # @return [Uploadcare::Resources::DocumentConversion]
   def self.status(token:, client: nil, config: Uploadcare.configuration, request_options: {})
     resolved_client = resolve_client(client: client, config: config)
     new({}, resolved_client).fetch_status(token: token, request_options: request_options)
   end
 
+  # Fetch document conversion capabilities for a file.
+  #
+  # @param uuid [String]
+  # @param client [Uploadcare::Client, nil]
+  # @param config [Uploadcare::Configuration]
+  # @param request_options [Hash]
+  # @return [Uploadcare::Resources::DocumentConversion]
   def self.info_for(uuid:, client: nil, config: Uploadcare.configuration, request_options: {})
     resolved_client = resolve_client(client: client, config: config)
     new({ 'uuid' => uuid }, resolved_client).info(request_options: request_options)
