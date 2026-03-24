@@ -1,168 +1,45 @@
 # Changelog
 
-## 5.0.0 — 2026-01-06
+## 5.0.0.rc1 — 2026-03-24
 
-### ⚠️ BREAKING CHANGES
-This is a major rewrite with significant architectural changes. Please review the migration guide below.
+This release candidate is the first public v5 cut from the rewritten codebase.
 
-### Changed - Architecture Overhaul
+Please review [`MIGRATING_V5.md`](./MIGRATING_V5.md) before upgrading from v4.x.
 
-#### Dependency Modernization
-* **Removed dependencies**:
-  * `dry-configurable` — replaced with plain Ruby `Configuration` class
-  * `uploadcare-api_struct` — no longer needed with new resource pattern
-  * `mimemagic` — replaced with `mime-types`
-  * `parallel` — multipart uploads now use native threading
-  * `retries` — retry logic now built into clients
-* **Added dependencies**:
-  * `zeitwerk` (~> 2.6.18) — modern Ruby autoloading
-  * `faraday` (~> 2.12) — HTTP client with middleware support
-  * `faraday-multipart` (~> 1.0) — multipart upload support
-  * `addressable` (~> 2.8) — URI handling and encoding
-  * `mime-types` (~> 3.1) — MIME type detection
+### Added
 
-#### Code Structure
-* **Complete rewrite from entity-based to resource-based architecture**
-  * Replaced `entity/` classes with simpler `resources/` pattern
-  * Restructured client layer from `client/` to `clients/` directory
-  * Removed param builders in favor of integrated client logic
-  * Changed module structure and namespacing
-* **New layered architecture**:
-  * `Resources` — public API layer (`Uploadcare::File`, `Uploadcare::Uploader`, etc.)
-  * `Clients` — HTTP layer (`FileClient`, `UploaderClient`, `RestClient`, etc.)
-  * `Concerns` — shared modules (`ErrorHandler`, `ThrottleHandler`)
-* **Simplified require paths**: gemspec now uses single `lib` require path instead of multiple paths
-* **Zeitwerk autoloading**: replaces manual `require` statements with automatic module loading
+* New client-first public API centered on `Uploadcare::Client`
+* Full endpoint-parity access through `client.api.rest` and `client.api.upload`
+* Canonical endpoint examples for the REST API and Upload API under `api_examples/`
+* Updated workflow-oriented examples under `examples/`
+* Multi-account configuration support through client-scoped `Uploadcare::Configuration`
+* Documented internal API surface through YARD for maintainers and integrators
+* Ruby 4.0 support in the test matrix
 
-#### Configuration System
-* Replaced `Dry::Configurable` with plain Ruby `Configuration` class
-* Configuration is now a proper class with documented attributes and YARD annotations
-* New configuration options:
-  * `multipart_chunk_size` — chunk size for multipart uploads (default: 5MB)
-  * `upload_timeout` — upload request timeout in seconds (default: 60)
-  * `max_upload_retries` — maximum upload retry attempts (default: 3)
+### Changed
 
-#### HTTP Client
-* New `RestClient` class using Faraday with middleware:
-  * JSON request/response encoding
-  * Automatic error raising on 4xx/5xx responses
-  * Built-in throttle handling with exponential backoff
-* New `UploadClient` class for Upload API with multipart support
-* New `Authenticator` class for HMAC-SHA1 signature generation
-
-### Added - New Features
-* **Zeitwerk autoloading** for modern Ruby module management
-* **Smart upload detection** with automatic method selection based on file size/type
-* **Enhanced multipart upload** with parallel processing support
-* **Progress tracking** for all upload operations with real-time callbacks
-* **Batch upload capabilities** with error handling per file
-* **Thread-safe upload operations** with configurable concurrency
-* **New exception classes** for better error handling:
-  * `InvalidRequestError` — for 400 Bad Request responses
-  * `NotFoundError` — for 404 Not Found responses
-  * `UploadError` — for upload-specific failures
-  * `RetryError` — for polling/retry scenarios
-* **New resource classes**:
-  * `BatchFileResult` — for batch store/delete operations
-  * `PaginatedCollection` — for paginated API responses
-  * `BaseResource` — base class for all resources
-* **Comprehensive examples** in `/examples` directory:
-  * `simple_upload.rb` — basic file upload
-  * `batch_upload.rb` — multiple file uploads
-  * `large_file_upload.rb` — multipart upload for large files
-  * `upload_with_progress.rb` — progress tracking
-  * `url_upload.rb` — upload from URL
-  * `group_creation.rb` — file grouping
-* **Integration tests** with full end-to-end workflow coverage
-* **API examples** in `/api_examples` directory for REST and Upload APIs
-
-### Added - Ruby 4.0 Support
-* **Ruby 4.0 Official Support**: Explicitly documented and tested Ruby 4.0.1 compatibility
-
-### Changed - Ruby Version Support
-* **Minimum Ruby version**: Now requires Ruby 3.3+ (compatible with Rails main)
-* **Supported versions**: Ruby 3.3, 3.4, 4.0
-* **Removed support**: Ruby 3.0, 3.1, 3.2 (EOL or nearing EOL)
+* Replaced the older flatter API shape with a layered API:
+  * convenience layer for application code
+  * raw parity layer for exact endpoint access
+* Replaced `dry-configurable` with a plain Ruby configuration object
+* Replaced legacy HTTP and autoloading patterns with Faraday and Zeitwerk
+* Standardized resource and collection return types across the convenience layer
+* Reworked README, migration docs, and examples to match the current v5 API
 
 ### Fixed
-* JSON response parsing in UploadClient
-* Thread safety in parallel uploads with proper error aggregation
-* Rubocop configuration to match gemspec Ruby version requirement
-* Constant name collision between module and class Uploader
-* Proper exponential backoff with jitter in polling logic
+
+* Upload IO normalization for both path-backed files and generic readable streams
+* Client/config scoping so resources do not silently fall back to the wrong account context
+* Video conversion `store` parameter normalization
+* REST request signing so the resolved `Content-Type` is the same value used for both signing and transmission
+* Multipart upload retry semantics so `max_retries` means retries after the initial attempt
+* Example cleanup to avoid leaking temporary files and groups in the demo project
+* Standalone example loading and script execution
 
 ### Removed
-* Old entity system (`entity/` directory)
-* Param builders (`param/` directory) — logic moved into clients
-* Legacy concern system (`concern/` directory)
-* `Dry::Configurable` dependency and DSL
-* `uploadcare-api_struct` dependency
-* Support for Ruby < 3.3
 
-### Migration Guide from v4.x to v5.0
-
-#### Module Changes
-```ruby
-# Old (v4.x)
-Uploadcare::Entity::File
-Uploadcare::Client::FileClient
-
-# New (v5.0)
-Uploadcare::File
-Uploadcare::FileClient
-```
-
-#### Upload API Changes
-```ruby
-# Old (v4.x)
-Uploadcare::Uploader.upload_from_url(url)
-
-# New (v5.0) - Smart detection
-Uploadcare::Uploader.upload(url)  # Automatically detects URL
-Uploadcare::Uploader.upload(file) # Automatically uses multipart for large files
-```
-
-#### Configuration Changes
-```ruby
-# Old (v4.x) - Dry::Configurable DSL
-Uploadcare.configure do |config|
-  config.public_key = 'your_public_key'
-  config.secret_key = 'your_secret_key'
-end
-
-# New (v5.0) - Plain Ruby Configuration class (same syntax, different implementation)
-Uploadcare.configure do |config|
-  config.public_key = 'your_public_key'
-  config.secret_key = 'your_secret_key'
-  # New options available:
-  config.upload_timeout = 120
-  config.max_upload_retries = 5
-  config.multipart_chunk_size = 10 * 1024 * 1024  # 10MB chunks
-end
-```
-
-#### Error Handling Changes
-```ruby
-# Old (v4.x)
-rescue Uploadcare::Exception::RequestError => e
-
-# New (v5.0) - More specific exceptions available
-rescue Uploadcare::Exception::NotFoundError => e
-  # Handle 404 specifically
-rescue Uploadcare::Exception::InvalidRequestError => e
-  # Handle 400 specifically
-rescue Uploadcare::Exception::RequestError => e
-  # Handle other errors
-```
-
-#### Batch Operations
-```ruby
-# New in v5.0 - BatchFileResult for batch operations
-result = Uploadcare::File.batch_store(uuids)
-result.status    # => 200
-result.result    # => Array of File objects
-result.problems  # => Hash of UUIDs that failed with reasons
-```
+* Support for Ruby versions below `3.3`
+* Legacy configuration and transport patterns that were no longer aligned with the v5 architecture
 
 ## 4.5.0 — 2025-07-25
 ### Added

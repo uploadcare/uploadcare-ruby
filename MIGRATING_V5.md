@@ -1,60 +1,38 @@
-# Migrating From v4.x to v5.0
+# Migrating From v4.x to v5
 
-Version 5 is a rewrite. The main change is architectural: application code should now be written against `Uploadcare::Client` and its domain accessors instead of a mix of global helpers and transport-oriented classes.
+Version 5 moves the gem to a client-first API with a clearer split between the convenience layer and the endpoint-parity API.
 
-## Core Shift
+The main migration rule is simple:
 
-### v4 style
+- use `Uploadcare::Client` for application code
+- use `client.files`, `client.groups`, `client.uploads`, and the other domain accessors for normal workflows
+- use `client.api.rest` and `client.api.upload` when you need exact Uploadcare endpoint behavior
 
-The old API encouraged a flatter surface with more global access:
+## What Changed
 
-- entity-style objects
-- transport-specific client classes in application code
-- older upload helpers and naming
+Version 5 introduces:
 
-### v5 style
+- a client-scoped configuration model
+- first-class multi-account support
+- a convenience layer that returns resources and raises typed exceptions
+- a raw API layer that mirrors the REST and Upload APIs and returns `Uploadcare::Result`
+- a modernized internal structure built around Zeitwerk and Faraday
 
-The new API is organized around:
+Version 5 also raises the minimum supported Ruby version to `3.3`.
 
-- `Uploadcare::Client`
-- `client.files`
-- `client.groups`
-- `client.uploads`
-- `client.project`
-- `client.webhooks`
-- `client.file_metadata`
-- `client.addons`
-- `client.conversions`
-- `client.api.rest` and `client.api.upload` for endpoint-level access
+## Recommended Migration Order
 
-## What To Change First
-
-1. Create explicit clients instead of relying on implicit global state.
-2. Move application code to the convenience layer (`client.files`, `client.groups`, and so on).
-3. Use `client.api.*` only where you need exact endpoint parity.
-4. Stop depending on internal transport classes as part of your app-facing API.
+1. Introduce explicit `Uploadcare::Client` instances in your application.
+2. Move app-facing code to `client.files`, `client.groups`, `client.uploads`, `client.project`, `client.webhooks`, `client.file_metadata`, `client.addons`, and `client.conversions`.
+3. Keep `client.api.rest` and `client.api.upload` only where you need raw endpoint parity.
+4. Audit return-type and error-handling assumptions.
+5. Remove any app code that depends on internal transport classes.
 
 ## Configuration
 
 ### Before
 
-Configuration was more framework-shaped and less client-oriented.
-
-### After
-
-Configuration is a plain Ruby object and every client owns its own config.
-
-```ruby
-base = Uploadcare::Configuration.new(
-  public_key: ENV.fetch("UPLOADCARE_PUBLIC_KEY"),
-  secret_key: ENV.fetch("UPLOADCARE_SECRET_KEY")
-)
-
-client = Uploadcare::Client.new(config: base)
-other = Uploadcare::Client.new(config: base.with(public_key: "other", secret_key: "secret"))
-```
-
-Global configuration still exists:
+Typical v4 code relied more heavily on the process-wide configuration singleton.
 
 ```ruby
 Uploadcare.configure do |config|
@@ -63,7 +41,32 @@ Uploadcare.configure do |config|
 end
 ```
 
-But the recommended approach for applications, especially multi-tenant apps, is explicit clients.
+### After
+
+Global configuration still exists, but the preferred style is explicit clients.
+
+```ruby
+client = Uploadcare::Client.new(
+  public_key: ENV.fetch("UPLOADCARE_PUBLIC_KEY"),
+  secret_key: ENV.fetch("UPLOADCARE_SECRET_KEY")
+)
+```
+
+You can also build and copy configuration objects directly:
+
+```ruby
+base = Uploadcare::Configuration.new(
+  public_key: ENV.fetch("UPLOADCARE_PUBLIC_KEY"),
+  secret_key: ENV.fetch("UPLOADCARE_SECRET_KEY")
+)
+
+primary = Uploadcare::Client.new(config: base)
+secondary = Uploadcare::Client.new(
+  config: base.with(public_key: "other-public-key", secret_key: "other-secret-key")
+)
+```
+
+This is the intended approach for multi-tenant Rails apps and for integrations that need more than one Uploadcare project in one process.
 
 ## Public API Mapping
 
@@ -185,9 +188,9 @@ Uploadcare::Addons.check_remove_bg_status(request_id: request_id)
 client.addons.remove_bg_status(request_id: request_id)
 ```
 
-## Namespace Changes
+## Top-Level Constants
 
-The public top-level resource constants remain:
+These top-level resource constants still exist:
 
 - `Uploadcare::File`
 - `Uploadcare::Group`
@@ -197,27 +200,31 @@ The public top-level resource constants remain:
 - `Uploadcare::DocumentConversion`
 - `Uploadcare::VideoConversion`
 
-But the main entry point for application code is now `Uploadcare::Client`.
+They remain useful for compatibility and for direct resource-oriented usage, but the main application entry point is now `Uploadcare::Client`.
 
-Internal transport and implementation classes are no longer the recommended public surface.
+## Errors and Results
 
-## Result and Error Handling
+### Convenience Layer
 
-This is one of the most important behavioral changes.
-
-### Convenience layer
-
-The convenience layer unwraps results and raises exceptions:
+The convenience layer unwraps results and raises typed exceptions.
 
 ```ruby
 file = client.files.find(uuid: uuid)
 ```
 
-If the request fails, you get a typed exception.
+Typical exceptions include:
 
-### Raw API layer
+- `Uploadcare::Exception::RequestError`
+- `Uploadcare::Exception::InvalidRequestError`
+- `Uploadcare::Exception::NotFoundError`
+- `Uploadcare::Exception::UploadError`
+- `Uploadcare::Exception::MultipartUploadError`
+- `Uploadcare::Exception::UploadTimeoutError`
+- `Uploadcare::Exception::ThrottleError`
 
-The raw API layer returns `Uploadcare::Result`:
+### Raw API Layer
+
+The raw API layer returns `Uploadcare::Result`.
 
 ```ruby
 result = client.api.rest.files.info(uuid: uuid)
@@ -229,21 +236,21 @@ else
 end
 ```
 
-If your v4 code expected direct hashes everywhere, be explicit about whether you want the convenience layer or the raw parity layer.
+If your v4 code assumed direct hashes everywhere, decide explicitly whether it belongs on the convenience layer or the raw API layer.
 
 ## Return Type Changes
 
-### Files and groups
+### Files and Groups
 
-Convenience methods return resources and collections:
+Convenience methods now return resource objects and paginated collections:
 
 - `client.files.find` -> `Uploadcare::File`
 - `client.files.list` -> `Uploadcare::Collections::Paginated`
 - `client.groups.find` -> `Uploadcare::Group`
 
-### Batch operations
+### Batch Operations
 
-Batch operations return `Uploadcare::Collections::BatchResult`:
+Batch operations return `Uploadcare::Collections::BatchResult`.
 
 ```ruby
 result = client.files.batch_store(uuids: uuids)
@@ -255,36 +262,25 @@ result.problems
 
 ### Conversions
 
-Document and video conversions are not perfectly symmetrical:
+Document and video conversions are intentionally not perfectly symmetrical:
 
 - `client.conversions.documents.convert` returns the API response hash
 - `client.conversions.videos.convert` returns a `Uploadcare::VideoConversion` resource
 
-If you are migrating conversion code, verify the return type you rely on.
+Audit conversion code carefully if you rely on exact return types.
 
-## Exceptions
+## Internal APIs
 
-Version 5 exposes more specific exception types, including:
+Version 5 keeps the internal transport layer available and documented, but it is not the recommended primary surface for application code.
 
-- `Uploadcare::Exception::RequestError`
-- `Uploadcare::Exception::InvalidRequestError`
-- `Uploadcare::Exception::NotFoundError`
-- `Uploadcare::Exception::UploadError`
-- `Uploadcare::Exception::MultipartUploadError`
-- `Uploadcare::Exception::UploadTimeoutError`
-- `Uploadcare::Exception::ThrottleError`
+If you need it:
 
-## Recommended Migration Strategy
+- `client.api.rest`
+- `client.api.upload`
 
-1. Introduce `Uploadcare::Client` and pass it explicitly where possible.
-2. Move upload code to `client.files` / `client.uploads`.
-3. Move file, group, metadata, and webhook code to client accessors.
-4. Replace any direct reliance on internal transport classes with `client.api`.
-5. Audit return-type assumptions, especially for conversions and batch operations.
-6. Add tests around multi-account behavior if your app uses more than one Uploadcare project.
+If you are wrapping the gem from another library, prefer these explicit raw API entry points over reaching into lower-level internals.
 
 ## See Also
 
 - [README.md](./README.md)
-- [api_examples/README.md](./api_examples/README.md)
 - [CHANGELOG.md](./CHANGELOG.md)
