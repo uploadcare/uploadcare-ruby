@@ -106,6 +106,14 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
         expect(result.error).to be_a(ArgumentError)
         expect(result.error.message).to eq('part_size must be > 0')
       end
+
+      it 'returns a failure Result when threads exceeds config.upload_threads' do
+        result = uploader.upload(file: tempfile, threads: 3)
+
+        expect(result.failure?).to be(true)
+        expect(result.error).to be_a(ArgumentError)
+        expect(result.error.message).to eq('threads must be <= 2')
+      end
     end
 
     context 'when performing sequential upload (threads <= 1)' do
@@ -271,13 +279,21 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
       end
 
       it 'uploads correct data chunks in parallel' do
+        high_thread_config = Uploadcare::Configuration.new(
+          public_key: 'demopublickey',
+          secret_key: 'demosecretkey',
+          auth_type: 'Uploadcare.Simple',
+          multipart_chunk_size: 1024,
+          upload_threads: 3
+        )
+        high_thread_uploader = described_class.new(upload_client: upload_client, config: high_thread_config)
         chunks = Mutex.new
         all_chunks = {}
         allow(upload_client).to receive(:upload_part_to_url) do |url, data|
           chunks.synchronize { all_chunks[url] = data.bytesize }
         end
 
-        uploader.upload(file: tempfile, threads: 3)
+        high_thread_uploader.upload(file: tempfile, threads: 3)
         expect(all_chunks.values).to all(eq(1024))
         expect(all_chunks.size).to eq(3)
       end
@@ -300,8 +316,17 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
         expect(final_uploaded).to eq(3072)
       end
 
-      it 'works with more threads than parts' do
-        result = uploader.upload(file: tempfile, threads: 10)
+      it 'works with more threads than parts when allowed by config' do
+        high_thread_config = Uploadcare::Configuration.new(
+          public_key: 'demopublickey',
+          secret_key: 'demosecretkey',
+          auth_type: 'Uploadcare.Simple',
+          multipart_chunk_size: 1024,
+          upload_threads: 10
+        )
+        high_thread_uploader = described_class.new(upload_client: upload_client, config: high_thread_config)
+
+        result = high_thread_uploader.upload(file: tempfile, threads: 10)
         expect(result.success?).to be(true)
       end
 
@@ -329,11 +354,19 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
       end
 
       it 'propagates the first error from parallel workers' do
+        high_thread_config = Uploadcare::Configuration.new(
+          public_key: 'demopublickey',
+          secret_key: 'demosecretkey',
+          auth_type: 'Uploadcare.Simple',
+          multipart_chunk_size: 1024,
+          upload_threads: 3
+        )
+        high_thread_uploader = described_class.new(upload_client: upload_client, config: high_thread_config)
         allow(upload_client).to receive(:upload_part_to_url) do
           raise 'network timeout'
         end
 
-        result = uploader.upload(file: tempfile, threads: 3)
+        result = high_thread_uploader.upload(file: tempfile, threads: 3)
         expect(result.failure?).to be(true)
         expect(result.error).to be_a(RuntimeError)
       end
@@ -494,6 +527,14 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
 
     context 'when performing parallel upload with offset >= total_size' do
       it 'handles more presigned URLs than needed' do
+        high_thread_config = Uploadcare::Configuration.new(
+          public_key: 'demopublickey',
+          secret_key: 'demosecretkey',
+          auth_type: 'Uploadcare.Simple',
+          multipart_chunk_size: 1024,
+          upload_threads: 3
+        )
+        high_thread_uploader = described_class.new(upload_client: upload_client, config: high_thread_config)
         small_content = 'C' * 1024
         small_file = Tempfile.new(['small_parallel', '.bin'])
         small_file.binmode
@@ -511,7 +552,7 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
           uploaded_urls << url
         end
 
-        result = uploader.upload(file: small_file, threads: 3)
+        result = high_thread_uploader.upload(file: small_file, threads: 3)
         expect(result.success?).to be(true)
         expect(uploaded_urls.length).to eq(1)
 

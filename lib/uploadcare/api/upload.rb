@@ -2,7 +2,9 @@
 
 require 'faraday'
 require 'faraday/multipart'
+require 'ipaddr'
 require 'mime/types'
+require 'resolv'
 require 'securerandom'
 require 'uri'
 require 'addressable/uri'
@@ -91,9 +93,9 @@ class Uploadcare::Api::Upload
   # @return [Boolean] true on success
   # @raise [Uploadcare::Exception::MultipartUploadError] on failure after retries
   def upload_part_to_url(presigned_url, part_data, max_retries: 3)
+    uri = validated_presigned_uri(presigned_url)
     retries = 0
     begin
-      uri = URI.parse(presigned_url)
       conn = Faraday.new(url: "#{uri.scheme}://#{uri.host}") do |f|
         f.adapter Faraday.default_adapter
       end
@@ -213,5 +215,47 @@ class Uploadcare::Api::Upload
     end
 
     raise Uploadcare::Exception::RequestError, "Network error: #{error.message}"
+  end
+
+  def validated_presigned_uri(url)
+    uri = URI.parse(url.to_s)
+    raise ArgumentError, 'presigned_url must use HTTPS' unless uri.is_a?(URI::HTTPS)
+    raise ArgumentError, 'presigned_url host is required' if uri.host.to_s.empty?
+    raise ArgumentError, 'presigned_url cannot target localhost' if local_hostname?(uri.host)
+    raise ArgumentError, 'presigned_url cannot target a private address' if private_host?(uri.host)
+
+    uri
+  rescue URI::InvalidURIError => e
+    raise ArgumentError, "Invalid presigned_url: #{e.message}"
+  end
+
+  def local_hostname?(host)
+    normalized_host = host.to_s.downcase
+    normalized_host == 'localhost' || normalized_host.end_with?('.localhost', '.local')
+  end
+
+  def private_host?(host)
+    return private_ip?(host) if ip_literal?(host)
+
+    Resolv.getaddresses(host).any? { |address| private_ip?(address) }
+  rescue Resolv::ResolvError, SocketError
+    false
+  end
+
+  def ip_literal?(host)
+    IPAddr.new(host)
+    true
+  rescue IPAddr::InvalidAddressError
+    false
+  end
+
+  def private_ip?(address)
+    ip = IPAddr.new(address)
+    return true if ip.loopback?
+    return true if ip.link_local?
+
+    ip.private?
+  rescue IPAddr::InvalidAddressError
+    false
   end
 end

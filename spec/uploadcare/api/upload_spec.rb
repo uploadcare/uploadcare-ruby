@@ -136,6 +136,24 @@ RSpec.describe Uploadcare::Api::Upload do
       expect(result).to be true
     end
 
+    it 'rejects non-https presigned URLs' do
+      expect do
+        upload.upload_part_to_url('http://s3.amazonaws.com/bucket/part', 'data')
+      end.to raise_error(ArgumentError, 'presigned_url must use HTTPS')
+    end
+
+    it 'rejects localhost presigned URLs' do
+      expect do
+        upload.upload_part_to_url('https://localhost/bucket/part', 'data')
+      end.to raise_error(ArgumentError, 'presigned_url cannot target localhost')
+    end
+
+    it 'rejects private IP presigned URLs' do
+      expect do
+        upload.upload_part_to_url('https://10.0.0.5/bucket/part', 'data')
+      end.to raise_error(ArgumentError, 'presigned_url cannot target a private address')
+    end
+
     it 'raises MultipartUploadError after max retries on non-2xx responses' do
       stub_request(:put, presigned_url)
         .to_return(status: 500, body: 'Internal Server Error', headers: {}) # force Zeitwerk to load upload_error.rb

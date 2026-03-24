@@ -77,10 +77,13 @@ class Uploadcare::Operations::MultipartUpload
 
   def normalize_upload_options(options)
     part_size = Integer(options.fetch(:part_size, config.multipart_chunk_size || CHUNK_SIZE))
-    threads = Integer(options.fetch(:threads, 1))
+    max_threads = Integer(config.upload_threads || 1)
+    threads = Integer(options.fetch(:threads, max_threads))
 
     raise ArgumentError, 'part_size must be > 0' if part_size <= 0
+    raise ArgumentError, 'upload_threads must be >= 1' if max_threads < 1
     raise ArgumentError, 'threads must be >= 1' if threads < 1
+    raise ArgumentError, "threads must be <= #{max_threads}" if threads > max_threads
 
     [part_size, threads]
   end
