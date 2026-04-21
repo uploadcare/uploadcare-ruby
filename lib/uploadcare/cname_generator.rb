@@ -2,6 +2,7 @@
 
 # lib/uploadcare/client/cname_generator.rb
 require 'digest'
+require 'monitor'
 require 'uri'
 
 # CNAME generator for Uploadcare CDN.
@@ -16,14 +17,19 @@ class Uploadcare::CnameGenerator
     # @param config [Uploadcare::Configuration]
     # @return [String]
     def cdn_base_postfix(config: Uploadcare.configuration)
-      @cdn_base_postfix_cache ||= {}
       key = [config.cdn_base_postfix, config.public_key]
-      @cdn_base_postfix_cache[key] ||= begin
-        uri = URI.parse(config.cdn_base_postfix)
-        uri.host = "#{generate_cname(public_key: config.public_key)}.#{uri.host}"
-        uri.to_s
-      rescue URI::InvalidURIError => e
-        raise Uploadcare::Exception::ConfigurationError, "Invalid cdn_base_postfix URL: #{e.message}"
+      cached = @cdn_base_postfix_cache&.[](key)
+      return cached if cached
+
+      cache_mutex.synchronize do
+        @cdn_base_postfix_cache ||= {}
+        @cdn_base_postfix_cache[key] ||= begin
+          uri = URI.parse(config.cdn_base_postfix)
+          uri.host = "#{generate_cname(public_key: config.public_key)}.#{uri.host}"
+          uri.to_s
+        rescue URI::InvalidURIError => e
+          raise Uploadcare::Exception::ConfigurationError, "Invalid cdn_base_postfix URL: #{e.message}"
+        end
       end
     end
 
@@ -39,15 +45,24 @@ class Uploadcare::CnameGenerator
 
     # Generate CNAME prefix
     def custom_cname(public_key = Uploadcare.configuration.public_key)
-      @custom_cname_cache ||= {}
       raise Uploadcare::Exception::ConfigurationError, "Invalid public_key: #{public_key}" if public_key.nil?
 
-      @custom_cname_cache[public_key] ||= begin
-        sha256_hex = Digest::SHA256.hexdigest(public_key)
-        sha256_hex = sha256_hex.to_i(16)
-        sha256_base36 = sha256_hex.to_s(36)
-        sha256_base36[0, CNAME_PREFIX_LEN]
+      cached = @custom_cname_cache&.[](public_key)
+      return cached if cached
+
+      cache_mutex.synchronize do
+        @custom_cname_cache ||= {}
+        @custom_cname_cache[public_key] ||= begin
+          sha256_hex = Digest::SHA256.hexdigest(public_key)
+          sha256_hex = sha256_hex.to_i(16)
+          sha256_base36 = sha256_hex.to_s(36)
+          sha256_base36[0, CNAME_PREFIX_LEN]
+        end
       end
+    end
+
+    def cache_mutex
+      @cache_mutex ||= Monitor.new
     end
   end
 end

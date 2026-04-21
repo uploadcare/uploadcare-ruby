@@ -29,6 +29,7 @@ class Uploadcare::Client
   def initialize(config: nil, **options)
     base_config = config || Uploadcare.configuration
     @config = base_config.with(**options)
+    @memo_mutex = Mutex.new
   end
 
   # Build a new client derived from this client.
@@ -43,63 +44,63 @@ class Uploadcare::Client
   #
   # @return [Uploadcare::Client::Api]
   def api
-    @api ||= Api.new(config: config)
+    memoized(:@api) { Api.new(config: config) }
   end
 
   # Access file operations and upload helpers.
   #
   # @return [Uploadcare::Client::FilesAccessor]
   def files
-    @files ||= FilesAccessor.new(client: self)
+    memoized(:@files) { FilesAccessor.new(client: self) }
   end
 
   # Access group operations.
   #
   # @return [Uploadcare::Client::GroupsAccessor]
   def groups
-    @groups ||= GroupsAccessor.new(client: self)
+    memoized(:@groups) { GroupsAccessor.new(client: self) }
   end
 
   # Access upload routing helpers.
   #
   # @return [Uploadcare::Operations::UploadRouter]
   def uploads
-    @uploads ||= Uploadcare::Operations::UploadRouter.new(client: self)
+    memoized(:@uploads) { Uploadcare::Operations::UploadRouter.new(client: self) }
   end
 
   # Access project operations.
   #
   # @return [Uploadcare::Client::ProjectAccessor]
   def project
-    @project ||= ProjectAccessor.new(client: self)
+    memoized(:@project) { ProjectAccessor.new(client: self) }
   end
 
   # Access webhook operations.
   #
   # @return [Uploadcare::Client::WebhooksAccessor]
   def webhooks
-    @webhooks ||= WebhooksAccessor.new(client: self)
+    memoized(:@webhooks) { WebhooksAccessor.new(client: self) }
   end
 
   # Access add-on execution helpers.
   #
   # @return [Uploadcare::Client::AddonsAccessor]
   def addons
-    @addons ||= AddonsAccessor.new(client: self)
+    memoized(:@addons) { AddonsAccessor.new(client: self) }
   end
 
   # Access file metadata operations.
   #
   # @return [Uploadcare::Client::FileMetadataAccessor]
   def file_metadata
-    @file_metadata ||= FileMetadataAccessor.new(client: self)
+    memoized(:@file_metadata) { FileMetadataAccessor.new(client: self) }
   end
 
   # Access conversion helpers.
   #
   # @return [Uploadcare::Client::ConversionsAccessor]
   def conversions
-    @conversions ||= ConversionsAccessor.new(client: self)
+    memoized(:@conversions) { ConversionsAccessor.new(client: self) }
   end
 
   # Upload a source through the convenience upload router.
@@ -111,5 +112,16 @@ class Uploadcare::Client
   # @return [Uploadcare::Resources::File, Array<Uploadcare::Resources::File>, Hash]
   def upload(source, request_options: {}, **options, &block)
     uploads.upload(source, request_options: request_options, **options, &block)
+  end
+
+  private
+
+  def memoized(ivar)
+    cached = instance_variable_get(ivar)
+    return cached if cached
+
+    @memo_mutex.synchronize do
+      instance_variable_get(ivar) || instance_variable_set(ivar, yield)
+    end
   end
 end

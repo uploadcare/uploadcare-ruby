@@ -35,6 +35,7 @@ class Uploadcare::Api::Rest
   # @param config [Uploadcare::Configuration] Configuration object (defaults to global config)
   def initialize(config: Uploadcare.configuration)
     @config = config
+    @memo_mutex = Mutex.new
     @connection = Faraday.new(url: config.rest_api_root) do |conn|
       conn.request :json
       conn.response :json, content_type: /\bjson$/
@@ -47,42 +48,42 @@ class Uploadcare::Api::Rest
 
   # @return [Uploadcare::Api::Rest::Files] File operations endpoint
   def files
-    @files ||= Uploadcare::Api::Rest::Files.new(rest: self)
+    memoized(:@files) { Uploadcare::Api::Rest::Files.new(rest: self) }
   end
 
   # @return [Uploadcare::Api::Rest::Groups] Group operations endpoint
   def groups
-    @groups ||= Uploadcare::Api::Rest::Groups.new(rest: self)
+    memoized(:@groups) { Uploadcare::Api::Rest::Groups.new(rest: self) }
   end
 
   # @return [Uploadcare::Api::Rest::Project] Project information endpoint
   def project
-    @project ||= Uploadcare::Api::Rest::Project.new(rest: self)
+    memoized(:@project) { Uploadcare::Api::Rest::Project.new(rest: self) }
   end
 
   # @return [Uploadcare::Api::Rest::Webhooks] Webhook operations endpoint
   def webhooks
-    @webhooks ||= Uploadcare::Api::Rest::Webhooks.new(rest: self)
+    memoized(:@webhooks) { Uploadcare::Api::Rest::Webhooks.new(rest: self) }
   end
 
   # @return [Uploadcare::Api::Rest::FileMetadata] File metadata operations endpoint
   def file_metadata
-    @file_metadata ||= Uploadcare::Api::Rest::FileMetadata.new(rest: self)
+    memoized(:@file_metadata) { Uploadcare::Api::Rest::FileMetadata.new(rest: self) }
   end
 
   # @return [Uploadcare::Api::Rest::Addons] Add-on operations endpoint
   def addons
-    @addons ||= Uploadcare::Api::Rest::Addons.new(rest: self)
+    memoized(:@addons) { Uploadcare::Api::Rest::Addons.new(rest: self) }
   end
 
   # @return [Uploadcare::Api::Rest::DocumentConversions] Document conversion endpoint
   def document_conversions
-    @document_conversions ||= Uploadcare::Api::Rest::DocumentConversions.new(rest: self)
+    memoized(:@document_conversions) { Uploadcare::Api::Rest::DocumentConversions.new(rest: self) }
   end
 
   # @return [Uploadcare::Api::Rest::VideoConversions] Video conversion endpoint
   def video_conversions
-    @video_conversions ||= Uploadcare::Api::Rest::VideoConversions.new(rest: self)
+    memoized(:@video_conversions) { Uploadcare::Api::Rest::VideoConversions.new(rest: self) }
   end
 
   # --- HTTP methods ---
@@ -239,6 +240,15 @@ class Uploadcare::Api::Rest
       params_encoder = connection.options.params_encoder || Faraday::Utils.default_params_encoder
       encoded_query = params_encoder.encode(query_params)
       "#{path}#{separator}#{encoded_query}"
+    end
+  end
+
+  def memoized(ivar)
+    cached = instance_variable_get(ivar)
+    return cached if cached
+
+    @memo_mutex.synchronize do
+      instance_variable_get(ivar) || instance_variable_set(ivar, yield)
     end
   end
 end

@@ -35,6 +35,7 @@ class Uploadcare::Api::Upload
   # @param config [Uploadcare::Configuration] Configuration object
   def initialize(config: Uploadcare.configuration)
     @config = config
+    @memo_mutex = Mutex.new
     @connection = Faraday.new(url: config.upload_api_root) do |conn|
       conn.request :multipart
       conn.request :url_encoded
@@ -49,12 +50,12 @@ class Uploadcare::Api::Upload
 
   # @return [Uploadcare::Api::Upload::Files] File upload operations
   def files
-    @files ||= Uploadcare::Api::Upload::Files.new(upload: self)
+    memoized(:@files) { Uploadcare::Api::Upload::Files.new(upload: self) }
   end
 
   # @return [Uploadcare::Api::Upload::Groups] Group operations via Upload API
   def groups
-    @groups ||= Uploadcare::Api::Upload::Groups.new(upload: self)
+    memoized(:@groups) { Uploadcare::Api::Upload::Groups.new(upload: self) }
   end
 
   # --- HTTP methods ---
@@ -258,5 +259,14 @@ class Uploadcare::Api::Upload
 
   def raise_multipart_upload_error(message)
     raise Uploadcare::Exception::MultipartUploadError, message
+  end
+
+  def memoized(ivar)
+    cached = instance_variable_get(ivar)
+    return cached if cached
+
+    @memo_mutex.synchronize do
+      instance_variable_get(ivar) || instance_variable_set(ivar, yield)
+    end
   end
 end

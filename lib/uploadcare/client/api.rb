@@ -7,15 +7,27 @@ class Uploadcare::Client::Api
   # @param config [Uploadcare::Configuration]
   def initialize(config:)
     @config = config
+    @memo_mutex = Mutex.new
   end
 
   # @return [Uploadcare::Api::Rest]
   def rest
-    @rest ||= Uploadcare::Api::Rest.new(config: config)
+    memoized(:@rest) { Uploadcare::Api::Rest.new(config: config) }
   end
 
   # @return [Uploadcare::Api::Upload]
   def upload
-    @upload ||= Uploadcare::Api::Upload.new(config: config)
+    memoized(:@upload) { Uploadcare::Api::Upload.new(config: config) }
+  end
+
+  private
+
+  def memoized(ivar)
+    cached = instance_variable_get(ivar)
+    return cached if cached
+
+    @memo_mutex.synchronize do
+      instance_variable_get(ivar) || instance_variable_set(ivar, yield)
+    end
   end
 end
