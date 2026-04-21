@@ -146,11 +146,11 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
 
       it 'uploads each part to its presigned URL' do
         expect(upload_client).to receive(:upload_part_to_url)
-          .with('https://s3.example.com/part0', anything).ordered
+          .with('https://s3.example.com/part0', anything, hash_including(max_retries: 3, timeout: 60)).ordered
         expect(upload_client).to receive(:upload_part_to_url)
-          .with('https://s3.example.com/part1', anything).ordered
+          .with('https://s3.example.com/part1', anything, hash_including(max_retries: 3, timeout: 60)).ordered
         expect(upload_client).to receive(:upload_part_to_url)
-          .with('https://s3.example.com/part2', anything).ordered
+          .with('https://s3.example.com/part2', anything, hash_including(max_retries: 3, timeout: 60)).ordered
 
         uploader.upload(file: tempfile)
       end
@@ -163,6 +163,24 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
 
         uploader.upload(file: tempfile)
         expect(chunks).to eq([1024, 1024, 1024])
+      end
+
+      it 'forwards config upload timeout and retry settings to part uploads' do
+        tuned_config = Uploadcare::Configuration.new(
+          public_key: 'pk',
+          secret_key: 'sk',
+          auth_type: 'Uploadcare.Simple',
+          multipart_chunk_size: 1024,
+          upload_timeout: 45,
+          max_upload_retries: 7
+        )
+        tuned_uploader = described_class.new(upload_client: upload_client, config: tuned_config)
+
+        expect(upload_client).to receive(:upload_part_to_url)
+          .with(anything, anything, hash_including(timeout: 45, max_retries: 7))
+          .at_least(:once)
+
+        tuned_uploader.upload(file: tempfile)
       end
 
       it 'calls multipart_complete with the UUID' do
@@ -351,6 +369,19 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
         result = uploader.upload(file: tempfile, threads: 2)
         expect(result.failure?).to be(true)
         expect(result.error.message).to include('S3 upload failed')
+      end
+
+      it 'cancels remaining queued parts after first worker error' do
+        call_count = 0
+        allow(upload_client).to receive(:upload_part_to_url) do |_url, _data|
+          call_count += 1
+          raise StandardError, 'S3 upload failed' if call_count == 1
+        end
+
+        result = uploader.upload(file: tempfile, threads: 2)
+
+        expect(result.failure?).to be(true)
+        expect(call_count).to be < presigned_urls.length
       end
 
       it 'propagates the first error from parallel workers' do

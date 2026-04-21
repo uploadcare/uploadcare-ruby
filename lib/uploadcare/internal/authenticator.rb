@@ -15,6 +15,9 @@ require 'time'
 #
 # @see https://uploadcare.com/docs/api_reference/rest/requests_auth/
 class Uploadcare::Internal::Authenticator
+  BODY_DIGEST_NAME = 'MD5'
+  SIGNATURE_DIGEST_NAME = 'SHA1'
+
   # @return [Hash] Default headers included in all requests
   attr_reader :default_headers
 
@@ -89,31 +92,10 @@ class Uploadcare::Internal::Authenticator
   end
 
   def body_digest(body)
-    OpenSSL::Digest.new(body_digest_name).hexdigest(body)
+    OpenSSL::Digest.new(BODY_DIGEST_NAME).hexdigest(body)
   end
 
   def signature_digest
-    OpenSSL::Digest.new(signature_digest_name)
-  end
-
-  def body_digest_name
-    @body_digest_name ||= find_digest_name(name_length: 3, hexdigest_length: 32)
-  end
-
-  def signature_digest_name
-    @signature_digest_name ||= find_digest_name(name_length: 4, hexdigest_length: 40)
-  end
-
-  def find_digest_name(name_length:, hexdigest_length:)
-    OpenSSL::Digest.constants
-                   .map(&:to_s)
-                   .sort
-                   .find do |name|
-                     next false unless name.length == name_length
-
-                     OpenSSL::Digest.const_get(name).new.hexdigest('').length == hexdigest_length
-                   rescue OpenSSL::Digest::DigestError, TypeError
-                     false
-                   end || raise(Uploadcare::Exception::ConfigurationError, 'Required digest unavailable')
+    OpenSSL::Digest.new(SIGNATURE_DIGEST_NAME)
   end
 end

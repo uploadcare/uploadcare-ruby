@@ -40,7 +40,7 @@ class Uploadcare::Api::Upload
       conn.request :url_encoded
       conn.response :json, content_type: /\bjson$/
       conn.response :raise_error
-      conn.response :logger if ENV['DEBUG']
+      conn.response :logger, config.logger, bodies: false, headers: false if ENV['DEBUG']
       conn.adapter Faraday.default_adapter
     end
   end
@@ -90,9 +90,11 @@ class Uploadcare::Api::Upload
   # @param presigned_url [String] Presigned URL from multipart_start
   # @param part_data [String, IO] Binary data for this part
   # @param max_retries [Integer] Maximum retry attempts (default: 3)
+  # @param timeout [Integer, nil] Request timeout in seconds
+  # @param open_timeout [Integer, nil] Open timeout in seconds
   # @return [Boolean] true on success
   # @raise [Uploadcare::Exception::MultipartUploadError] on failure after retries
-  def upload_part_to_url(presigned_url, part_data, max_retries: 3)
+  def upload_part_to_url(presigned_url, part_data, max_retries: 3, timeout: nil, open_timeout: nil)
     uri = validated_presigned_uri(presigned_url)
     retries = 0
     begin
@@ -101,25 +103,14 @@ class Uploadcare::Api::Upload
       end
 
       data = part_data.respond_to?(:read) ? part_data.read : part_data
-
-      response = conn.put(uri.request_uri) do |req|
-        req.headers['Content-Type'] = 'application/octet-stream'
-        req.body = data
-      end
-
-      unless response.status >= 200 && response.status < 300
-        raise Uploadcare::Exception::MultipartUploadError,
-              "Failed to upload part: HTTP #{response.status}"
-      end
+      response = upload_part_request(
+        conn: conn, request_uri: uri.request_uri, data: data, timeout: timeout, open_timeout: open_timeout
+      )
+      raise_multipart_upload_error("Failed to upload part: HTTP #{response.status}") unless success_response?(response)
 
       true
     rescue StandardError => e
-      if retries >= max_retries
-        raise Uploadcare::Exception::MultipartUploadError,
-              "Failed to upload part after #{max_retries} retries: #{e.message}"
-      end
-
-      sleep(2**retries)
+      retry_part_upload_or_raise!(error: e, retries: retries, max_retries: max_retries)
       retries += 1
       retry
     end
@@ -144,8 +135,6 @@ class Uploadcare::Api::Upload
     parse_success_response(response)
   rescue JSON::ParserError => e
     handle_json_error(e, response)
-  rescue Faraday::Error => e
-    handle_faraday_error(e)
   end
 
   private
@@ -208,15 +197,6 @@ class Uploadcare::Api::Upload
     success_response?(response) ? {} : response.body
   end
 
-  def handle_faraday_error(error)
-    if error.response
-      raise Uploadcare::Exception::RequestError,
-            "HTTP #{error.response[:status]}: #{error.response[:body]}"
-    end
-
-    raise Uploadcare::Exception::RequestError, "Network error: #{error.message}"
-  end
-
   def validated_presigned_uri(url)
     uri = URI.parse(url.to_s)
     raise ArgumentError, 'presigned_url must use HTTPS' unless uri.is_a?(URI::HTTPS)
@@ -257,5 +237,26 @@ class Uploadcare::Api::Upload
     ip.private?
   rescue IPAddr::InvalidAddressError
     false
+  end
+
+  def upload_part_request(conn:, request_uri:, data:, timeout:, open_timeout:)
+    conn.put(request_uri) do |req|
+      req.headers['Content-Type'] = 'application/octet-stream'
+      req.options.timeout = timeout if timeout
+      req.options.open_timeout = open_timeout if open_timeout
+      req.body = data
+    end
+  end
+
+  def retry_part_upload_or_raise!(error:, retries:, max_retries:)
+    if retries >= max_retries
+      raise_multipart_upload_error("Failed to upload part after #{max_retries} retries: #{error.message}")
+    end
+
+    sleep(2**retries)
+  end
+
+  def raise_multipart_upload_error(message)
+    raise Uploadcare::Exception::MultipartUploadError, message
   end
 end

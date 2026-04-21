@@ -179,6 +179,14 @@ RSpec.describe Uploadcare::Internal::Authenticator do
         sig_without = without_slash['Authorization'].split(':').last
         expect(sig_with).to eq(sig_without)
       end
+
+      it 'uses MD5 for body digest required by Uploadcare REST signing' do
+        expect(authenticator.send(:body_digest, 'abc')).to eq(OpenSSL::Digest.new('MD5').hexdigest('abc'))
+      end
+
+      it 'uses SHA1 for HMAC signature required by Uploadcare REST signing' do
+        expect(authenticator.send(:signature_digest).name).to eq('SHA1')
+      end
     end
   end
 end

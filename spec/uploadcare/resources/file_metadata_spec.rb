@@ -78,9 +78,11 @@ RSpec.describe Uploadcare::Resources::FileMetadata do
 
   describe 'instance methods' do
     let(:metadata_instance) do
-      instance = described_class.new({ 'uuid' => file_uuid }, client)
-      instance.instance_variable_set(:@uuid, file_uuid)
-      instance
+      described_class.new({ 'uuid' => file_uuid }, client)
+    end
+
+    it 'assigns uuid from initialization attributes' do
+      expect(metadata_instance.uuid).to eq(file_uuid)
     end
 
     describe '#index' do

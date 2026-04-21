@@ -87,6 +87,37 @@ RSpec.describe Uploadcare::Api::Rest do
 
       expect(result).to be_success
     end
+
+    it 'signs GET URI with the same nested params encoding used by Faraday' do
+      authenticator = instance_double(Uploadcare::Internal::Authenticator)
+      allow(authenticator).to receive(:default_headers).and_return(
+        {
+          'Accept' => 'application/vnd.uploadcare-v0.7+json',
+          'Content-Type' => 'application/json'
+        }
+      )
+      allow(authenticator).to receive(:headers)
+        .with('GET', '/files/?tags%5B%5D=a&tags%5B%5D=b', '', 'application/json')
+        .and_return(
+          {
+            'Accept' => 'application/vnd.uploadcare-v0.7+json',
+            'Authorization' => 'Uploadcare.Simple demopublickey:demosecretkey',
+            'Content-Type' => 'application/json'
+          }
+        )
+      rest.instance_variable_set(:@authenticator, authenticator)
+
+      stub_request(:get, %r{\Ahttps://api\.uploadcare\.com/files/\?tags%5B%5D=a&tags%5B%5D=b\z})
+        .to_return(
+          status: 200,
+          body: { results: [] }.to_json,
+          headers: { 'Content-Type' => 'application/json' }
+        )
+
+      result = rest.get(path: '/files/', params: { tags: %w[a b] }, headers: {}, request_options: {})
+
+      expect(result).to be_success
+    end
   end
 
   describe '#post' do

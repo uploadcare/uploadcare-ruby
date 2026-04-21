@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 # Upload API endpoint for file upload operations.
-#
-# Supports direct upload, URL upload, multipart upload, and file info retrieval.
-#
-# @see https://uploadcare.com/api-refs/upload-api/
+# rubocop:disable Metrics/ClassLength
 class Uploadcare::Api::Upload::Files
   # @return [Uploadcare::Api::Upload] Parent Upload client
   attr_reader :upload
@@ -51,7 +48,7 @@ class Uploadcare::Api::Upload::Files
       files.each do |file|
         prepared_file = Uploadcare::Internal::UploadIo.wrap(file)
         prepared_files << prepared_file
-        form_data_for(prepared_file, params)
+        form_data_for(prepared_file, params, field_index: prepared_files.length - 1)
       end
       Uploadcare::Result.unwrap(upload.post(path: '/base/', params: params, request_options: request_options))
     ensure
@@ -74,14 +71,11 @@ class Uploadcare::Api::Upload::Files
   def from_url(source_url:, request_options: {}, **options)
     Uploadcare::Result.capture do
       validate_url(source_url)
-
       async_mode = options.fetch(:async, false)
       params = build_from_url_params(source_url, options)
-
       response = Uploadcare::Result.unwrap(
         upload.post(path: 'from_url/', params: params, request_options: request_options)
       )
-
       if async_mode
         response
       else
@@ -111,7 +105,7 @@ class Uploadcare::Api::Upload::Files
   # @param filename [String] Original filename
   # @param size [Integer] File size in bytes
   # @param content_type [String] MIME type
-  # @param options [Hash] Upload options (:store, :metadata, :part_size)
+  # @param options [Hash] Upload options (:store, :metadata)
   # @param request_options [Hash] Request options
   # @return [Uploadcare::Result] Response with UUID and presigned URLs
   # @see https://uploadcare.com/api-refs/upload-api/#operation/multipartUploadStart
@@ -183,14 +177,13 @@ class Uploadcare::Api::Upload::Files
     form_data_for(file, params)
   end
 
-  def form_data_for(file, params)
+  def form_data_for(file, params, field_index: nil)
     file_path = file.path
     filename = file.respond_to?(:original_filename) ? file.original_filename : ::File.basename(file_path)
     mime = MIME::Types.type_for(file.path).first&.content_type || 'application/octet-stream'
 
-    filename = "#{SecureRandom.random_number(100)}#{filename}" if params.key?(filename)
-
-    params[filename] = Faraday::Multipart::FilePart.new(file_path, mime, filename)
+    field_name = unique_form_field_name(filename, params, field_index)
+    params[field_name] = Faraday::Multipart::FilePart.new(file_path, mime, filename)
     params
   end
 
@@ -199,44 +192,36 @@ class Uploadcare::Api::Upload::Files
       'pub_key' => upload.config.public_key,
       'source_url' => source_url
     }
-
     store = store_value(options[:store])
     params['store'] = store unless store.nil?
-
     params['check_URL_duplicates'] = options[:check_URL_duplicates].to_s if options.key?(:check_URL_duplicates)
     params['save_URL_duplicates'] = options[:save_URL_duplicates].to_s if options.key?(:save_URL_duplicates)
-
     metadata_params = generate_metadata_params(options[:metadata])
     params.merge!(metadata_params) if metadata_params.any?
-
     params.merge!(signature_params(options))
     params
   end
 
   def build_multipart_start_params(filename, size, content_type, options)
-    part_size = options.fetch(:part_size, upload.config.multipart_chunk_size)
-
     params = {
       'UPLOADCARE_PUB_KEY' => upload.config.public_key,
       'filename' => filename,
       'size' => size.to_s,
-      'content_type' => content_type,
-      'part_size' => part_size.to_s
+      'content_type' => content_type
     }
-
     store = store_value(options[:store])
     params['UPLOADCARE_STORE'] = store unless store.nil?
-
     metadata_params = generate_metadata_params(options[:metadata])
     params.merge!(metadata_params) if metadata_params.any?
-
     params.merge!(signature_params(options))
     params
   end
 
   def poll_upload_status(token:, options: {}, request_options: {})
-    poll_interval = options.fetch(:poll_interval, 1)
+    initial_poll_interval = options.fetch(:poll_interval, 1).to_f
+    max_poll_interval = options.fetch(:poll_max_interval, 10).to_f
     poll_timeout = options.fetch(:poll_timeout, 300)
+    poll_attempt = 0
     start_time = Time.now
 
     loop do
@@ -254,7 +239,13 @@ class Uploadcare::Api::Upload::Files
                 "Upload from URL polling timed out after #{poll_timeout} seconds"
         end
 
-        sleep(poll_interval)
+        sleep_duration = next_poll_sleep(
+          initial: initial_poll_interval,
+          max_interval: max_poll_interval,
+          attempt: poll_attempt
+        )
+        sleep(sleep_duration)
+        poll_attempt += 1
       else
         raise Uploadcare::Exception::UnknownStatusError, "Unknown upload status: #{status['status']}"
       end
@@ -302,4 +293,21 @@ class Uploadcare::Api::Upload::Files
       { 'signature' => result }
     end
   end
+
+  def unique_form_field_name(filename, params, field_index)
+    return filename unless params.key?(filename)
+
+    candidate = "__uploadcare_form_#{field_index || 0}__#{filename}"
+    suffix = 0
+    while params.key?(candidate)
+      suffix += 1
+      candidate = "__uploadcare_form_#{field_index || 0}_#{suffix}__#{filename}"
+    end
+    candidate
+  end
+
+  def next_poll_sleep(initial:, max_interval:, attempt:)
+    [initial.to_f * (2**attempt), max_interval.to_f].min
+  end
 end
+# rubocop:enable Metrics/ClassLength

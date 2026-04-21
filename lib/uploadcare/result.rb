@@ -70,7 +70,7 @@ class Uploadcare::Result
       raise error if error.is_a?(Exception)
       raise error if error.is_a?(String)
 
-      raise error.inspect
+      raise error.to_s
     end
 
     @value

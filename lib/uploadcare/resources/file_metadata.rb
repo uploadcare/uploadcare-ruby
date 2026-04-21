@@ -4,6 +4,8 @@
 #
 # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File-metadata
 class Uploadcare::Resources::FileMetadata < Uploadcare::Resources::BaseResource
+  attr_accessor :uuid
+
   def initialize(attributes = {}, client_or_config = nil)
     super
     @metadata = {}

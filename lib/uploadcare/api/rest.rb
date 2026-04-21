@@ -2,7 +2,6 @@
 
 require 'faraday'
 require 'uri'
-require 'addressable/uri'
 
 # Base client for the Uploadcare REST API.
 #
@@ -236,9 +235,10 @@ class Uploadcare::Api::Rest
     if query_params.empty?
       path
     else
-      uri = Addressable::URI.parse(path)
-      uri.query_values = query_params
-      uri.to_s
+      separator = path.include?('?') ? '&' : '?'
+      params_encoder = connection.options.params_encoder || Faraday::Utils.default_params_encoder
+      encoded_query = params_encoder.encode(query_params)
+      "#{path}#{separator}#{encoded_query}"
     end
   end
 end

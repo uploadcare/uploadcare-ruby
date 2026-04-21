@@ -97,7 +97,7 @@ class Uploadcare::Operations::MultipartUpload
       part_data = file.read(part_size)
       break if part_data.nil? || part_data.empty?
 
-      upload_client.upload_part_to_url(presigned_url, part_data)
+      upload_part(presigned_url, part_data)
       uploaded += part_data.bytesize
 
       block&.call(uploaded: uploaded, total: total_size, part: index + 1, total_parts: presigned_urls.length)
@@ -110,15 +110,28 @@ class Uploadcare::Operations::MultipartUpload
     mutex = Mutex.new
     queue = Queue.new
     errors = []
+    cancel = { value: false }
     file_path = file.path
     total_parts = presigned_urls.length
 
     presigned_urls.each_with_index { |url, index| queue << [url, index] }
     threads.times { queue << nil }
 
+    worker_context = {
+      queue: queue,
+      file_path: file_path,
+      part_size: part_size,
+      total_size: total_size,
+      total_parts: total_parts,
+      mutex: mutex,
+      uploaded: uploaded,
+      errors: errors,
+      cancel: cancel
+    }
+
     workers = threads.times.map do
       Thread.new do
-        run_parallel_worker(queue, file_path, part_size, total_size, total_parts, mutex, uploaded, errors, &block)
+        run_parallel_worker(worker_context, &block)
       end
     end
 
@@ -126,29 +139,75 @@ class Uploadcare::Operations::MultipartUpload
     raise errors.first if errors.any?
   end
 
-  def run_parallel_worker(queue, file_path, part_size, total_size, total_parts, mutex, uploaded, errors, &block)
-    ::File.open(file_path, 'rb') do |worker_file|
-      loop do
-        job = queue.pop
-        break if job.nil?
-
-        presigned_url, index = job
-        offset = index * part_size
-        break if offset >= total_size
-
-        worker_file.seek(offset)
-        part_data = worker_file.read(part_size)
-        break if part_data.nil? || part_data.empty?
-
-        upload_client.upload_part_to_url(presigned_url, part_data)
-
-        mutex.synchronize do
-          uploaded[:value] += part_data.bytesize
-          block&.call(uploaded: uploaded[:value], total: total_size, part: index + 1, total_parts: total_parts)
-        end
-      end
+  def run_parallel_worker(context, &block)
+    ::File.open(context[:file_path], 'rb') do |worker_file|
+      process_parallel_jobs(worker_file, context, &block)
     rescue StandardError => e
-      mutex.synchronize { errors << e }
+      record_parallel_error(context, e)
     end
+  end
+
+  def process_parallel_jobs(worker_file, context, &block)
+    loop do
+      job = context[:queue].pop
+      break unless process_parallel_job(worker_file, context, job, &block)
+    end
+  end
+
+  def process_parallel_job(worker_file, context, job)
+    return false if job.nil? || context[:cancel][:value]
+
+    presigned_url, index = job
+    offset = index * context[:part_size]
+    return false if offset >= context[:total_size]
+
+    worker_file.seek(offset)
+    part_data = worker_file.read(context[:part_size])
+    return false if part_data.nil? || part_data.empty?
+
+    upload_part(presigned_url, part_data)
+    update_parallel_progress(context, index, part_data.bytesize) { |progress| yield(progress) if block_given? }
+    true
+  end
+
+  def update_parallel_progress(context, index, bytesize)
+    context[:mutex].synchronize do
+      context[:uploaded][:value] += bytesize
+      progress = {
+        uploaded: context[:uploaded][:value],
+        total: context[:total_size],
+        part: index + 1,
+        total_parts: context[:total_parts]
+      }
+      yield(progress)
+    end
+  end
+
+  def record_parallel_error(context, error)
+    context[:mutex].synchronize do
+      context[:cancel][:value] = true
+      context[:errors] << error
+    end
+  end
+
+  def upload_part(presigned_url, part_data)
+    upload_client.upload_part_to_url(
+      presigned_url,
+      part_data,
+      max_retries: configured_max_upload_retries,
+      timeout: configured_upload_timeout
+    )
+  end
+
+  def configured_max_upload_retries
+    value = config.max_upload_retries
+    value.nil? ? 3 : Integer(value)
+  end
+
+  def configured_upload_timeout
+    value = config.upload_timeout
+    return nil if value.nil?
+
+    Integer(value)
   end
 end

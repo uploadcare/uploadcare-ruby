@@ -169,11 +169,11 @@ RSpec.describe Uploadcare::Api::Rest::DocumentConversions do
       expect(stub).to have_been_requested
     end
 
-    it 'omits unsupported boolean-like values' do
+    it 'passes through unsupported boolean-like values' do
       stub = stub_request(:post, 'https://api.uploadcare.com/convert/document/')
              .with do |request|
                body = JSON.parse(request.body)
-               body['paths'] == [conversion_path] && !body.key?('store')
+               body['paths'] == [conversion_path] && body['store'] == 'no'
              end
              .to_return(
                status: 200,

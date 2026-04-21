@@ -145,6 +145,26 @@ RSpec.describe Uploadcare::Operations::UploadRouter do
       f1.close!
       f2.close!
     end
+
+    it 'decodes encoded multipart form field names back to original filenames' do
+      f1 = Tempfile.new('a')
+      f2 = Tempfile.new('b')
+
+      allow(upload_files_api).to receive(:direct_many)
+        .with(files: [f1, f2], request_options: {})
+        .and_return(Uploadcare::Result.success(
+                      {
+                        'photo.jpg' => 'uuid-a',
+                        '__uploadcare_form_1__photo.jpg' => 'uuid-b'
+                      }
+                    ))
+
+      result = router.upload_files(files: [f1, f2])
+      expect(result.map(&:original_filename)).to eq(['photo.jpg', 'photo.jpg'])
+
+      f1.close!
+      f2.close!
+    end
   end
 
   describe '#upload_from_url' do

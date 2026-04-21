@@ -59,6 +59,7 @@ class Uploadcare::Api::Rest::DocumentConversions
     case normalized
     when true, 1, '1', 'true' then '1'
     when false, 0, '0', 'false' then '0'
+    else value
     end
   end
 end

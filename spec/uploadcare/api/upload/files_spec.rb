@@ -88,6 +88,31 @@ RSpec.describe Uploadcare::Api::Upload::Files do
       expect(result.error).to be_a(ArgumentError)
       expect(result.error.message).to include('files cannot be empty')
     end
+
+    it 'uses a stable encoded field key when duplicate filenames collide' do
+      params = {}
+      io_class = Class.new(StringIO) do
+        def original_filename
+          'photo.jpg'
+        end
+      end
+
+      io_one = Uploadcare::Internal::UploadIo.wrap(io_class.new('a'))
+      io_two = Uploadcare::Internal::UploadIo.wrap(io_class.new('b'))
+
+      begin
+        files.send(:form_data_for, io_one, params, field_index: 0)
+        files.send(:form_data_for, io_two, params, field_index: 1)
+      ensure
+        io_one.close!
+        io_two.close!
+      end
+
+      keys = params.keys
+      expect(keys.length).to eq(2)
+      expect(keys.first).not_to match(/\A__uploadcare_form_/)
+      expect(keys.last).to match(/\A__uploadcare_form_1__/)
+    end
   end
 
   describe '#from_url' do
@@ -159,6 +184,12 @@ RSpec.describe Uploadcare::Api::Upload::Files do
       )
 
       expect(stub).to have_been_requested
+    end
+
+    it 'computes exponential polling intervals with max cap' do
+      expect(files.send(:next_poll_sleep, initial: 1, max_interval: 2, attempt: 0)).to eq(1.0)
+      expect(files.send(:next_poll_sleep, initial: 1, max_interval: 2, attempt: 1)).to eq(2.0)
+      expect(files.send(:next_poll_sleep, initial: 1, max_interval: 2, attempt: 5)).to eq(2.0)
     end
   end
 
@@ -249,6 +280,28 @@ RSpec.describe Uploadcare::Api::Upload::Files do
              )
 
       files.multipart_start(filename: 'test.mp4', size: 100_000_000, content_type: 'video/mp4')
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'does not send part_size to multipart/start endpoint' do
+      stub = stub_request(:post, 'https://upload.uploadcare.com/multipart/start/')
+             .with do |request|
+               body = URI.decode_www_form(request.body).to_h
+               !body.key?('part_size')
+             end
+             .to_return(
+               status: 200,
+               body: { uuid: 'mp-uuid', parts: [] }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      files.multipart_start(
+        filename: 'test.mp4',
+        size: 100_000_000,
+        content_type: 'video/mp4',
+        part_size: 1024
+      )
 
       expect(stub).to have_been_requested
     end

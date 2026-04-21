@@ -60,7 +60,7 @@ class Uploadcare::Operations::UploadRouter
       client.api.upload.files.direct_many(files: [file], request_options: request_options, **options)
     )
     file_name, uuid = response.first
-    Uploadcare::Resources::File.new({ uuid: uuid, original_filename: file_name }, client)
+    Uploadcare::Resources::File.new({ uuid: uuid, original_filename: decode_uploaded_filename(file_name) }, client)
   end
 
   # Upload multiple files directly.
@@ -74,7 +74,7 @@ class Uploadcare::Operations::UploadRouter
       client.api.upload.files.direct_many(files: files, request_options: request_options, **options)
     )
     response.map do |file_name, uuid|
-      Uploadcare::Resources::File.new({ uuid: uuid, original_filename: file_name }, client)
+      Uploadcare::Resources::File.new({ uuid: uuid, original_filename: decode_uploaded_filename(file_name) }, client)
     end
   end
 
@@ -152,5 +152,11 @@ class Uploadcare::Operations::UploadRouter
     return ::File.size(object.path) if object.respond_to?(:path) && object.path && ::File.exist?(object.path)
 
     0
+  end
+
+  def decode_uploaded_filename(file_name)
+    encoded_prefix = /\A__uploadcare_form_\d+(?:_\d+)?__(.+)\z/
+    match = encoded_prefix.match(file_name.to_s)
+    match ? match[1] : file_name
   end
 end
