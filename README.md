@@ -296,6 +296,12 @@ status = client.uploads.upload_from_url_status(token: job.fetch("token"))
 
 When async mode is enabled, the convenience layer returns the raw status token hash because the file does not exist yet.
 
+Polling options for synchronous URL uploads:
+
+- `poll_interval` (default: `1`) initial status polling interval in seconds
+- `poll_max_interval` (default: `10`) maximum polling interval in seconds
+- `poll_timeout` (default: `300`) maximum total polling time in seconds
+
 ### Multipart upload with progress
 
 ```ruby
