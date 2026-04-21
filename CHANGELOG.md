@@ -31,10 +31,21 @@ Please review [`MIGRATING_V5.md`](./MIGRATING_V5.md) before upgrading from v4.x.
 * Upload IO normalization for both path-backed files and generic readable streams
 * Client/config scoping so resources do not silently fall back to the wrong account context
 * Video conversion `store` parameter normalization
+* Document conversion boolean option normalization to match video conversion behavior
 * REST request signing so the resolved `Content-Type` is the same value used for both signing and transmission
+* REST query signing to use the same parameter encoding style as request transmission
 * Multipart upload retry semantics so `max_retries` means retries after the initial attempt
+* Multipart upload part retries/timeouts now honor configuration (`max_upload_retries`, `upload_timeout`)
+* Multipart upload worker cancellation after first parallel upload error to avoid unnecessary in-flight uploads
+* Multipart upload start payload no longer sends unsupported `part_size` to `/multipart/start/`
+* Upload-from-URL polling now supports exponential backoff with a configurable cap
 * Example cleanup to avoid leaking temporary files and groups in the demo project
 * Standalone example loading and script execution
+* File metadata resource initialization now correctly assigns instance UUID
+* Upload API batch uploads now avoid filename collisions without mutating caller-visible filenames
+* REST authenticator now uses deterministic protocol-required digests (`MD5` body digest and `SHA1` HMAC digest)
+* Upload API debug logger now avoids emitting request/response headers and bodies by default
+* Thread-safe lazy memoization for client/accessor/API endpoint objects and CNAME cache internals
 
 ### Removed
 
