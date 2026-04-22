@@ -150,11 +150,11 @@ class Uploadcare::Operations::MultipartUpload
   def process_parallel_jobs(worker_file, context, &)
     loop do
       job = context[:queue].pop
-      break unless process_parallel_job(worker_file, context, job, &)
+      break unless process_parallel_job?(worker_file, context, job, &)
     end
   end
 
-  def process_parallel_job(worker_file, context, job)
+  def process_parallel_job?(worker_file, context, job)
     return false if job.nil? || context[:cancel][:value]
 
     presigned_url, index = job

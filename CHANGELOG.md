@@ -1,6 +1,6 @@
 # Changelog
 
-## 5.0.0.rc1 — 2026-03-24
+## 5.0.0.rc1 — 2026-04-22
 
 This release candidate is the first public v5 cut from the rewritten codebase.
 
