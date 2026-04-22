@@ -78,11 +78,8 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
       it 'accepts an object with read but no path by normalizing it to a temp file' do
         obj = StringIO.new(file_content)
 
-        allow(upload_files_api).to receive(:multipart_start)
-          .and_return(Uploadcare::Result.success(start_response))
         allow(upload_client).to receive(:upload_part_to_url)
-        allow(upload_files_api).to receive(:multipart_complete)
-          .and_return(Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
+        allow(upload_files_api).to receive_messages(multipart_start: Uploadcare::Result.success(start_response), multipart_complete: Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
 
         result = uploader.upload(file: obj)
         expect(result.success?).to be(true)
@@ -118,11 +115,8 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
 
     context 'when performing sequential upload (threads <= 1)' do
       before do
-        allow(upload_files_api).to receive(:multipart_start)
-          .and_return(Uploadcare::Result.success(start_response))
         allow(upload_client).to receive(:upload_part_to_url)
-        allow(upload_files_api).to receive(:multipart_complete)
-          .and_return(Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
+        allow(upload_files_api).to receive_messages(multipart_start: Uploadcare::Result.success(start_response), multipart_complete: Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
       end
 
       it 'returns a successful Result with the UUID' do
@@ -219,14 +213,11 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
         custom_uploader = described_class.new(upload_client: upload_client, config: custom_config)
 
         chunks = []
-        allow(upload_files_api).to receive(:multipart_start)
-          .and_return(Uploadcare::Result.success({
-                                                   'uuid' => 'mp-uuid-123',
-                                                   'parts' => ['https://s3.example.com/p0', 'https://s3.example.com/p1']
-                                                 }))
         allow(upload_client).to receive(:upload_part_to_url) { |_url, data| chunks << data.bytesize }
-        allow(upload_files_api).to receive(:multipart_complete)
-          .and_return(Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
+        allow(upload_files_api).to receive_messages(multipart_start: Uploadcare::Result.success({
+                                                                                                  'uuid' => 'mp-uuid-123',
+                                                                                                  'parts' => ['https://s3.example.com/p0', 'https://s3.example.com/p1']
+                                                                                                }), multipart_complete: Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
 
         custom_uploader.upload(file: tempfile, part_size: 512)
         expect(chunks.first).to eq(512)
@@ -243,11 +234,8 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
 
     context 'when reporting progress via block callback' do
       before do
-        allow(upload_files_api).to receive(:multipart_start)
-          .and_return(Uploadcare::Result.success(start_response))
         allow(upload_client).to receive(:upload_part_to_url)
-        allow(upload_files_api).to receive(:multipart_complete)
-          .and_return(Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
+        allow(upload_files_api).to receive_messages(multipart_start: Uploadcare::Result.success(start_response), multipart_complete: Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
       end
 
       it 'calls the block for each uploaded part' do
@@ -273,11 +261,8 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
 
     context 'when performing parallel upload (threads > 1)' do
       before do
-        allow(upload_files_api).to receive(:multipart_start)
-          .and_return(Uploadcare::Result.success(start_response))
         allow(upload_client).to receive(:upload_part_to_url)
-        allow(upload_files_api).to receive(:multipart_complete)
-          .and_return(Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
+        allow(upload_files_api).to receive_messages(multipart_start: Uploadcare::Result.success(start_response), multipart_complete: Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
       end
 
       it 'returns a successful Result' do
@@ -507,11 +492,8 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
 
     context 'when multipart_complete fails' do
       it 'returns a failure Result' do
-        allow(upload_files_api).to receive(:multipart_start)
-          .and_return(Uploadcare::Result.success(start_response))
         allow(upload_client).to receive(:upload_part_to_url)
-        allow(upload_files_api).to receive(:multipart_complete)
-          .and_return(Uploadcare::Result.failure(StandardError.new('complete failed')))
+        allow(upload_files_api).to receive_messages(multipart_start: Uploadcare::Result.success(start_response), multipart_complete: Uploadcare::Result.failure(StandardError.new('complete failed')))
 
         result = uploader.upload(file: tempfile)
         expect(result.failure?).to be(true)
@@ -541,10 +523,7 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
         small_file.rewind
 
         many_urls = 5.times.map { |i| "https://s3.example.com/part#{i}" }
-        allow(upload_files_api).to receive(:multipart_start)
-          .and_return(Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123', 'parts' => many_urls }))
-        allow(upload_files_api).to receive(:multipart_complete)
-          .and_return(Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
+        allow(upload_files_api).to receive_messages(multipart_start: Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123', 'parts' => many_urls }), multipart_complete: Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
 
         uploaded_count = 0
         allow(upload_client).to receive(:upload_part_to_url) { uploaded_count += 1 }
@@ -573,10 +552,7 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
         small_file.rewind
 
         many_urls = 5.times.map { |i| "https://s3.example.com/part#{i}" }
-        allow(upload_files_api).to receive(:multipart_start)
-          .and_return(Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123', 'parts' => many_urls }))
-        allow(upload_files_api).to receive(:multipart_complete)
-          .and_return(Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
+        allow(upload_files_api).to receive_messages(multipart_start: Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123', 'parts' => many_urls }), multipart_complete: Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
 
         uploaded_urls = []
         allow(upload_client).to receive(:upload_part_to_url) do |url, _data|
@@ -593,10 +569,7 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
 
     context 'when parallel worker encounters nil part_data' do
       it 'stops processing that worker gracefully' do
-        allow(upload_files_api).to receive(:multipart_start)
-          .and_return(Uploadcare::Result.success(start_response))
-        allow(upload_files_api).to receive(:multipart_complete)
-          .and_return(Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
+        allow(upload_files_api).to receive_messages(multipart_start: Uploadcare::Result.success(start_response), multipart_complete: Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
         allow(upload_client).to receive(:upload_part_to_url)
 
         result = uploader.upload(file: tempfile, threads: 2)

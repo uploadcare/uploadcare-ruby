@@ -19,6 +19,10 @@ Version 5 introduces:
 - a modernized internal structure built around Zeitwerk and Faraday
 
 Version 5 also raises the minimum supported Ruby version to `3.3`.
+The CI matrix for v5 verifies `3.3`, `3.4`, and `4.0`.
+
+If you run examples locally with `.env`, use it only for developer machines and never commit real keys.
+The examples expect `UPLOADCARE_PUBLIC_KEY` and `UPLOADCARE_SECRET_KEY` to come from environment variables.
 
 ## Recommended Migration Order
 

@@ -3,6 +3,8 @@
 require 'spec_helper'
 
 RSpec.describe Uploadcare::Api::Rest::DocumentConversions do
+  subject(:document_conversions) { described_class.new(rest: rest) }
+
   let(:config) do
     Uploadcare::Configuration.new(
       public_key: 'demopublickey',
@@ -13,8 +15,6 @@ RSpec.describe Uploadcare::Api::Rest::DocumentConversions do
   let(:file_uuid) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' }
 
   let(:rest) { Uploadcare::Api::Rest.new(config: config) }
-
-  subject(:document_conversions) { described_class.new(rest: rest) }
 
   describe '#initialize' do
     it 'stores the rest client' do

@@ -104,7 +104,7 @@ class Uploadcare::Operations::MultipartUpload
     end
   end
 
-  def upload_parts_parallel(file, presigned_urls, part_size, threads, &block)
+  def upload_parts_parallel(file, presigned_urls, part_size, threads, &)
     total_size = file.respond_to?(:size) ? file.size : ::File.size(file.path)
     uploaded = { value: 0 }
     mutex = Mutex.new
@@ -131,7 +131,7 @@ class Uploadcare::Operations::MultipartUpload
 
     workers = threads.times.map do
       Thread.new do
-        run_parallel_worker(worker_context, &block)
+        run_parallel_worker(worker_context, &)
       end
     end
 
@@ -139,18 +139,18 @@ class Uploadcare::Operations::MultipartUpload
     raise errors.first if errors.any?
   end
 
-  def run_parallel_worker(context, &block)
+  def run_parallel_worker(context, &)
     ::File.open(context[:file_path], 'rb') do |worker_file|
-      process_parallel_jobs(worker_file, context, &block)
+      process_parallel_jobs(worker_file, context, &)
     rescue StandardError => e
       record_parallel_error(context, e)
     end
   end
 
-  def process_parallel_jobs(worker_file, context, &block)
+  def process_parallel_jobs(worker_file, context, &)
     loop do
       job = context[:queue].pop
-      break unless process_parallel_job(worker_file, context, job, &block)
+      break unless process_parallel_job(worker_file, context, job, &)
     end
   end
 

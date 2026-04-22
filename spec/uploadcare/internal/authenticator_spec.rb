@@ -3,6 +3,8 @@
 require 'spec_helper'
 
 RSpec.describe Uploadcare::Internal::Authenticator do
+  subject(:authenticator) { described_class.new(config: config) }
+
   let(:public_key) { 'test-public-key' }
   let(:secret_key) { 'test-secret-key' }
 
@@ -13,8 +15,6 @@ RSpec.describe Uploadcare::Internal::Authenticator do
       auth_type: auth_type
     )
   end
-
-  subject(:authenticator) { described_class.new(config: config) }
 
   describe '#initialize' do
     let(:auth_type) { 'Uploadcare.Simple' }

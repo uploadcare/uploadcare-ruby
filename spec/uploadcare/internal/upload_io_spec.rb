@@ -18,20 +18,20 @@ RSpec.describe Uploadcare::Internal::UploadIo do
       expect(wrapped.size).to eq(3)
 
       wrapped.close!
-      expect(File.exist?(file.path)).to eq(true)
+      expect(File.exist?(file.path)).to be(true)
       file.close!
     end
 
     it 'normalizes a non-path IO object into a temp file' do
       wrapped = described_class.wrap(StringIO.new('stream-data'))
 
-      expect(File.exist?(wrapped.path)).to eq(true)
+      expect(File.exist?(wrapped.path)).to be(true)
       expect(wrapped.original_filename).to eq('upload.bin')
       expect(wrapped.size).to eq(11)
 
       path = wrapped.path
       wrapped.close!
-      expect(File.exist?(path)).to eq(false)
+      expect(File.exist?(path)).to be(false)
     end
 
     it 'preserves original_filename when available on the source object' do
@@ -58,7 +58,7 @@ RSpec.describe Uploadcare::Internal::UploadIo do
 
         wrapped = described_class.wrap(source, filename: 'directory.txt')
 
-        expect(File.file?(wrapped.path)).to eq(true)
+        expect(File.file?(wrapped.path)).to be(true)
         expect(wrapped.original_filename).to eq('directory.txt')
         wrapped.close!
       end

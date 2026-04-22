@@ -3,6 +3,8 @@
 require 'spec_helper'
 
 RSpec.describe Uploadcare::Api::Rest::Addons do
+  subject(:addons) { described_class.new(rest: rest) }
+
   let(:config) do
     Uploadcare::Configuration.new(
       public_key: 'demopublickey',
@@ -14,8 +16,6 @@ RSpec.describe Uploadcare::Api::Rest::Addons do
   let(:request_id) { 'req-abc-123' }
 
   let(:rest) { Uploadcare::Api::Rest.new(config: config) }
-
-  subject(:addons) { described_class.new(rest: rest) }
 
   describe '#initialize' do
     it 'stores the rest client' do

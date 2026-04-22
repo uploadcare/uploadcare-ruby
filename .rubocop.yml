@@ -4,7 +4,8 @@ plugins:
 
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.3
+  # RuboCop currently supports up to 3.5; CI still tests this gem on Ruby 4.0.
+  TargetRubyVersion: 3.4
   SuggestExtensions: false
   Exclude:
     - 'examples/**/*'
@@ -81,6 +82,9 @@ Style/FrozenStringLiteralComment:
 Style/ArgumentsForwarding:
   Enabled: false
 
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
 RSpec/ContextWording:
   Prefixes:
     - when
@@ -90,37 +94,17 @@ RSpec/ContextWording:
     - unless
     - for
 
-RSpec/MultipleExpectations:
-  Enabled: false
-
-RSpec/ExampleLength:
+# Kept intentionally for API-integration style specs where strict unit-style cops add noise.
+RSpec/AnyInstance:
   Enabled: false
 
 RSpec/DescribedClass:
   Enabled: false
 
-RSpec/DescribeClass:
+RSpec/ExampleLength:
   Enabled: false
 
-RSpec/ExpectActual:
-  Enabled: false
-
-RSpec/AnyInstance:
-  Enabled: false
-
-RSpec/SpecFilePathFormat:
-  Enabled: false
-
-RSpec/LeadingSubject:
-  Enabled: false
-
-RSpec/EmptyLineAfterExample:
-  Enabled: false
-
-RSpec/EmptyLineAfterFinalLet:
-  Enabled: false
-
-RSpec/EmptyLineAfterExampleGroup:
+RSpec/MultipleExpectations:
   Enabled: false
 
 RSpec/MultipleMemoizedHelpers:
@@ -129,32 +113,15 @@ RSpec/MultipleMemoizedHelpers:
 RSpec/NestedGroups:
   Enabled: false
 
-RSpec/NamedSubject:
-  Enabled: false
-
-RSpec/IteratedExpectation:
-  Enabled: false
-
-RSpec/BeEq:
-  Enabled: false
-
-RSpec/StubbedMock:
-  Enabled: false
-
-RSpec/EmptyLineAfterHook:
+# Existing test suite uses classic doubles/spies heavily; keep these disabled until specs are migrated.
+RSpec/DescribeClass:
   Enabled: false
 
 RSpec/MessageSpies:
   Enabled: false
 
+RSpec/StubbedMock:
+  Enabled: false
+
 RSpec/VerifiedDoubles:
-  Enabled: false
-
-RSpec/ReceiveMessages:
-  Enabled: false
-
-RSpec/HookArgument:
-  Enabled: false
-
-RSpec/ClassCheck:
   Enabled: false

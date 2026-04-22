@@ -94,7 +94,7 @@ RSpec.describe Uploadcare::Operations::UploadRouter do
         result = router.upload([file1, file2])
         expect(result).to be_an(Array)
         expect(result.length).to eq(2)
-        result.each { |f| expect(f).to be_a(Uploadcare::Resources::File) }
+        expect(result).to all(be_a(Uploadcare::Resources::File))
 
         file1.close!
         file2.close!

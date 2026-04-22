@@ -5,6 +5,8 @@ require 'tempfile'
 require 'stringio'
 
 RSpec.describe Uploadcare::Api::Upload::Files do
+  subject(:files) { described_class.new(upload: upload_client) }
+
   let(:config) do
     Uploadcare::Configuration.new(
       public_key: 'demopublickey',
@@ -14,8 +16,6 @@ RSpec.describe Uploadcare::Api::Upload::Files do
   end
 
   let(:upload_client) { Uploadcare::Api::Upload.new(config: config) }
-
-  subject(:files) { described_class.new(upload: upload_client) }
 
   describe '#initialize' do
     it 'stores the upload client' do

@@ -3,6 +3,8 @@
 require 'spec_helper'
 
 RSpec.describe Uploadcare::Api::Upload do
+  subject(:upload) { described_class.new(config: config) }
+
   let(:config) do
     Uploadcare::Configuration.new(
       public_key: 'demopublickey',
@@ -10,8 +12,6 @@ RSpec.describe Uploadcare::Api::Upload do
       auth_type: 'Uploadcare.Simple'
     )
   end
-
-  subject(:upload) { described_class.new(config: config) }
 
   describe '#initialize' do
     it 'stores the config' do

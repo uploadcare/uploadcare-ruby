@@ -183,8 +183,7 @@ RSpec.describe Uploadcare::CnameGenerator do
   describe 'integration tests' do
     context 'with known public key' do
       before do
-        allow(Uploadcare.configuration).to receive(:public_key).and_return('test_key_123')
-        allow(Uploadcare.configuration).to receive(:cdn_base_postfix).and_return('https://ucarecd.net/')
+        allow(Uploadcare.configuration).to receive_messages(public_key: 'test_key_123', cdn_base_postfix: 'https://ucarecd.net/')
       end
 
       it 'generates consistent CNAME across method calls' do
@@ -227,8 +226,7 @@ RSpec.describe Uploadcare::CnameGenerator do
       it 'generates expected CNAME and CDN base for real-world scenario' do
         # Real-world test with a specific public key
         test_public_key = 'pub_12345test'
-        allow(Uploadcare.configuration).to receive(:public_key).and_return(test_public_key)
-        allow(Uploadcare.configuration).to receive(:cdn_base_postfix).and_return('https://ucarecd.net/')
+        allow(Uploadcare.configuration).to receive_messages(public_key: test_public_key, cdn_base_postfix: 'https://ucarecd.net/')
 
         # Calculate expected CNAME manually
         sha256_hex = Digest::SHA256.hexdigest(test_public_key)

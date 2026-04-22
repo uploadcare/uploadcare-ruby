@@ -51,6 +51,10 @@ Please review [`MIGRATING_V5.md`](./MIGRATING_V5.md) before upgrading from v4.x.
 
 * Support for Ruby versions below `3.3`
 * Legacy configuration and transport patterns that were no longer aligned with the v5 architecture
+### Risk & Rollout Notes
+* Ruby support baseline is now `>= 3.3`; verify application/runtime images before upgrading.
+* Recommended rc1 rollout: wire explicit `Uploadcare::Client` instances first, then migrate call sites incrementally.
+* Keep rollback simple by pinning to the latest v4 release if your app depends on removed internal APIs.
 
 ## 4.5.0 — 2025-07-25
 ### Added

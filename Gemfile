@@ -2,26 +2,25 @@
 
 source 'https://rubygems.org'
 
-# Ruby 3.4+ and 4.0+ compatibility - these gems are no longer in stdlib
-gem 'base64'
-gem 'benchmark' # Required for Ruby 4.0+ compatibility
-gem 'bigdecimal'
-gem 'cgi' # Required for Ruby 4.0+ compatibility
-gem 'mutex_m'
-
 group :development, :test do
+  # Ruby 3.4+ stopped shipping some stdlib components as default gems.
+  if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('3.4')
+    gem 'base64', require: false
+    gem 'cgi', require: false
+  end
+
+  # Ruby 4.1+ removes tsort from default gems.
+  gem('tsort', require: false) if Gem::Version.new(RUBY_VERSION) >= Gem::Version.new('4.1')
+
   gem 'byebug'
   gem 'dotenv', '~> 3.2' # For running examples with .env file
-  gem 'irb'
   gem 'rake'
-  gem 'rdoc'
   gem 'redcarpet'
   gem 'rspec'
   gem 'rubocop'
   gem 'rubocop-rake'
   gem 'rubocop-rspec'
   gem 'simplecov', require: false
-  gem 'tsort', require: false
   gem 'vcr'
   gem 'webmock'
   gem 'yard'
