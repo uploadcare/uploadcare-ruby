@@ -1,0 +1,69 @@
+{
+  "$schema": "https://context7.com/schema/context7.json",
+  "projectTitle": "Uploadcare Ruby",
+  "description": "Ruby API client for Uploadcare uploads, file management, conversions, webhooks, add-ons, and signed CDN URLs.",
+  "url": "https://context7.com/uploadcare/uploadcare-ruby",
+  "public_key": "pk_WoigIc3LrHKMjLxnI0IA2",
+  "branch": "main",
+  "folders": [
+    "lib",
+    "api_examples"
+  ],
+  "excludeFolders": [
+    ".github",
+    "bin",
+    "spec",
+    "vendor",
+    "tmp",
+    "coverage",
+    "pkg",
+    "doc",
+    "*archive*",
+    "*archived*",
+    "old",
+    "docs/old",
+    "*deprecated*",
+    "*legacy*",
+    "*previous*",
+    "*outdated*",
+    "*superseded*"
+  ],
+  "excludeFiles": [
+    "CHANGELOG.md",
+    "changelog.md",
+    "CHANGELOG.mdx",
+    "changelog.mdx",
+    "LICENSE",
+    "LICENSE.md",
+    "license.md",
+    "CODE_OF_CONDUCT.md",
+    "code_of_conduct.md",
+    "Gemfile",
+    "Rakefile",
+    "uploadcare-ruby.gemspec",
+    ".rspec",
+    ".rubocop.yml",
+    ".yardopts"
+  ],
+  "rules": [
+    "Install the gem as `uploadcare-ruby` and require it with `require \"uploadcare\"`.",
+    "Configure credentials with `Uploadcare.config.public_key` and `Uploadcare.config.secret_key` or the UPLOADCARE_PUBLIC_KEY and UPLOADCARE_SECRET_KEY environment variables.",
+    "Never hardcode real Uploadcare API keys in examples or application code; use environment variables or an application secrets store.",
+    "Use `Uploadcare::Uploader.upload` for automatic upload method selection and `Uploadcare::Uploader.multipart_upload` for explicit large-file multipart uploads.",
+    "Prefer public entity helpers such as `Uploadcare::File`, `Uploadcare::FileList`, `Uploadcare::Group`, `Uploadcare::Webhook`, and conversion methods over internal clients."
+  ],
+  "previousVersions": [
+    {
+      "tag": "v4.4.3"
+    },
+    {
+      "tag": "v3.3.2"
+    },
+    {
+      "tag": "v2.1.2"
+    },
+    {
+      "tag": "v1.2.2"
+    }
+  ]
+}
