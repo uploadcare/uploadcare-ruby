@@ -36,7 +36,9 @@ module Uploadcare
               fl_path = fl_with_params.delete(:next)
               previous_page_path = previous_page.delete(:next)
               expect(fl_with_params).to eq(previous_page)
-              expect(CGI.parse(URI.parse(fl_path).query)).to eq(CGI.parse(URI.parse(previous_page_path).query))
+              fl_query = URI.decode_www_form(URI.parse(fl_path).query).sort
+              previous_page_query = URI.decode_www_form(URI.parse(previous_page_path).query).sort
+              expect(fl_query).to eq(previous_page_query)
             end
           end
         end

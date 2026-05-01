@@ -12,8 +12,10 @@ def generate_big_file
   return if File.file?('spec/fixtures/big.jpeg')
 
   FileUtils.cp('spec/fixtures/kitten.jpeg', 'spec/fixtures/big.jpeg')
-  source_file = File.open('spec/fixtures/kitten.jpeg')
-  destination = File.open('spec/fixtures/big.jpeg', 'w')
-  destination.write(source_file.read)
-  destination.write('a' * 10 * 1024 * 1024)
+  File.open('spec/fixtures/kitten.jpeg') do |source_file|
+    File.open('spec/fixtures/big.jpeg', 'w') do |destination|
+      destination.write(source_file.read)
+      destination.write('a' * 10 * 1024 * 1024)
+    end
+  end
 end
