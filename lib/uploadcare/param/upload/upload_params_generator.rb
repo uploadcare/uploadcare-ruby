@@ -12,9 +12,10 @@ module Uploadcare
           def call(options = {})
             {
               'UPLOADCARE_PUB_KEY' => Uploadcare.config.public_key,
-              'UPLOADCARE_STORE' => store_value(options[:store]),
-              'signature' => (Upload::SignatureGenerator.call if Uploadcare.config.sign_uploads)
-            }.merge(metadata(options)).compact
+              'UPLOADCARE_STORE' => store_value(options[:store])
+            }.merge(
+              Uploadcare.config.sign_uploads ? Upload::SignatureGenerator.call : {}
+            ).merge(metadata(options)).compact
           end
 
           private
