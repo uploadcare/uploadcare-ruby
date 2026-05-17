@@ -1,8 +1,10 @@
 # Changelog
 
-## 5.0.0.rc1 — 2026-04-22
+## 5.0.0 — 2026-05-17
 
-This release candidate is the first public v5 cut from the rewritten codebase.
+v5 is stable.
+No API changes since `5.0.0.rc1`.
+This cut removes the prerelease suffix, ports the relevant upstream release-readiness updates, and publishes the v5 line as stable.
 
 Please review [`MIGRATING_V5.md`](./MIGRATING_V5.md) before upgrading from v4.x.
 
@@ -12,6 +14,7 @@ Please review [`MIGRATING_V5.md`](./MIGRATING_V5.md) before upgrading from v4.x.
 * Full endpoint-parity access through `client.api.rest` and `client.api.upload`
 * Canonical endpoint examples for the REST API and Upload API under `api_examples/`
 * Updated workflow-oriented examples under `examples/`
+* Context7 configuration tuned for the v5 client-first API and example layout
 * Multi-account configuration support through client-scoped `Uploadcare::Configuration`
 * Documented internal API surface through YARD for maintainers and integrators
 * Ruby 4.0 support in the test matrix
@@ -46,14 +49,20 @@ Please review [`MIGRATING_V5.md`](./MIGRATING_V5.md) before upgrading from v4.x.
 * REST authenticator now uses deterministic protocol-required digests (`MD5` body digest and `SHA1` HMAC digest)
 * Upload API debug logger now avoids emitting request/response headers and bodies by default
 * Thread-safe lazy memoization for client/accessor/API endpoint objects and CNAME cache internals
+* Test fixture generation now closes source and destination file handles correctly
 
 ### Removed
 
 * Support for Ruby versions below `3.3`
 * Legacy configuration and transport patterns that were no longer aligned with the v5 architecture
+
 ### Risk & Rollout Notes
+
 * Ruby support baseline is now `>= 3.3`; verify application/runtime images before upgrading.
-* Recommended rc1 rollout: wire explicit `Uploadcare::Client` instances first, then migrate call sites incrementally.
+* Recommended rollout: wire explicit `Uploadcare::Client` instances first, then migrate call sites incrementally.
+* Validate large-file uploads because multipart retry and cancellation behavior was hardened.
+* Validate custom REST signing integrations if your app reimplements signing outside this gem.
+* After deploy, monitor upload errors, multipart worker failures, and REST signing errors for 24-72 hours.
 * Keep rollback simple by pinning to the latest v4 release if your app depends on removed internal APIs.
 
 ## 4.5.0 — 2025-07-25
