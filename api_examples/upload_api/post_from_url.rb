@@ -1,6 +1,4 @@
-require 'uploadcare'
-Uploadcare.config.public_key = 'YOUR_PUBLIC_KEY'
-Uploadcare.config.secret_key = 'YOUR_SECRET_KEY'
+#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-source_url = 'https://source.unsplash.com/featured'
-Uploadcare::Uploader.upload(source_url, store: 'auto')
+require_relative '../support/run_upload_example'

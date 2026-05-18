@@ -1,6 +1,4 @@
-require 'uploadcare'
-Uploadcare.config.public_key = 'YOUR_PUBLIC_KEY'
-Uploadcare.config.secret_key = 'YOUR_SECRET_KEY'
+#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-groups = Uploadcare::GroupList.list(limit: 10)
-groups.each { |group| puts group.inspect }
+require_relative '../support/run_rest_example'

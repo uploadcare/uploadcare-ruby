@@ -1,5 +1,4 @@
-require 'uploadcare'
-Uploadcare.config.public_key = 'YOUR_PUBLIC_KEY'
-Uploadcare.config.secret_key = 'YOUR_SECRET_KEY'
+#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-puts Uploadcare::Webhook.delete('https://yourwebhook.com')
+require_relative '../support/run_rest_example'

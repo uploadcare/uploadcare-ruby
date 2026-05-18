@@ -7,7 +7,9 @@
   "branch": "main",
   "folders": [
     "lib",
-    "api_examples"
+    "api_examples",
+    "examples",
+    "docs"
   ],
   "excludeFolders": [
     ".github",
@@ -47,10 +49,13 @@
   ],
   "rules": [
     "Install the gem as `uploadcare-ruby` and require it with `require \"uploadcare\"`.",
-    "Configure credentials with `Uploadcare.config.public_key` and `Uploadcare.config.secret_key` or the UPLOADCARE_PUBLIC_KEY and UPLOADCARE_SECRET_KEY environment variables.",
+    "Prefer explicit `Uploadcare::Client` instances for application code, especially when an app uses more than one Uploadcare project.",
+    "Configure credentials with `Uploadcare::Client.new(public_key: ..., secret_key: ...)`, `Uploadcare.configure`, or the UPLOADCARE_PUBLIC_KEY and UPLOADCARE_SECRET_KEY environment variables.",
     "Never hardcode real Uploadcare API keys in examples or application code; use environment variables or an application secrets store.",
-    "Use `Uploadcare::Uploader.upload` for automatic upload method selection and `Uploadcare::Uploader.multipart_upload` for explicit large-file multipart uploads.",
-    "Prefer public entity helpers such as `Uploadcare::File`, `Uploadcare::FileList`, `Uploadcare::Group`, `Uploadcare::Webhook`, and conversion methods over internal clients."
+    "Use `client.files`, `client.groups`, `client.uploads`, `client.project`, `client.webhooks`, `client.file_metadata`, `client.addons`, and `client.conversions` for normal application workflows.",
+    "Use `client.api.rest` and `client.api.upload` when exact REST API or Upload API endpoint parity is needed.",
+    "Use `client.uploads.upload` for automatic upload method selection and `client.uploads.multipart_upload` for explicit multipart uploads.",
+    "Use `MIGRATING_V5.md` when upgrading applications from uploadcare-ruby v4.x to v5."
   ],
   "previousVersions": [
     {

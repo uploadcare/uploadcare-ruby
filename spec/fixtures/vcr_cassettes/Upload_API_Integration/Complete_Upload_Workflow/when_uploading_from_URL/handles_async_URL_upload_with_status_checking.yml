@@ -1,0 +1,115 @@
+---
+http_interactions:
+- request:
+    method: post
+    uri: https://upload.uploadcare.com/from_url/
+    body:
+      encoding: UTF-8
+      string: pub_key=<uploadcare_public_key>&source_url=https%3A%2F%2Fraw.githubusercontent.com%2Fuploadcare%2Fuploadcare-ruby%2Fmain%2Fspec%2Ffixtures%2Fkitten.jpeg
+    headers:
+      User-Agent:
+      - Faraday v2.14.1
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sun, 08 Feb 2026 06:32:41 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - OPTIONS, GET, POST
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning, Retry-After
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 37ef7bc4-2cfb-4392-b6d7-cb6ead6537ec
+    body:
+      encoding: ASCII-8BIT
+      string: '{"type":"token","token":"<uploadcare_upload_token>"}'
+  recorded_at: Sun, 08 Feb 2026 06:32:41 GMT
+- request:
+    method: get
+    uri: https://upload.uploadcare.com/from_url/status/?token=<uploadcare_upload_token>
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - UploadcareRuby/5.0.0/<uploadcare_public_key> (Ruby/4.0.1)
+      Accept:
+      - application/vnd.uploadcare-v0.7+json
+      Content-Type:
+      - application/json
+      Authorization:
+      - Uploadcare.Simple <uploadcare_authorization>
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Sun, 08 Feb 2026 06:32:42 GMT
+      Content-Type:
+      - application/json
+      Transfer-Encoding:
+      - chunked
+      Connection:
+      - keep-alive
+      Server:
+      - nginx
+      Vary:
+      - Accept-Encoding
+      - Origin
+      Access-Control-Allow-Origin:
+      - "*"
+      Access-Control-Allow-Methods:
+      - GET, POST, HEAD, OPTIONS
+      Access-Control-Allow-Headers:
+      - DNT, X-PINGOTHER, X-UC-User-Agent
+      Access-Control-Max-Age:
+      - '1'
+      Access-Control-Allow-Credentials:
+      - 'true'
+      Access-Control-Expose-Headers:
+      - Warning, Retry-After
+      X-Xss-Protection:
+      - 1; mode=block
+      X-Content-Type-Options:
+      - nosniff
+      X-Uploadcare-Request-Id:
+      - 4e27c6f6-d3a7-45d6-b6c7-938128958aa9
+    body:
+      encoding: ASCII-8BIT
+      string: '{"size":1290,"total":1290,"done":1290,"uuid":"0cad2be4-55b3-4ceb-87be-15993c25c6bb","file_id":"0cad2be4-55b3-4ceb-87be-15993c25c6bb","original_filename":"kitten.jpeg","is_image":true,"is_stored":false,"image_info":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null},"video_info":null,"content_info":{"mime":{"mime":"image/jpeg","type":"image","subtype":"jpeg"},"image":{"dpi":[96,96],"width":50,"format":"JPEG","height":50,"sequence":false,"color_mode":"RGB","orientation":null,"geo_location":null,"datetime_original":null}},"is_ready":true,"filename":"kitten.jpeg","mime_type":"image/jpeg","metadata":{},"status":"success"}'
+  recorded_at: Sun, 08 Feb 2026 06:32:42 GMT
+recorded_with: VCR 6.2.0

@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://upload.uploadcare.com/from_url/status/?token=0313e4e2-f2ca-4564-833b-4f71bc8cba27
+    uri: https://upload.uploadcare.com/from_url/status/?token=<uploadcare_upload_token>
     body:
       encoding: UTF-8
       string: ''

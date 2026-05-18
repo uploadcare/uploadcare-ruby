@@ -2,42 +2,67 @@
 
 # lib/uploadcare/client/cname_generator.rb
 require 'digest'
+require 'monitor'
+require 'uri'
 
-module Uploadcare
-  # CNAME generator for Uploadcare CDN
-  # see https://uploadcare.com/docs/delivery/cdn
-  class CnameGenerator
-    CNAME_PREFIX_LEN = 10
+# CNAME generator for Uploadcare CDN.
+# @see https://uploadcare.com/docs/delivery/cdn
+class Uploadcare::CnameGenerator
+  # CNAME prefix length.
+  CNAME_PREFIX_LEN = 10
 
-    class << self
-      def cdn_base_postfix
-        @cdn_base_postfix ||= begin
-          uri = URI.parse(Uploadcare.config.cdn_base_postfix)
-          uri.host = "#{custom_cname}.#{uri.host}"
+  class << self
+    # Build CDN base URL with a generated CNAME prefix.
+    #
+    # @param config [Uploadcare::Configuration]
+    # @return [String]
+    def cdn_base_postfix(config: Uploadcare.configuration)
+      key = [config.cdn_base_postfix, config.public_key]
+      cached = @cdn_base_postfix_cache&.[](key)
+      return cached if cached
+
+      cache_mutex.synchronize do
+        @cdn_base_postfix_cache ||= {}
+        @cdn_base_postfix_cache[key] ||= begin
+          uri = URI.parse(config.cdn_base_postfix)
+          uri.host = "#{generate_cname(public_key: config.public_key)}.#{uri.host}"
           uri.to_s
         rescue URI::InvalidURIError => e
           raise Uploadcare::Exception::ConfigurationError, "Invalid cdn_base_postfix URL: #{e.message}"
         end
       end
+    end
 
-      def generate_cname
-        custom_cname
-      end
+    # Generate a CNAME prefix for the current public key.
+    #
+    # @param public_key [String]
+    # @return [String]
+    def generate_cname(public_key: Uploadcare.configuration.public_key)
+      custom_cname(public_key)
+    end
 
-      private
+    private
 
-      # Generate CNAME prefix
-      def custom_cname
-        @custom_cname ||= begin
-          public_key = Uploadcare.config.public_key
-          raise Uploadcare::Exception::ConfigurationError, "Invalid public_key: #{public_key}" if public_key.nil?
+    # Generate CNAME prefix
+    def custom_cname(public_key = Uploadcare.configuration.public_key)
+      raise Uploadcare::Exception::ConfigurationError, "Invalid public_key: #{public_key}" if public_key.nil?
 
+      cached = @custom_cname_cache&.[](public_key)
+      return cached if cached
+
+      cache_mutex.synchronize do
+        @custom_cname_cache ||= {}
+        @custom_cname_cache[public_key] ||= begin
           sha256_hex = Digest::SHA256.hexdigest(public_key)
           sha256_hex = sha256_hex.to_i(16)
           sha256_base36 = sha256_hex.to_s(36)
           sha256_base36[0, CNAME_PREFIX_LEN]
         end
       end
+    end
+
+    def cache_mutex
+      @cache_mutex ||= Monitor.new
     end
   end
 end

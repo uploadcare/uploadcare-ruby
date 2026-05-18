@@ -1,70 +1,88 @@
 # frozen_string_literal: true
 
-# Gem version
-require 'ruby/version'
+require 'zeitwerk'
+require 'faraday'
 
-# Exceptions
-require 'exception/throttle_error'
-require 'exception/request_error'
-require 'exception/retry_error'
-require 'exception/auth_error'
-require 'exception/configuration_error'
-
-# Entities
-require 'entity/entity'
-require 'entity/file'
-require 'entity/file_list'
-require 'entity/group'
-require 'entity/group_list'
-require 'entity/project'
-require 'entity/uploader'
-require 'entity/webhook'
-
-# Param
-require 'param/webhook_signature_verifier'
-
-# General api
-require 'api/api'
-
-# SignedUrlGenerators
-require 'signed_url_generators/akamai_generator'
-require 'signed_url_generators/base_generator'
-
-# CNAME generator
-require 'cname_generator'
-
-# Ruby wrapper for Uploadcare API
-#
-# @see https://uploadcare.com/docs/api_reference
 module Uploadcare
-  extend Dry::Configurable
+  @loader = Zeitwerk::Loader.for_gem
 
-  setting :public_key,                default: ENV.fetch('UPLOADCARE_PUBLIC_KEY', '')
-  setting :secret_key,                default: ENV.fetch('UPLOADCARE_SECRET_KEY', '')
-  setting :auth_type,                 default: 'Uploadcare'
-  setting :multipart_size_threshold,  default: 100 * 1024 * 1024
-  setting :rest_api_root,             default: 'https://api.uploadcare.com'
-  setting :upload_api_root,           default: 'https://upload.uploadcare.com'
-  setting :max_request_tries,         default: 100
-  setting :base_request_sleep,        default: 1 # seconds
-  setting :max_request_sleep,         default: 60.0 # seconds
-  setting :sign_uploads,              default: false
-  setting :upload_signature_lifetime, default: 30 * 60 # seconds
-  setting :max_throttle_attempts,     default: 5
-  setting :upload_threads,            default: 2 # used for multiupload only ATM
-  setting :framework_data,            default: ''
-  setting :file_chunk_size,           default: 100
-  setting :logger,                    default: Logger.new($stdout)
-  setting :default_cdn_base,          default: ENV.fetch('UPLOADCARE_DEFAULT_CDN_BASE', 'https://ucarecdn.com/')
-  setting :cdn_base_postfix,          default: ENV.fetch('UPLOADCARE_CDN_BASE', 'https://ucarecd.net/')
-  # Enable automatic *.ucarecdn.net subdomains and CNAME generation
-  setting :use_subdomains,            default: false
-  setting :custom_cname,              default: -> { CnameGenerator.generate_cname } # CNAME domain
-  setting :cdn_base, default: lambda {
-    if config.use_subdomains && config.public_key
-      CnameGenerator.cdn_base_postfix
-    else
-      config.default_cdn_base
+  @loader.setup
+
+  require_relative 'uploadcare/cname_generator'
+
+  class << self
+    # Configure the global Uploadcare instance.
+    #
+    # @yield [config] Configuration block
+    # @yieldparam config [Uploadcare::Configuration] The configuration object
+    def configure
+      yield configuration if block_given?
+    ensure
+      @client = nil
     end
-  }
+
+    # Access the global configuration.
+    #
+    # @return [Uploadcare::Configuration]
+    def configuration
+      @configuration ||= Configuration.new
+    end
+
+    # Access a global client instance, or create one with overrides.
+    #
+    # @param config [Uploadcare::Configuration, nil] Custom configuration
+    # @param options [Hash] Configuration overrides
+    # @return [Uploadcare::Client]
+    def client(config: nil, **options)
+      if options.empty? && (config.nil? || config.equal?(configuration))
+        return (@client ||= Client.new(config: configuration))
+      end
+
+      Client.new(config: config || configuration, **options)
+    end
+
+    # @return [Uploadcare::Client::FilesAccessor]
+    def files
+      client.files
+    end
+
+    # @return [Uploadcare::Client::GroupsAccessor]
+    def groups
+      client.groups
+    end
+
+    # @return [Uploadcare::Operations::UploadRouter]
+    def uploads
+      client.uploads
+    end
+
+    # @return [Uploadcare::Client::ProjectAccessor]
+    def project
+      client.project
+    end
+
+    # Eager-load the gem namespace through Zeitwerk.
+    #
+    # @return [void]
+    def eager_load!
+      @loader.eager_load
+    end
+  end
+
+  # Top-level aliases for the public resource classes.
+  File = Resources::File
+  # Alias for the group resource.
+  Group = Resources::Group
+  # Alias for the project resource.
+  Project = Resources::Project
+  # Alias for the webhook resource.
+  Webhook = Resources::Webhook
+  # Alias for the file metadata resource.
+  FileMetadata = Resources::FileMetadata
+  # Alias for the add-on execution resource.
+  AddonExecution = Resources::AddonExecution
+  # Alias for the document conversion resource.
+  DocumentConversion = Resources::DocumentConversion
+  # Alias for the video conversion resource.
+  VideoConversion = Resources::VideoConversion
 end

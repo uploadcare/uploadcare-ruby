@@ -1,4 +1,4 @@
-# Ruby integration for Uploadcare
+# Uploadcare Ruby SDK
 
 ![license](https://img.shields.io/badge/license-MIT-brightgreen.svg)
 [![Build Status][actions-img]][actions-badge]
@@ -6,948 +6,634 @@
 
 [actions-badge]: https://github.com/uploadcare/uploadcare-ruby/actions/workflows/ruby.yml
 [actions-img]: https://github.com/uploadcare/uploadcare-ruby/actions/workflows/ruby.yml/badge.svg
-[coverals-img]: https://coveralls.io/repos/github/uploadcare/uploadcare-ruby/badge.svg?branch=main
-[coverals]: https://coveralls.io/github/uploadcare/uploadcare-ruby?branch=main
 [stack-img]: https://img.shields.io/badge/tech-stack-0690fa.svg?style=flat
 [stack]: https://stackshare.io/uploadcare/stacks/
 
-Uploadcare Ruby integration handles uploads and further operations with files by
-wrapping Upload and REST APIs.
+`uploadcare-ruby` is a framework-agnostic client for the Uploadcare Upload API and REST API.
 
+The gem is built around:
+
+- explicit `Uploadcare::Client` instances
+- client-scoped configuration for multi-account use
+- a small convenience layer for common workflows
+- full endpoint coverage through `client.api.rest` and `client.api.upload`
+
+- [Requirements](#requirements)
+- [Compatibility](#compatibility)
 - [Installation](#installation)
-- [Usage](#usage)
-  - [Uploading files](#uploading-files)
-    - [Uploading and storing a single file](#uploading-and-storing-a-single-file)
-    - [Multiple ways to upload files](#multiple-ways-to-upload-files)
-    - [Uploading options](#uploading-options)
-  - [File management](#file-management)
-    - [File](#file)
-    - [FileList](#filelist)
-    - [Pagination](#pagination)
-    - [Custom File Metadata](#custom-file-metadata)
-    - [Group](#group)
-    - [GroupList](#grouplist)
-    - [Webhook](#webhook)
-    - [Add-Ons](#add-ons)
-    - [Project](#project)
-    - [Conversion](#conversion)
-- [Useful links](#useful-links)
+- [Design](#design)
+- [Quick Start](#quick-start)
+- [Configuration](#configuration)
+- [Multi-Account Usage](#multi-account-usage)
+- [Uploads](#uploads)
+- [Files](#files)
+- [Groups](#groups)
+- [Project](#project)
+- [Metadata](#metadata)
+- [Webhooks](#webhooks)
+- [Add-ons](#add-ons)
+- [Conversions](#conversions)
+- [Secure Delivery](#secure-delivery)
+- [Errors and Results](#errors-and-results)
+- [Request Options](#request-options)
+- [Raw API Access](#raw-api-access)
+- [Examples](#examples)
+- [Upgrading from v4.x](#upgrading-from-v4x)
 
 ## Requirements
 
-- ruby 3.0+
+- Ruby 3.3+
 
 ## Compatibility
 
-Note that `uploadcare-ruby` **3.x** is not backward compatible with
-**[2.x](https://github.com/uploadcare/uploadcare-ruby/tree/v2.x)**.
+This gem is intended for plain Ruby applications and for framework integrations built on top of it.
+
+- Use explicit `Uploadcare::Client` instances when you need multiple accounts in one process.
+- Use `Uploadcare.configure` and `Uploadcare.client` when one global default client is enough.
+- Use `client.api.rest` and `client.api.upload` when you want endpoint-level parity with the official API references.
 
 ## Installation
 
-Add this line to your application's Gemfile:
+Add the gem to your Gemfile:
 
 ```ruby
 gem "uploadcare-ruby"
 ```
 
-And then execute:
+Then install:
 
-    $ bundle
+```bash
+bundle
+```
 
-You can also use it outside of Rails or other Apps.
+Set credentials with environment variables:
 
-Install the gem directly:
+```bash
+export UPLOADCARE_PUBLIC_KEY=your_public_key
+export UPLOADCARE_SECRET_KEY=your_secret_key
+```
 
-    $ gem install uploadcare-ruby
+## Design
 
-Then in your Ruby code:
+The gem has two public layers:
+
+### Convenience layer
+
+This is the default API you should use in applications:
+
+- `client.files`
+- `client.groups`
+- `client.uploads`
+- `client.project`
+- `client.webhooks`
+- `client.file_metadata`
+- `client.addons`
+- `client.conversions`
+
+This layer returns resources and collections, and it raises typed exceptions on failure.
+
+### Raw parity layer
+
+This layer mirrors Uploadcare’s REST and Upload APIs:
+
+- `client.api.rest`
+- `client.api.upload`
+
+This layer returns `Uploadcare::Result` objects so you can inspect success and failure explicitly.
+
+That split keeps app code clean without losing full API coverage.
+
+## Quick Start
 
 ```ruby
 require "uploadcare"
 
-Uploadcare.config.public_key = "your_public_key"
-Uploadcare.config.secret_key = "your_secret_key"
+client = Uploadcare::Client.new(
+  public_key: ENV.fetch("UPLOADCARE_PUBLIC_KEY"),
+  secret_key: ENV.fetch("UPLOADCARE_SECRET_KEY")
+)
 
-# Example usage
-uuid = "file_uuid"
-puts Uploadcare::File.info(uuid).inspect
+file = File.open("photo.jpg", "rb") do |io|
+  client.files.upload(io, store: true)
+end
+
+puts file.uuid
+puts file.cdn_url
 ```
 
-If you use `api_struct` gem in your project, replace it with `uploadcare-api_struct`:
+You can also configure a default global client:
 
 ```ruby
-gem 'uploadcare-api_struct'
+Uploadcare.configure do |config|
+  config.public_key = ENV.fetch("UPLOADCARE_PUBLIC_KEY")
+  config.secret_key = ENV.fetch("UPLOADCARE_SECRET_KEY")
+end
+
+file = File.open("photo.jpg", "rb") do |io|
+  Uploadcare.files.upload(io, store: true)
+end
 ```
 
-and run `bundle install`
+The recommended style is explicit `Uploadcare::Client` instances. Global configuration is best treated as a default.
 
-If already not, create your project in [Uploadcare dashboard](https://app.uploadcare.com/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby) and copy
-its [API keys](https://app.uploadcare.com/projects/-/api-keys/) from there.
+## Example Usage
 
-Set your Uploadcare keys in config file or through environment variables:
+This is the shortest end-to-end flow for the main public API:
+
+```ruby
+require "uploadcare"
+
+client = Uploadcare::Client.new(
+  public_key: ENV.fetch("UPLOADCARE_PUBLIC_KEY"),
+  secret_key: ENV.fetch("UPLOADCARE_SECRET_KEY")
+)
+
+file = File.open("photo.jpg", "rb") do |io|
+  client.files.upload(io, store: true)
+end
+
+group = client.groups.create(uuids: [file.uuid])
+
+puts file.uuid
+puts file.cdn_url
+puts group.id
+puts group.cdn_url
+```
+
+## Configuration
+
+Use `Uploadcare.configure` to set process-wide defaults:
+
+```ruby
+Uploadcare.configure do |config|
+  config.public_key = "public_key"
+  config.secret_key = "secret_key"
+  config.auth_type = "Uploadcare"
+  config.use_subdomains = false
+end
+```
+
+Or build configuration objects directly:
+
+```ruby
+base_config = Uploadcare::Configuration.new(
+  public_key: "public_key",
+  secret_key: "secret_key"
+)
+
+client = Uploadcare::Client.new(config: base_config)
+```
+
+Configuration objects are copyable:
+
+```ruby
+account_a = Uploadcare::Client.new(config: base_config.with(public_key: "pk-a", secret_key: "sk-a"))
+account_b = Uploadcare::Client.new(config: base_config.with(public_key: "pk-b", secret_key: "sk-b"))
+```
+
+Common configuration options:
+
+- `public_key`
+- `secret_key`
+- `auth_type`
+- `multipart_size_threshold`
+- `multipart_chunk_size`
+- `upload_threads`
+- `upload_timeout`
+- `max_upload_retries`
+- `sign_uploads`
+- `upload_signature_lifetime`
+- `use_subdomains`
+- `cdn_base_postfix`
+- `default_cdn_base`
+
+CDN helpers:
+
+```ruby
+Uploadcare.configure do |config|
+  config.use_subdomains = true
+  config.cdn_base_postfix = "https://ucarecd.net/"
+  config.default_cdn_base = "https://ucarecdn.com/"
+end
+
+Uploadcare.configuration.custom_cname
+Uploadcare.configuration.cdn_base
+```
+
+## Multi-Account Usage
+
+The gem is designed to support multiple Uploadcare projects in the same process:
+
+```ruby
+primary = Uploadcare::Client.new(public_key: "pk-1", secret_key: "sk-1")
+secondary = Uploadcare::Client.new(public_key: "pk-2", secret_key: "sk-2")
+
+primary_file = primary.files.find(uuid: "uuid-1")
+secondary_file = secondary.files.find(uuid: "uuid-2")
+```
+
+You can also derive temporary variants from an existing client:
+
+```ruby
+admin_client = primary.with(secret_key: "different-secret")
+```
+
+Resource objects retain their client context, so subsequent instance operations stay bound to the correct account.
+
+## Uploads
+
+### Smart upload
+
+`client.uploads.upload` accepts:
+
+- an IO or file object
+- an array of IO or file objects
+- an HTTP or HTTPS URL string
+
+```ruby
+file = File.open("photo.jpg", "rb") do |io|
+  client.uploads.upload(io, store: true)
+end
+
+remote_file = client.uploads.upload("https://example.com/image.jpg", store: true)
+```
+
+### Single file upload
+
+```ruby
+file = File.open("photo.jpg", "rb") do |io|
+  client.files.upload(io, store: true, metadata: { subsystem: "avatars" })
+end
+```
+
+### Multiple file upload
+
+```ruby
+files = [
+  File.open("photo-1.jpg", "rb"),
+  File.open("photo-2.jpg", "rb")
+]
+
+uploaded = client.uploads.upload(files, store: true)
+
+files.each(&:close)
+```
+
+### Upload from URL
+
+Synchronous:
+
+```ruby
+file = client.files.upload_from_url("https://example.com/image.jpg", store: true)
+```
+
+Async:
+
+```ruby
+job = client.uploads.upload_from_url(url: "https://example.com/image.jpg", async: true, store: true)
+status = client.uploads.upload_from_url_status(token: job.fetch("token"))
+```
+
+When async mode is enabled, the convenience layer returns the raw status token hash because the file does not exist yet.
+
+Polling options for synchronous URL uploads:
+
+- `poll_interval` (default: `1`) initial status polling interval in seconds
+- `poll_max_interval` (default: `10`) maximum polling interval in seconds
+- `poll_timeout` (default: `300`) maximum total polling time in seconds
+
+### Multipart upload with progress
+
+```ruby
+File.open("large-video.mp4", "rb") do |io|
+  file = client.uploads.multipart_upload(file: io, store: true, threads: 4) do |progress|
+    uploaded = progress[:uploaded]
+    total = progress[:total]
+    puts "#{uploaded}/#{total}"
+  end
+
+  puts file.uuid
+end
+```
+
+### Signed uploads
+
+You can enable signed uploads globally:
+
+```ruby
+client = Uploadcare::Client.new(
+  public_key: "public",
+  secret_key: "secret",
+  sign_uploads: true
+)
+```
+
+Or pass explicit signature data per request:
+
+```ruby
+File.open("photo.jpg", "rb") do |io|
+  client.files.upload(io, signature: "signature", expire: 1_900_000_000)
+end
+```
+
+### Upload options
+
+Common upload options:
+
+- `store: true | false | "auto"`
+- `metadata: { key: value }`
+- `signature: "..."`
+- `expire: unix_timestamp`
+- `async: true` for URL uploads
+- `threads:` and `part_size:` for multipart uploads
+
+If you prefer the older top-level style, the same flows can still be written through the global client:
+
+```ruby
+Uploadcare.configure do |config|
+  config.public_key = ENV.fetch("UPLOADCARE_PUBLIC_KEY")
+  config.secret_key = ENV.fetch("UPLOADCARE_SECRET_KEY")
+end
+
+file = File.open("photo.jpg", "rb") do |io|
+  Uploadcare.files.upload(io, store: true)
+end
+```
+
+## Files
+
+### Find a file
+
+```ruby
+file = client.files.find(uuid: "file-uuid")
+```
+
+### List files
+
+```ruby
+files = client.files.list(limit: 100)
+files.each { |file| puts file.uuid }
+```
+
+List responses are `Uploadcare::Collections::Paginated`:
+
+```ruby
+files.next_page
+files.previous_page
+files.all
+```
+
+Filters and API parameters can still be passed through:
+
+```ruby
+files = client.files.list(stored: true, removed: false, limit: 100)
+```
+
+### Resource operations
+
+```ruby
+file.store
+file.delete
+file.reload
+file.reload(params: { include: "appdata" })
+```
+
+### Batch operations
+
+```ruby
+result = client.files.batch_store(uuids: ["uuid-1", "uuid-2"])
+
+puts result.status
+puts result.result.map(&:uuid)
+puts result.problems
+```
+
+The same shape applies to `client.files.batch_delete`.
+
+### Copy operations
+
+```ruby
+copied = client.files.copy_to_local(source: file.uuid, options: { store: true })
+remote_url = client.files.copy_to_remote(source: file.uuid, target: "custom_storage")
+```
+
+Instance-level variants are also available:
+
+```ruby
+copied = file.copy_to_local(options: { store: true })
+remote_url = file.copy_to_remote(target: "custom_storage")
+```
+
+## Groups
+
+Create a group:
+
+```ruby
+group = client.groups.create(uuids: ["uuid-1", "uuid-2"])
+```
+
+Find and list groups:
+
+```ruby
+group = client.groups.find(group_id: "group-uuid~2")
+groups = client.groups.list(limit: 50)
+```
+
+Delete a group:
+
+```ruby
+group.delete
+```
+
+Useful group helpers:
+
+```ruby
+group.cdn_url
+group.file_cdn_urls
+```
+
+## Project
+
+Fetch the current project:
+
+```ruby
+project = client.project.current
+
+puts project.name
+puts project.pub_key
+puts project.collaborators
+```
+
+## Metadata
+
+```ruby
+client.file_metadata.update(uuid: file.uuid, key: "category", value: "avatar")
+client.file_metadata.show(uuid: file.uuid, key: "category")
+client.file_metadata.index(uuid: file.uuid)
+client.file_metadata.delete(uuid: file.uuid, key: "category")
+```
+
+`Uploadcare::FileMetadata` is also available as a resource if you need to hold metadata state locally.
+
+## Webhooks
+
+```ruby
+webhook = client.webhooks.create(
+  target_url: "https://example.com/uploadcare",
+  event: "file.uploaded",
+  is_active: true
+)
+
+client.webhooks.list
+client.webhooks.update(id: webhook.id, is_active: false)
+client.webhooks.delete(target_url: webhook.target_url)
+```
+
+## Add-ons
+
+```ruby
+execution = client.addons.aws_rekognition_detect_labels(uuid: file.uuid)
+client.addons.aws_rekognition_detect_labels_status(request_id: execution.request_id)
+
+scan = client.addons.uc_clamav_virus_scan(uuid: file.uuid)
+client.addons.uc_clamav_virus_scan_status(request_id: scan.request_id)
+
+background = client.addons.remove_bg(uuid: file.uuid)
+client.addons.remove_bg_status(request_id: background.request_id)
+```
+
+These methods return `Uploadcare::AddonExecution` resources.
+
+## Conversions
+
+Document conversions:
+
+```ruby
+info = client.conversions.documents.info(uuid: file.uuid)
+job = client.conversions.documents.convert(uuid: file.uuid, format: :pdf)
+status = client.conversions.documents.status(token: job.fetch("result").first.fetch("token"))
+```
+
+Video conversions:
+
+```ruby
+job = client.conversions.videos.convert(uuid: file.uuid, format: :webm, quality: :normal)
+status = client.conversions.videos.status(token: job.result.first.fetch("token"))
+```
+
+Document conversion `convert` returns the API response hash.
+
+Video conversion `convert` returns a `Uploadcare::VideoConversion` resource.
+
+## Secure Delivery
+
+The gem includes signed URL generators for delivery workflows.
+
+```ruby
+generator = Uploadcare::SignedUrlGenerators::AkamaiGenerator.new(
+  cdn_host: "example.com",
+  secret_key: "your_hex_encoded_akamai_secret"
+)
+
+signed_url = generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3")
+```
+
+Custom ACL and wildcard examples:
+
+```ruby
+generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3", "/*")
+generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3", wildcard: true)
+```
+
+## Errors and Results
+
+The convenience layer raises exceptions:
+
+- `Uploadcare::Exception::RequestError`
+- `Uploadcare::Exception::InvalidRequestError`
+- `Uploadcare::Exception::NotFoundError`
+- `Uploadcare::Exception::UploadError`
+- `Uploadcare::Exception::MultipartUploadError`
+- `Uploadcare::Exception::UploadTimeoutError`
+- `Uploadcare::Exception::ThrottleError`
+
+Example:
+
+```ruby
+begin
+  client.files.find(uuid: "missing")
+rescue Uploadcare::Exception::NotFoundError => e
+  warn e.message
+end
+```
+
+The raw API layer returns `Uploadcare::Result`:
+
+```ruby
+result = client.api.rest.files.info(uuid: "file-uuid")
+
+if result.success?
+  puts result.success
+else
+  warn result.error_message
+end
+```
+
+## Request Options
+
+Most API calls accept `request_options:` and pass them to the HTTP layer.
+
+Example:
+
+```ruby
+client.files.find(uuid: "file-uuid", request_options: { timeout: 10 })
+```
+
+Use this when you need per-request timeout control without changing the client’s default configuration.
+
+## Raw API Access
+
+The gem exposes full endpoint-level access through `client.api`.
+
+REST API:
+
+```ruby
+client.api.rest.files.list(params: { limit: 10 })
+client.api.rest.files.info(uuid: "file-uuid")
+client.api.rest.project.show
+client.api.rest.webhooks.list
+```
+
+Upload API:
+
+```ruby
+File.open("photo.jpg", "rb") do |io|
+  client.api.upload.files.direct(file: io, store: true)
+end
+
+client.api.upload.files.from_url(source_url: "https://example.com/image.jpg", async: true)
+client.api.upload.groups.create(files: ["uuid-1", "uuid-2"])
+```
+
+Use this layer when you want exact control over the documented endpoints or when you are wrapping the gem from another library.
+
+The raw layer is part of the public surface, but it is intentionally less promoted than `client.files`, `client.groups`, and the other convenience accessors.
+
+## Examples
+
+- [api_examples/README.md](./api_examples/README.md): one canonical script per documented REST and Upload API endpoint
+- [examples/README.md](./examples/README.md): workflow-oriented demos built on the public client API
+
+Run examples with project-managed Ruby:
 
 ```bash
-export UPLOADCARE_PUBLIC_KEY=your_public_key
-export UPLOADCARE_SECRET_KEY=your_private_key
+mise exec -- ruby api_examples/rest_api/get_project.rb
+mise exec -- ruby examples/simple_upload.rb spec/fixtures/kitten.jpeg
 ```
 
-Or configure your app yourself if you are using different way of storing keys.
-Gem configuration is available in `Uploadcare.configuration`. Full list of
-settings can be seen in [`lib/uploadcare.rb`](lib/uploadcare.rb)
+## Upgrading from v4.x
 
-```ruby
-# your_config_initializer_file.rb
-Uploadcare.config.public_key = "your_public_key"
-Uploadcare.config.secret_key = "your_private_key"
-```
+See:
 
-## Usage
-
-This section contains practical usage examples. Please note, everything that
-follows gets way more clear once you've looked through our
-[docs](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
-and [Upload](https://uploadcare.com/api-refs/upload-api/) and [REST](https://uploadcare.com/api-refs/rest-api/) API refs.
-
-You can also find an example project [here](https://github.com/uploadcare/uploadcare-rails-example).
-
-In examples we’re going to use `demo.ucarecd.net` domain. Check your project's subdomain in the [Dashboard](https://app.uploadcare.com/projects/-/settings/#delivery).
-
-### Uploading files
-
-#### Uploading and storing a single file
-
-Using Uploadcare is simple, and here are the basics of handling files.
-
-```ruby
-@file_to_upload = File.open("your-file.png")
-
-@uc_file = Uploadcare::Uploader.upload(@file_to_upload, store: "auto")
-
-@uc_file.uuid
-# => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40"
-
-# URL for the file, can be used with your website or app right away
-@uc_file.original_file_url
-# => "https://demo.ucarecd.net/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/your-file.png"
-
-# CDN URL for the file
-@uc_file.cdn_url
-# => "https://demo.ucarecd.net/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
-#
-# With subdomains enabled:
-# Uploadcare.config.use_subdomains = true
-# => "https://a1b2c3d4e5.ucarecdn.net/dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/"
-```
-
-The `store` option can have these possible values:
-
-- `true`: mark the uploaded file as stored.
-- `false`: do not mark the uploaded file as stored and remove it after 24 hours.
-- `"auto"`: defers the choice of storage behavior to the [auto-store setting](https://app.uploadcare.com/projects/-/settings/#storage) for your Uploadcare project. This is the default behavior.
-
-Your might then want to store or delete the uploaded file.
-
-```ruby
-# that's how you store a file, if you have uploaded the file using store: false and changed your mind later
-@uc_file.store
-# => #<Uploadcare::Api::File ...
-
-# and that works for deleting it
-@uc_file.delete
-# => #<Uploadcare::Api::File ...
-```
-
-#### Multiple ways to upload files
-
-Uploadcare supports multiple ways to upload files:
-
-```ruby
-# Smart upload - detects type of passed object and picks appropriate upload method
-# If you have a large file (more than 100Mb / 10485760 bytes), the uploader will automatically process it with a multipart upload
-
-Uploadcare::Uploader.upload("https://placekitten.com/96/139", store: "auto")
-```
-
-There are explicit ways to select upload type:
-
-```ruby
-files = [File.open("1.jpg"), File.open("1.jpg")]
-Uploadcare::Uploader.upload_files(files, store: 'auto')
-
-Uploadcare::Uploader.upload_from_url("https://placekitten.com/96/139", store: "auto")
-```
-
-It is possible to track progress of the upload-from-URL process. To do that, you should specify the `async` option and get a token:
-
-```ruby
-Uploadcare::Uploader.upload_from_url("https://placekitten.com/96/139", async: true)
-# => "c6e31082-6bdc-4cb3-bef5-14dd10574d72"
-```
-
-After the request for uploading-from-URL is sent, you can check the progress of the upload by sending the `get_upload_from_url_status` request:
-
-```ruby
-Uploadcare::Uploader.get_upload_from_url_status("1251ee66-3631-4416-a2fb-96ba59f5a515")
-# => Success({:size=>453543, :total=>453543, :done=>453543, :uuid=>"5c51a7fe-e45d-42a2-ba5e-79957ff4bdab", :file_id=>"5c51a7fe-e45d-42a2-ba5e-79957ff4bdab", :original_filename=>"2250", :is_image=>true, :is_stored=>false, :image_info=>{:dpi=>[96, 96], :width=>2250, :format=>"JPEG", :height=>2250, :sequence=>false, :color_mode=>"RGB", :orientation=>nil, :geo_location=>nil, :datetime_original=>nil}, :video_info=>nil, :content_info=>{:mime=>{:mime=>"image/jpeg", :type=>"image", :subtype=>"jpeg"}, :image=>{:dpi=>[96, 96], :width=>2250, :format=>"JPEG", :height=>2250, :sequence=>false, :color_mode=>"RGB", :orientation=>nil, :geo_location=>nil, :datetime_original=>nil}}, :is_ready=>true, :filename=>"2250", :mime_type=>"image/jpeg", :metadata=>{}, :status=>"success"})
-```
-
-In case of the `async` option is disabled, uploadcare-ruby tries to request the upload status several times (depending on the `max_request_tries` config param) and then returns uploaded file attributes.
-
-```ruby
-# multipart upload - can be useful for files bigger than 10 mb
-Uploadcare::Uploader.multipart_upload(File.open("big_file.bin"), store: true)
-```
-
-For the multipart upload you can pass a block to add some additional logic after each file chunk is uploaded.
-For example to track file uploading progress you can do something like this:
-
-```ruby
-file = File.open("big_file.bin")
-progress = 0
-Uploadcare::Uploader.multipart_upload(file, store: true) do |options|
-  progress += (100.0 / options[:links_count])
-  puts "PROGRESS = #{progress}"
-end
-```
-
-Output of the code above looks like:
-
-```console
-PROGRESS = 4.545454545454546
-PROGRESS = 9.090909090909092
-PROGRESS = 13.636363636363637
-...
-```
-
-Options available in a block:
-
-- **:chunk_size** - size of each chunk in bytes;
-- **:object** - file object which is going to be uploaded;
-- **:offset** - offset from the beginning of a File object in bytes;
-- **:link_id** - index of a link provided by Uploadcare API. Might be treated as index of a chunk;
-- **:links** - array of links for uploading file's chunks;
-- **:links_count** - count of the array of links.
-
-#### Uploading options
-
-You can override [auto-store setting](https://app.uploadcare.com/projects/-/settings/#storage) from your Uploadcare project for each upload request:
-
-```ruby
-@api.upload(files, store: true)          # mark the uploaded file as stored.
-@api.upload(files, store: false)         # do not mark the uploaded file as stored and remove it after 24 hours.
-@api.upload_from_url(url, store: "auto") # defers the choice of storage behavior to the auto-store setting.
-```
-
-You can upload file with custom metadata, for example `subsystem` and `pet`:
-
-```ruby
-@api.upload(files, metadata: { subsystem: 'my_subsystem', pet: 'cat' } )
-@api.upload_from_url(url, metadata: { subsystem: 'my_subsystem', pet: 'cat' })
-```
-
-### File management
-
-Entities are representations of objects in Uploadcare cloud.
-
-#### File
-
-File entity contains its metadata. It also supports `include` param to include additional fields to the file object, such as: "appdata".
-
-```ruby
-@file = Uploadcare::File.file("FILE_UUID", include: "appdata")
-{
-  "datetime_removed"=>nil,
-  "datetime_stored"=>"2018-11-26T12:49:10.477888Z",
-  "datetime_uploaded"=>"2018-11-26T12:49:09.945335Z",
-  "is_image"=>true,
-  "is_ready"=>true,
-  "mime_type"=>"image/jpeg",
-  "original_file_url"=>"https://demo.ucarecd.net/FILE_UUID/pineapple.jpg",
-  "original_filename"=>"pineapple.jpg",
-  "size"=>642,
-  "url"=>"https://api.uploadcare.com/files/FILE_UUID/",
-  "uuid"=>"FILE_UUID",
-  "variations"=>nil,
-  "content_info"=>{
-    "mime"=>{
-      "mime"=>"image/jpeg",
-      "type"=>"image",
-      "subtype"=>"jpeg"
-    },
-    "image"=>{
-      "format"=>"JPEG",
-      "width"=>500,
-      "height"=>500,
-      "sequence"=>false,
-      "orientation"=>6,
-      "geo_location"=>{
-        "latitude"=>55.62013611111111,
-        "longitude"=>37.66299166666666
-      },
-      "datetime_original"=>"2018-08-20T08:59:50",
-      "dpi"=>[72, 72]
-    }
-  },
-  "metadata"=>{
-    "subsystem"=>"uploader",
-    "pet"=>"cat"
-  },
-  "appdata"=>{
-    "uc_clamav_virus_scan"=>{
-      "data"=>{
-        "infected"=>true,
-        "infected_with"=>"Win.Test.EICAR_HDB-1"
-      },
-      "version"=>"0.104.2",
-      "datetime_created"=>"2021-09-21T11:24:33.159663Z",
-      "datetime_updated"=>"2021-09-21T11:24:33.159663Z"
-    },
-    "remove_bg"=>{
-      "data"=>{
-        "foreground_type"=>"person"
-      },
-      "version"=>"1.0",
-      "datetime_created"=>"2021-07-25T12:24:33.159663Z",
-      "datetime_updated"=>"2021-07-25T12:24:33.159663Z"
-    },
-    "aws_rekognition_detect_labels"=>{
-      "data"=>{
-        "LabelModelVersion"=>"2.0",
-        "Labels"=>[
-          {
-            "Confidence"=>93.41645812988281,
-            "Instances"=>[],
-            "Name"=>"Home Decor",
-            "Parents"=>[]
-          },
-          {
-            "Confidence"=>70.75951385498047,
-            "Instances"=>[],
-            "Name"=>"Linen",
-            "Parents"=>[{ "Name"=>"Home Decor" }]
-          },
-          {
-            "Confidence"=>64.7123794555664,
-            "Instances"=>[],
-            "Name"=>"Sunlight",
-            "Parents"=>[]
-          },
-          {
-            "Confidence"=>56.264793395996094,
-            "Instances"=>[],
-            "Name"=>"Flare",
-            "Parents"=>[{ "Name"=>"Light" }]
-          },
-          {
-            "Confidence"=>50.47153854370117,
-            "Instances"=>[],
-            "Name"=>"Tree",
-            "Parents"=>[{ "Name"=>"Plant" }]
-          }
-        ]
-      },
-      "version"=>"2016-06-27",
-      "datetime_created"=>"2021-09-21T11:25:31.259763Z",
-      "datetime_updated"=>"2021-09-21T11:27:33.359763Z"
-    }
-  }
-}
-
-@file.local_copy # copy file to local storage
-
-@file.remote_copy # copy file to remote storage
-
-@file.store # stores file, returns updated metadata
-
-@file.delete #deletes file. Returns updated metadata
-```
-
-The File object is also can be converted if it is a document or a video file. Imagine, you have a document file:
-
-```ruby
-@file = Uploadcare::File.file("FILE_UUID")
-```
-
-To convert it to an another file, just do:
-
-```ruby
-@converted_file = @file.convert_document({ format: "png", page: "1" }, store: true)
-# => {
-#    "uuid"=>"<NEW_FILE_UUID>"}
-#    ...other file info...
-# }
-# OR
-# Failure({:"<FILE_UUID>/document/-/format/png/-/page/1/"=>"the target_format is not a supported 'to' format for this source file. <you_source_file_extension> -> png"})
-```
-
-Same works for video files:
-
-```ruby
-@converted_file = @file.convert_video(
-  {
-    format: "ogg",
-    quality: "best",
-    cut: { start_time: "0:0:0.1", length: "end" },
-    size: { resize_mode: "change_ratio", width: "600", height: "400" },
-    thumb: { N: 1, number: 2 }
-  },
-  store: true
-)
-# => {
-#    "uuid"=>"<NEW_FILE_UUID>"}
-#    ...other file info...
-# }
-# OR
-# Failure({:"<FILE_UUID>/video/-/size/600x400/preserve_ratio/-/quality/best/-/format/ogg/-/cut/0:0:0.1/end/-/thumbs~1/2/"=>"CDN Path error: Failed to parse remainder \"/preserve_ratio\" of \"size/600x400/preserve_ratio\""})
-```
-
-More about file conversion [here](#conversion).
-Metadata of deleted files is stored permanently.
-
-#### FileList
-
-`Uploadcare::FileList` represents the whole collection of files (or it's
-subset) and provides a way to iterate through it, making pagination transparent.
-FileList objects can be created using `Uploadcare::FileList.file_list` method.
-
-```ruby
-@list = Uploadcare::FileList.file_list
-# Returns instance of Uploadcare::Entity::FileList
-<Hashie::Mash
-  next=nil
-  per_page=100
-  previous=nil
-  results=[
-    # Array of Entity::File
-  ]
-  total=8>
-# load last page of files
-@files = @list.files
-# load all files
-@all_files = @list.load
-```
-
-This method accepts some options to control which files should be fetched and
-how they should be fetched:
-
-- **:limit** — Controls page size. Accepts values from 1 to 1000, defaults to 100.
-- **:stored** — Can be either `true` or `false`. When true, file list will contain only stored files. When false — only not stored.
-- **:removed** — Can be either `true` or `false`. When true, file list will contain only removed files. When false — all except removed. Defaults to false.
-- **:ordering** — Controls the order of returned files. Available values: `datetime_uploaded`, `-datetime_uploaded`. Defaults to `datetime_uploaded`. More info can be found [here](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/filesList).
-- **:from** — Specifies the starting point for a collection. Resulting collection will contain files from the given value and to the end in a direction set by an **ordering** option. When files are ordered by `datetime_updated` in any direction, accepts either a `DateTime` object or an ISO 8601 string. When files are ordered by size, accepts non-negative integers (size in bytes). More info can be found [here](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/filesList).
-
-Options used to create a file list can be accessed through `#options` method.
-Note that, once set, they don't affect file fetching process anymore and are
-stored just for your convenience. That is why they are frozen.
-
-```ruby
-options = {
-  limit: 10,
-  stored: true,
-  ordering: "-datetime_uploaded",
-  from: "2017-01-01T00:00:00",
-}
-@list = @api.file_list(options)
-```
-
-To simply get all associated objects:
-
-```ruby
-@list.all # => returns Array of Files
-```
-
-#### Pagination
-
-Initially, `FileList` is a paginated collection. It can be navigated using following methods:
-
-```ruby
-  @file_list = Uploadcare::FileList.file_list
-  # Let's assume there are 250 files in cloud. By default, UC loads 100 files. To get next 100 files, do:
-  @next_page = @file_list.next_page
-  # To get previous page:
-  @previous_page = @file_list.previous_page
-```
-
-Alternatively, it's possible to iterate through full list of groups or files with `each`:
-
-```ruby
-@list.each do |file|
-  p file.url
-end
-```
-
-#### Custom File Metadata
-
-File metadata is additional, arbitrary data, associated with uploaded file.
-As an example, you could store unique file identifier from your system.
-
-```ruby
-# Get file's metadata keys and values.
-Uploadcare::FileMetadata.index('FILE_UUID')
-
-# Get the value of a single metadata key.
-Uploadcare::FileMetadata.show('FILE_UUID', 'KEY')
-
-# Update the value of a single metadata key. If the key does not exist, it will be created.
-Uploadcare::FileMetadata.update('FILE_UUID', 'KEY', 'VALUE')
-
-# Delete a file's metadata key.
-Uploadcare::FileMetadata.delete('FILE_UUID', 'KEY')
-```
-
-#### Group
-
-Groups are structures intended to organize sets of separate files. Each group is
-assigned UUID. Note, group UUIDs include a `~#{files_count}` part at the end.
-That's a requirement of our API.
-
-```ruby
-# group can be created from an array of Uploadcare files (UUIDs)
-@file = "134dc30c-093e-4f48-a5b9-966fe9cb1d01"
-@file2 = "134dc30c-093e-4f48-a5b9-966fe9cb1d02"
-@files_ary = [@file, @file2]
-@group = Uploadcare::Group.create @files
-
-# group can be stored by group ID. It means that all files of a group will be stored on Uploadcare servers permanently
-Uploadcare::Group.store(group.id)
-
-# get a file group by its ID.
-Uploadcare::Group.rest_info(group.id)
-
-# group can be deleted by group ID.
-Uploadcare::Group.delete(group.id)
-# Note: This operation only removes the group object itself. All the files that were part of the group are left as is.
-
-# Returns group's CDN URL
-@group.cdn_url
-# => "https://demo.ucarecd.net/group-id~2/"
-
-# Returns CDN URLs of all files from group without API requesting
-@group.file_cdn_urls
-# => 'https://demo.ucarecd.net/0513dda0-582f-447d-846f-096e5df9e2bb~2/nth/0/'
-```
-
-#### GroupList
-
-`GroupList` is a list of `Group`
-
-```ruby
-@group_list = Uploadcare::GroupList.list
-# To get an array of groups:
-@groups = @group_list.all
-```
-
-This is a paginated list, so [pagination](#Pagination) methods apply
-
-#### Webhook
-
-https://uploadcare.com/docs/api_reference/rest/webhooks/
-
-You can use webhooks to provide notifications about your uploads to target urls.
-This gem lets you create and manage webhooks.
-
-Each webhook payload can be signed with a secret (the `signing_secret` option) to ensure that the request comes from the expected sender.
-More info about secure webhooks [here](https://uploadcare.com/docs/security/secure-webhooks/).
-
-```ruby
-Uploadcare::Webhook.create(target_url: "https://example.com/listen", event: "file.uploaded", is_active: true, signing_secret: "some-secret")
-Uploadcare::Webhook.update(<webhook_id>, target_url: "https://newexample.com/listen/new", event: "file.uploaded", is_active: true, signing_secret: "some-secret")
-Uploadcare::Webhook.delete("https://example.com/listen")
-Uploadcare::Webhook.list
-```
-
-##### Webhook signature verification
-
-The gem has a helper class to verify a webhook signature from headers —
-`Uploadcare::Param::WebhookSignatureVerifier`. This class accepts three
-important options:
-
-- **:webhook_body** — this option represents parameters received in the webhook
-  request in the JSON format.
-  **NOTE**: if you're using Rails, you should exclude options `controller`,
-  `action` and `post` from the `webhook_body`.
-- **:signing_secret** — the secret that was set while creating/updating a
-  webhook. This option can be specified as an ENV var with the name
-  `UC_SIGNING_SECRET` — then no need to send it to the verifier class.
-- **:x_uc_signature_header** — the content of the `X-Uc-Signature` HTTP header
-  in the webhook request.
-
-Using the `Uploadcare::Param::WebhookSignatureVerifier` class example:
-
-```ruby
-  webhook_body = '{...}'
-
-signing_secret = "12345X"
-x_uc_signature_header = "v1=9b31c7dd83fdbf4a2e12b19d7f2b9d87d547672a325b9492457292db4f513c70"
-
-Uploadcare::Param::WebhookSignatureVerifier.valid?(signing_secret: signing_secret, x_uc_signature_header: x_uc_signature_header, webhook_body: webhook_body)
-```
-
-You can write your verifier. Example code:
-
-```ruby
-webhook_body_json = '{...}'
-
-signing_secret = ENV['UC_SIGNING_SECRET']
-x_uc_signature_header = "v1=f4d859ed2fe47b9a4fcc81693d34e58ad12366a841e58a7072c1530483689cc0"
-
-digest = OpenSSL::Digest.new('sha256')
-
-calculated_signature = "v1=#{OpenSSL::HMAC.hexdigest(digest, signing_secret.force_encoding("utf-8"), webhook_body_json.force_encoding("utf-8"))}"
-
-if calculated_signature == x_uc_signature_header
-  puts "WebHook signature matches!"
-else
-  puts "WebHook signature mismatch!"
-end
-```
-
-#### Add-Ons
-
-An `Add-On` is an application implemented by Uploadcare that accepts uploaded files as an input and can produce other files and/or appdata as an output.
-
-##### AWS Rekognition
-
-```ruby
-# Execute AWS Rekognition Add-On for a given target to detect labels in an image.
-# Note: Detected labels are stored in the file's appdata.
-Uploadcare::Addons.ws_rekognition_detect_labels('FILE_UUID')
-
-# Check the status of AWS Rekognition.
-Uploadcare::Addons.ws_rekognition_detect_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_LABELS')
-```
-
-##### AWS Rekognition Moderation
-
-```ruby
-# Execute AWS Rekognition Moderation Add-On for a given target to detect moderation labels in an image.
-# Note: Detected moderation labels are stored in the file's appdata.
-
-Uploadcare::Addons.ws_rekognition_detect_moderation_labels('FILE_UUID')
-
-# Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
-Uploadcare::Addons.ws_rekognition_detect_moderation_labels_status('RETURNED_ID_FROM_WS_REKOGNITION_DETECT_MODERATION_LABELS')
-```
-
-##### ClamAV
-
-```ruby
-# ClamAV virus checking Add-On for a given target.
-Uploadcare::Addons.uc_clamav_virus_scan('FILE_UUID')
-
-# Check and purge infected file.
-Uploadcare::Addons.uc_clamav_virus_scan('FILE_UUID', purge_infected: true )
-
-# Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
-Uploadcare::Addons.uc_clamav_virus_scan_status('RETURNED_ID_FROM_UC_CLAMAV_VIRUS_SCAN')
-```
-
-##### Remove.bg
-
-```ruby
-# Execute remove.bg background image removal Add-On for a given target.
-Uploadcare::Addons.remove_bg('FILE_UUID')
-
-# You can pass optional parameters.
-# See the full list of parameters here: https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/removeBgExecute
-Uploadcare::Addons.remove_bg('FILE_UUID', crop: true, type_level: '2')
-
-# Check the status of an Add-On execution request that had been started using the Execute Add-On operation.
-Uploadcare::Addons.remove_bg_status('RETURNED_ID_FROM_REMOVE_BG')
-```
-
-#### Project
-
-`Project` provides basic info about the connected Uploadcare project. That
-object is also an Hashie::Mash, so every methods out of
-[these](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/projectInfo) will work.
-
-```ruby
-@project = Uploadcare::Project.project
-# => #<Uploadcare::Api::Project collaborators=[], name="demo", pub_key="your_public_key", autostore_enabled=true>
-
-@project.name
-# => "demo"
-
-@project.collaborators
-# => []
-# while that one was empty, it usually goes like this:
-# [{"email": collaborator@gmail.com, "name": "Collaborator"}, {"email": collaborator@gmail.com, "name": "Collaborator"}]
-```
-
-#### Conversion
-
-##### Video
-
-After each video file upload you obtain a file identifier in UUID format.
-Then you can use this file identifier to convert your video in multiple ways:
-
-```ruby
-Uploadcare::VideoConverter.convert(
-  [
-    {
-      uuid: "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40",
-      size: { resize_mode: "change_ratio", width: "600", height: "400" },
-      quality: "best",
-      format: "ogg",
-      cut: { start_time: "0:0:0.0", length: "0:0:1.0" },
-      thumbs: { N: 2, number: 1 }
-    }
-  ],
-  store: false
-)
-```
-
-This method accepts options to set properties of an output file:
-
-- **uuid** — the file UUID-identifier.
-- **size**:
-  - **resize_mode** - size operation to apply to a video file. Can be `preserve_ratio (default)`, `change_ratio`, `scale_crop` or `add_padding`.
-  - **width** - width for a converted video.
-  - **height** - height for a converted video.
-
-```
-  NOTE: you can choose to provide a single dimension (width OR height).
-        The value you specify for any of the dimensions should be a non-zero integer divisible by 4
-```
-
-- **quality** - sets the level of video quality that affects file sizes and hence loading times and volumes of generated traffic. Can be `normal (default)`, `better`, `best`, `lighter`, `lightest`.
-- **format** - format for a converted video. Can be `mp4 (default)`, `webm`, `ogg`.
-- **cut**:
-  - **start_time** - defines the starting point of a fragment to cut based on your input file timeline.
-  - **length** - defines the duration of that fragment.
-- **thumbs**:
-  - **N** - quantity of thumbnails for your video - non-zero integer ranging from 1 to 50; defaults to 1.
-  - **number** - zero-based index of a particular thumbnail in a created set, ranging from 1 to (N - 1).
-- **store** - a flag indicating if Uploadcare should store your transformed outputs.
-
-```ruby
-# Response
-{
-  :result => [
-    {
-      :original_source=>"dc99200d-9bd6-4b43-bfa9-aa7bfaefca40/video/-/size/600x400/change_ratio/-/quality/best/-/format/ogg/-/cut/0:0:0.0/0:0:1.0/-/thumbs~2/1/",
-      :token=>911933811,
-      :uuid=>"6f9b88bd-625c-4d60-bfde-145fa3813d95",
-      :thumbnails_group_uuid=>"cf34c5a1-8fcc-4db2-9ec5-62c389e84468~2"
-    }
-  ],
-  :problems=>{}
-}
-```
-
-Params in the response:
-
-- **result** - info related to your transformed output(-s):
-  - **original_source** - built path for a particular video with all the conversion operations and parameters.
-  - **token** - a processing job token that can be used to get a [job status](https://uploadcare.com/docs/transformations/video-encoding/#status) (see below).
-  - **uuid** - UUID of your processed video file.
-  - **thumbnails_group_uuid** - holds :uuid-thumb-group, a UUID of a [file group](https://uploadcare.com/api-refs/rest-api/v0.7.0/#operation/groupsList) with thumbnails for an output video, based on the thumbs [operation](https://uploadcare.com/docs/transformations/video-encoding/#operation-thumbs) parameters.
-- **problems** - problems related to your processing job, if any.
-
-To convert multiple videos just add params as a hash for each video to the first argument of the `Uploadcare::VideoConverter#convert` method:
-
-```ruby
-Uploadcare::VideoConverter.convert(
-  [
-    { video_one_params }, { video_two_params }, ...
-  ],
-  store: false
-)
-```
-
-To check a status of a video processing job you can simply use appropriate method of `Uploadcare::VideoConverter`:
-
-```ruby
-token = 911933811
-Uploadcare::VideoConverter.status(token)
-```
-
-`token` here is a processing job token, obtained in a response of a convert video request.
-
-```ruby
-# Response
-{
-  :status => "finished",
-  :error => nil,
-  :result => {
-    :uuid => "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40",
-    :thumbnails_group_uuid => "0f181f24-7551-42e5-bebc-14b15d9d3838~2"
-  }
-}
-```
-
-Params in the response:
-
-- **status** - processing job status, can have one of the following values:
-  - _pending_ — video file is being prepared for conversion.
-  - _processing_ — video file processing is in progress.
-  - _finished_ — the processing is finished.
-  - _failed_ — we failed to process the video, see error for details.
-  - _canceled_ — video processing was canceled.
-- **error** - holds a processing error if we failed to handle your video.
-- **result** - repeats the contents of your processing output.
-- **thumbnails_group_uuid** - holds :uuid-thumb-group, a UUID of a file group with thumbnails for an output video, based on the thumbs operation parameters.
-- **uuid** - a UUID of your processed video file.
-
-More examples and options can be found [here](https://uploadcare.com/docs/transformations/video-encoding/#video-encoding).
-
-##### Document
-
-After each document file upload you obtain a file identifier in UUID format.
-
-You can use file identifier to determine the document format and possible conversion formats.
-
-```ruby
-Uploadcare::DocumentConverter.info("dc99200d-9bd6-4b43-bfa9-aa7bfaefca40")
-
-# Response
-{:error=>nil, :format=>{
-  :name=>"jpg",
-  :conversion_formats=>[
-    {:name=>"avif"}, {:name=>"bmp"}, {:name=>"gif"}, {:name=>"ico"}, {:name=>"pcx"}, {:name=>"pdf"}, {:name=>"png"}, {:name=>"ps"}, {:name=>"svg"}, {:name=>"tga"}, {:name=>"thumbnail"}, {:name=>"tiff"}, {:name=>"wbmp"}, {:name=>"webp"}
-  ]
-}}
-```
-
-Then you can use this file identifier to convert your document to a new format:
-
-```ruby
-Uploadcare::DocumentConverter.convert(
-  [
-    {
-      uuid: "dc99200d-9bd6-4b43-bfa9-aa7bfaefca40",
-      format: "pdf"
-    }
-  ],
-  store: false
-)
-```
-
-or create an image of a particular page (if using image format):
-
-```ruby
-Uploadcare::DocumentConverter.convert(
-  [
-    {
-      uuid: "a4b9db2f-1591-4f4c-8f68-94018924525d",
-      format: "png",
-      page: 1
-    }
-  ],
-  store: false
-)
-```
-
-This method accepts options to set properties of an output file:
-
-- **uuid** — the file UUID-identifier.
-- **format** - defines the target format you want a source file converted to. The supported values are: `pdf` (default), `doc`, `docx`, `xls`, `xlsx`, `odt`, `ods`, `rtf`, `txt`, `jpg`, `png`. In case the format operation was not found, your input document will be converted to `pdf`.
-- **page** - a page number of a multi-paged document to either `jpg` or `png`. The method will not work for any other target formats.
-
-```ruby
-# Response
-{
-  :result => [
-    {
-      :original_source=>"a4b9db2f-1591-4f4c-8f68-94018924525d/document/-/format/png/-/page/1/",
-      :token=>21120220
-      :uuid=>"88fe5ada-90f1-422a-a233-3a0f3a7cf23c"
-    }
-  ],
-  :problems=>{}
-}
-```
-
-Params in the response:
-
-- **result** - info related to your transformed output(-s):
-  - **original_source** - source file identifier including a target format, if present.
-  - **token** - a processing job token that can be used to get a [job status](https://uploadcare.com/docs/transformations/document-conversion/#status) (see below).
-  - **uuid** - UUID of your processed document file.
-- **problems** - problems related to your processing job, if any.
-
-To convert multiple documents just add params as a hash for each document to the first argument of the `Uploadcare::DocumentConverter#convert` method:
-
-```ruby
-Uploadcare::DocumentConverter.convert(
-  [
-    { doc_one_params }, { doc_two_params }, ...
-  ],
-  store: false
-)
-```
-
-To check a status of a document processing job you can simply use appropriate method of `Uploadcare::DocumentConverter`:
-
-```ruby
-token = 21120220
-Uploadcare::DocumentConverter.status(token)
-```
-
-`token` here is a processing job token, obtained in a response of a convert document request.
-
-```ruby
-# Response
-{
-  :status => "finished",
-  :error => nil,
-  :result => {
-    :uuid => "a4b9db2f-1591-4f4c-8f68-94018924525d"
-  }
-}
-```
-
-Params in the response:
-
-- **status** - processing job status, can have one of the following values:
-  - _pending_ — document file is being prepared for conversion.
-  - _processing_ — document file processing is in progress.
-  - _finished_ — the processing is finished.
-  - _failed_ — we failed to process the document, see error for details.
-  - _canceled_ — document processing was canceled.
-- **error** - holds a processing error if we failed to handle your document.
-- **result** - repeats the contents of your processing output.
-- **uuid** - a UUID of your processed document file.
-
-More examples and options can be found [here](https://uploadcare.com/docs/transformations/document-conversion/#document-conversion)
-
-## Secure delivery
-
-You can use custom domain and CDN provider to deliver files with authenticated URLs (see [original documentation](https://uploadcare.com/docs/security/secure_delivery/)).
-
-To generate authenticated URL from the library, you should choose `Uploadcare::SignedUrlGenerators::AkamaiGenerator` (or create your own generator implementation):
-
-```ruby
-generator = Uploadcare::SignedUrlGenerators::AkamaiGenerator.new(cdn_host: 'example.com', secret_key: 'secret_key')
-# Optional parameters: ttl: 300, algorithm: 'sha256'
-generator.generate_url(uuid, acl = optional)
-
-generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3")
-# https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1649405263~acl=/a7d5645e-5cd7-4046-819f-a6a2933bafe3/~hmac=a989cae5342f17013677f5a0e6577fc5594cc4e238fb4c95eda36634eb47018b
-
-# You can pass in ACL as a second parameter to generate_url. See https://uploadcare.com/docs/security/secure-delivery/#authenticated-urls for supported acl formats
-generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3", '/*/')
-# https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1649405263~acl=/*/~hmac=3ce1152c6af8864b36d4dc721f08ca3cf0b3a20278d7f849e82c6c930d48ccc1
-
-# Optionally you can use wildcard: true to generate a wildcard acl token
-generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3", wildcard: true)
-# https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1714233449~acl=/a7d5645e-5cd7-4046-819f-a6a2933bafe3/*~hmac=a568ee2a85dd90a8a8a1ef35ea0cc0ef0acb84fe81990edd3a06eacf10a52b4e
-
-# You can also pass in a custom ttl and algorithm to AkamaiGenerator
-generator = Uploadcare::SignedUrlGenerators::AkamaiGenerator.new(cdn_host: 'example.com', secret_key: 'secret_key', ttl: 10)
-generator.generate_url("a7d5645e-5cd7-4046-819f-a6a2933bafe3")
-# This generates a URL that expires in 10 seconds
-# https://example.com/a7d5645e-5cd7-4046-819f-a6a2933bafe3/?token=exp=1714233277~acl=/a7d5645e-5cd7-4046-819f-a6a2933bafe3/~hmac=f25343104aeced3004d2cc4d49807d8d7c732300b54b154c319da5283a871a71
-```
-
-## Useful links
-
-- [Development](https://github.com/uploadcare/uploadcare-ruby/blob/main/DEVELOPMENT.md)
-- [Uploadcare documentation](https://uploadcare.com/docs/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
-- [Upload API reference](https://uploadcare.com/api-refs/upload-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
-- [REST API reference](https://uploadcare.com/api-refs/rest-api/?utm_source=github&utm_medium=referral&utm_campaign=uploadcare-ruby)
-- [Changelog](./CHANGELOG.md)
-- [Contributing guide](https://github.com/uploadcare/.github/blob/master/CONTRIBUTING.md)
-- [Security policy](https://github.com/uploadcare/uploadcare-ruby/security/policy)
-- [Support](https://github.com/uploadcare/.github/blob/master/SUPPORT.md)
+- [MIGRATING_V5.md](./MIGRATING_V5.md)
+- [api_examples/README.md](./api_examples/README.md)

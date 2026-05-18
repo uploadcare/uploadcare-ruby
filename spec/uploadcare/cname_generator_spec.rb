@@ -5,8 +5,10 @@ require 'spec_helper'
 RSpec.describe Uploadcare::CnameGenerator do
   before do
     # Reset memoized variables between tests
-    described_class.instance_variable_set(:@custom_cname, nil)
-    described_class.instance_variable_set(:@cdn_base_postfix, nil)
+    described_class.instance_variable_set(:@custom_cname_cache, nil)
+    described_class.instance_variable_set(:@cdn_base_postfix_cache, nil)
+    # Reset configuration
+    Uploadcare.instance_variable_set(:@configuration, nil)
   end
 
   describe '.generate_cname' do
@@ -21,7 +23,7 @@ RSpec.describe Uploadcare::CnameGenerator do
 
   describe '.cdn_base_postfix' do
     before do
-      allow(Uploadcare.config).to receive(:cdn_base_postfix).and_return('https://ucarecd.net/')
+      allow(Uploadcare.configuration).to receive(:cdn_base_postfix).and_return('https://ucarecd.net/')
       allow(described_class).to receive(:custom_cname).and_return('abc123def')
     end
 
@@ -31,8 +33,8 @@ RSpec.describe Uploadcare::CnameGenerator do
     end
 
     it 'handles different CDN bases' do
-      described_class.instance_variable_set(:@cdn_base_postfix, nil)
-      allow(Uploadcare.config).to receive(:cdn_base_postfix).and_return('https://example.com')
+      described_class.instance_variable_set(:@cdn_base_postfix_cache, nil)
+      allow(Uploadcare.configuration).to receive(:cdn_base_postfix).and_return('https://example.com')
       allow(described_class).to receive(:custom_cname).and_return('xyz789')
 
       result = described_class.cdn_base_postfix
@@ -48,8 +50,8 @@ RSpec.describe Uploadcare::CnameGenerator do
     end
 
     it 'handles CDN base with path' do
-      described_class.instance_variable_set(:@cdn_base_postfix, nil)
-      allow(Uploadcare.config).to receive(:cdn_base_postfix).and_return('https://cdn.example.com/path/')
+      described_class.instance_variable_set(:@cdn_base_postfix_cache, nil)
+      allow(Uploadcare.configuration).to receive(:cdn_base_postfix).and_return('https://cdn.example.com/path/')
       allow(described_class).to receive(:custom_cname).and_return('prefix123')
 
       result = described_class.cdn_base_postfix
@@ -70,8 +72,8 @@ RSpec.describe Uploadcare::CnameGenerator do
 
       invalid_urls.each do |invalid_url|
         # Reset memoization for each test
-        described_class.instance_variable_set(:@cdn_base_postfix, nil)
-        allow(Uploadcare.config).to receive(:cdn_base_postfix).and_return(invalid_url)
+        described_class.instance_variable_set(:@cdn_base_postfix_cache, nil)
+        allow(Uploadcare.configuration).to receive(:cdn_base_postfix).and_return(invalid_url)
         allow(described_class).to receive(:generate_cname).and_return('test123')
 
         expect { described_class.cdn_base_postfix }.to raise_error(
@@ -84,7 +86,7 @@ RSpec.describe Uploadcare::CnameGenerator do
 
   describe '.custom_cname' do
     before do
-      allow(Uploadcare.config).to receive(:public_key).and_return('test_public_key')
+      allow(Uploadcare.configuration).to receive(:public_key).and_return('test_public_key')
     end
 
     it 'generates CNAME prefix from public key' do
@@ -104,13 +106,13 @@ RSpec.describe Uploadcare::CnameGenerator do
     end
 
     it 'generates different results for different public keys' do
-      allow(Uploadcare.config).to receive(:public_key).and_return('key1')
+      allow(Uploadcare.configuration).to receive(:public_key).and_return('key1')
       result1 = described_class.send(:custom_cname)
 
       # Reset memoization
-      described_class.instance_variable_set(:@custom_cname, nil)
+      described_class.instance_variable_set(:@custom_cname_cache, nil)
 
-      allow(Uploadcare.config).to receive(:public_key).and_return('key2')
+      allow(Uploadcare.configuration).to receive(:public_key).and_return('key2')
       result2 = described_class.send(:custom_cname)
 
       expect(result1).not_to eq(result2)
@@ -127,7 +129,7 @@ RSpec.describe Uploadcare::CnameGenerator do
     end
 
     it 'handles empty public key' do
-      allow(Uploadcare.config).to receive(:public_key).and_return('')
+      allow(Uploadcare.configuration).to receive(:public_key).and_return('')
 
       result = described_class.send(:custom_cname)
       expect(result).to be_a(String)
@@ -135,7 +137,7 @@ RSpec.describe Uploadcare::CnameGenerator do
     end
 
     it 'handles nil public key' do
-      allow(Uploadcare.config).to receive(:public_key).and_return(nil)
+      allow(Uploadcare.configuration).to receive(:public_key).and_return(nil)
 
       # Should raise ConfigurationError for nil public key
       expect { described_class.send(:custom_cname) }.to raise_error(
@@ -145,7 +147,7 @@ RSpec.describe Uploadcare::CnameGenerator do
     end
 
     it 'handles special characters in public key' do
-      allow(Uploadcare.config).to receive(:public_key).and_return('key!@#$%^&*()')
+      allow(Uploadcare.configuration).to receive(:public_key).and_return('key!@#$%^&*()')
 
       result = described_class.send(:custom_cname)
       expect(result).to be_a(String)
@@ -156,7 +158,7 @@ RSpec.describe Uploadcare::CnameGenerator do
     it 'generates expected CNAME for known public key' do
       # Test with a specific known public key to verify the algorithm
       known_public_key = 'demopublickey'
-      allow(Uploadcare.config).to receive(:public_key).and_return(known_public_key)
+      allow(Uploadcare.configuration).to receive(:public_key).and_return(known_public_key)
 
       # Manual calculation of expected CNAME:
       # 1. SHA256 hash of 'demopublickey'
@@ -181,8 +183,7 @@ RSpec.describe Uploadcare::CnameGenerator do
   describe 'integration tests' do
     context 'with known public key' do
       before do
-        allow(Uploadcare.config).to receive(:public_key).and_return('test_key_123')
-        allow(Uploadcare.config).to receive(:cdn_base_postfix).and_return('https://ucarecd.net/')
+        allow(Uploadcare.configuration).to receive_messages(public_key: 'test_key_123', cdn_base_postfix: 'https://ucarecd.net/')
       end
 
       it 'generates consistent CNAME across method calls' do
@@ -211,8 +212,8 @@ RSpec.describe Uploadcare::CnameGenerator do
         ]
 
         test_cases.each do |cdn_base|
-          described_class.instance_variable_set(:@cdn_base_postfix, nil)
-          allow(Uploadcare.config).to receive(:cdn_base_postfix).and_return(cdn_base)
+          described_class.instance_variable_set(:@cdn_base_postfix_cache, nil)
+          allow(Uploadcare.configuration).to receive(:cdn_base_postfix).and_return(cdn_base)
           allow(described_class).to receive(:custom_cname).and_return('test123')
 
           result = described_class.cdn_base_postfix
@@ -221,12 +222,11 @@ RSpec.describe Uploadcare::CnameGenerator do
       end
     end
 
-    context 'manual CNAME generation verification' do
+    context 'when manually verifying CNAME generation' do
       it 'generates expected CNAME and CDN base for real-world scenario' do
         # Real-world test with a specific public key
         test_public_key = 'pub_12345test'
-        allow(Uploadcare.config).to receive(:public_key).and_return(test_public_key)
-        allow(Uploadcare.config).to receive(:cdn_base_postfix).and_return('https://ucarecd.net/')
+        allow(Uploadcare.configuration).to receive_messages(public_key: test_public_key, cdn_base_postfix: 'https://ucarecd.net/')
 
         # Calculate expected CNAME manually
         sha256_hex = Digest::SHA256.hexdigest(test_public_key)

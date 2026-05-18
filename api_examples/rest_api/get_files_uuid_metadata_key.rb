@@ -1,6 +1,4 @@
-require 'uploadcare'
-Uploadcare.config.public_key = 'YOUR_PUBLIC_KEY'
-Uploadcare.config.secret_key = 'YOUR_SECRET_KEY'
+#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-uuid = '1bac376c-aa7e-4356-861b-dd2657b5bfd2'
-puts Uploadcare::FileMetadata.index(uuid).inspect
+require_relative '../support/run_rest_example'

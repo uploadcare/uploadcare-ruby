@@ -1,6 +1,4 @@
-require 'uploadcare'
-Uploadcare.config.public_key = 'YOUR_PUBLIC_KEY'
-Uploadcare.config.secret_key = 'YOUR_SECRET_KEY'
+#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-token = 32_921_143
-puts Uploadcare::DocumentConverter.status(token)
+require_relative '../support/run_rest_example'

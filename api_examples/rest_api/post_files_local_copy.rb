@@ -1,7 +1,4 @@
-require 'uploadcare'
-Uploadcare.config.public_key = 'YOUR_PUBLIC_KEY'
-Uploadcare.config.secret_key = 'YOUR_SECRET_KEY'
+#!/usr/bin/env ruby
+# frozen_string_literal: true
 
-source = '1bac376c-aa7e-4356-861b-dd2657b5bfd2'
-copied_file = Uploadcare::File.local_copy(source, store: true)
-puts copied_file.uuid
+require_relative '../support/run_rest_example'

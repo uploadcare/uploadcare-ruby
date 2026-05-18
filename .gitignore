@@ -18,4 +18,12 @@ Gemfile.lock
 .ruby-version
 project_files
 *.gem
+.vscode/
+.DS_Store
 .claude/
+.kiro/
+.agents/
+
+# Environment variables (API keys)
+.env
+.env.local

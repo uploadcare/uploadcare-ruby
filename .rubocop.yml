@@ -1,6 +1,18 @@
+plugins:
+  - rubocop-rake
+  - rubocop-rspec
+
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 3.0
+  # RuboCop currently supports up to 3.5; CI still tests this gem on Ruby 4.0.
+  TargetRubyVersion: 3.4
+  SuggestExtensions: false
+  Exclude:
+    - 'examples/**/*'
+    - 'tmp/**/*'
+    - 'spec/support/**/*'
+    - 'api_examples/support/**/*'
+    - 'vendor/bundle/**/*'
 
 Layout/LineLength:
   Max: 120
@@ -10,27 +22,55 @@ Layout/LineLength:
 Lint/IneffectiveAccessModifier:
   Enabled: false
 
-Style/HashTransformKeys:
-  Exclude:
-    - 'lib/uploadcare/entity/decorator/paginator.rb'
-    - 'lib/uploadcare/client/conversion/video_conversion_client.rb'
-    - 'lib/uploadcare/entity/file.rb'
-
 Metrics/BlockLength:
+  Max: 30
   Exclude:
     - 'bin/'
     - 'spec/**/*'
     - 'uploadcare-ruby.gemspec'
+    - 'api_examples/support/**/*.rb'
 
-Metrics/ModuleLength:
+Metrics/ClassLength:
+  Max: 200
   Exclude:
     - 'spec/**/*'
 
+Metrics/ModuleLength:
+  Max: 100
+  Exclude:
+    - 'spec/**/*'
+    - 'api_examples/support/**/*.rb'
+
 Metrics/MethodLength:
-  Max: 20
+  Max: 30
+  Exclude:
+    - 'api_examples/support/**/*.rb'
+
+Metrics/AbcSize:
+  Max: 28
+  Exclude:
+    - 'api_examples/support/**/*.rb'
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+  Exclude:
+    - 'api_examples/support/**/*.rb'
+
+Metrics/PerceivedComplexity:
+  Max: 11
+  Exclude:
+    - 'api_examples/support/**/*.rb'
+
+Metrics/ParameterLists:
+  Max: 8
+  Exclude:
+    - 'spec/**/*'
 
 Style/Documentation:
   Enabled: false
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: compact
 
 Style/OptionalBooleanParameter:
   AllowedMethods: ['create']
@@ -38,3 +78,50 @@ Style/OptionalBooleanParameter:
 Style/FrozenStringLiteralComment:
   Exclude:
     - 'api_examples/**/*'
+
+Style/ArgumentsForwarding:
+  Enabled: false
+
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
+RSpec/ContextWording:
+  Prefixes:
+    - when
+    - with
+    - without
+    - if
+    - unless
+    - for
+
+# Kept intentionally for API-integration style specs where strict unit-style cops add noise.
+RSpec/AnyInstance:
+  Enabled: false
+
+RSpec/DescribedClass:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+# Existing test suite uses classic doubles/spies heavily; keep these disabled until specs are migrated.
+RSpec/DescribeClass:
+  Enabled: false
+
+RSpec/MessageSpies:
+  Enabled: false
+
+RSpec/StubbedMock:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
+  Enabled: false
