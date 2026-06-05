@@ -159,7 +159,7 @@ class Uploadcare::Api::Upload
   end
 
   def prepare_headers(req, _method, _uri, headers)
-    req.headers['User-Agent'] ||= Uploadcare::Internal::UserAgent.call(config: config)
+    req.headers['User-Agent'] = Uploadcare::Internal::UserAgent.call(config: config)
     req.headers.merge!(headers)
   end
 
@@ -243,6 +243,7 @@ class Uploadcare::Api::Upload
   def upload_part_request(conn:, request_uri:, data:, timeout:, open_timeout:)
     conn.put(request_uri) do |req|
       req.headers['Content-Type'] = 'application/octet-stream'
+      req.headers['User-Agent'] = Uploadcare::Internal::UserAgent.call(config: config)
       req.options.timeout = timeout if timeout
       req.options.open_timeout = open_timeout if open_timeout
       req.body = data

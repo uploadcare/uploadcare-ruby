@@ -39,6 +39,22 @@ RSpec.describe Uploadcare::Api::Rest do
     end
   end
 
+  describe 'User-Agent header' do
+    it 'sends the SDK User-Agent on REST API requests, not the Faraday default' do
+      expected_user_agent = Uploadcare::Internal::UserAgent.call(config: config)
+      stub_request(:get, 'https://api.uploadcare.com/files/')
+        .with(headers: { 'User-Agent' => expected_user_agent })
+        .to_return(status: 200, body: '{}', headers: { 'Content-Type' => 'application/json' })
+
+      rest.get(path: '/files/', params: {}, headers: {}, request_options: {})
+
+      expect(
+        a_request(:get, 'https://api.uploadcare.com/files/')
+          .with(headers: { 'User-Agent' => %r{\AUploadcareRuby/} })
+      ).to have_been_made
+    end
+  end
+
   describe '#get' do
     it 'returns a successful Result on 200' do
       stub_request(:get, 'https://api.uploadcare.com/files/')
