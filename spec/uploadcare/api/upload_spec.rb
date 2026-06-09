@@ -105,6 +105,37 @@ RSpec.describe Uploadcare::Api::Upload do
     end
   end
 
+  describe 'User-Agent header' do
+    let(:expected_user_agent) { Uploadcare::Internal::UserAgent.call(config: config) }
+
+    it 'sends the SDK User-Agent on Upload API requests, not the Faraday default' do
+      stub_request(:post, 'https://upload.uploadcare.com/base/')
+        .with(headers: { 'User-Agent' => expected_user_agent })
+        .to_return(status: 200, body: '{}', headers: { 'Content-Type' => 'application/json' })
+
+      upload.post(path: 'base/', params: { 'UPLOADCARE_PUB_KEY' => 'demopublickey' })
+
+      expect(
+        a_request(:post, 'https://upload.uploadcare.com/base/')
+          .with(headers: { 'User-Agent' => %r{\AUploadcareRuby/} })
+      ).to have_been_made
+    end
+
+    it 'sends the SDK User-Agent when uploading parts to a presigned URL' do
+      presigned_url = 'https://s3.amazonaws.com/bucket/part?signature=abc123'
+      stub_request(:put, presigned_url)
+        .with(headers: { 'User-Agent' => expected_user_agent })
+        .to_return(status: 200, body: '', headers: {})
+
+      upload.upload_part_to_url(presigned_url, 'binary-data')
+
+      expect(
+        a_request(:put, presigned_url)
+          .with(headers: { 'User-Agent' => %r{\AUploadcareRuby/} })
+      ).to have_been_made
+    end
+  end
+
   describe '#upload_part_to_url' do
     let(:presigned_url) { 'https://s3.amazonaws.com/bucket/part?signature=abc123' }
 
