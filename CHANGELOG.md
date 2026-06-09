@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.0.1 — 2026-06-09
+
+### Fixed
+
+* Upload API requests now send the SDK-generated `User-Agent` instead of Faraday's default header.
+* Multipart upload part requests to presigned URLs now include the same SDK-generated `User-Agent`.
+
 ## 5.0.0 — 2026-05-17
 
 v5 is stable.
