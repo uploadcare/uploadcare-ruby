@@ -270,6 +270,19 @@ RSpec.describe Uploadcare::Client do
       expect(result).to be_a(Uploadcare::Collections::Paginated)
     end
 
+    it 'delegates search to Resources::File.search' do
+      allow(rest_files).to receive(:search)
+        .with(params: { query: 'invoice' }, query: { limit: 10 }, request_options: {})
+        .and_return(Uploadcare::Result.success({
+                                                 'results' => [], 'next' => nil, 'previous' => nil,
+                                                 'per_page' => 10, 'total' => 0
+                                               }))
+
+      result = client.files.search(query: 'invoice', limit: 10)
+
+      expect(result).to be_a(Uploadcare::Collections::FileSearchResult)
+    end
+
     it 'delegates batch_store to Resources::File.batch_store' do
       allow(rest_files).to receive(:batch_store)
         .and_return(Uploadcare::Result.success({ 'status' => 'ok', 'result' => [], 'problems' => {} }))

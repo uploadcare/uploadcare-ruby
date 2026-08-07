@@ -12,6 +12,20 @@ module ApiExamples::RunRestExample
         client.project.current
       when 'get_files.rb'
         client.files.list(limit: 2)
+      when 'post_files_search.rb'
+        ApiExamples::ExampleHelper.with_uploaded_file do |file|
+          matches = ApiExamples::ExampleHelper.wait_for_file_search(uuid: file.uuid)
+          {
+            'total' => matches.total,
+            'results' => matches.map do |match|
+              {
+                'uuid' => match.uuid,
+                'original_filename' => match.original_filename,
+                'highlight' => match.highlight
+              }
+            end
+          }
+        end
       when 'get_files_uuid.rb'
         ApiExamples::ExampleHelper.with_uploaded_file do |file|
           client.files.find(uuid: file.uuid)

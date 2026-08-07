@@ -64,6 +64,51 @@ RSpec.describe Uploadcare::Api::Rest::Files do
     end
   end
 
+  describe '#search' do
+    it 'posts search criteria in JSON and pagination options in the query string' do
+      stub = stub_request(:post, 'https://api.uploadcare.com/files/search/')
+             .with(
+               query: { limit: '20', offset: '40', include: 'appdata' },
+               body: {
+                 query: 'invoice',
+                 phrase: { original_filename: 'report' },
+                 is_image: false
+               }
+             )
+             .to_return(
+               status: 200,
+               body: { results: [], total: 0, per_page: 20, next: nil, previous: nil }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      result = files.search(
+        params: {
+          query: 'invoice',
+          phrase: { original_filename: 'report' },
+          is_image: false
+        },
+        query: { limit: 20, offset: 40, include: 'appdata' }
+      )
+
+      expect(result).to be_success
+      expect(stub).to have_been_requested
+    end
+
+    it 'returns validation failures in a Result' do
+      stub_request(:post, 'https://api.uploadcare.com/files/search/')
+        .to_return(
+          status: 400,
+          body: { non_field_errors: ['At least one search criterion must be specified.'] }.to_json,
+          headers: { 'Content-Type' => 'application/json' }
+        )
+
+      result = files.search
+
+      expect(result).to be_failure
+      expect(result.error).to be_a(Uploadcare::Exception::InvalidRequestError)
+    end
+  end
+
   describe '#info' do
     let(:encoded_uuid) { URI.encode_www_form_component(file_uuid) }
 

@@ -21,13 +21,14 @@ Optional environment variables:
 
 Verification:
 
-- Verified against a real Uploadcare demo account on `2026-08-07`
+- Examples were verified against a real Uploadcare demo account on `2026-08-07`.
 
 ## REST API 0.7
 
 | Endpoint | Example file | Notes |
 | --- | --- | --- |
 | `GET /files/` | `api_examples/rest_api/get_files.rb` | Uses `client.files.list` |
+| `POST /files/search/` | `api_examples/rest_api/post_files_search.rb` | Uses `client.files.search` with a UUID lookup |
 | `PUT /files/{uuid}/storage/` | `api_examples/rest_api/put_files_uuid_storage.rb` | Uses `file.store` |
 | `DELETE /files/{uuid}/storage/` | `api_examples/rest_api/delete_files_uuid_storage.rb` | Uses `file.delete` |
 | `GET /files/{uuid}/` | `api_examples/rest_api/get_files_uuid.rb` | Uses `client.files.find` |

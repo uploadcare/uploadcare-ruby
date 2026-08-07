@@ -28,6 +28,17 @@ class Uploadcare::Client::FilesAccessor
     )
   end
 
+  # Search files using full-text criteria and structured filters.
+  #
+  # @param request_options [Hash]
+  # @param options [Hash] Search criteria plus limit, offset, and include
+  # @return [Uploadcare::Collections::FileSearchResult]
+  def search(request_options: {}, **options)
+    Uploadcare::Resources::File.search(
+      options: options, client: client, request_options: request_options
+    )
+  end
+
   # @param source [IO, Array<IO>, String]
   # @param request_options [Hash]
   # @param options [Hash]

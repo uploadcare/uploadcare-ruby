@@ -397,6 +397,48 @@ Filters and API parameters can still be passed through:
 files = client.files.list(stored: true, removed: false, limit: 100)
 ```
 
+### Search files
+
+Search across filenames, metadata, and detected MIME types:
+
+```ruby
+matches = client.files.search(
+  query: "invoice",
+  is_image: false,
+  sort: ["-datetime_uploaded"],
+  limit: 20
+)
+
+puts "Found #{matches.total} files"
+matches.each do |file|
+  puts file.original_filename
+  puts file.highlight
+end
+```
+
+Search accepts full-text `query` and field-specific `phrase` criteria, exact matches, ranges, and tag filters. All
+top-level criteria are combined with AND:
+
+```ruby
+matches = client.files.search(
+  phrase: { original_filename: "report" },
+  exact: {
+    detected_mime_type: ["application/pdf"],
+    "metadata[department]" => ["finance"]
+  },
+  datetime_uploaded: { gte: "2026-01-01T00:00:00Z" },
+  size: { lte: 10 * 1024 * 1024 },
+  tags: { all: ["approved"], none: ["archived"] },
+  include: "appdata"
+)
+```
+
+`limit`, `offset`, and `include` are sent as URL query parameters; search criteria are sent in the JSON body. Search
+responses are `Uploadcare::Collections::FileSearchResult` objects and support `next_page`, `previous_page`, and `all`
+like ordinary file lists. Subsequent pages automatically resend the original search criteria. Full-text values must be
+at least four characters; `fuzziness: true` enables typo-tolerant matching but increases latency. Newly uploaded files
+may take a short time to appear in the search index.
+
 ### Resource operations
 
 ```ruby

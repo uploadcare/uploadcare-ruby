@@ -49,7 +49,7 @@ RSpec.describe Uploadcare::Resources::File do
     it 'defines expected attributes' do
       expected = %i[
         datetime_removed datetime_stored datetime_uploaded is_image is_ready mime_type original_file_url
-        original_filename size url uuid variations content_info metadata tags appdata source
+        original_filename size url uuid variations content_info metadata tags appdata source highlight
       ]
       expect(described_class::ATTRIBUTES).to match_array(expected)
     end
@@ -133,6 +133,66 @@ RSpec.describe Uploadcare::Resources::File do
       result = described_class.list(options: { limit: 5 }, client: client)
 
       expect(result).to be_a(Uploadcare::Collections::Paginated)
+    end
+  end
+
+  describe '.search' do
+    let(:search_response) do
+      {
+        'results' => [
+          file_attrs.merge(
+            'highlight' => {
+              'original_filename' => ['<em>photo</em>.jpg'],
+              'metadata' => { 'camera' => '<em>Canon</em>' }
+            }
+          )
+        ],
+        'next' => 'https://api.uploadcare.com/files/search/?limit=20&offset=20&include=appdata',
+        'previous' => nil,
+        'per_page' => 20,
+        'total' => 42
+      }
+    end
+
+    it 'returns file resources with highlights in a FileSearchResult' do
+      allow(rest_files).to receive(:search)
+        .with(
+          params: { query: 'photo' },
+          query: { limit: 20, include: 'appdata' },
+          request_options: { timeout: 5 }
+        )
+        .and_return(Uploadcare::Result.success(search_response))
+
+      result = described_class.search(
+        options: { query: 'photo', limit: 20, include: 'appdata' },
+        client: client,
+        request_options: { timeout: 5 }
+      )
+
+      expect(result).to be_a(Uploadcare::Collections::FileSearchResult)
+      expect(result.total).to eq(42)
+      expect(result.resources.first).to be_a(described_class)
+      expect(result.resources.first.highlight).to eq(
+        'original_filename' => ['<em>photo</em>.jpg'],
+        'metadata' => { 'camera' => '<em>Canon</em>' }
+      )
+      expect(result.search_params).to eq(query: 'photo')
+    end
+
+    it 'supports string keys for URL query options' do
+      allow(rest_files).to receive(:search)
+        .with(
+          params: { 'query' => 'photo' },
+          query: { limit: 10, offset: 30 },
+          request_options: {}
+        )
+        .and_return(Uploadcare::Result.success(search_response))
+
+      result = described_class.search(
+        options: { 'query' => 'photo', 'limit' => 10, 'offset' => 30 }, client: client
+      )
+
+      expect(result).to be_a(Uploadcare::Collections::FileSearchResult)
     end
   end
 
