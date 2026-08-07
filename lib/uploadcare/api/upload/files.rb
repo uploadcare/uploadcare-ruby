@@ -14,7 +14,7 @@ class Uploadcare::Api::Upload::Files
   # Upload a file directly (POST /base/).
   #
   # @param file [File, IO] File object to upload
-  # @param options [Hash] Upload options (:store, :metadata, :signature, :expire)
+  # @param options [Hash] Upload options (:store, :metadata, :tags, :signature, :expire)
   # @param request_options [Hash] Request options
   # @return [Uploadcare::Result] Upload response with file UUID
   # @raise [ArgumentError] if file is not a valid IO object
@@ -32,7 +32,7 @@ class Uploadcare::Api::Upload::Files
   # Upload multiple files directly (POST /base/).
   #
   # @param files [Array<File, IO>] Files to upload
-  # @param options [Hash] Upload options (:store, :metadata)
+  # @param options [Hash] Upload options (:store, :metadata, :tags)
   # @param request_options [Hash] Request options
   # @return [Uploadcare::Result] Upload response hash mapping filenames to UUIDs
   # @see https://uploadcare.com/api-refs/upload-api/#operation/baseUpload
@@ -63,6 +63,7 @@ class Uploadcare::Api::Upload::Files
   # @option options [Boolean] :async Return immediately with token (default: false)
   # @option options [String, Boolean] :store Whether to store the file
   # @option options [Hash] :metadata Custom metadata
+  # @option options [Array<String>] :tags Tags to attach to the file
   # @option options [Integer] :poll_interval Polling interval in seconds (default: 1)
   # @option options [Integer] :poll_timeout Max polling time in seconds (default: 300)
   # @param request_options [Hash] Request options
@@ -105,7 +106,7 @@ class Uploadcare::Api::Upload::Files
   # @param filename [String] Original filename
   # @param size [Integer] File size in bytes
   # @param content_type [String] MIME type
-  # @param options [Hash] Upload options (:store, :metadata)
+  # @param options [Hash] Upload options (:store, :metadata, :tags)
   # @param request_options [Hash] Request options
   # @return [Uploadcare::Result] Response with UUID and presigned URLs
   # @see https://uploadcare.com/api-refs/upload-api/#operation/multipartUploadStart
@@ -198,6 +199,8 @@ class Uploadcare::Api::Upload::Files
     params['save_URL_duplicates'] = options[:save_URL_duplicates].to_s if options.key?(:save_URL_duplicates)
     metadata_params = generate_metadata_params(options[:metadata])
     params.merge!(metadata_params) if metadata_params.any?
+    tags_param = generate_tags_param(options[:tags])
+    params.merge!(tags_param) if tags_param.any?
     params.merge!(signature_params(options))
     params
   end
@@ -213,6 +216,8 @@ class Uploadcare::Api::Upload::Files
     params['UPLOADCARE_STORE'] = store unless store.nil?
     metadata_params = generate_metadata_params(options[:metadata])
     params.merge!(metadata_params) if metadata_params.any?
+    tags_param = generate_tags_param(options[:tags])
+    params.merge!(tags_param) if tags_param.any?
     params.merge!(signature_params(options))
     params
   end
@@ -268,6 +273,15 @@ class Uploadcare::Api::Upload::Files
     metadata.each_with_object({}) do |(key, value), result|
       result["metadata[#{key}]"] = value.to_s
     end
+  end
+
+  def generate_tags_param(tags = nil)
+    return {} if tags.nil?
+
+    normalized = Uploadcare::Internal::FileTagNormalizer.call(tags)
+    return {} if normalized.empty?
+
+    { 'tags' => normalized.join(',') }
   end
 
   def signature_params(options = {})

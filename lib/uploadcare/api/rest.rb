@@ -5,7 +5,7 @@ require 'uri'
 
 # Base client for the Uploadcare REST API.
 #
-# Provides authenticated HTTP methods (GET, POST, PUT, DELETE) for all REST API
+# Provides authenticated HTTP methods (GET, POST, PUT, PATCH, DELETE) for all REST API
 # endpoints. Includes automatic error handling and throttle retry logic.
 #
 # Endpoint classes are accessed via lazy-loaded accessors:
@@ -69,6 +69,11 @@ class Uploadcare::Api::Rest
   # @return [Uploadcare::Api::Rest::FileMetadata] File metadata operations endpoint
   def file_metadata
     memoized(:@file_metadata) { Uploadcare::Api::Rest::FileMetadata.new(rest: self) }
+  end
+
+  # @return [Uploadcare::Api::Rest::FileTags] Per-file tag operations endpoint
+  def file_tags
+    memoized(:@file_tags) { Uploadcare::Api::Rest::FileTags.new(rest: self) }
   end
 
   # @return [Uploadcare::Api::Rest::Addons] Add-on operations endpoint
@@ -139,6 +144,17 @@ class Uploadcare::Api::Rest
   # @return [Uploadcare::Result]
   def put(path:, params: {}, headers: {}, request_options: {})
     request(method: :put, path: path, params: params, headers: headers, request_options: request_options)
+  end
+
+  # Make a PATCH request wrapped in a Result.
+  #
+  # @param path [String] API endpoint path
+  # @param params [Hash] Request body parameters
+  # @param headers [Hash] Additional request headers
+  # @param request_options [Hash] Request options
+  # @return [Uploadcare::Result]
+  def patch(path:, params: {}, headers: {}, request_options: {})
+    request(method: :patch, path: path, params: params, headers: headers, request_options: request_options)
   end
 
   # Make a DELETE request wrapped in a Result.

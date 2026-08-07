@@ -70,6 +70,23 @@ RSpec.describe Uploadcare::Api::Upload::Files do
       expect(result).to be_success
       expect(result.value!).to eq({ 'upload.bin' => 'uploaded-uuid-123' })
     end
+
+    it 'sends normalized tags as a comma-separated value' do
+      stub = stub_request(:post, 'https://upload.uploadcare.com/base/')
+             .with do |request|
+               request.body.include?('name="tags"') && request.body.include?('cat,featured')
+             end
+             .to_return(
+               status: 200,
+               body: { 'test.jpg' => 'uploaded-uuid-123' }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      result = files.direct(file: tempfile, tags: [' Cat ', 'FEATURED', 'cat'])
+
+      expect(result).to be_success
+      expect(stub).to have_been_requested
+    end
   end
 
   describe '#direct_many' do
@@ -182,6 +199,20 @@ RSpec.describe Uploadcare::Api::Upload::Files do
         check_URL_duplicates: false,
         save_URL_duplicates: false
       )
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'sends normalized tags as a comma-separated value' do
+      stub = stub_request(:post, 'https://upload.uploadcare.com/from_url/')
+             .with(body: hash_including('tags' => 'cat,featured'))
+             .to_return(
+               status: 200,
+               body: { token: 'upload-token' }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      files.from_url(source_url: source_url, async: true, tags: [' Cat ', 'FEATURED', 'cat'])
 
       expect(stub).to have_been_requested
     end
@@ -301,6 +332,25 @@ RSpec.describe Uploadcare::Api::Upload::Files do
         size: 100_000_000,
         content_type: 'video/mp4',
         part_size: 1024
+      )
+
+      expect(stub).to have_been_requested
+    end
+
+    it 'sends normalized tags as a comma-separated value' do
+      stub = stub_request(:post, 'https://upload.uploadcare.com/multipart/start/')
+             .with(body: hash_including('tags' => 'video,featured'))
+             .to_return(
+               status: 200,
+               body: { uuid: 'mp-uuid', parts: [] }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      files.multipart_start(
+        filename: 'test.mp4',
+        size: 100_000_000,
+        content_type: 'video/mp4',
+        tags: [' Video ', 'FEATURED']
       )
 
       expect(stub).to have_been_requested

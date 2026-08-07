@@ -21,8 +21,7 @@ Optional environment variables:
 
 Verification:
 
-- Verified against a real Uploadcare demo account on `2026-03-16`
-- All canonical scripts in `api_examples/rest_api` and `api_examples/upload_api` executed successfully
+- Verified against a real Uploadcare demo account on `2026-08-07`
 
 ## REST API 0.7
 
@@ -40,6 +39,9 @@ Verification:
 | `GET /files/{uuid}/metadata/{key}/` | `api_examples/rest_api/get_files_uuid_metadata_key.rb` | Uses `client.file_metadata.show` |
 | `PUT /files/{uuid}/metadata/{key}/` | `api_examples/rest_api/put_files_uuid_metadata_key.rb` | Uses `client.file_metadata.update` |
 | `DELETE /files/{uuid}/metadata/{key}/` | `api_examples/rest_api/delete_files_uuid_metadata_key.rb` | Uses `client.file_metadata.delete` |
+| `GET /files/{uuid}/tags/` | `api_examples/rest_api/get_files_uuid_tags.rb` | Uses `client.file_tags.list` |
+| `PUT /files/{uuid}/tags/` | `api_examples/rest_api/put_files_uuid_tags.rb` | Uses `client.file_tags.replace` |
+| `PATCH /files/{uuid}/tags/` | `api_examples/rest_api/patch_files_uuid_tags.rb` | Uses `client.file_tags.update` |
 | `GET /groups/` | `api_examples/rest_api/get_groups.rb` | Uses `client.groups.list` |
 | `GET /groups/{uuid}/` | `api_examples/rest_api/get_groups_uuid.rb` | Uses `client.groups.find` |
 | `DELETE /groups/{uuid}/` | `api_examples/rest_api/delete_groups_uuid.rb` | Uses `group.delete` |

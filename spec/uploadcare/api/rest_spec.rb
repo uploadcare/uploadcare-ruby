@@ -324,6 +324,10 @@ RSpec.describe Uploadcare::Api::Rest do
       expect(rest.file_metadata).to be_a(Uploadcare::Api::Rest::FileMetadata)
     end
 
+    it 'returns a FileTags endpoint' do
+      expect(rest.file_tags).to be_a(Uploadcare::Api::Rest::FileTags)
+    end
+
     it 'returns an Addons endpoint' do
       expect(rest.addons).to be_a(Uploadcare::Api::Rest::Addons)
     end
@@ -342,6 +346,7 @@ RSpec.describe Uploadcare::Api::Rest do
       project = rest.project
       webhooks = rest.webhooks
       file_metadata = rest.file_metadata
+      file_tags = rest.file_tags
       addons = rest.addons
       document_conversions = rest.document_conversions
       video_conversions = rest.video_conversions
@@ -351,6 +356,7 @@ RSpec.describe Uploadcare::Api::Rest do
       expect(rest.project).to be(project)
       expect(rest.webhooks).to be(webhooks)
       expect(rest.file_metadata).to be(file_metadata)
+      expect(rest.file_tags).to be(file_tags)
       expect(rest.addons).to be(addons)
       expect(rest.document_conversions).to be(document_conversions)
       expect(rest.video_conversions).to be(video_conversions)

@@ -123,6 +123,10 @@ RSpec.describe Uploadcare do
       expect(Uploadcare::Webhook).to eq(Uploadcare::Resources::Webhook)
     end
 
+    it 'aliases Resources::FileTags as FileTags' do
+      expect(Uploadcare::FileTags).to eq(Uploadcare::Resources::FileTags)
+    end
+
     it 'aliases Resources::AddonExecution as AddonExecution' do
       expect(Uploadcare::AddonExecution).to eq(Uploadcare::Resources::AddonExecution)
     end

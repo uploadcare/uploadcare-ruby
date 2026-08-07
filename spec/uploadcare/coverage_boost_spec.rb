@@ -369,6 +369,7 @@ RSpec.describe 'Coverage: edge cases and error paths' do
       expect(client.webhooks).to be_a(Uploadcare::Client::WebhooksAccessor)
       expect(client.addons).to be_a(Uploadcare::Client::AddonsAccessor)
       expect(client.file_metadata).to be_a(Uploadcare::Client::FileMetadataAccessor)
+      expect(client.file_tags).to be_a(Uploadcare::Client::FileTagsAccessor)
       expect(client.conversions).to be_a(Uploadcare::Client::ConversionsAccessor)
       expect(client.conversions.documents).to be_a(Uploadcare::Client::DocumentConversionsAccessor)
       expect(client.conversions.videos).to be_a(Uploadcare::Client::VideoConversionsAccessor)

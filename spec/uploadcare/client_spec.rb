@@ -154,6 +154,16 @@ RSpec.describe Uploadcare::Client do
     end
   end
 
+  describe '#file_tags' do
+    it 'returns a FileTagsAccessor' do
+      expect(client.file_tags).to be_a(Uploadcare::Client::FileTagsAccessor)
+    end
+
+    it 'memoizes the accessor' do
+      expect(client.file_tags).to equal(client.file_tags)
+    end
+  end
+
   describe '#conversions' do
     it 'returns a ConversionsAccessor' do
       expect(client.conversions).to be_a(Uploadcare::Client::ConversionsAccessor)
@@ -479,6 +489,47 @@ RSpec.describe Uploadcare::Client do
       expect do
         client.file_metadata.delete(uuid: file_uuid, key: 'key')
       end.not_to raise_error
+    end
+  end
+
+  describe 'FileTagsAccessor delegation' do
+    let(:rest) { instance_double(Uploadcare::Api::Rest) }
+    let(:rest_file_tags) { instance_double(Uploadcare::Api::Rest::FileTags) }
+    let(:api_instance) { instance_double(Uploadcare::Client::Api, rest: rest) }
+    let(:file_uuid) { 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' }
+
+    before do
+      allow(client).to receive(:api).and_return(api_instance)
+      allow(rest).to receive(:file_tags).and_return(rest_file_tags)
+    end
+
+    it 'lists tags' do
+      allow(rest_file_tags).to receive(:list)
+        .and_return(Uploadcare::Result.success({ 'tags' => %w[cat animal] }))
+
+      expect(client.file_tags.list(uuid: file_uuid)).to eq(%w[cat animal])
+    end
+
+    it 'replaces tags' do
+      allow(rest_file_tags).to receive(:replace)
+        .and_return(Uploadcare::Result.success({ 'tags' => ['cat'], 'added' => ['cat'], 'deleted' => [] }))
+
+      result = client.file_tags.replace(uuid: file_uuid, tags: ['Cat'])
+
+      expect(result).to be_a(Uploadcare::Resources::FileTags)
+      expect(result.tags).to eq(['cat'])
+    end
+
+    it 'updates tags atomically' do
+      allow(rest_file_tags).to receive(:update)
+        .and_return(
+          Uploadcare::Result.success({ 'tags' => ['featured'], 'added' => ['featured'], 'deleted' => ['draft'] })
+        )
+
+      result = client.file_tags.update(uuid: file_uuid, add: ['featured'], delete: ['draft'])
+
+      expect(result.added).to eq(['featured'])
+      expect(result.deleted).to eq(['draft'])
     end
   end
 end

@@ -96,6 +96,13 @@ class Uploadcare::Client
     memoized(:@file_metadata) { FileMetadataAccessor.new(client: self) }
   end
 
+  # Access per-file tag operations.
+  #
+  # @return [Uploadcare::Client::FileTagsAccessor]
+  def file_tags
+    memoized(:@file_tags) { FileTagsAccessor.new(client: self) }
+  end
+
   # Access conversion helpers.
   #
   # @return [Uploadcare::Client::ConversionsAccessor]

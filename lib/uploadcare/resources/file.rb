@@ -19,13 +19,13 @@ class Uploadcare::Resources::File < Uploadcare::Resources::BaseResource
   # API fields assigned onto file resources.
   ATTRIBUTES = %i[
     datetime_removed datetime_stored datetime_uploaded is_image is_ready mime_type original_file_url
-    original_filename size url uuid variations content_info metadata appdata source
+    original_filename size url uuid variations content_info metadata tags appdata source
   ].freeze
 
   attr_writer :uuid
   attr_accessor :datetime_removed, :datetime_stored, :datetime_uploaded, :is_image, :is_ready, :mime_type,
                 :original_file_url, :original_filename, :size, :url, :variations, :content_info,
-                :metadata, :appdata, :source
+                :metadata, :tags, :appdata, :source
 
   # --- Class methods ---
 

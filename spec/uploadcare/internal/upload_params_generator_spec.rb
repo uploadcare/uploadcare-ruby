@@ -111,6 +111,25 @@ RSpec.describe Uploadcare::Internal::UploadParamsGenerator do
       end
     end
 
+    context 'with tags option' do
+      it 'normalizes tags into the Upload API CSV format' do
+        result = described_class.call(options: { tags: [' Cat ', 'ANIMAL', 'cat'] }, config: config)
+
+        expect(result['tags']).to eq('cat,animal')
+      end
+
+      it 'omits tags when nil or empty' do
+        expect(described_class.call(options: { tags: nil }, config: config)).not_to have_key('tags')
+        expect(described_class.call(options: { tags: [] }, config: config)).not_to have_key('tags')
+      end
+
+      it 'rejects invalid tags' do
+        expect do
+          described_class.call(options: { tags: ['has space'] }, config: config)
+        end.to raise_error(ArgumentError, /invalid characters/)
+      end
+    end
+
     context 'with explicit signature options' do
       it 'uses provided signature and expire' do
         options = { signature: 'abc123', expire: 9_999_999 }
@@ -159,6 +178,7 @@ RSpec.describe Uploadcare::Internal::UploadParamsGenerator do
         options = {
           store: true,
           metadata: { 'env' => 'test' },
+          tags: %w[featured production],
           signature: 'combo-sig',
           expire: 12_345
         }
@@ -166,6 +186,7 @@ RSpec.describe Uploadcare::Internal::UploadParamsGenerator do
         expect(result['UPLOADCARE_PUB_KEY']).to eq('test-pub-key')
         expect(result['UPLOADCARE_STORE']).to eq('1')
         expect(result['metadata[env]']).to eq('test')
+        expect(result['tags']).to eq('featured,production')
         expect(result['signature']).to eq('combo-sig')
         expect(result['expire']).to eq(12_345)
       end

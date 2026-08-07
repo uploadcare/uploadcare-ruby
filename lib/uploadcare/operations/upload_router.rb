@@ -31,7 +31,7 @@ class Uploadcare::Operations::UploadRouter
   # - Strings → URL upload
   #
   # @param source [File, IO, String, Array] Upload source
-  # @param options [Hash] Upload options (:store, :metadata, etc.)
+  # @param options [Hash] Upload options (:store, :metadata, :tags, etc.)
   # @param request_options [Hash] Request options
   # @return [Uploadcare::Resources::File, Array<Uploadcare::Resources::File>, Hash]
   # @raise [ArgumentError] if source type is not recognized
@@ -81,7 +81,7 @@ class Uploadcare::Operations::UploadRouter
   # Upload a file from URL.
   #
   # @param url [String] Source URL
-  # @param options [Hash] Upload options (:async, :store, :metadata)
+  # @param options [Hash] Upload options (:async, :store, :metadata, :tags)
   # @param request_options [Hash] Request options
   # @return [Uploadcare::Resources::File, Hash] File resource (sync) or token hash (async)
   def upload_from_url(url:, request_options: {}, **options)

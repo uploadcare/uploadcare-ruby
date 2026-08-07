@@ -3,12 +3,12 @@
 # Generates upload parameters for Upload API requests.
 #
 # Builds the parameter hash needed for file uploads, including public key,
-# store preferences, metadata, and optional signature params.
+# store preferences, metadata, tags, and optional signature params.
 class Uploadcare::Internal::UploadParamsGenerator
   class << self
     # Build upload parameters.
     #
-    # @param options [Hash] Upload options (:store, :metadata, :signature, :expire)
+    # @param options [Hash] Upload options (:store, :metadata, :tags, :signature, :expire)
     # @param config [Uploadcare::Configuration] Configuration with public key and signing settings
     # @return [Hash] Upload parameters hash
     def call(options: {}, config: Uploadcare.configuration)
@@ -20,6 +20,7 @@ class Uploadcare::Internal::UploadParamsGenerator
       params['UPLOADCARE_STORE'] = store unless store.nil?
 
       params.merge!(metadata(options: options))
+      params.merge!(tags(options: options))
       params.merge!(signature_params(options: options, config: config))
 
       params.compact
@@ -52,6 +53,19 @@ class Uploadcare::Internal::UploadParamsGenerator
       options[:metadata].each_with_object({}) do |(k, v), res|
         res["metadata[#{k}]"] = v.to_s
       end
+    end
+
+    # Generate the comma-separated tags parameter.
+    #
+    # @param options [Hash] Options containing :tags
+    # @return [Hash]
+    def tags(options:)
+      return {} if options[:tags].nil?
+
+      normalized = Uploadcare::Internal::FileTagNormalizer.call(options[:tags])
+      return {} if normalized.empty?
+
+      { 'tags' => normalized.join(',') }
     end
 
     # Generate signature parameters for signed uploads.
