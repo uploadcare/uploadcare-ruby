@@ -155,8 +155,14 @@ class Uploadcare::Collections::Paginated
       api_client: api_client,
       resource_class: resource_class,
       client: client,
-      request_options: request_options
+      request_options: request_options,
+      **continuation_options
     )
+  end
+
+  # Extra state that a specialized collection needs to carry to subsequent pages.
+  def continuation_options
+    {}
   end
 
   def build_resources(results)

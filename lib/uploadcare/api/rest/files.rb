@@ -2,11 +2,12 @@
 
 # REST API endpoint for file operations.
 #
-# Provides methods for listing, retrieving, storing, deleting, and copying files.
+# Provides methods for listing, searching, retrieving, storing, deleting, and copying files.
 #
 # @example
 #   rest = Uploadcare::Api::Rest.new(config: config)
 #   rest.files.list(params: { limit: 10 })
+#   rest.files.search(params: { query: "invoice" }, query: { limit: 20 })
 #   rest.files.info(uuid: "file-uuid")
 #
 # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File
@@ -27,6 +28,22 @@ class Uploadcare::Api::Rest::Files
   # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/filesList
   def list(params: {}, request_options: {})
     rest.get(path: '/files/', params: params, headers: {}, request_options: request_options)
+  end
+
+  # Search files by full-text criteria and structured filters.
+  #
+  # Search criteria belong in the JSON request body (`params`). Pagination and
+  # response expansion options belong in the query string (`query`).
+  #
+  # @param params [Hash] Search body (query, phrase, exact, ranges, tags, etc.)
+  # @param query [Hash] Query parameters (limit, offset, include)
+  # @param request_options [Hash] Request options
+  # @return [Uploadcare::Result] Paginated file search results
+  # @see https://uploadcare.com/api-refs/rest-api/v0.7.0/#tag/File/operation/searchFiles
+  def search(params: {}, query: {}, request_options: {})
+    rest.post(
+      path: '/files/search/', params: params, query: query, headers: {}, request_options: request_options
+    )
   end
 
   # Get file information by UUID.

@@ -4,6 +4,8 @@
 
 ### Added
 
+* File search through `client.files.search`, including full-text, exact, metadata, tag, range, and image filters,
+  sorting, highlights, `include=appdata`, and POST-aware pagination
 * Per-file tags through `client.file_tags` with list, replace, and atomic add/delete operations
 * Upload-time `tags:` support for direct, batch, URL, and multipart uploads
 * The `tags` attribute on file resources returned by the REST API

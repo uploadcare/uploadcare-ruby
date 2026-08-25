@@ -28,6 +28,23 @@ class Uploadcare::Client::FilesAccessor
     )
   end
 
+  # Search files using full-text criteria and structured filters.
+  #
+  # @example Search PDFs and inspect highlighted matches
+  #   results = client.files.search(
+  #     query: "invoice", exact: { detected_mime_type: ["application/pdf"] }, limit: 20
+  #   )
+  #   results.each { |file| puts file.highlight }
+  #
+  # @param request_options [Hash]
+  # @param options [Hash] Search criteria plus limit, offset, and include
+  # @return [Uploadcare::Collections::FileSearchResult]
+  def search(request_options: {}, **options)
+    Uploadcare::Resources::File.search(
+      options: options, client: client, request_options: request_options
+    )
+  end
+
   # @param source [IO, Array<IO>, String]
   # @param request_options [Hash]
   # @param options [Hash]

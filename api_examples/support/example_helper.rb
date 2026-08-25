@@ -66,6 +66,21 @@ module ApiExamples::ExampleHelper
     Array(files).each { |file| safe_delete_file(file) }
   end
 
+  def wait_for_file_search(uuid:, timeout: 10, poll_interval: 0.5)
+    deadline = Process.clock_gettime(Process::CLOCK_MONOTONIC) + timeout
+
+    loop do
+      matches = client.files.search(query: uuid, limit: 20)
+      return matches if matches.any? { |match| match.uuid == uuid }
+
+      raise "Timed out waiting for file #{uuid} to appear in search" if Process.clock_gettime(
+        Process::CLOCK_MONOTONIC
+      ) >= deadline
+
+      sleep poll_interval
+    end
+  end
+
   def with_fixture_file(name)
     handle = File.open(fixture_path(name), 'rb')
     response = yield handle

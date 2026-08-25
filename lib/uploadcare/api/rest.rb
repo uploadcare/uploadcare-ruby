@@ -98,14 +98,15 @@ class Uploadcare::Api::Rest
   # @param method [Symbol] HTTP method (:get, :post, :put, :patch, :delete)
   # @param path [String] API endpoint path
   # @param params [Hash, Array, String] Request parameters
+  # @param query [Hash] Query parameters for requests that also have a body
   # @param headers [Hash] Additional request headers
   # @param request_options [Hash] Request options (timeout, etc.)
   # @return [Hash, Array, nil] Parsed JSON response body
   # @raise [Uploadcare::Exception::RequestError] on API errors
-  def make_request(method:, path:, params: {}, headers: {}, request_options: {})
+  def make_request(method:, path:, params: {}, query: {}, headers: {}, request_options: {})
     handle_throttling(max_attempts: request_options[:max_throttle_attempts]) do
       response = connection.public_send(method, path) do |req|
-        prepare_request(req, method, path, params, headers, request_options)
+        prepare_request(req, method, path, params, query, headers, request_options)
       end
       response.body
     end
@@ -117,11 +118,14 @@ class Uploadcare::Api::Rest
   #
   # @param path [String] API endpoint path
   # @param params [Hash] Request body parameters
+  # @param query [Hash] Query parameters
   # @param headers [Hash] Additional request headers
   # @param request_options [Hash] Request options
   # @return [Uploadcare::Result]
-  def post(path:, params: {}, headers: {}, request_options: {})
-    request(method: :post, path: path, params: params, headers: headers, request_options: request_options)
+  def post(path:, params: {}, query: {}, headers: {}, request_options: {})
+    request(
+      method: :post, path: path, params: params, query: query, headers: headers, request_options: request_options
+    )
   end
 
   # Make a GET request wrapped in a Result.
@@ -173,28 +177,33 @@ class Uploadcare::Api::Rest
   # @param method [Symbol] HTTP method
   # @param path [String] API path
   # @param params [Hash] Request parameters
+  # @param query [Hash] Query parameters for requests that also have a body
   # @param headers [Hash] Request headers
   # @param request_options [Hash] Request options
   # @return [Uploadcare::Result]
-  def request(method:, path:, params: {}, headers: {}, request_options: {})
+  def request(method:, path:, params: {}, query: {}, headers: {}, request_options: {})
     Uploadcare::Result.capture do
-      make_request(method: method, path: path, params: params, headers: headers, request_options: request_options)
+      make_request(
+        method: method, path: path, params: params, query: query, headers: headers, request_options: request_options
+      )
     end
   end
 
   private
 
-  def prepare_request(req, method, path, params, headers, request_options)
+  def prepare_request(req, method, path, params, query, headers, request_options)
     upcase_method_name = method.to_s.upcase
-    uri = build_request_uri(path, params, upcase_method_name)
+    query_params = upcase_method_name == HTTP_GET ? params : query
+    uri = build_request_uri(path, query_params)
 
     prepare_headers(req, upcase_method_name, uri, params, headers)
     prepare_body_or_params(req, upcase_method_name, params)
+    req.params.update(query) if upcase_method_name != HTTP_GET && !query.nil? && !query.empty?
     apply_request_options(req, request_options)
   end
 
-  def build_request_uri(path, params, method)
-    if method == HTTP_GET && !params.nil? && params.is_a?(Hash) && !params.empty?
+  def build_request_uri(path, params)
+    if !params.nil? && params.is_a?(Hash) && !params.empty?
       build_uri(path, params)
     else
       path

@@ -175,6 +175,67 @@ RSpec.describe Uploadcare::Api::Rest do
       expect(result.error).to be_a(Uploadcare::Exception::InvalidRequestError)
     end
 
+    it 'sends query params alongside a JSON request body' do
+      stub = stub_request(:post, 'https://api.uploadcare.com/files/search/')
+             .with(
+               query: { limit: '20', offset: '40' },
+               body: { query: 'invoice', is_image: false }
+             )
+             .to_return(
+               status: 200,
+               body: { results: [], total: 0 }.to_json,
+               headers: { 'Content-Type' => 'application/json' }
+             )
+
+      result = rest.post(
+        path: '/files/search/',
+        params: { query: 'invoice', is_image: false },
+        query: { limit: 20, offset: 40 },
+        headers: {},
+        request_options: {}
+      )
+
+      expect(result).to be_success
+      expect(stub).to have_been_requested
+    end
+
+    it 'signs POST URI with the same query encoding used by Faraday' do
+      authenticator = instance_double(Uploadcare::Internal::Authenticator)
+      allow(authenticator).to receive(:default_headers).and_return(
+        {
+          'Accept' => 'application/vnd.uploadcare-v0.7+json',
+          'Content-Type' => 'application/json'
+        }
+      )
+      allow(authenticator).to receive(:headers)
+        .with('POST', '/files/search/?include=appdata&limit=20', { query: 'invoice' }.to_json, 'application/json')
+        .and_return(
+          {
+            'Accept' => 'application/vnd.uploadcare-v0.7+json',
+            'Authorization' => 'Uploadcare.Simple demopublickey:demosecretkey',
+            'Content-Type' => 'application/json'
+          }
+        )
+      rest.instance_variable_set(:@authenticator, authenticator)
+
+      stub_request(:post, 'https://api.uploadcare.com/files/search/?include=appdata&limit=20')
+        .to_return(
+          status: 200,
+          body: { results: [] }.to_json,
+          headers: { 'Content-Type' => 'application/json' }
+        )
+
+      result = rest.post(
+        path: '/files/search/',
+        params: { query: 'invoice' },
+        query: { limit: 20, include: 'appdata' },
+        headers: {},
+        request_options: {}
+      )
+
+      expect(result).to be_success
+    end
+
     it 'uses the resolved Content-Type consistently for signing and request headers' do
       authenticator = instance_double(Uploadcare::Internal::Authenticator)
       allow(authenticator).to receive(:default_headers).and_return(

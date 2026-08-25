@@ -19,13 +19,13 @@ class Uploadcare::Resources::File < Uploadcare::Resources::BaseResource
   # API fields assigned onto file resources.
   ATTRIBUTES = %i[
     datetime_removed datetime_stored datetime_uploaded is_image is_ready mime_type original_file_url
-    original_filename size url uuid variations content_info metadata tags appdata source
+    original_filename size url uuid variations content_info metadata tags appdata source highlight
   ].freeze
 
   attr_writer :uuid
   attr_accessor :datetime_removed, :datetime_stored, :datetime_uploaded, :is_image, :is_ready, :mime_type,
                 :original_file_url, :original_filename, :size, :url, :variations, :content_info,
-                :metadata, :tags, :appdata, :source
+                :metadata, :tags, :appdata, :source, :highlight
 
   # --- Class methods ---
 
@@ -43,11 +43,6 @@ class Uploadcare::Resources::File < Uploadcare::Resources::BaseResource
       resolved_client.api.rest.files.info(uuid: uuid, params: params, request_options: request_options)
     )
     new(response, resolved_client)
-  end
-
-  class << self
-    alias retrieve find
-    alias info find
   end
 
   # List files with optional filtering and pagination.
@@ -75,6 +70,23 @@ class Uploadcare::Resources::File < Uploadcare::Resources::BaseResource
       resource_class: self,
       client: resolved_client,
       request_options: request_options
+    )
+  end
+
+  # Search files with full-text criteria and structured filters.
+  #
+  # `limit`, `offset`, and `include` are sent as query parameters. All other
+  # options are sent in the JSON request body as search criteria.
+  #
+  # @param options [Hash] Search criteria plus pagination/expansion options
+  # @param client [Uploadcare::Client, nil] Client instance
+  # @param config [Uploadcare::Configuration] Configuration fallback
+  # @param request_options [Hash] Request options
+  # @return [Uploadcare::Collections::FileSearchResult]
+  def self.search(options: {}, client: nil, config: Uploadcare.configuration, request_options: {})
+    resolved_client = resolve_client(client: client, config: config)
+    Uploadcare::Operations::FileSearch.call(
+      options: options, client: resolved_client, resource_class: self, request_options: request_options
     )
   end
 
@@ -112,10 +124,6 @@ class Uploadcare::Resources::File < Uploadcare::Resources::BaseResource
   def self.upload_url(url, client: nil, config: Uploadcare.configuration, request_options: {}, **options)
     resolved_client = resolve_client(client: client, config: config)
     resolved_client.uploads.upload_from_url(url: url, request_options: request_options, **options)
-  end
-
-  class << self
-    alias upload_from_url upload_url
   end
 
   # Batch store files.
@@ -175,10 +183,6 @@ class Uploadcare::Resources::File < Uploadcare::Resources::BaseResource
     new(response['result'], resolved_client)
   end
 
-  class << self
-    alias copy_to_local local_copy
-  end
-
   # Copy a file to remote storage (class method).
   #
   # @param source [String] CDN URL or UUID
@@ -197,6 +201,10 @@ class Uploadcare::Resources::File < Uploadcare::Resources::BaseResource
   end
 
   class << self
+    alias retrieve find
+    alias info find
+    alias upload_from_url upload_url
+    alias copy_to_local local_copy
     alias copy_to_remote remote_copy
   end
 

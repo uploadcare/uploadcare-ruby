@@ -55,6 +55,7 @@
     "Use `client.files`, `client.groups`, `client.uploads`, `client.project`, `client.webhooks`, `client.file_metadata`, `client.file_tags`, `client.addons`, and `client.conversions` for normal application workflows.",
     "Use `client.api.rest` and `client.api.upload` when exact REST API or Upload API endpoint parity is needed.",
     "Use `client.uploads.upload` for automatic upload method selection and `client.uploads.multipart_upload` for explicit multipart uploads.",
+    "Use `client.files.search` for full-text and structured file search; search pagination resends the original POST criteria automatically.",
     "Pass `tags: [...]` when uploading, and use `client.file_tags` to list, replace, add, or delete tags on an existing file.",
     "Use `MIGRATING_V5.md` when upgrading applications from uploadcare-ruby v4.x to v5."
   ],
