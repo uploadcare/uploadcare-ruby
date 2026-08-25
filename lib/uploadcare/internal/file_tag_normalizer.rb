@@ -33,6 +33,8 @@ class Uploadcare::Internal::FileTagNormalizer
         raise ArgumentError, 'tags must be an array of strings' unless tag.is_a?(String)
 
         value = tag.strip.downcase
+        next if value.empty?
+
         validate_tag(value)
         next if seen[value]
 
@@ -42,7 +44,6 @@ class Uploadcare::Internal::FileTagNormalizer
     end
 
     def validate_tag(tag)
-      raise ArgumentError, 'tag may not be blank' if tag.empty?
       if tag.length > MAX_LENGTH
         raise ArgumentError, "tag is too long: #{tag.length} characters (maximum #{MAX_LENGTH})"
       end
