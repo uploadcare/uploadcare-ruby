@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 # Per-file tag operations scoped to a client instance.
+#
+# @example Replace and update tags
+#   client.file_tags.replace(uuid: file.uuid, tags: %w[approved summer])
+#   client.file_tags.update(uuid: file.uuid, add: ["featured"], delete: ["summer"])
 class Uploadcare::Client::FileTagsAccessor
   attr_reader :client
 

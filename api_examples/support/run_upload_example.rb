@@ -71,13 +71,19 @@ module ApiExamples::RunUploadExample
 
   def run_base_upload(client)
     ApiExamples::ExampleHelper.with_fixture_file('kitten.jpeg') do |handle|
-      ApiExamples::ExampleHelper.unwrap(client.api.upload.files.direct(file: handle, store: true))
+      ApiExamples::ExampleHelper.unwrap(
+        client.api.upload.files.direct(file: handle, store: true, tags: %w[example base])
+      )
     end
   end
 
   def run_url_upload(client)
     response = ApiExamples::ExampleHelper.unwrap(
-      client.api.upload.files.from_url(source_url: ApiExamples::ExampleHelper::SAMPLE_IMAGE_URL, store: true)
+      client.api.upload.files.from_url(
+        source_url: ApiExamples::ExampleHelper::SAMPLE_IMAGE_URL,
+        store: true,
+        tags: %w[example remote]
+      )
     )
     response
   ensure

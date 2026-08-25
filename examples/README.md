@@ -29,6 +29,8 @@ mise exec -- ruby examples/simple_upload.rb spec/fixtures/kitten.jpeg
   Force multipart upload and show throughput details.
 - `examples/url_upload.rb`
   Upload a remote URL and show async polling as a follow-up example.
+- `examples/file_tags.rb`
+  Upload a file with tags, then list, replace, add, and delete tags.
 - `examples/group_creation.rb`
   Upload multiple files, create a group, and print group details.
 

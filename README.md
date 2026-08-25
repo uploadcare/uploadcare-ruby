@@ -281,7 +281,7 @@ files = [
   File.open("photo-2.jpg", "rb")
 ]
 
-uploaded = client.uploads.upload(files, store: true)
+uploaded = client.uploads.upload(files, store: true, tags: ["gallery", "batch"])
 
 files.each(&:close)
 ```
@@ -291,7 +291,11 @@ files.each(&:close)
 Synchronous:
 
 ```ruby
-file = client.files.upload_from_url("https://example.com/image.jpg", store: true)
+file = client.files.upload_from_url(
+  "https://example.com/image.jpg",
+  store: true,
+  tags: ["remote", "example"]
+)
 ```
 
 Async:
@@ -313,7 +317,12 @@ Polling options for synchronous URL uploads:
 
 ```ruby
 File.open("large-video.mp4", "rb") do |io|
-  file = client.uploads.multipart_upload(file: io, store: true, threads: 4) do |progress|
+  file = client.uploads.multipart_upload(
+    file: io,
+    store: true,
+    threads: 4,
+    tags: ["video", "multipart"]
+  ) do |progress|
     uploaded = progress[:uploaded]
     total = progress[:total]
     puts "#{uploaded}/#{total}"
@@ -437,6 +446,7 @@ File responses expose the ordered tag list through `file.tags` when the field is
 ## File Tags
 
 Tags can be attached during direct, URL, batch, and multipart uploads with the `tags:` option. The SDK normalizes tags to lowercase, strips surrounding whitespace, discards blank tags, removes duplicates while preserving order, and validates the platform limits.
+Upload responses do not include tags; use `client.file_tags.list` or reload the file through the REST API to read them.
 
 Read or replace the complete tag list:
 
@@ -452,6 +462,9 @@ puts change.tags
 puts change.added
 puts change.deleted
 ```
+
+Mutation responses expose the resulting ordered `tags`, the tags actually `added`, and the tags actually `deleted`.
+Replacing with the same normalized set is safe and reports no additions or deletions.
 
 Add and delete tags atomically (deletions are applied first):
 
@@ -649,10 +662,14 @@ Upload API:
 
 ```ruby
 File.open("photo.jpg", "rb") do |io|
-  client.api.upload.files.direct(file: io, store: true)
+  client.api.upload.files.direct(file: io, store: true, tags: ["photo", "example"])
 end
 
-client.api.upload.files.from_url(source_url: "https://example.com/image.jpg", async: true)
+client.api.upload.files.from_url(
+  source_url: "https://example.com/image.jpg",
+  async: true,
+  tags: ["remote", "example"]
+)
 client.api.upload.groups.create(files: ["uuid-1", "uuid-2"])
 ```
 
