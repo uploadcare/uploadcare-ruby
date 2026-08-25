@@ -139,7 +139,8 @@ module ApiExamples::ExampleHelper
         size: file.size,
         content_type: 'image/jpeg',
         part_size: multipart_part_size,
-        store: true
+        store: true,
+        tags: %w[example multipart]
       )
     )
     yield file, response
