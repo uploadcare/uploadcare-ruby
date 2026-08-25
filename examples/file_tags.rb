@@ -32,4 +32,6 @@ begin
 rescue StandardError => e
   warn "File tag example failed: #{e.message}"
   exit 1
+ensure
+  client.api.rest.files.delete(uuid: file.uuid) if file&.uuid
 end
