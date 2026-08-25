@@ -34,6 +34,7 @@ RSpec.describe Uploadcare::Resources::File do
       'variations' => nil,
       'content_info' => {},
       'metadata' => {},
+      'tags' => %w[cat featured],
       'appdata' => nil,
       'source' => nil
     }
@@ -48,7 +49,7 @@ RSpec.describe Uploadcare::Resources::File do
     it 'defines expected attributes' do
       expected = %i[
         datetime_removed datetime_stored datetime_uploaded is_image is_ready mime_type original_file_url
-        original_filename size url uuid variations content_info metadata appdata source
+        original_filename size url uuid variations content_info metadata tags appdata source
       ]
       expect(described_class::ATTRIBUTES).to match_array(expected)
     end
@@ -63,6 +64,7 @@ RSpec.describe Uploadcare::Resources::File do
       expect(file.mime_type).to eq('image/jpeg')
       expect(file.is_image).to be true
       expect(file.is_ready).to be true
+      expect(file.tags).to eq(%w[cat featured])
     end
 
     it 'stores client reference' do

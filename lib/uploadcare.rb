@@ -79,6 +79,8 @@ module Uploadcare
   Webhook = Resources::Webhook
   # Alias for the file metadata resource.
   FileMetadata = Resources::FileMetadata
+  # Alias for the file tags resource.
+  FileTags = Resources::FileTags
   # Alias for the add-on execution resource.
   AddonExecution = Resources::AddonExecution
   # Alias for the document conversion resource.

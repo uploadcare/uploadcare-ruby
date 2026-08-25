@@ -32,7 +32,7 @@ class Uploadcare::Operations::MultipartUpload
   # Execute the full multipart upload flow.
   #
   # @param file [File, IO] File to upload
-  # @param options [Hash] Upload options (:store, :metadata, :threads, :part_size)
+  # @param options [Hash] Upload options (:store, :metadata, :tags, :threads, :part_size)
   # @param request_options [Hash] Request options
   # @yield [Hash] Progress callback with :uploaded, :total, :part, :total_parts
   # @return [Uploadcare::Result] Result containing { 'uuid' => '...' }

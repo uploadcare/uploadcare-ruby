@@ -114,6 +114,16 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
     end
 
     context 'when performing sequential upload (threads <= 1)' do
+      let(:config) do
+        Uploadcare::Configuration.new(
+          public_key: 'demopublickey',
+          secret_key: 'demosecretkey',
+          auth_type: 'Uploadcare.Simple',
+          multipart_chunk_size: 1024,
+          upload_threads: 1
+        )
+      end
+
       before do
         allow(upload_client).to receive(:upload_part_to_url)
         allow(upload_files_api).to receive_messages(multipart_start: Uploadcare::Result.success(start_response), multipart_complete: Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
@@ -166,7 +176,8 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
           auth_type: 'Uploadcare.Simple',
           multipart_chunk_size: 1024,
           upload_timeout: 45,
-          max_upload_retries: 7
+          max_upload_retries: 7,
+          upload_threads: 1
         )
         tuned_uploader = described_class.new(upload_client: upload_client, config: tuned_config)
 
@@ -208,7 +219,7 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
       it 'uses custom part_size from options' do
         custom_config = Uploadcare::Configuration.new(
           public_key: 'pk', secret_key: 'sk', auth_type: 'Uploadcare.Simple',
-          multipart_chunk_size: 2048
+          multipart_chunk_size: 2048, upload_threads: 1
         )
         custom_uploader = described_class.new(upload_client: upload_client, config: custom_config)
 
@@ -233,6 +244,16 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
     end
 
     context 'when reporting progress via block callback' do
+      let(:config) do
+        Uploadcare::Configuration.new(
+          public_key: 'demopublickey',
+          secret_key: 'demosecretkey',
+          auth_type: 'Uploadcare.Simple',
+          multipart_chunk_size: 1024,
+          upload_threads: 1
+        )
+      end
+
       before do
         allow(upload_client).to receive(:upload_part_to_url)
         allow(upload_files_api).to receive_messages(multipart_start: Uploadcare::Result.success(start_response), multipart_complete: Uploadcare::Result.success({ 'uuid' => 'mp-uuid-123' }))
@@ -508,7 +529,7 @@ RSpec.describe Uploadcare::Operations::MultipartUpload do
         allow(upload_client).to receive(:upload_part_to_url)
           .and_raise(Uploadcare::Exception::MultipartUploadError, 'part upload failed')
 
-        result = uploader.upload(file: tempfile)
+        result = uploader.upload(file: tempfile, threads: 1)
         expect(result.failure?).to be(true)
         expect(result.error).to be_a(Uploadcare::Exception::MultipartUploadError)
       end

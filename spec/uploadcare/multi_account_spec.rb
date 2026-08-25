@@ -45,6 +45,7 @@ RSpec.describe 'Multi-account support' do
       expect(client_a.webhooks).not_to equal(client_b.webhooks)
       expect(client_a.addons).not_to equal(client_b.addons)
       expect(client_a.file_metadata).not_to equal(client_b.file_metadata)
+      expect(client_a.file_tags).not_to equal(client_b.file_tags)
       expect(client_a.conversions).not_to equal(client_b.conversions)
     end
   end

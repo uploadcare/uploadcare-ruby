@@ -93,6 +93,22 @@ module ApiExamples::RunRestExample
           client.file_metadata.delete(uuid: file.uuid, key: 'color')
           { 'uuid' => file.uuid, 'key' => 'color', 'deleted' => true }
         end
+      when 'get_files_uuid_tags.rb'
+        ApiExamples::ExampleHelper.with_uploaded_file do |file|
+          client.file_tags.replace(uuid: file.uuid, tags: %w[cat example])
+          client.file_tags.list(uuid: file.uuid)
+        end
+      when 'put_files_uuid_tags.rb'
+        ApiExamples::ExampleHelper.with_uploaded_file do |file|
+          change = client.file_tags.replace(uuid: file.uuid, tags: %w[approved example])
+          { 'tags' => change.tags, 'added' => change.added, 'deleted' => change.deleted }
+        end
+      when 'patch_files_uuid_tags.rb'
+        ApiExamples::ExampleHelper.with_uploaded_file do |file|
+          client.file_tags.replace(uuid: file.uuid, tags: %w[draft example])
+          change = client.file_tags.update(uuid: file.uuid, add: ['featured'], delete: ['draft'])
+          { 'tags' => change.tags, 'added' => change.added, 'deleted' => change.deleted }
+        end
       when 'post_addons_aws_rekognition_detect_labels_execute.rb'
         ApiExamples::ExampleHelper.with_uploaded_file do |file|
           client.addons.aws_rekognition_detect_labels(uuid: file.uuid)

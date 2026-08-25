@@ -21,8 +21,8 @@ Optional environment variables:
 
 Verification:
 
-- Verified against a real Uploadcare demo account on `2026-03-16`
-- All canonical scripts in `api_examples/rest_api` and `api_examples/upload_api` executed successfully
+- The endpoint suite was verified against a real Uploadcare demo account on `2026-08-07`.
+- Run changed examples against a disposable project before release; they create and remove temporary resources.
 
 ## REST API 0.7
 
@@ -40,6 +40,9 @@ Verification:
 | `GET /files/{uuid}/metadata/{key}/` | `api_examples/rest_api/get_files_uuid_metadata_key.rb` | Uses `client.file_metadata.show` |
 | `PUT /files/{uuid}/metadata/{key}/` | `api_examples/rest_api/put_files_uuid_metadata_key.rb` | Uses `client.file_metadata.update` |
 | `DELETE /files/{uuid}/metadata/{key}/` | `api_examples/rest_api/delete_files_uuid_metadata_key.rb` | Uses `client.file_metadata.delete` |
+| `GET /files/{uuid}/tags/` | `api_examples/rest_api/get_files_uuid_tags.rb` | Uses `client.file_tags.list` |
+| `PUT /files/{uuid}/tags/` | `api_examples/rest_api/put_files_uuid_tags.rb` | Uses `client.file_tags.replace` |
+| `PATCH /files/{uuid}/tags/` | `api_examples/rest_api/patch_files_uuid_tags.rb` | Uses `client.file_tags.update` |
 | `GET /groups/` | `api_examples/rest_api/get_groups.rb` | Uses `client.groups.list` |
 | `GET /groups/{uuid}/` | `api_examples/rest_api/get_groups_uuid.rb` | Uses `client.groups.find` |
 | `DELETE /groups/{uuid}/` | `api_examples/rest_api/delete_groups_uuid.rb` | Uses `group.delete` |
@@ -66,11 +69,11 @@ Verification:
 
 | Endpoint | Example file | Notes |
 | --- | --- | --- |
-| `POST /base/` | `api_examples/upload_api/post_base.rb` | Uses raw upload API |
-| `POST /multipart/start/` | `api_examples/upload_api/post_multipart_start.rb` | Starts and completes a real multipart upload |
+| `POST /base/` | `api_examples/upload_api/post_base.rb` | Uses raw upload API with upload-time tags |
+| `POST /multipart/start/` | `api_examples/upload_api/post_multipart_start.rb` | Starts and completes a real multipart upload with tags |
 | `PUT <presigned-url-x>` | `api_examples/upload_api/put_multipart_part.rb` | Uploads one part via gem multipart helper |
 | `POST /multipart/complete/` | `api_examples/upload_api/post_multipart_complete.rb` | Completes a real multipart upload |
-| `POST /from_url/` | `api_examples/upload_api/post_from_url.rb` | Uses raw upload API |
+| `POST /from_url/` | `api_examples/upload_api/post_from_url.rb` | Uses raw upload API with upload-time tags |
 | `GET /from_url/status/` | `api_examples/upload_api/get_from_url_status.rb` | Starts async upload then checks status |
 | `GET /info/` | `api_examples/upload_api/get_info.rb` | Uses raw upload API |
 | `POST /group/` | `api_examples/upload_api/post_group.rb` | Uses raw upload API |

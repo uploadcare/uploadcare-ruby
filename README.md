@@ -27,6 +27,7 @@ The gem is built around:
 - [Multi-Account Usage](#multi-account-usage)
 - [Uploads](#uploads)
 - [Files](#files)
+- [File Tags](#file-tags)
 - [Groups](#groups)
 - [Project](#project)
 - [Metadata](#metadata)
@@ -87,6 +88,7 @@ This is the default API you should use in applications:
 - `client.project`
 - `client.webhooks`
 - `client.file_metadata`
+- `client.file_tags`
 - `client.addons`
 - `client.conversions`
 
@@ -262,7 +264,12 @@ remote_file = client.uploads.upload("https://example.com/image.jpg", store: true
 
 ```ruby
 file = File.open("photo.jpg", "rb") do |io|
-  client.files.upload(io, store: true, metadata: { subsystem: "avatars" })
+  client.files.upload(
+    io,
+    store: true,
+    metadata: { subsystem: "avatars" },
+    tags: ["avatar", "profile"]
+  )
 end
 ```
 
@@ -274,7 +281,7 @@ files = [
   File.open("photo-2.jpg", "rb")
 ]
 
-uploaded = client.uploads.upload(files, store: true)
+uploaded = client.uploads.upload(files, store: true, tags: ["gallery", "batch"])
 
 files.each(&:close)
 ```
@@ -284,7 +291,11 @@ files.each(&:close)
 Synchronous:
 
 ```ruby
-file = client.files.upload_from_url("https://example.com/image.jpg", store: true)
+file = client.files.upload_from_url(
+  "https://example.com/image.jpg",
+  store: true,
+  tags: ["remote", "example"]
+)
 ```
 
 Async:
@@ -306,7 +317,12 @@ Polling options for synchronous URL uploads:
 
 ```ruby
 File.open("large-video.mp4", "rb") do |io|
-  file = client.uploads.multipart_upload(file: io, store: true, threads: 4) do |progress|
+  file = client.uploads.multipart_upload(
+    file: io,
+    store: true,
+    threads: 4,
+    tags: ["video", "multipart"]
+  ) do |progress|
     uploaded = progress[:uploaded]
     total = progress[:total]
     puts "#{uploaded}/#{total}"
@@ -342,6 +358,7 @@ Common upload options:
 
 - `store: true | false | "auto"`
 - `metadata: { key: value }`
+- `tags: ["tag-1", "tag_2"]`
 - `signature: "..."`
 - `expire: unix_timestamp`
 - `async: true` for URL uploads
@@ -423,6 +440,43 @@ Instance-level variants are also available:
 copied = file.copy_to_local(options: { store: true })
 remote_url = file.copy_to_remote(target: "custom_storage")
 ```
+
+File responses expose the ordered tag list through `file.tags` when the field is present.
+
+## File Tags
+
+Tags can be attached during direct, URL, batch, and multipart uploads with the `tags:` option. The SDK normalizes tags to lowercase, strips surrounding whitespace, discards blank tags, removes duplicates while preserving order, and validates the platform limits.
+Upload responses do not include tags; use `client.file_tags.list` or reload the file through the REST API to read them.
+
+Read or replace the complete tag list:
+
+```ruby
+tags = client.file_tags.list(uuid: file.uuid)
+
+change = client.file_tags.replace(
+  uuid: file.uuid,
+  tags: ["approved", "Summer"]
+)
+
+puts change.tags
+puts change.added
+puts change.deleted
+```
+
+Mutation responses expose the resulting ordered `tags`, the tags actually `added`, and the tags actually `deleted`.
+Replacing with the same normalized set is safe and reports no additions or deletions.
+
+Add and delete tags atomically (deletions are applied first):
+
+```ruby
+change = client.file_tags.update(
+  uuid: file.uuid,
+  add: ["featured"],
+  delete: ["draft"]
+)
+```
+
+Passing an empty array to `replace` clears all tags. Tags may contain Latin letters, digits, hyphens, underscores, and dots; each tag is limited to 100 characters and each file to 50 tags.
 
 ## Groups
 
@@ -608,10 +662,14 @@ Upload API:
 
 ```ruby
 File.open("photo.jpg", "rb") do |io|
-  client.api.upload.files.direct(file: io, store: true)
+  client.api.upload.files.direct(file: io, store: true, tags: ["photo", "example"])
 end
 
-client.api.upload.files.from_url(source_url: "https://example.com/image.jpg", async: true)
+client.api.upload.files.from_url(
+  source_url: "https://example.com/image.jpg",
+  async: true,
+  tags: ["remote", "example"]
+)
 client.api.upload.groups.create(files: ["uuid-1", "uuid-2"])
 ```
 
