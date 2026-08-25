@@ -408,7 +408,7 @@ files = client.files.list(stored: true, removed: false, limit: 100)
 
 ### Search files
 
-Search across filenames, metadata, and detected MIME types:
+Search across filenames, file UUIDs, metadata, and detected MIME types:
 
 ```ruby
 matches = client.files.search(

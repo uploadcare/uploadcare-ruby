@@ -21,10 +21,11 @@ RSpec.describe Uploadcare::Collections::FileSearchResult do
     }
   end
   let(:first_file) { resource_class.new({ 'uuid' => 'uuid-1' }, client) }
+  let(:search_query) { { include: 'appdata', limit: 2 } }
   let(:collection) do
     described_class.new(
       resources: [first_file],
-      next_page: 'https://api.uploadcare.com/files/search/?limit=2&offset=50&include=appdata',
+      next_page: 'https://api.uploadcare.com/files/search/?limit=2&offset=50',
       previous_page: nil,
       per_page: 2,
       total: 100,
@@ -32,7 +33,8 @@ RSpec.describe Uploadcare::Collections::FileSearchResult do
       resource_class: resource_class,
       client: client,
       request_options: { timeout: 5 },
-      search_params: search_params
+      search_params: search_params,
+      search_query: search_query
     )
   end
 
@@ -53,7 +55,7 @@ RSpec.describe Uploadcare::Collections::FileSearchResult do
       allow(api_client).to receive(:search)
         .with(
           params: search_params,
-          query: { 'limit' => '2', 'offset' => '50', 'include' => 'appdata' },
+          query: { 'include' => 'appdata', 'limit' => '2', 'offset' => '50' },
           request_options: { timeout: 5 }
         )
         .and_return(Uploadcare::Result.success(response))
@@ -66,6 +68,19 @@ RSpec.describe Uploadcare::Collections::FileSearchResult do
         'original_filename' => ['<em>invoice</em>.pdf']
       )
       expect(page.search_params).to eq(search_params)
+      expect(page.search_query).to eq(search_query)
+    end
+  end
+
+  describe '#search_query' do
+    it 'is copied and frozen so callers cannot alter subsequent page fetches' do
+      snapshot = collection.search_query
+
+      search_query[:include] = 'other'
+
+      expect(snapshot).to eq(include: 'appdata', limit: 2)
+      expect(snapshot).to be_frozen
+      expect(snapshot.fetch(:include)).to be_frozen
     end
   end
 
@@ -108,14 +123,14 @@ RSpec.describe Uploadcare::Collections::FileSearchResult do
       allow(api_client).to receive(:search)
         .with(
           params: search_params,
-          query: { 'limit' => '2', 'offset' => '50', 'include' => 'appdata' },
+          query: { 'include' => 'appdata', 'limit' => '2', 'offset' => '50' },
           request_options: { timeout: 5 }
         )
         .and_return(Uploadcare::Result.success(empty_page))
       allow(api_client).to receive(:search)
         .with(
           params: search_params,
-          query: { 'limit' => '2', 'offset' => '52' },
+          query: { 'include' => 'appdata', 'limit' => '2', 'offset' => '52' },
           request_options: { timeout: 5 }
         )
         .and_return(Uploadcare::Result.success(final_page))

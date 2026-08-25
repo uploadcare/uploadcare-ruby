@@ -7,10 +7,11 @@
 # the API's next or previous URL.
 class Uploadcare::Collections::FileSearchResult < Uploadcare::Collections::Paginated
   # @return [Hash] JSON search criteria resent for subsequent pages
-  attr_reader :search_params
+  attr_reader :search_params, :search_query
 
   def initialize(params = {})
     @search_params = immutable_copy(params[:search_params] || {})
+    @search_query = immutable_copy(params[:search_query] || {})
     super
   end
 
@@ -32,12 +33,13 @@ class Uploadcare::Collections::FileSearchResult < Uploadcare::Collections::Pagin
   end
 
   def fetch_response(params)
+    query = search_query.transform_keys(&:to_s).merge(params)
     Uploadcare::Result.unwrap(
-      api_client.search(params: search_params, query: params, request_options: request_options)
+      api_client.search(params: search_params, query: query, request_options: request_options)
     )
   end
 
   def continuation_options
-    { search_params: search_params }
+    { search_params: search_params, search_query: search_query }
   end
 end

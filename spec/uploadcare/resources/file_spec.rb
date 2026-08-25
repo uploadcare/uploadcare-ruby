@@ -177,6 +177,7 @@ RSpec.describe Uploadcare::Resources::File do
         'metadata' => { 'camera' => '<em>Canon</em>' }
       )
       expect(result.search_params).to eq(query: 'photo')
+      expect(result.search_query).to eq(limit: 20, include: 'appdata')
     end
 
     it 'supports string keys for URL query options' do

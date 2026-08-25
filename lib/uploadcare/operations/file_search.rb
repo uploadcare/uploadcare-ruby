@@ -23,7 +23,8 @@ class Uploadcare::Operations::FileSearch
         resource_class: resource_class,
         client: client,
         request_options: request_options,
-        search_params: search_params
+        search_params: search_params,
+        search_query: query_params
       )
     end
 

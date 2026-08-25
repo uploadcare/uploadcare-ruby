@@ -26,7 +26,7 @@ begin
   end
 
   next_page = results.next_page
-  puts "Next page contains #{next_page.length} files" if next_page
+  puts "Next page contains #{next_page.count} files" if next_page
 rescue StandardError => e
   warn "File search example failed: #{e.message}"
   exit 1
