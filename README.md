@@ -436,8 +436,10 @@ matches = client.files.search(
 `limit`, `offset`, and `include` are sent as URL query parameters; search criteria are sent in the JSON body. Search
 responses are `Uploadcare::Collections::FileSearchResult` objects and support `next_page`, `previous_page`, and `all`
 like ordinary file lists. Subsequent pages automatically resend the original search criteria. Full-text values must be
-at least four characters; `fuzziness: true` enables typo-tolerant matching but increases latency. Newly uploaded files
-may take a short time to appear in the search index.
+at least four characters; use `exact` for shorter values. A field cannot appear in both `phrase` and `exact`, and every
+request needs at least one search condition. `limit` accepts 1–100 results, while `offset + limit` cannot exceed 1,000.
+For filter-only searches, pass an explicit `sort` for deterministic ordering. `fuzziness: true` enables typo-tolerant
+matching but increases latency. Newly uploaded files may take a short time to appear in the search index.
 
 ### Resource operations
 
