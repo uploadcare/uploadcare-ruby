@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Upload API endpoint for file upload operations.
-# rubocop:disable Metrics/ClassLength
+# rubocop:disable-next Metrics/ClassLength
 class Uploadcare::Api::Upload::Files
   # @return [Uploadcare::Api::Upload] Parent Upload client
   attr_reader :upload
@@ -324,4 +324,3 @@ class Uploadcare::Api::Upload::Files
     [initial.to_f * (2**attempt), max_interval.to_f].min
   end
 end
-# rubocop:enable Metrics/ClassLength

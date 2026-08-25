@@ -478,7 +478,7 @@ File responses expose the ordered tag list through `file.tags` when the field is
 
 ## File Tags
 
-Tags can be attached during direct, URL, batch, and multipart uploads with the `tags:` option. The SDK normalizes tags to lowercase, strips surrounding whitespace, removes duplicates while preserving order, and validates the platform limits.
+Tags can be attached during direct, URL, batch, and multipart uploads with the `tags:` option. The SDK normalizes tags to lowercase, strips surrounding whitespace, discards blank tags, removes duplicates while preserving order, and validates the platform limits.
 
 Read or replace the complete tag list:
 

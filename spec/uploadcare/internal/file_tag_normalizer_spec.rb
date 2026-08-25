@@ -22,8 +22,8 @@ RSpec.describe Uploadcare::Internal::FileTagNormalizer do
       expect { described_class.call(['cat', 1]) }.to raise_error(ArgumentError, /array of strings/)
     end
 
-    it 'rejects blank tags' do
-      expect { described_class.call(['  ']) }.to raise_error(ArgumentError, /may not be blank/)
+    it 'discards blank tags' do
+      expect(described_class.call(['cat', '', '  ', 'dog'])).to eq(%w[cat dog])
     end
 
     it 'rejects tags longer than 100 characters' do
