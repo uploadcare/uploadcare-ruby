@@ -95,7 +95,7 @@ class Uploadcare::Api::Rest
 
   # Make an HTTP request to the REST API.
   #
-  # @param method [Symbol] HTTP method (:get, :post, :put, :delete)
+  # @param method [Symbol] HTTP method (:get, :post, :put, :patch, :delete)
   # @param path [String] API endpoint path
   # @param params [Hash, Array, String] Request parameters
   # @param headers [Hash] Additional request headers
