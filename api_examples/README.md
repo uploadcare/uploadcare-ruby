@@ -21,7 +21,8 @@ Optional environment variables:
 
 Verification:
 
-- Verified against a real Uploadcare demo account on `2026-08-07`
+- The endpoint suite was verified against a real Uploadcare demo account on `2026-08-07`.
+- Run changed examples against a disposable project before release; they create and remove temporary resources.
 
 ## REST API 0.7
 
