@@ -2,6 +2,6 @@
 
 RSpec.describe Uploadcare::VERSION do
   it 'has a version number' do
-    expect(Uploadcare::VERSION).to eq('5.0.1')
+    expect(Uploadcare::VERSION).to eq('5.1.0')
   end
 end
