@@ -7,7 +7,7 @@
 #
 # @example
 #   Uploadcare::Internal::UserAgent.call(config: config)
-#   # => "UploadcareRuby/5.0.0/demopublickey (Ruby/3.3.0)"
+#   # => "UploadcareRuby/5.0.1/demopublickey (Ruby/3.3.0)"
 class Uploadcare::Internal::UserAgent
   # Build a User-Agent string.
   #
