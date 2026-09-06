@@ -1,14 +1,22 @@
 # Changelog
 
-## Unreleased
+## 5.1.0 — 2026-09-06
 
 ### Added
 
-* File search through `client.files.search`, including full-text, exact, metadata, tag, range, and image filters,
-  sorting, highlights, `include=appdata`, and POST-aware pagination
-* Per-file tags through `client.file_tags` with list, replace, and atomic add/delete operations
-* Upload-time `tags:` support for direct, batch, URL, and multipart uploads
-* The `tags` attribute on file resources returned by the REST API
+* Search files through `client.files.search` with full-text, UUID, exact, metadata, tag, range, and image filters,
+  sorting, highlights, `include=appdata`, and POST-aware pagination that preserves the original search options.
+* Manage per-file tags through `client.file_tags` with list, replace, and atomic add/delete operations.
+* Apply tags while uploading files directly, in batches, from URLs, or through multipart uploads.
+* Read tags from file resources returned by the REST API.
+* Call the raw REST file-search and file-tag endpoints through `client.api.rest` when exact endpoint parity is needed.
+
+## 5.0.1 — 2026-06-09
+
+### Fixed
+
+* Upload API requests now send the SDK-generated `User-Agent` instead of Faraday's default header.
+* Multipart upload part requests to presigned URLs now include the same SDK-generated `User-Agent`.
 
 ## 5.0.0 — 2026-05-17
 

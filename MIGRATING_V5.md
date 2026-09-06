@@ -27,7 +27,7 @@ The examples expect `UPLOADCARE_PUBLIC_KEY` and `UPLOADCARE_SECRET_KEY` to come 
 ## Recommended Migration Order
 
 1. Introduce explicit `Uploadcare::Client` instances in your application.
-2. Move app-facing code to `client.files`, `client.groups`, `client.uploads`, `client.project`, `client.webhooks`, `client.file_metadata`, `client.addons`, and `client.conversions`.
+2. Move app-facing code to `client.files`, `client.groups`, `client.uploads`, `client.project`, `client.webhooks`, `client.file_metadata`, `client.file_tags`, `client.addons`, and `client.conversions`.
 3. Keep `client.api.rest` and `client.api.upload` only where you need raw endpoint parity.
 4. Audit return-type and error-handling assumptions.
 5. Remove any app code that depends on internal transport classes.
@@ -201,6 +201,7 @@ These top-level resource constants still exist:
 - `Uploadcare::Project`
 - `Uploadcare::Webhook`
 - `Uploadcare::FileMetadata`
+- `Uploadcare::FileTags`
 - `Uploadcare::DocumentConversion`
 - `Uploadcare::VideoConversion`
 
